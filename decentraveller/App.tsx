@@ -1,19 +1,20 @@
 import React from "react";
+import { MoralisProvider } from "react-moralis";
 import { NavigationContainer } from "@react-navigation/native";
 import {
   BottomTabNavigationOptions,
   createBottomTabNavigator,
 } from "@react-navigation/bottom-tabs";
-import { Dimensions } from 'react-native';
-import Home from "./home/Home";
-import Owned from "./owned/Owned";
+import { Dimensions } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
-import {sizesConfig} from "./config/sizesConfig";
+import { sizesConfig } from "./config/sizesConfig";
+import Home from "./screens/home/Home";
+import Owned from "./screens/owned/Owned";
 
 type DeviceDimensions = {
-    width: number;
-    height: number;
-}
+  width: number;
+  height: number;
+};
 
 type RootStackScreens = {
   Home: undefined;
@@ -21,21 +22,21 @@ type RootStackScreens = {
 };
 
 type bottomTabElementProps = {
-    focused: boolean;
-    color: string;
-    size: number;
+  focused: boolean;
+  color: string;
+  size: number;
 };
 
 const deviceDimensions: DeviceDimensions = {
-    width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height,
-}
+  width: Dimensions.get("window").width,
+  height: Dimensions.get("window").height,
+};
 
 const Tab = createBottomTabNavigator<RootStackScreens>();
 
 const getTabBarIcon = (
   route: Readonly<{ key: string; name: "Home" | "Owned"; path?: string }>,
-  iconSize: number,
+  iconSize: number
 ) => {
   return ({ focused, color, size }: bottomTabElementProps): JSX.Element => {
     if (route.name === "Home") {
@@ -51,32 +52,42 @@ const getBottomTabNavigatorScreenOptions = (
   route: Readonly<{ key: string; name: "Home" | "Owned"; path?: string }>
 ): BottomTabNavigationOptions => {
   return {
-    tabBarIcon: getTabBarIcon(route, deviceDimensions.width / sizesConfig.bottomTabIconSizeWidthInverseFraction),
+    tabBarIcon: getTabBarIcon(
+      route,
+      deviceDimensions.width / sizesConfig.bottomTabIconSizeWidthInverseFraction
+    ),
     tabBarActiveTintColor: "tomato",
     tabBarInactiveTintColor: "gray",
-      tabBarStyle: {
-        height: deviceDimensions.height / sizesConfig.bottomTabHeightInverseFraction,
-      },
-      tabBarLabelStyle: {
-        fontSize: deviceDimensions.width / sizesConfig.bottomTabFontSizeWidthInverseFraction,
-          fontFamily: 'sans-serif-medium',
-          fontWeight: 'bold'
-      }
+    tabBarStyle: {
+      height:
+        deviceDimensions.height / sizesConfig.bottomTabHeightInverseFraction,
+    },
+    tabBarLabelStyle: {
+      fontSize:
+        deviceDimensions.width /
+        sizesConfig.bottomTabFontSizeWidthInverseFraction,
+      fontFamily: "sans-serif-medium",
+      fontWeight: "bold",
+    },
   };
 };
 
 const App = () => {
   return (
-    <NavigationContainer>
-      <Tab.Navigator
-        initialRouteName="Home"
-        backBehavior="initialRoute"
-        screenOptions={({ route }) => getBottomTabNavigatorScreenOptions(route)}
-      >
-        <Tab.Screen name="Home" component={Home} />
-        <Tab.Screen name="Owned" component={Owned} />
-      </Tab.Navigator>
-    </NavigationContainer>
+    <MoralisProvider serverUrl="https://pnzdph5trjza.usemoralis.com:2053/server" appId="4PNXRLBF4yFp280oYVFPsRu8QSjTcSNaI9F8rkc5">
+      <NavigationContainer>
+        <Tab.Navigator
+          initialRouteName="Home"
+          backBehavior="initialRoute"
+          screenOptions={({ route }) =>
+            getBottomTabNavigatorScreenOptions(route)
+          }
+        >
+          <Tab.Screen name="Home" component={Home} />
+          <Tab.Screen name="Owned" component={Owned} />
+        </Tab.Navigator>
+      </NavigationContainer>
+    </MoralisProvider>
   );
 };
 
