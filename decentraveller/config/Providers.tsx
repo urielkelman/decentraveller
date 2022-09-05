@@ -1,5 +1,5 @@
-const Providers: React.FC = () => {
+/*const Providers: React.FC = () => {
     return (
         <Moral
     )
-}
+}*/
