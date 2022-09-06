@@ -27,9 +27,9 @@ const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
   };
 
   return (
-    <AppContext.Provider
-      value={{ signInInformation, processSignInParameters }}
-    />
+    <AppContext.Provider value={{ signInInformation, processSignInParameters }}>
+      {children}
+    </AppContext.Provider>
   );
 };
 
