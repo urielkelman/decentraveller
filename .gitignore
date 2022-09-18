@@ -6,6 +6,5 @@ blockchain/cache
 blockchain/artifacts
 
 
-decentraveller/node_modules
-decentraveller/package-lock.json
-decentraveller/.idea/
+decentraveller-app/node_modules/
+decentraveller-app/.idea/
