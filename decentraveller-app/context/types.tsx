@@ -1,9 +1,16 @@
 export interface ConnectionContext {
     connectedAddress: string | null;
-    connectedChainId: string | null;
+    connectedChainId: number | null;
+}
+
+export interface DeviceDimensions {
+    width: number;
+    height: number;
 }
 
 export type AppContextType = {
     connectionContext: ConnectionContext;
-    setConnectionContext: (connectionAddress, chainId) => void;
+    deviceDimensions: DeviceDimensions;
+    setConnectionContext: (newConnectionContext: ConnectionContext) => void;
+    cleanConnectionContext: () => void;
 };

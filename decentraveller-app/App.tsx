@@ -1,5 +1,10 @@
 import DecentravellerInitialScreen from './screens/UserInitialScreen';
+import AppContextProvider from './context/AppContext';
 
 export default function App() {
-    return <DecentravellerInitialScreen />;
+    return (
+        <AppContextProvider>
+            <DecentravellerInitialScreen />
+        </AppContextProvider>
+    );
 }
