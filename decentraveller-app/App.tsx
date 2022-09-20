@@ -1,7 +1,5 @@
-import DecentravellerInitialScreen from "./screens/UserInitialScreen";
+import DecentravellerInitialScreen from './screens/UserInitialScreen';
 
 export default function App() {
-  return (
-      <DecentravellerInitialScreen />
-  );
+    return <DecentravellerInitialScreen />;
 }
