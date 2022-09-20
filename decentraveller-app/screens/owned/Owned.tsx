@@ -1,14 +1,11 @@
-import { Text, View } from "react-native";
+import { Text, View } from 'react-native';
 
 const Owned = () => {
-  return (
-    <View>
-      <Text>
-        I´m the owned component. Here you can see all your places and add new
-        ones.
-      </Text>
-    </View>
-  );
+    return (
+        <View>
+            <Text>I´m the owned component. Here you can see all your places and add new ones.</Text>
+        </View>
+    );
 };
 
 export default Owned;
