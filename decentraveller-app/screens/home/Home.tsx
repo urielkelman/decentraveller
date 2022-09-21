@@ -1,7 +1,7 @@
-import {Button, Text, View} from 'react-native';
-import {useWalletConnect} from "@walletconnect/react-native-dapp";
-import {useConnectionContext} from "../../context/AppContext";
-import React from "react";
+import { ActivityIndicator, Button, Text, View } from 'react-native';
+import { useWalletConnect } from '@walletconnect/react-native-dapp';
+import { useConnectionContext } from '../../context/AppContext';
+import React from 'react';
 
 const Home = () => {
     const connector = useWalletConnect();
@@ -10,12 +10,10 @@ const Home = () => {
     const killSession = async () => {
         appContext.setConnectionContext({
             connectedAddress: null,
-            connectedChainId: null
+            connectedChainId: null,
         });
         await connector.killSession();
-    }
-
-    if(!connector.connected) killSession();
+    };
 
     return (
         <View>

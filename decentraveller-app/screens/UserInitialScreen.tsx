@@ -6,7 +6,8 @@ import RootNavigator from './home/RootNavigator';
 
 const DecentravellerInitialScreen = () => {
     const appContext = useConnectionContext();
-    const stackToRender: JSX.Element = appContext.connectedAddress === null ? <LoginNavigator /> : <RootNavigator />;
+    const stackToRender: JSX.Element =
+        appContext.connectionContext.connectedAddress === null ? <LoginNavigator /> : <RootNavigator />;
     return <NavigationContainer>{stackToRender}</NavigationContainer>;
 };
 

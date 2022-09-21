@@ -11,16 +11,15 @@ const ConnectWalletScreen = () => {
         return connector.connect();
     }, [connector]);
 
-    const killSession = React.useCallback(() => {
-        return connector.killSession();
-    }, [connector]);
+    React.useEffect(() => {
+        if (connector.connected) {
+            appContext.setConnectionContext({
+                connectedAddress: connector.accounts[0],
+                connectedChainId: connector.chainId,
+            });
+        }
+    }, [connector])
 
-    if (connector.connected) {
-        appContext.setConnectionContext({
-            connectedAddress: connector.accounts[0],
-            connectedChainId: connector.chainId,
-        });
-    }
 
     return (
         <View>
