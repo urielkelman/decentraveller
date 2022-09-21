@@ -39,7 +39,7 @@ const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
 };
 
 export const useConnectionContext = (): AppContextType => {
-    return (React.useContext(AppContext) as AppContextType);
+    return React.useContext(AppContext) as AppContextType;
 };
 
 export const useDeviceDimensions = (): DeviceDimensions => {
