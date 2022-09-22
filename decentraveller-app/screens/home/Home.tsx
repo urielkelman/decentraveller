@@ -15,6 +15,7 @@ const Home = () => {
         await connector.killSession();
     };
 
+
     return (
         <View>
             <Button title={'Logout'} onPress={killSession} />
