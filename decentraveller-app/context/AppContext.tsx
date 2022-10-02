@@ -6,11 +6,33 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const AppContext = React.createContext<AppContextType | null>(null);
 
+const DEFAULT_CHAIN_ID = 5;
+const DEFAULT_RPC = 'https://goerli.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161';
+
+interface UpdateSessionPayloadParams {
+    accounts: string[];
+    chainId: number;
+}
+
 const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
     const [connectionContext, setConnectionContext] = React.useState<ConnectionContext>(null);
     const [subscriptionsDone, setSubscriptionsDone] = React.useState<boolean>(false);
 
     const connector = useWalletConnect();
+
+    const pushChangeUpdate = async () => {
+        try {
+            const r = await connector.sendCustomRequest({
+                id: 1,
+                jsonrpc: '2.0',
+                method: 'wallet_switchEthereumChain',
+                params: [{chainId: '0x5'}]
+            });
+            console.log(r)
+        } catch (e) {
+            console.log(e)
+        }
+    };
 
     const deviceDimensions: DeviceDimensions = React.useMemo<DeviceDimensions>(
         () => ({
@@ -29,28 +51,36 @@ const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
         wipeAsyncStorage().catch((e) => console.log('There was a problem wiping async storage', e));
     }, []);
 
+    const updateConnectionContext = (address, chainId) => {
+        const isWrongChain = chainId !== DEFAULT_CHAIN_ID;
+        setConnectionContext({
+            connectedAddress: address,
+            connectedChainId: chainId,
+            isWrongChain: isWrongChain,
+        });
+    };
+
     React.useEffect(() => {
+        console.log(connector.connected);
         if (connector.connected) {
-            setConnectionContext({
-                connectedAddress: connector.accounts[0],
-                connectedChainId: connector.chainId,
-            });
+            updateConnectionContext(connector.accounts[0], connector.chainId);
 
             if (!subscriptionsDone) {
                 setSubscriptionsDone(true);
 
                 connector.on('disconnect', async (error, payload) => {
-                    console.log('disconnected from wallet');
-                    console.log('params', payload);
+                    setSubscriptionsDone(false);
+                    setConnectionContext(null);
                 });
 
                 connector.on('session_update', async (error, payload) => {
-                    console.log(`connector.on("session_update")`);
-                    console.log(payload.params[0]);
+                    const params: UpdateSessionPayloadParams = payload.params[0];
+                    console.log('sesesion_update')
+                    updateConnectionContext(params.accounts[0], params.chainId);
                 });
             }
         }
-    }, [connector]);
+    }, [connector.connected]);
 
     const cleanConnectionContext = () => setConnectionContext(null);
 
@@ -60,6 +90,7 @@ const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
                 connectionContext,
                 deviceDimensions,
                 setConnectionContext,
+                pushChangeUpdate,
                 cleanConnectionContext,
             }}
         >

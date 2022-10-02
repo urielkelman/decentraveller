@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import { Button, View } from 'react-native';
 import { useWalletConnect } from '@walletconnect/react-native-dapp';
 import { useAppContext } from '../../context/AppContext';
@@ -11,7 +11,7 @@ const ConnectWalletScreen = () => {
         return connector.connect();
     }, [connector]);
 
-    console.log(appContext)
+    // console.log(appContext)
 
     return (
         <View>
