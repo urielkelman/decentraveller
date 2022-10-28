@@ -4,12 +4,16 @@ import "@nomiclabs/hardhat-etherscan";
 import "@nomiclabs/hardhat-ethers";
 import "@typechain/hardhat";
 import * as dotenv from "dotenv";
+import "./tasks/block_number";
+import "hardhat-gas-reporter";
+import "solidity-coverage";
 
 dotenv.config();
 
 const GOERLI_RPC_URL = process.env.GOERLI_RPC_URL as string;
 const PRIVATE_KEY = process.env.PRIVATE_KEY as string;
 const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY as string;
+const COINMARKETCAP_API_KEY = process.env.COINMARKETCAP_API_KEY as string;
 
 const config: HardhatUserConfig = {
     solidity: "0.8.17",
@@ -20,9 +24,23 @@ const config: HardhatUserConfig = {
             accounts: [PRIVATE_KEY],
             chainId: 5,
         },
+        /* Localhost network, which is run by 'yarn hardhat node' is a different blockchain that the default one.
+        The default only lives for a script execution, while the other one is a process that can run an arbitrary amount of time.  */
+        localhost: {
+            url: "http://127.0.0.1:8545/",
+            chainId: 31337,
+        },
     },
     etherscan: {
         apiKey: ETHERSCAN_API_KEY,
+    },
+    gasReporter: {
+        enabled: true,
+        outputFile: "gas-report.txt",
+        noColors: true,
+        currency: "USD",
+        coinmarketcap: COINMARKETCAP_API_KEY,
+        token: "MATIC",
     },
 };
 
