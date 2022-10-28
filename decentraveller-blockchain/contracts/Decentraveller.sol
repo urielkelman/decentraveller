@@ -5,7 +5,7 @@ pragma solidity ^0.8.9;
 // import "hardhat/console.sol";
 
 contract Decentraveller {
-    uint256 private lastPlaceId = 0;
+    uint256 public lastPlaceId = 0;
 
     enum TourismField {
         GASTRONOMY,
