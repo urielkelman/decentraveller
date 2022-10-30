@@ -26,11 +26,11 @@ const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
                 id: 1,
                 jsonrpc: '2.0',
                 method: 'wallet_switchEthereumChain',
-                params: [{chainId: '0x5'}]
+                params: [{ chainId: '0x5' }],
             });
-            console.log(r)
+            console.log('custom request response', r);
         } catch (e) {
-            console.log(e)
+            console.log('Error updating', e);
         }
     };
 
@@ -61,7 +61,7 @@ const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
     };
 
     React.useEffect(() => {
-        console.log(connector.connected);
+        console.log('connected:', connector.connected);
         if (connector.connected) {
             updateConnectionContext(connector.accounts[0], connector.chainId);
 
@@ -74,8 +74,10 @@ const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
                 });
 
                 connector.on('session_update', async (error, payload) => {
+                    console.log('Full payload', payload);
                     const params: UpdateSessionPayloadParams = payload.params[0];
-                    console.log('sesesion_update')
+                    console.log(params);
+                    console.log('sesion_update');
                     updateConnectionContext(params.accounts[0], params.chainId);
                 });
             }
