@@ -1,9 +1,10 @@
-import { ActivityIndicator, Button, Text, View } from 'react-native';
+import { Button, Text, TouchableOpacity, View } from 'react-native';
 import { useWalletConnect } from '@walletconnect/react-native-dapp';
 import { useAppContext } from '../../context/AppContext';
 import React from 'react';
+import { Feather } from '@expo/vector-icons';
 
-const Home = () => {
+const Home = ({ navigation }) => {
     const connector = useWalletConnect();
     const appContext = useAppContext();
 
@@ -14,9 +15,16 @@ const Home = () => {
     };
 
     return (
-        <View>
+        <View style={{ flex: 1 }}>
             <Button title={'Disconnect wallet'} onPress={killSession} />
             <Text>{connector.accounts[0]}</Text>
+            <TouchableOpacity
+                style={{ paddingTop: 35, flex: 1, flexDirection: 'row' }}
+                onPress={() => navigation.navigate('CreatePlace')}
+            >
+                <Feather name="plus-circle" size={24} color="black" style={{ paddingRight: 10 }} />
+                <Text>Add a place</Text>
+            </TouchableOpacity>
         </View>
     );
 };

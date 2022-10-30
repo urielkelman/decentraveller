@@ -1,4 +1,6 @@
 {
-    "compilerOptions": {},
+    "compilerOptions": {
+        "resolveJsonModule": true /* Enables json imports */
+    },
     "extends": "expo/tsconfig.base"
 }

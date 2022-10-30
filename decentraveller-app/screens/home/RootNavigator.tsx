@@ -4,10 +4,10 @@ import { sizesConfig } from '../../config/sizesConfig';
 import React from 'react';
 import { useDeviceDimensions } from '../../context/AppContext';
 import ConnectWalletScreen from '../login/ConnectWalletScreen';
-import Home from './Home';
+import HomeNavigator from './HomeNavigator';
 
 type RootStackScreens = {
-    Home: undefined;
+    HomeNavigator: undefined;
 };
 
 const RootTabNavigator = createBottomTabNavigator<RootStackScreens>();
@@ -19,13 +19,13 @@ type bottomTabElementProps = {
 };
 
 const getTabBarIcon = (
-    route: Readonly<{ key: string; name: 'ConnectWalletScreen' | 'Home'; path?: string }>,
+    route: Readonly<{ key: string; name: 'ConnectWalletScreen' | 'HomeNavigator'; path?: string }>,
     iconSize: number
 ) => {
     return ({ focused, color, size }: bottomTabElementProps): JSX.Element => {
         if (route.name === 'ConnectWalletScreen') {
             return <AntDesign name="home" size={iconSize} color="black" />;
-        } else if (route.name === 'Home') {
+        } else if (route.name === 'HomeNavigator') {
             return <AntDesign name="user" size={iconSize} color="black" />;
         }
         return <AntDesign name="home" size={iconSize} color="black" />;
@@ -33,7 +33,7 @@ const getTabBarIcon = (
 };
 
 const getBottomTabNavigatorScreenOptions = (
-    route: Readonly<{ key: string; name: 'ConnectWalletScreen' | 'Home'; path?: string }>
+    route: Readonly<{ key: string; name: 'ConnectWalletScreen' | 'HomeNavigator'; path?: string }>
 ): BottomTabNavigationOptions => {
     const deviceDimensions = useDeviceDimensions();
     return {
@@ -48,17 +48,19 @@ const getBottomTabNavigatorScreenOptions = (
             fontFamily: 'sans-serif-medium',
             fontWeight: 'bold',
         },
+        title: route.name.replace('Navigator', ''),
+        headerShown: false,
     };
 };
 
 const RootNavigator = () => {
     return (
         <RootTabNavigator.Navigator
-            initialRouteName="Home"
+            initialRouteName="HomeNavigator"
             backBehavior="initialRoute"
             screenOptions={({ route }) => getBottomTabNavigatorScreenOptions(route)}
         >
-            <RootTabNavigator.Screen name="Home" component={Home} />
+            <RootTabNavigator.Screen name="HomeNavigator" component={HomeNavigator} />
         </RootTabNavigator.Navigator>
     );
 };
