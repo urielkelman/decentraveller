@@ -7,6 +7,7 @@ import * as dotenv from "dotenv";
 import "./tasks/block_number";
 import "hardhat-gas-reporter";
 import "solidity-coverage";
+import "hardhat-deploy";
 
 dotenv.config();
 
@@ -41,6 +42,11 @@ const config: HardhatUserConfig = {
         currency: "USD",
         coinmarketcap: COINMARKETCAP_API_KEY,
         token: "MATIC",
+    },
+    namedAccounts: {
+        deployer: {
+            default: 0,
+        },
     },
 };
 
