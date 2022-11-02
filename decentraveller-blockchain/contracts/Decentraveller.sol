@@ -13,6 +13,8 @@ contract Decentraveller {
         HISTORICAL
     }
 
+    event NewPlace(address _from, uint256 _id, string _placeName);
+
     struct Place {
         TourismField TourismField;
         string latitude;
@@ -37,6 +39,7 @@ contract Decentraveller {
             lastPlaceId,
             new string[](0)
         );
+        emit NewPlace(msg.sender, lastPlaceId, _name);
     }
 
     function addReview(string memory _placeName, string memory _review) public {

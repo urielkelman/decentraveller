@@ -22,13 +22,12 @@ const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
 
     const pushChangeUpdate = async () => {
         try {
-            const r = await connector.sendCustomRequest({
+            await connector.sendCustomRequest({
                 id: 1,
                 jsonrpc: '2.0',
                 method: 'wallet_switchEthereumChain',
                 params: [{ chainId: '0x5' }],
             });
-            console.log('custom request response', r);
         } catch (e) {
             console.log('Error updating', e);
         }

@@ -1,28 +1,30 @@
-{
-    "inputs": [
-        {
-            "internalType": "string",
-            "name": "_name",
-            "type": "string"
-        },
-        {
-            "internalType": "enum Decentraveller.TourismField",
-            "name": "_tourismField",
-            "type": "uint8"
-        },
-        {
-            "internalType": "string",
-            "name": "_latitude",
-            "type": "string"
-        },
-        {
-            "internalType": "string",
-            "name": "_longitude",
-            "type": "string"
-        }
-    ],
-    "name": "addPlace",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-}
+[
+    {
+        "inputs": [
+            {
+                "internalType": "string",
+                "name": "_name",
+                "type": "string"
+            },
+            {
+                "internalType": "enum Decentraveller.TourismField",
+                "name": "_tourismField",
+                "type": "uint8"
+            },
+            {
+                "internalType": "string",
+                "name": "_latitude",
+                "type": "string"
+            },
+            {
+                "internalType": "string",
+                "name": "_longitude",
+                "type": "string"
+            }
+        ],
+        "name": "addPlace",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    }
+]
