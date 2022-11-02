@@ -1,17 +1,15 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Button, View } from 'react-native';
 import { useWalletConnect } from '@walletconnect/react-native-dapp';
 import { useAppContext } from '../../context/AppContext';
 
 const ConnectWalletScreen = () => {
     const connector = useWalletConnect();
-    const appContext = useAppContext();
 
     const connectWallet = React.useCallback(() => {
+        console.log('Trying to connect....');
         return connector.connect();
     }, [connector]);
-
-    // console.log(appContext)
 
     return (
         <View>

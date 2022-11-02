@@ -11,4 +11,6 @@ export default async (hre: HardhatRuntimeEnvironment) => {
         from: deployer,
         log: true,
     });
+
+    log("D<c")
 };

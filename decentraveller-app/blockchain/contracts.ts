@@ -1,24 +1,32 @@
 import addPlaceABI from './abis/addPlaceABI.json';
+import { Blockchain } from './config';
 
 interface AddressesByBlockchain {
     GOERLI: string;
     LOCALHOST: string;
 }
 
-interface Contract {
-    addressesByBlockchain: AddressesByBlockchain;
+export interface ContractFunction {
+    functionName: string;
+    functionABI: string;
 }
 
-interface DecentravellerContract extends Contract {
-    addPlaceFunctionABI: string;
+export interface DecentravellerContract {
+    addressesByBlockchain: { [key in Blockchain]: string };
+    functions: { [key in string]: ContractFunction };
 }
 
-const decentravellerContract: DecentravellerContract = {
+const decentravellerMainContract: DecentravellerContract = {
     addressesByBlockchain: {
-        GOERLI: '0x2037D009a0E170A6BdB506284b7d08A3f902F514',
         LOCALHOST: '',
+        GOERLI: '0xD30D709b5B422A745ef38392539217BeE689F243',
     },
-    addPlaceFunctionABI: JSON.stringify(addPlaceABI),
+    functions: {
+        addPlace: {
+            functionName: 'addPlace',
+            functionABI: JSON.stringify(addPlaceABI),
+        },
+    },
 };
 
-export { decentravellerContract };
+export { decentravellerMainContract };

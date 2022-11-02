@@ -34,7 +34,7 @@ const main = async () => {
         await verify(decentraveller.address, []);
     }
 
-    const transactionResponse = await decentraveller.addPlace(
+    /*const transactionResponse = await decentraveller.addPlace(
         "Shami Shawarma",
         0,
         "33.46",
@@ -53,7 +53,7 @@ const main = async () => {
     const shamiShawarmaPlace = await decentraveller.getReviews(
         "Shami Shawarma"
     );
-    console.log(shamiShawarmaPlace);
+    console.log(shamiShawarmaPlace);*/
 };
 
 main()
