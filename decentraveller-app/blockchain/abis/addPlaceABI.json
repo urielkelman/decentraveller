@@ -7,9 +7,9 @@
                 "type": "string"
             },
             {
-                "internalType": "enum Decentraveller.TourismField",
+                "internalType": "string",
                 "name": "_tourismField",
-                "type": "uint8"
+                "type": "string"
             },
             {
                 "internalType": "string",
