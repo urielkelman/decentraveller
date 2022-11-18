@@ -4,61 +4,57 @@ pragma solidity ^0.8.9;
 // Uncomment this line to use console.log
 // import "hardhat/console.sol";
 
+import "./DecentravellerPlace.sol";
+import "./DecentravellerPlaceCloneFactory.sol";
+
 contract Decentraveller {
-    uint256 public lastPlaceId = 0;
+    uint256 public lastPlaceId;
+    DecentravellerPlaceCloneFactory placeFactory;
 
-    enum TourismField {
-        GASTRONOMY,
-        ENTERTAINMENT,
-        HISTORICAL
+    constructor(address _placesFactory) {
+        placeFactory = DecentravellerPlaceCloneFactory(_placesFactory);
+        lastPlaceId = 0;
     }
 
-    event NewPlace(address _from, uint256 _id, string _placeName);
-
-    struct Place {
-        TourismField TourismField;
-        string latitude;
-        string longitude;
-        uint256 placeId;
-        string[] reviews;
-    }
-
-    mapping(string => Place) public places;
+    mapping(uint256 => address) public placesAddressByPlaceId;
 
     function addPlace(
         string memory _name,
-        TourismField _tourismField,
+        string memory _tourismField,
         string memory _latitude,
         string memory _longitude
     ) public {
         lastPlaceId += 1;
-        places[_name] = Place(
-            _tourismField,
+        placesAddressByPlaceId[lastPlaceId] = placeFactory.createNewPlace(
+            lastPlaceId,
+            _name,
             _latitude,
             _longitude,
-            lastPlaceId,
-            new string[](0)
+            _tourismField,
+            msg.sender
         );
-        emit NewPlace(msg.sender, lastPlaceId, _name);
     }
 
-    function addReview(string memory _placeName, string memory _review) public {
+    function addReview(uint256 _placeId, string memory _review) public {
         require(
-            places[_placeName].placeId != 0,
+            placesAddressByPlaceId[_placeId] != address(0),
             "Review must be added to an existent place"
         );
-        places[_placeName].reviews.push(_review);
+        DecentravellerPlace(placesAddressByPlaceId[_placeId]).addReview(
+            _review
+        );
     }
 
-    function getReviews(string memory _placeName)
+    function getReviews(uint256 _placeId)
         external
         view
         returns (string[] memory)
     {
         require(
-            places[_placeName].placeId != 0,
-            "Review must be added to an existent place"
+            placesAddressByPlaceId[_placeId] != address(0),
+            "Place does not exist"
         );
-        return places[_placeName].reviews;
+        return
+            DecentravellerPlace(placesAddressByPlaceId[_placeId]).getReviews();
     }
 }

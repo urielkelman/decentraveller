@@ -1,7 +1,15 @@
 import { ethers } from 'ethers';
 import WalletConnect from '@walletconnect/client';
 import { ContractFunction, DecentravellerContract, decentravellerMainContract } from './contracts';
-import { Blockchain, BlockchainByConnectorChainId } from './config';
+import { Blockchain, BlockchainByConnectorChainId, LOCAL_DEVELOPMENT_CHAIN_ID } from './config';
+
+const getProvider = async (chainId: number): Promise<ethers.providers.Provider> => {
+    if (chainId === LOCAL_DEVELOPMENT_CHAIN_ID) {
+        return new ethers.providers.JsonRpcProvider('http://10.0.2.2:8545/');
+    } else {
+        return ethers.getDefaultProvider(chainId);
+    }
+};
 
 const populateAndSend = async (
     connector: WalletConnect,
@@ -9,11 +17,10 @@ const populateAndSend = async (
     functionName: string,
     ...args: unknown[]
 ): Promise<string> => {
-    const provider: ethers.providers.Provider = ethers.getDefaultProvider(connector.chainId);
+    const provider: ethers.providers.Provider = await getProvider(connector.chainId);
     const blockchain: Blockchain = BlockchainByConnectorChainId[connector.chainId];
     const contractAddress: string = contract.addressesByBlockchain[blockchain];
     const contractFunction: ContractFunction = contract.functions[functionName];
-    console.log(contractFunction.functionABI);
     const ethersContract: ethers.Contract = new ethers.Contract(
         contractAddress,
         contractFunction.functionABI,

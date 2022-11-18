@@ -2,13 +2,12 @@ import { Text, TextInput, TouchableOpacity, View } from 'react-native';
 import React from 'react';
 import { createAddNewPlaceTransaction } from '../../blockchain/blockhainAdapter';
 import { useWalletConnect } from '@walletconnect/react-native-dapp';
-import { decentravellerMainContract } from '../../blockchain/contracts';
 
 const CreatePlace = () => {
     const connector = useWalletConnect();
     const [lastHash, setLastHash] = React.useState<string>(undefined);
     const [placeName, setPlaceName] = React.useState<string>('');
-    const tourismField = 0;
+    const tourismField = 'Gastronomic';
     const latitude = '-34.06';
     const longitude = '34.06';
 
