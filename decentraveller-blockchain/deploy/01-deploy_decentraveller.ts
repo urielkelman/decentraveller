@@ -1,16 +1,38 @@
 import { network } from "hardhat";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
+import { DeployFunction } from "hardhat-deploy/types";
 
-export default async (hre: HardhatRuntimeEnvironment) => {
-    /*const { getNamedAccounts, deployments } = hre;
+const deployFunction: DeployFunction = async function (
+    hre: HardhatRuntimeEnvironment
+) {
+    const { getNamedAccounts, deployments } = hre;
     const { deploy, log } = deployments;
     const { deployer } = await getNamedAccounts();
     const chainId = network.config.chainId;
 
-    const decentraveller = await deploy("Decentraveller", {
+    const decentravellerPlace = await deploy("DecentravellerPlace", {
         from: deployer,
         log: true,
     });
 
-    console.log(decentraveller);*/
+    const decentravellerPlaceFactory = await deploy(
+        "DecentravellerPlaceCloneFactory",
+        {
+            from: deployer,
+            args: [decentravellerPlace.address],
+            log: true,
+        }
+    );
+
+    const decentraveller = await deploy("Decentraveller", {
+        from: deployer,
+        args: [decentravellerPlaceFactory.address],
+        log: true,
+    });
+
+    console.log(decentraveller);
 };
+
+deployFunction.tags = ["all"];
+
+export default deployFunction;

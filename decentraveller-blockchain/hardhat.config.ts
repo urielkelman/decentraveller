@@ -47,6 +47,9 @@ const config: HardhatUserConfig = {
         deployer: {
             default: 0,
         },
+        user: {
+            default: 1,
+        },
     },
 };
 
