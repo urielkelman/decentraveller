@@ -45,11 +45,9 @@ contract Decentraveller {
         );
     }
 
-    function getReviews(uint256 _placeId)
-        external
-        view
-        returns (string[] memory)
-    {
+    function getReviews(
+        uint256 _placeId
+    ) external view returns (string[] memory) {
         require(
             placesAddressByPlaceId[_placeId] != address(0),
             "Place does not exist"

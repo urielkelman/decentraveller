@@ -13,15 +13,6 @@ contract DecentravellerPlace is Initializable {
     address public placeCreator;
     string[] public reviews;
 
-    event NewPlace(
-        address _placeCreator,
-        uint256 _id,
-        string _placeName,
-        string _tourismField,
-        string _latitude,
-        string _longitude
-    );
-
     function initialize(
         uint256 _placeId,
         string memory _name,
@@ -36,15 +27,6 @@ contract DecentravellerPlace is Initializable {
         longitude = _longitude;
         tourismField = _tourismField;
         placeCreator = _placeCreator;
-
-        emit NewPlace(
-            _placeCreator,
-            _placeId,
-            _name,
-            _tourismField,
-            _latitude,
-            _longitude
-        );
     }
 
     function addReview(string memory _review) public {

@@ -1,0 +1,100 @@
+[
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_decentravellerPlaceImplementation",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "constructor"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "internalType": "address",
+                "name": "placeCreator",
+                "type": "address"
+            },
+            {
+                "indexed": true,
+                "internalType": "uint256",
+                "name": "id",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "string",
+                "name": "placeName",
+                "type": "string"
+            },
+            {
+                "indexed": false,
+                "internalType": "string",
+                "name": "tourismField",
+                "type": "string"
+            },
+            {
+                "indexed": false,
+                "internalType": "string",
+                "name": "latitude",
+                "type": "string"
+            },
+            {
+                "indexed": false,
+                "internalType": "string",
+                "name": "longitude",
+                "type": "string"
+            }
+        ],
+        "name": "NewPlace",
+        "type": "event"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "_placeId",
+                "type": "uint256"
+            },
+            {
+                "internalType": "string",
+                "name": "_name",
+                "type": "string"
+            },
+            {
+                "internalType": "string",
+                "name": "_latitude",
+                "type": "string"
+            },
+            {
+                "internalType": "string",
+                "name": "_longitude",
+                "type": "string"
+            },
+            {
+                "internalType": "string",
+                "name": "_touristField",
+                "type": "string"
+            },
+            {
+                "internalType": "address",
+                "name": "_placeCreator",
+                "type": "address"
+            }
+        ],
+        "name": "createNewPlace",
+        "outputs": [
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    }
+]

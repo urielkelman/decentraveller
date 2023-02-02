@@ -6,9 +6,8 @@ const deployFunction: DeployFunction = async function (
     hre: HardhatRuntimeEnvironment
 ) {
     const { getNamedAccounts, deployments } = hre;
-    const { deploy, log } = deployments;
+    const { deploy } = deployments;
     const { deployer } = await getNamedAccounts();
-    const chainId = network.config.chainId;
 
     const decentravellerPlace = await deploy("DecentravellerPlace", {
         from: deployer,
