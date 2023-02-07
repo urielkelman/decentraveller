@@ -15,15 +15,15 @@
         "inputs": [
             {
                 "indexed": true,
-                "internalType": "address",
-                "name": "placeCreator",
-                "type": "address"
-            },
-            {
-                "indexed": true,
                 "internalType": "uint256",
                 "name": "id",
                 "type": "uint256"
+            },
+            {
+                "indexed": true,
+                "internalType": "address",
+                "name": "placeCreator",
+                "type": "address"
             },
             {
                 "indexed": false,

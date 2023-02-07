@@ -1,26 +1,14 @@
-import decentravellerPlaceABI from "./contract-configs/abis/decentravellerPlaceCloneFactoryABI.json";
+import { mainServerAdapter } from "./contract-configs/adapters/MainServerAdapter";
+import { EventRequest } from "./contract-configs/adapters/types";
+import { eventsToListen, provider } from "./contract-configs/config";
 
-import { ethers } from "ethers";
-import { CONTRACT_ADDRESSES } from "./contract-configs/config";
-
-const provider = new ethers.providers.WebSocketProvider(
-    "http://127.0.0.1:8545"
-);
-
-const decentravellerPlaceCloneFactoryContract: ethers.Contract =
-    new ethers.Contract(
-        CONTRACT_ADDRESSES.DECENTRAVELLER_PLACE_CLONE_FACTORY,
-        decentravellerPlaceABI,
-        provider
-    );
-
-decentravellerPlaceCloneFactoryContract.on(
-    "NewPlace",
-    (placeCreator, id, placeName, tourismField, latitude, longitude, event) => {
-        console.log("place creator listened", placeCreator);
-        console.log("id listened", id);
-        console.log("full event", event);
-    }
-);
+eventsToListen.forEach(({ contract, eventName, transformer }) => {
+    console.log("Registering contract on", eventName);
+    contract.on(eventName, async (...event) => {
+        console.log(event);
+        const eventRequest: EventRequest = transformer.transformEvent(event);
+        await mainServerAdapter.makeRequest(eventRequest);
+    });
+});
 
 provider.on("block", () => console.log("new block listened"));
