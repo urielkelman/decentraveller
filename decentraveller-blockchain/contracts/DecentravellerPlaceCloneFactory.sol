@@ -8,8 +8,8 @@ contract DecentravellerPlaceCloneFactory {
     address immutable decentravellerPlaceImplementation;
 
     event NewPlace(
-        address indexed placeCreator,
         uint256 indexed id,
+        address indexed placeCreator,
         string placeName,
         string tourismField,
         string latitude,
@@ -40,8 +40,8 @@ contract DecentravellerPlaceCloneFactory {
             _placeCreator
         );
         emit NewPlace(
-            _placeCreator,
             _placeId,
+            _placeCreator,
             _name,
             _touristField,
             _latitude,
