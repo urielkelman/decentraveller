@@ -1,0 +1,5 @@
+fastapi
+fastapi-utils
+uvicorn[standard]
+SQLAlchemy
+alembic==1.8.1
