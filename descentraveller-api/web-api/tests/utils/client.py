@@ -1,6 +1,8 @@
-from src.app import app
 from typing import Generator
+
 from fastapi.testclient import TestClient
+
+from src.app import app
 from src.deps import get_db
 
 
