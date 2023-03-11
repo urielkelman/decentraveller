@@ -40,7 +40,7 @@ class ReviewCBV:
         :param place_id: the id of the place
         :return: a query with the result
         """
-        query = session.query(ReviewORM).filter(place_id=place_id)
+        query = session.query(ReviewORM).filter(ReviewORM.place_id == place_id)
 
         return query
 
@@ -89,4 +89,4 @@ class ReviewCBV:
         reviews = self.session.execute(query).all()
         if not reviews:
             raise HTTPException(status_code=HTTP_404_NOT_FOUND)
-        return [ReviewInDB.from_orm(r) for r in reviews]
+        return [ReviewInDB.from_orm(r[0]) for r in reviews]
