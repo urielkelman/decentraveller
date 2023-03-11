@@ -6,9 +6,8 @@ blockchain/artifacts
 
 decentraveller-app/.idea/
 
-events-poc/node_modules/
-
-node_modules/*
+*node_modules/*
 .idea/*
 __pycache__*
 *.db
+*.expo/*
