@@ -3,9 +3,9 @@ run-name: ${{ github.actor }}
 on:
   push:
     paths:
-      - descentraveller-api
+      - decentraveller-api
 jobs:
   tests:
     runs-on: ubuntu-latest
     steps:
-      - run: docker-compose -f descentraveller-api/docker-compose.yml run tests
+      - run: docker-compose -f decentraveller-api/docker-compose.yml run tests
