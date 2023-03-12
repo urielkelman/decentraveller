@@ -1,4 +1,6 @@
-from sqlalchemy import Column, String, Float, JSON, ARRAY, Integer
+from sqlalchemy import Column, String, Float, JSON, Integer
+from sqlalchemy.orm import relationship
+
 from src.orms import Base
 
 
@@ -16,3 +18,4 @@ class PlaceORM(Base):
     open_hours = Column(JSON, nullable=True)
     categories = Column(String, nullable=True)
     sub_categories = Column(String, nullable=True)
+    review = relationship("ReviewORM", uselist=False)
