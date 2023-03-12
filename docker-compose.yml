@@ -40,6 +40,8 @@ services:
     command: yarn deploy:local
     depends_on:
       - blockchain
+    environment:
+      - LOCALHOST_HOST_ADDRESS=blockchain
 
 volumes:
   postgres_data:

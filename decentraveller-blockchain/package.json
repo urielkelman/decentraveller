@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "start:local": "./node_modules/.bin/hardhat --config hardhat.config.ts node",
-    "deploy:local": "./node_modules/.bin/hardhat --config hardhat.config2.ts --network localhost run scripts/deploy.ts"
+    "deploy:local": "./node_modules/.bin/hardhat --config hardhat.config.ts --network localhost run scripts/deploy.ts"
   },
   "devDependencies": {
     "@chainlink/contracts": "^0.5.1",
