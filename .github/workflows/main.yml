@@ -1,4 +1,4 @@
-name: Web API tests
+name: Tests
 run-name: ${{ github.actor }} 
 on: [push]
 jobs:
