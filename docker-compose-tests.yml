@@ -2,4 +2,3 @@ services:
   api-unit-tests:
     build: decentraveller-api/
     command: pytest tests
-    profiles: ["api-tests"]
