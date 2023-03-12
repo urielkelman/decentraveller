@@ -13,3 +13,4 @@ __pycache__*
 *.db
 *.expo/*
 *package-lock.json
+*yarn.lock

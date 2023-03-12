@@ -5,6 +5,7 @@ pragma solidity ^0.8.9;
 // import "hardhat/console.sol";
 
 import "./DecentravellerPlace.sol";
+import "./DecentravellerPlaceCategory.sol";
 import "./DecentravellerPlaceCloneFactory.sol";
 
 contract Decentraveller {
@@ -20,9 +21,10 @@ contract Decentraveller {
 
     function addPlace(
         string memory _name,
-        string memory _tourismField,
         string memory _latitude,
-        string memory _longitude
+        string memory _longitude,
+        string memory _physicalAddress,
+        DecentravellerPlaceCategory category
     ) public {
         lastPlaceId += 1;
         placesAddressByPlaceId[lastPlaceId] = placeFactory.createNewPlace(
@@ -30,7 +32,8 @@ contract Decentraveller {
             _name,
             _latitude,
             _longitude,
-            _tourismField,
+            _physicalAddress,
+            category,
             msg.sender
         );
     }

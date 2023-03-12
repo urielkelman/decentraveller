@@ -2,6 +2,7 @@
 pragma solidity ^0.8.9;
 
 import "./Decentraveller.sol";
+import "./DecentravellerPlaceCategory.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 
 contract DecentravellerPlace is Initializable {
@@ -9,7 +10,8 @@ contract DecentravellerPlace is Initializable {
     string public name;
     string public latitude;
     string public longitude;
-    string public tourismField;
+    string public physicalAddress;
+    DecentravellerPlaceCategory public category;
     address public placeCreator;
     string[] public reviews;
 
@@ -18,14 +20,16 @@ contract DecentravellerPlace is Initializable {
         string memory _name,
         string memory _latitude,
         string memory _longitude,
-        string memory _tourismField,
+        string memory _physicalAddress,
+        DecentravellerPlaceCategory _category,
         address _placeCreator
     ) public initializer {
         placeId = _placeId;
         name = _name;
         latitude = _latitude;
         longitude = _longitude;
-        tourismField = _tourismField;
+        physicalAddress = _physicalAddress;
+        category = _category;
         placeCreator = _placeCreator;
     }
 
