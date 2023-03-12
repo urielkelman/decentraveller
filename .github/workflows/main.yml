@@ -1,9 +1,6 @@
 name: Web API tests
 run-name: ${{ github.actor }} 
-on:
-  push:
-    paths:
-      - decentraveller-api
+on: [push]
 jobs:
   tests:
     runs-on: ubuntu-latest
