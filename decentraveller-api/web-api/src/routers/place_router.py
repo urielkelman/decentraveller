@@ -7,8 +7,8 @@ from sqlalchemy.orm import Session
 from starlette.status import HTTP_404_NOT_FOUND
 
 from src.api_models.place import PlaceID, PlaceUpdate, PlaceInDB, PlaceBody
-from src.orms.place import PlaceORM
 from src.deps import get_db
+from src.orms.place import PlaceORM
 
 place_router = InferringRouter()
 
