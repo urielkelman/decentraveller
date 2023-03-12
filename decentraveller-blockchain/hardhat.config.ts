@@ -13,8 +13,6 @@ let localhost_host = "localhost"
 
 if(process.env.LOCALHOST_HOST_ADDRESS){
     localhost_host = process.env.LOCALHOST_HOST_ADDRESS
-} else {
-    
 }
 
 dotenv.config();

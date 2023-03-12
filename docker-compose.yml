@@ -33,6 +33,10 @@ services:
   indexer:
     build: decentraveller-indexer/
     command: npm start
+    environment:
+      - BLOCKCHAIN_URI=http://blockchain:8545
+    depends_on:
+      - blockchain
 
 volumes:
   postgres_data:
