@@ -4,7 +4,6 @@ import { ContractFunction, DecentravellerContract, decentravellerMainContract } 
 import { Blockchain, BlockchainByConnectorChainId, LOCAL_DEVELOPMENT_CHAIN_ID } from './config';
 
 const getProvider = async (chainId: number): Promise<ethers.providers.Provider> => {
-    console.log(chainId)
     if (chainId === LOCAL_DEVELOPMENT_CHAIN_ID) {
         return new ethers.providers.JsonRpcProvider('http://10.0.2.2:8545/');
     } else {
