@@ -11,3 +11,4 @@ decentraveller-app/.idea/
 *.idea*
 __pycache__*
 *.db
+*.expo/*
