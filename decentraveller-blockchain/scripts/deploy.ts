@@ -52,23 +52,13 @@ const main = async () => {
     console.log(
         `Deployed decentraveller contract address ${decentraveller.address}`
     );
-    if (network.config.chainId === 5 && process.env.ETHERSCAN_API_KEY) {
+    /* if (network.config.chainId === 5 && process.env.ETHERSCAN_API_KEY) {
         // We wait for a few blocks to be mined so the scanner can index the transaction.
         await decentraveller.deployTransaction.wait(5);
         await verify(decentraveller.address, []);
-    }
+    } */
 
     const provider = new ethers.providers.JsonRpcProvider();
-
-    const wallet = new ethers.Wallet(
-        "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80",
-        provider
-    );
-
-    const sendTx = await wallet.sendTransaction({
-        to: "0x3168F1FE0927E01c1eBa0C3603B39195F069Da99",
-        value: utils.parseEther("1.0"),
-    });
 };
 
 main()
