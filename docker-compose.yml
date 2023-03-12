@@ -18,7 +18,7 @@ services:
     profiles: ["api-tests"]
 
   api:
-    build: descentraveller-api/
+    build: decentraveller-api/
     command: uvicorn src.app:app --host 0.0.0.0
     ports:
       - 8008:8000
