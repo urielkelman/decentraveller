@@ -8,4 +8,4 @@ jobs:
   tests:
     runs-on: ubuntu-latest
     steps:
-      - run: docker-compose -f descentraveller-api/docker-compose.yml run tests
+      - run: docker-compose run api-tests
