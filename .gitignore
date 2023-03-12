@@ -1,9 +1,9 @@
+decentraveller-blockchain/cache
+decentraveller-blockchain/artifacts
+decentraveller-blockchain/deployments
 
-blockchain/package-lock.json
+decentraveller-indexer/build
 
-blockchain/cache
-blockchain/artifacts
-blockchain/deployments
 
 decentraveller-app/.idea/
 
