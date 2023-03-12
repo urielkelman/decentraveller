@@ -13,7 +13,8 @@ export interface NewPlaceRequestBody extends EventRequestBody {
     id: number;
     placeCreator: string;
     placeName: string;
-    tourismField: string;
+    physycalAddress: string;
+    category: string;
     latitude: string;
     longitude: string;
 }
