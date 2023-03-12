@@ -1,13 +1,16 @@
+decentraveller-blockchain/cache
+decentraveller-blockchain/artifacts
+decentraveller-blockchain/deployments
 
-blockchain/package-lock.json
+decentraveller-indexer/build
 
-blockchain/cache
-blockchain/artifacts
 
 decentraveller-app/.idea/
 
 *node_modules/*
-.idea/*
+*.idea*
 __pycache__*
 *.db
 *.expo/*
+*package-lock.json
+*yarn.lock

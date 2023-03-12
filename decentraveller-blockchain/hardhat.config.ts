@@ -9,6 +9,12 @@ import "hardhat-gas-reporter";
 import "solidity-coverage";
 import "hardhat-deploy";
 
+let localhost_host = "localhost"
+
+if(process.env.LOCALHOST_HOST_ADDRESS){
+    localhost_host = process.env.LOCALHOST_HOST_ADDRESS
+}
+
 dotenv.config();
 
 const GOERLI_RPC_URL = process.env.GOERLI_RPC_URL as string;
@@ -28,7 +34,7 @@ const config: HardhatUserConfig = {
         /* Localhost network, which is run by 'yarn hardhat node' is a different blockchain that the default one.
         The default only lives for a script execution, while the other one is a process that can run an arbitrary amount of time.  */
         localhost: {
-            url: "http://127.0.0.1:8545/",
+            url: `http://${localhost_host}:8545/`,
             chainId: 31337,
         },
     },

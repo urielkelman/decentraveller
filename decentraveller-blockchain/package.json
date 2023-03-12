@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
+  "scripts": {
+    "start:local": "./node_modules/.bin/hardhat --config hardhat.config.ts node",
+    "deploy:local": "./node_modules/.bin/hardhat --config hardhat.config.ts --network localhost run scripts/deploy.ts"
+  },
   "devDependencies": {
     "@chainlink/contracts": "^0.5.1",
     "@ethersproject/abi": "^5.4.7",
