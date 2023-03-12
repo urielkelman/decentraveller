@@ -12,3 +12,4 @@ decentraveller-app/.idea/
 __pycache__*
 *.db
 *.expo/*
+*package-lock.json

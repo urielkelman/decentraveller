@@ -12,11 +12,6 @@ services:
       - POSTGRES_PASSWORD=webapi
       - POSTGRES_DB=webapi
 
-  api-tests:
-    build: decentraveller-api/
-    command: pytest tests
-    profiles: ["api-tests"]
-
   api:
     build: decentraveller-api/
     command: uvicorn src.app:app --host 0.0.0.0
@@ -34,14 +29,6 @@ services:
       - 8545
     ports:
       - 8545:8545
-
-  deploy-blockchain:
-    build: decentraveller-blockchain/
-    command: yarn deploy:local
-    depends_on:
-      - blockchain
-    environment:
-      - LOCALHOST_HOST_ADDRESS=blockchain
 
 volumes:
   postgres_data:

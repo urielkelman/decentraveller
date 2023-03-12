@@ -7,4 +7,4 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Run tests
-      run: docker-compose -f docker-compose.yml run api-tests
+      run: docker-compose -f docker-compose-tests.yml run api-tests
