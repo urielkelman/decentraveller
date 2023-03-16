@@ -9,7 +9,7 @@ const LoginStackNavigator = createStackNavigator<LoginStackParamList>();
 
 const LoginNavigator = () => {
     return (
-        <LoginStackNavigator.Navigator>
+        <LoginStackNavigator.Navigator screenOptions={{headerShown: false}}>
             <LoginStackNavigator.Screen name="ConnectWalletScreen" component={ConnectWalletScreen} />
         </LoginStackNavigator.Navigator>
     );
