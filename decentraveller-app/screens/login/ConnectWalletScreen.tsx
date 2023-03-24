@@ -1,5 +1,5 @@
 import React from 'react';
-import { TouchableOpacity, Text, View, Image } from 'react-native';
+import { TouchableOpacity, Text, View, ImageBackground, Image } from 'react-native';
 import { useWalletConnect } from '@walletconnect/react-native-dapp';
 import { useAppContext } from '../../context/AppContext';
 import {
@@ -8,7 +8,7 @@ import {
     discoverTextStyle,
     connectWalletButtonStyle,
     wholeScreenViewStyle,
-    imageViewStyle
+    imageViewStyle,
 } from '../../styles/conectWalletStyles';
 
 const ConnectWalletScreen = () => {
@@ -21,7 +21,11 @@ const ConnectWalletScreen = () => {
 
     return (
         <View style={wholeScreenViewStyle.container}>
-            <View style={imageViewStyle.container} />
+            <View style={imageViewStyle.container}>
+                <ImageBackground source={require('../../assets/images/init_image.png')} style={imageViewStyle.image}>
+                    <View style={imageViewStyle.semicircle} />
+                </ImageBackground>
+            </View>
             <View style={connectWalletScreenViewStyle.container}>
                 <View style={connectWalletScreenTextStyle.container}>
                     <Text style={connectWalletScreenTextStyle.title} adjustsFontSizeToFit={true} numberOfLines={1}>
@@ -35,7 +39,10 @@ const ConnectWalletScreen = () => {
                 <View style={connectWalletButtonStyle.container}>
                     <TouchableOpacity style={connectWalletButtonStyle.button} onPress={connectWallet}>
                         <View style={connectWalletButtonStyle.buttonLogoView}>
-                            <Image source={require('../../assets/logos/metamask.png')} style={connectWalletButtonStyle.logo} />
+                            <Image
+                                source={require('../../assets/logos/metamask.png')}
+                                style={connectWalletButtonStyle.logo}
+                            />
                         </View>
                         <View style={connectWalletButtonStyle.buttonTextView}>
                             <Text style={connectWalletButtonStyle.text}>Connect wallet</Text>
@@ -43,7 +50,10 @@ const ConnectWalletScreen = () => {
                     </TouchableOpacity>
                     <TouchableOpacity style={connectWalletButtonStyle.button}>
                         <View style={connectWalletButtonStyle.buttonLogoView}>
-                            <Image source={require('../../assets/logos/mandala.png')} style={connectWalletButtonStyle.logo} />
+                            <Image
+                                source={require('../../assets/logos/mandala.png')}
+                                style={connectWalletButtonStyle.logo}
+                            />
                         </View>
                         <View style={connectWalletButtonStyle.buttonTextView}>
                             <Text style={connectWalletButtonStyle.text}>Why DecenTraveller?</Text>

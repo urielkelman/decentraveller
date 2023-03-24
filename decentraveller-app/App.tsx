@@ -3,21 +3,22 @@ import * as Font from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import DecentravellerInitialScreen from './screens/UserInitialScreen';
 import AppContextProvider from './context/AppContext';
+import { Dosis_600SemiBold } from '@expo-google-fonts/dosis';
+import {
+    Montserrat_400Regular,
+    Montserrat_600SemiBold,
+    Montserrat_700Bold,
+    Montserrat_800ExtraBold,
+} from '@expo-google-fonts/montserrat';
+import { useFonts } from 'expo-font';
 
 SplashScreen.preventAutoHideAsync();
 
 export default function App() {
-    const [appConfigLoaded, setAppConfigLoaded] = useState(false);
-
-    useEffect(() => {
-        const loadFont = async () => {
-            await Font.loadAsync({
-                Dosis: require('./assets/fonts/Dosis-VariableFont_wght.ttf'),
-                Montserrat: require('./assets/fonts/Montserrat-VariableFont_wght.ttf'),
-            });
-            setAppConfigLoaded(true);
-        };
-        loadFont();
+    const [fontsLoaded] = useFonts({
+        Montserrat_700Bold,
+        Dosis_600SemiBold,
+        Montserrat_800ExtraBold,
     });
 
     useEffect(() => {
@@ -25,9 +26,9 @@ export default function App() {
             await SplashScreen.hideAsync();
         };
         hideSplashScreen();
-    }, [appConfigLoaded]);
+    }, [fontsLoaded]);
 
-    if (!appConfigLoaded) {
+    if (!fontsLoaded) {
         return null;
     }
 
