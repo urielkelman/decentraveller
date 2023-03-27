@@ -1,19 +1,18 @@
-import { BigNumber } from "ethers";
+import { HTTPMethod } from "./AxiosRequestBuilder";
 
-export interface EventRequestBody {}
+export type EventRequestBody = { [key: string]: string | number };
 
-export interface EventRequest {
+export interface EventRequest<T extends EventRequestBody> {
     endpoint: string;
-    body: EventRequestBody;
+    method: HTTPMethod;
+    body: T;
 }
-
-export interface NewPlaceRequest extends EventRequest {}
 
 export interface NewPlaceRequestBody extends EventRequestBody {
     id: number;
     placeCreator: string;
     placeName: string;
-    physycalAddress: string;
+    physicalAddress: string;
     category: string;
     latitude: string;
     longitude: string;

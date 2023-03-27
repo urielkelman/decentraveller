@@ -1,13 +1,15 @@
 import { BigNumber } from "ethers";
+import { HTTPMethod } from "../adapters/AxiosRequestBuilder";
 import { eventEndpoints } from "../adapters/config";
-import { NewPlaceRequest } from "../adapters/types";
+import { EventRequest, NewPlaceRequestBody } from "../adapters/types";
 import EventTransformer from "./EventTransformer";
 
-class NewPlaceTransformer extends EventTransformer {
-    public transformEvent(event: any[]): NewPlaceRequest {
+class NewPlaceTransformer extends EventTransformer<NewPlaceRequestBody> {
+    public transformEvent(event: any[]): EventRequest<NewPlaceRequestBody> {
         console.log(event);
         return {
             endpoint: eventEndpoints.NEW_PLACE_ENDPOINT,
+            method: HTTPMethod.POST,
             body: {
                 id: (event[0] as BigNumber).toNumber(),
                 placeCreator: event[1],
