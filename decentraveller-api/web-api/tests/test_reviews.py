@@ -25,7 +25,7 @@ def test_create_review(cleanup):
                                  "openHours": {"Monday - Monday": "24hs"},
                                  "categories": "Fast food"},
                            )
-    assert response.status_code == 200
+    assert response.status_code == 201
 
     response = client.get("/review/0")
     assert response.status_code == 404
@@ -65,7 +65,7 @@ def test_get_reviews_by_place(cleanup):
                                  "openHours": {"Monday - Monday": "24hs"},
                                  "categories": "Fast food"},
                            )
-    assert response.status_code == 200
+    assert response.status_code == 201
 
     response = client.get("/review/0")
     assert response.status_code == 404
