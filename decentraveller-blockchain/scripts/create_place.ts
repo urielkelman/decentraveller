@@ -2,8 +2,6 @@ import { ethers, run, network } from "hardhat";
 import { Decentraveller } from "../typechain-types";
 
 const main = async () => {
-    const signers = await ethers.getSigners();
-    console.log(signers);
     const decentravellerContract: Decentraveller = await ethers.getContractAt(
         "Decentraveller",
         "0x9fe46736679d2d9a65f0992f2272de9f3c7fa6e0"
