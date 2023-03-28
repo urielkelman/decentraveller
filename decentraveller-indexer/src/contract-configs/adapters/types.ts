@@ -10,9 +10,9 @@ export interface EventRequest<T extends EventRequestBody> {
 
 export interface NewPlaceRequestBody extends EventRequestBody {
     id: number;
-    placeCreator: string;
-    placeName: string;
-    physicalAddress: string;
+    owner: string;
+    name: string;
+    address: string;
     category: string;
     latitude: string;
     longitude: string;

@@ -19,7 +19,7 @@ services:
     ports:
       - 8008:8000
     environment:
-      - SQLALCHEMY_DATABASE_URL=postgresql://webapi:webapi@db:5432/webapi
+      - SQLALCHEMY_DATABASE_URL=postgresql://webapi:webapi@database:5432/webapi
     depends_on:
       - database
   

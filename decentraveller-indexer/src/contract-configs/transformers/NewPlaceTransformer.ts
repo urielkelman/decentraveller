@@ -12,9 +12,9 @@ class NewPlaceTransformer extends EventTransformer<NewPlaceRequestBody> {
             method: HTTPMethod.POST,
             body: {
                 id: (event[0] as BigNumber).toNumber(),
-                placeCreator: event[1],
-                placeName: event[2],
-                physicalAddress: event[3],
+                owner: event[1],
+                name: event[2],
+                address: event[3],
                 category: this.categoryNumberToString(event[4]),
                 latitude: event[5],
                 longitude: event[6],
