@@ -11,3 +11,5 @@ REPORT_GAS=true npx hardhat test
 npx hardhat node
 npx hardhat run scripts/deploy.ts
 ```
+
+Yelp dataset URL: https://www.kaggle.com/datasets/yelp-dataset/yelp-dataset
