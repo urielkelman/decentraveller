@@ -37,25 +37,4 @@ contract Decentraveller {
             msg.sender
         );
     }
-
-    function addReview(uint256 _placeId, string memory _review) public {
-        require(
-            placesAddressByPlaceId[_placeId] != address(0),
-            "Review must be added to an existent place"
-        );
-        DecentravellerPlace(placesAddressByPlaceId[_placeId]).addReview(
-            _review
-        );
-    }
-
-    function getReviews(
-        uint256 _placeId
-    ) external view returns (string[] memory) {
-        require(
-            placesAddressByPlaceId[_placeId] != address(0),
-            "Place does not exist"
-        );
-        return
-            DecentravellerPlace(placesAddressByPlaceId[_placeId]).getReviews();
-    }
 }

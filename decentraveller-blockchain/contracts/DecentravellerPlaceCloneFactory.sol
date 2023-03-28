@@ -7,6 +7,7 @@ import "@openzeppelin/contracts/proxy/Clones.sol";
 
 contract DecentravellerPlaceCloneFactory {
     address immutable decentravellerPlaceImplementation;
+    address immutable decentravellerReviewCloneFactory;
 
     event NewPlace(
         uint256 indexed id,
@@ -18,8 +19,12 @@ contract DecentravellerPlaceCloneFactory {
         string longitude
     );
 
-    constructor(address _decentravellerPlaceImplementation) {
+    constructor(
+        address _decentravellerPlaceImplementation,
+        address _decentravellerReviewCloneFactory
+    ) {
         decentravellerPlaceImplementation = _decentravellerPlaceImplementation;
+        decentravellerReviewCloneFactory = _decentravellerReviewCloneFactory;
     }
 
     function createNewPlace(
@@ -41,7 +46,8 @@ contract DecentravellerPlaceCloneFactory {
             _longitude,
             _physicalAddress,
             _category,
-            _placeCreator
+            _placeCreator,
+            decentravellerReviewCloneFactory
         );
 
         emit NewPlace(
