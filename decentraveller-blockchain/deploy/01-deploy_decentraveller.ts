@@ -8,6 +8,20 @@ const deployFunction: DeployFunction = async function (
     const { deploy } = deployments;
     const { deployer } = await getNamedAccounts();
 
+    const decentravellerReview = await deploy("DecentravellerReview", {
+        from: deployer,
+        log: true,
+    });
+
+    const decentravellerReviewFactory = await deploy(
+        "DecentravellerReviewCloneFactory",
+        {
+            from: deployer,
+            args: [decentravellerReview.address],
+            log: true,
+        }
+    );
+
     const decentravellerPlace = await deploy("DecentravellerPlace", {
         from: deployer,
         log: true,
@@ -17,7 +31,10 @@ const deployFunction: DeployFunction = async function (
         "DecentravellerPlaceCloneFactory",
         {
             from: deployer,
-            args: [decentravellerPlace.address],
+            args: [
+                decentravellerPlace.address,
+                decentravellerReviewFactory.address,
+            ],
             log: true,
         }
     );

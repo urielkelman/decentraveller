@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
 
-// Uncomment this line to use console.log
-// import "hardhat/console.sol";
-
 import "./DecentravellerPlace.sol";
 import "./DecentravellerPlaceCategory.sol";
 import "./DecentravellerPlaceCloneFactory.sol";
+import "hardhat/console.sol";
+
+error Place__NonExistent(uint256 placeId);
 
 contract Decentraveller {
     uint256 public lastPlaceId;
@@ -17,7 +17,7 @@ contract Decentraveller {
         lastPlaceId = 0;
     }
 
-    mapping(uint256 => address) public placesAddressByPlaceId;
+    mapping(uint256 => address) private placeAddressByPlaceId;
 
     function addPlace(
         string memory _name,
@@ -25,9 +25,10 @@ contract Decentraveller {
         string memory _longitude,
         string memory _physicalAddress,
         DecentravellerPlaceCategory category
-    ) public {
+    ) public returns (address) {
         lastPlaceId += 1;
-        placesAddressByPlaceId[lastPlaceId] = placeFactory.createNewPlace(
+
+        address placeAddress = placeFactory.createNewPlace(
             lastPlaceId,
             _name,
             _latitude,
@@ -36,5 +37,21 @@ contract Decentraveller {
             category,
             msg.sender
         );
+
+        placeAddressByPlaceId[lastPlaceId] = placeAddress;
+        console.log(placeAddressByPlaceId[lastPlaceId]);
+        return placeAddress;
+    }
+
+    function getPlaceAddressByPlaceId(
+        uint256 placeId
+    ) external view returns (address) {
+        console.log(placeId);
+        console.log(placeAddressByPlaceId[placeId]);
+        address placeAddress = placeAddressByPlaceId[placeId];
+        if (placeAddress == address(0)) {
+            revert Place__NonExistent(placeId);
+        }
+        return placeAddress;
     }
 }
