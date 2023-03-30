@@ -6,6 +6,8 @@ import "./DecentravellerPlaceCategory.sol";
 import "./DecentravellerReviewCloneFactory.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 
+error Review__InvalidScore();
+
 contract DecentravellerPlace is Initializable {
     uint256 public placeId;
     string public name;
@@ -44,6 +46,9 @@ contract DecentravellerPlace is Initializable {
         string[] memory _imagesHashes,
         uint8 _score
     ) public {
+        if (_score > 5) {
+            revert Review__InvalidScore();
+        }
         address reviewAddress = reviewFactory.createNewReview(
             currentReviewId,
             placeId,
