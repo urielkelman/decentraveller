@@ -3,17 +3,14 @@ import * as dotenv from "dotenv";
 import decentravellerPlaceABI from "../contract-configs/abis/decentravellerPlaceCloneFactoryABI.json";
 import EventTransformer from "./transformers/EventTransformer";
 import { newPlaceTransformer } from "./transformers/NewPlaceTransformer";
+import { EventRequestBody } from "./adapters/types";
 
-let blockchain_uri = "http://127.0.0.1:8545"
+let blockchainUri = process.env.BLOCKCHAIN_URI || "http://127.0.0.1:8545";
 
-if(process.env.BLOCKCHAIN_URI){
-    blockchain_uri = process.env.BLOCKCHAIN_URI
-}
-
-export interface EventToListen {
+export interface EventToListen<B extends EventRequestBody> {
     readonly contract: ethers.Contract;
     readonly eventName: string;
-    readonly transformer: EventTransformer;
+    readonly transformer: EventTransformer<B>;
 }
 
 const CONTRACT_ADDRESSES = {
@@ -21,7 +18,7 @@ const CONTRACT_ADDRESSES = {
         "0xe7f1725e7734ce288f8367e1bb143e90bb3f0512",
 };
 
-export const provider = new ethers.providers.WebSocketProvider(blockchain_uri);
+export const provider = new ethers.providers.WebSocketProvider(blockchainUri);
 
 const decentravellerPlaceCloneFactoryContract: ethers.Contract =
     new ethers.Contract(
@@ -30,7 +27,7 @@ const decentravellerPlaceCloneFactoryContract: ethers.Contract =
         provider
     );
 
-export const eventsToListen: Array<EventToListen> = [
+export const eventsToListen: Array<EventToListen<any>> = [
     {
         contract: decentravellerPlaceCloneFactoryContract,
         eventName: "NewPlace",

@@ -28,7 +28,7 @@ def test_create_place(cleanup):
                                  "openHours": {"Monday - Monday": "24hs"},
                                  "categories": "Fast food"},
                            )
-    assert response.status_code == 200
+    assert response.status_code == 201
 
     response = client.get("/place/0")
     assert response.status_code == 200
@@ -55,7 +55,7 @@ def test_overwrite_place(cleanup):
                                  "openHours": {"Monday - Monday": "24hs"},
                                  "categories": "Fast food"},
                            )
-    assert response.status_code == 200
+    assert response.status_code == 201
     response = client.put("/place/0",
                           json={"name": "McDonalds",
                                 "address": "Av. Callao & Av. Santa Fe",
@@ -92,7 +92,7 @@ def test_update_place(cleanup):
                                  "openHours": {"Monday - Monday": "24hs"},
                                  "categories": "Fast food"},
                            )
-    assert response.status_code == 200
+    assert response.status_code == 201
     response = client.patch("/place/0",
                             json={"categories": "Fast food,American",
                                   "subCategories": "Economic"})

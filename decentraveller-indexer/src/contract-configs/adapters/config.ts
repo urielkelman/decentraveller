@@ -1,3 +1,3 @@
 export const eventEndpoints = {
-    NEW_PLACE_ENDPOINT: "api/places",
+    NEW_PLACE_ENDPOINT: "/place",
 };
