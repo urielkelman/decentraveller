@@ -6,7 +6,7 @@ eventsToListen.forEach(({ contract, eventName, transformer }) => {
     console.log("Registering contract on", eventName);
     contract.on(eventName, async (...event) => {
         console.log(event);
-        const eventRequest: EventRequest = transformer.transformEvent(event);
+        const eventRequest = transformer.transformEvent(event);
         await mainServerAdapter.makeRequest(eventRequest);
     });
 });
