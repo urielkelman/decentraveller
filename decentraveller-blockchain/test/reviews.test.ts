@@ -3,17 +3,20 @@ import { expect, assert } from "chai";
 import {
     Decentraveller,
     DecentravellerPlace,
-    DecentravellerPlaceCloneFactory,
+    DecentravellerReviewCloneFactory,
 } from "../typechain-types";
 
 const DEFAULT_MOCK_HASHES = ["0xhash1", "0xhash2", "0xhash3"];
 
 describe("Places and Reviews", function () {
     let decentravellerPlace: DecentravellerPlace;
+    let decentravellerReviewCloneFactory: DecentravellerReviewCloneFactory;
+    let reviewerUserAddress: string;
 
     beforeEach(async function () {
         await deployments.fixture(["all"]);
         const { user, reviewer } = await getNamedAccounts();
+        reviewerUserAddress = reviewer;
         const decentraveller: Decentraveller = await ethers.getContract(
             "Decentraveller",
             user
@@ -35,6 +38,10 @@ describe("Places and Reviews", function () {
             createdPlaceAddress,
             reviewer
         );
+
+        decentravellerReviewCloneFactory = await ethers.getContract(
+            "DecentravellerReviewCloneFactory"
+        );
     });
 
     it("Should start with reviewId 0", async function () {
@@ -50,6 +57,26 @@ describe("Places and Reviews", function () {
         );
         const currentReviewId = await decentravellerPlace.getCurrentReviewId();
         assert.equal(currentReviewId.toString(), "1");
+    });
+
+    it("Should emit event when adding a new review", async function () {
+        const placeId = await decentravellerPlace.placeId();
+        await expect(
+            decentravellerPlace.addReview(
+                "Amazing shawarma place",
+                DEFAULT_MOCK_HASHES,
+                3
+            )
+        )
+            .to.emit(decentravellerReviewCloneFactory, "NewReview")
+            .withArgs(
+                1,
+                placeId,
+                reviewerUserAddress,
+                "Amazing shawarma place",
+                DEFAULT_MOCK_HASHES,
+                3
+            );
     });
 
     it("Should return review address of valid review id", async function () {
