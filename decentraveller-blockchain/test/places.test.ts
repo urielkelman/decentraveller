@@ -5,7 +5,7 @@ import {
     DecentravellerPlaceCloneFactory,
 } from "../typechain-types";
 
-describe("Decentraveller", function () {
+describe("Decentraveller and places ", function () {
     let decentraveller: Decentraveller;
     let decentravellerPlaceCloneFactory: DecentravellerPlaceCloneFactory;
     let userAddress: string;
@@ -52,16 +52,13 @@ describe("Decentraveller", function () {
         /* Tx generates two logs. First corresponds to contract creation for place */
         const createdPlaceAddress = txReceipt.logs[0].address;
 
-        console.log(txReceipt);
-
-        const retrievedPlaceAddress =
-            await decentraveller.getPlaceAddressByPlaceId(1);
+        const retrievedPlaceAddress = await decentraveller.getPlaceAddress(1);
 
         assert.equal(retrievedPlaceAddress, createdPlaceAddress);
     });
 
     it("Should revert with error when trying to return invalid place address", async function () {
-        await expect(decentraveller.getPlaceAddressByPlaceId(1))
+        await expect(decentraveller.getPlaceAddress(1))
             .to.be.revertedWithCustomError(decentraveller, "Place__NonExistent")
             .withArgs(1);
     });
