@@ -41,6 +41,15 @@ contract DecentravellerReviewCloneFactory {
             _score
         );
 
+        emit NewReview(
+            _reviewId,
+            _placeId,
+            _owner,
+            _reviewText,
+            _imagesHashes,
+            _score
+        );
+
         return reviewCloneAddress;
     }
 }

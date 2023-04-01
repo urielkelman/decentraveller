@@ -59,6 +59,7 @@ contract DecentravellerPlaceCloneFactory {
             _latitude,
             _longitude
         );
+
         return placeCloneAddress;
     }
 }
