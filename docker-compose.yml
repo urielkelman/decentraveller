@@ -17,7 +17,7 @@ services:
     build: decentraveller-api/
     command: uvicorn src.app:app --host 0.0.0.0
     ports:
-      - 8008:8000
+      - 8000:8000
     environment:
       - SQLALCHEMY_DATABASE_URL=postgresql://webapi:webapi@database:5432/webapi
     depends_on:

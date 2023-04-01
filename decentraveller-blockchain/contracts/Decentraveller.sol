@@ -19,14 +19,17 @@ contract Decentraveller {
 
     mapping(uint256 => address) public placesAddressByPlaceId;
 
+    function getNextPlaceId() external view returns (uint256 placeId) {
+        return lastPlaceId;
+    }
+
     function addPlace(
         string memory _name,
         string memory _latitude,
         string memory _longitude,
         string memory _physicalAddress,
         DecentravellerPlaceCategory category
-    ) public {
-        lastPlaceId += 1;
+    ) public returns (uint256 placeId){
         placesAddressByPlaceId[lastPlaceId] = placeFactory.createNewPlace(
             lastPlaceId,
             _name,
@@ -36,6 +39,8 @@ contract Decentraveller {
             category,
             msg.sender
         );
+        lastPlaceId += 1;
+        return lastPlaceId - 1;
     }
 
     function addReview(uint256 _placeId, string memory _review) public {
