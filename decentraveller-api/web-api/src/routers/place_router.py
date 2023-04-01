@@ -30,7 +30,7 @@ class PlaceCBV:
 
         return place
 
-    @place_router.post("/place")
+    @place_router.post("/place", status_code=201)
     def create_place(self, place: PlaceInDB) -> PlaceInDB:
         """
         Creates a new place in the database

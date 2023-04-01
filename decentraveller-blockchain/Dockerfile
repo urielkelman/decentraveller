@@ -1,7 +1,5 @@
-FROM node:14-slim
+FROM node:14-alpine3.16
 COPY . /app
 WORKDIR /app
-RUN apt-get update
-RUN apt-get install -y git
-RUN yarn install --non-interactive --frozen-lockfile
+RUN yarn install
 RUN yarn hardhat compile

@@ -9,44 +9,24 @@ import "hardhat-gas-reporter";
 import "solidity-coverage";
 import "hardhat-deploy";
 
-let localhost_host = "localhost";
-
-if (process.env.LOCALHOST_HOST_ADDRESS) {
-    localhost_host = process.env.LOCALHOST_HOST_ADDRESS;
-}
-
 dotenv.config();
 
-const GOERLI_RPC_URL = process.env.GOERLI_RPC_URL as string;
-const PRIVATE_KEY = process.env.PRIVATE_KEY as string;
-const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY as string;
-const COINMARKETCAP_API_KEY = process.env.COINMARKETCAP_API_KEY as string;
+const localhostHost = process.env.LOCALHOST_HOST_ADDRESS || "localhost";
 
-const config: HardhatUserConfig = {
+const baseConfig: HardhatUserConfig = {
     solidity: "0.8.17",
     defaultNetwork: "hardhat",
     networks: {
-        goerli: {
-            url: GOERLI_RPC_URL,
-            accounts: [PRIVATE_KEY],
-            chainId: 5,
-        },
-        /* Localhost network, which is run by 'yarn hardhat node' is a different blockchain that the default one.
-        The default only lives for a script execution, while the other one is a process that can run an arbitrary amount of time.  */
         localhost: {
-            url: `http://${localhost_host}:8545/`,
+            url: `http://${localhostHost}:8545/`,
             chainId: 31337,
         },
-    },
-    etherscan: {
-        apiKey: ETHERSCAN_API_KEY,
     },
     gasReporter: {
         enabled: true,
         outputFile: "gas-report.txt",
         noColors: true,
         currency: "USD",
-        coinmarketcap: COINMARKETCAP_API_KEY,
         token: "MATIC",
     },
     namedAccounts: {
@@ -61,5 +41,35 @@ const config: HardhatUserConfig = {
         },
     },
 };
+
+const getFullConfig = (): HardhatUserConfig => {
+    const GOERLI_RPC_URL = process.env.GOERLI_RPC_URL as string;
+    const PRIVATE_KEY = process.env.PRIVATE_KEY as string;
+    const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY as string;
+    const COINMARKETCAP_API_KEY = process.env.COINMARKETCAP_API_KEY as string;
+
+    return {
+        ...baseConfig,
+        networks: {
+            ...baseConfig.networks,
+            goerli: {
+                url: GOERLI_RPC_URL,
+                accounts: [PRIVATE_KEY],
+                chainId: 5,
+            },
+        },
+        etherscan: {
+            apiKey: ETHERSCAN_API_KEY,
+        },
+        gasReporter: {
+            ...baseConfig.gasReporter,
+            coinmarketcap: COINMARKETCAP_API_KEY,
+        },
+    };
+};
+
+const config: HardhatUserConfig = process.env.GOERLI_RPC_URL
+    ? getFullConfig()
+    : baseConfig;
 
 export default config;
