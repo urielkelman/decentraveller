@@ -16,6 +16,6 @@ jobs:
       run: docker-compose up -d
     - name: Load sample data
       run: docker-compose -f docker-compose-tests.yml run load-sample-data
-    - name: Load sample data
+    - name: Check ETL
       run: ./check_status.sh
 
