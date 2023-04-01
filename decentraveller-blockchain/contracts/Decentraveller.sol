@@ -39,15 +39,10 @@ contract Decentraveller {
         );
 
         placeAddressByPlaceId[lastPlaceId] = placeAddress;
-        console.log(placeAddressByPlaceId[lastPlaceId]);
         return placeAddress;
     }
 
-    function getPlaceAddressByPlaceId(
-        uint256 placeId
-    ) external view returns (address) {
-        console.log(placeId);
-        console.log(placeAddressByPlaceId[placeId]);
+    function getPlaceAddress(uint256 placeId) external view returns (address) {
         address placeAddress = placeAddressByPlaceId[placeId];
         if (placeAddress == address(0)) {
             revert Place__NonExistent(placeId);

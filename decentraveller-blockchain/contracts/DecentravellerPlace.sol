@@ -6,7 +6,8 @@ import "./DecentravellerPlaceCategory.sol";
 import "./DecentravellerReviewCloneFactory.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 
-error Review__InvalidScore();
+error Review__NonExistent(uint256 reviewId);
+error Review__InvalidScore(uint8 score);
 
 contract DecentravellerPlace is Initializable {
     uint256 public placeId;
@@ -47,8 +48,9 @@ contract DecentravellerPlace is Initializable {
         uint8 _score
     ) public {
         if (_score > 5) {
-            revert Review__InvalidScore();
+            revert Review__InvalidScore(_score);
         }
+        currentReviewId++;
         address reviewAddress = reviewFactory.createNewReview(
             currentReviewId,
             placeId,
@@ -57,18 +59,20 @@ contract DecentravellerPlace is Initializable {
             _imagesHashes,
             _score
         );
-
         reviewsAddressByReviewId[currentReviewId] = reviewAddress;
-
-        currentReviewId++;
     }
 
-    function getReview(uint256 _reviewId) external view returns (address) {
-        require(
-            reviewsAddressByReviewId[_reviewId] != address(0),
-            "Review does not exist"
-        );
+    function getReviewAddress(
+        uint256 _reviewId
+    ) external view returns (address) {
+        if (reviewsAddressByReviewId[_reviewId] == address(0)) {
+            revert Review__NonExistent(_reviewId);
+        }
 
         return reviewsAddressByReviewId[_reviewId];
+    }
+
+    function getCurrentReviewId() external view returns (uint256) {
+        return currentReviewId;
     }
 }

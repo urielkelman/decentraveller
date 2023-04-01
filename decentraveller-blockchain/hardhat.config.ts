@@ -9,10 +9,10 @@ import "hardhat-gas-reporter";
 import "solidity-coverage";
 import "hardhat-deploy";
 
-let localhost_host = "localhost"
+let localhost_host = "localhost";
 
-if(process.env.LOCALHOST_HOST_ADDRESS){
-    localhost_host = process.env.LOCALHOST_HOST_ADDRESS
+if (process.env.LOCALHOST_HOST_ADDRESS) {
+    localhost_host = process.env.LOCALHOST_HOST_ADDRESS;
 }
 
 dotenv.config();
@@ -55,6 +55,9 @@ const config: HardhatUserConfig = {
         },
         user: {
             default: 1,
+        },
+        reviewer: {
+            default: 2,
         },
     },
 };
