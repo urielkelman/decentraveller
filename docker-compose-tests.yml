@@ -6,4 +6,4 @@ services:
     build: decentraveller-blockchain/
     command: ./node_modules/.bin/hardhat --config hardhat.config.ts --network localhost run scripts/load_data.ts
     environment:
-      - BLOCKCHAIN_URI=http://blockchain:8545
+      - LOCALHOST_HOST_ADDRESS=blockchain
