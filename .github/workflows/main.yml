@@ -15,4 +15,7 @@ jobs:
     - name: Run environment
       run: docker-compose up -d
     - name: Load sample data
-      run: docker-compose -f docker-compose-tests.yml run api-unit-tests
+      run: docker-compose -f docker-compose-tests.yml run load-sample-data
+    - name: Load sample data
+      run: ./check_status.sh
+
