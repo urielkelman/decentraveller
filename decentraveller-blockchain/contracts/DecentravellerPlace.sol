@@ -17,7 +17,7 @@ contract DecentravellerPlace is Initializable {
     string public physicalAddress;
     DecentravellerPlaceCategory public category;
     address public placeCreator;
-    mapping(uint256 => address) reviewsAddressByReviewId;
+    mapping(uint256 => address) reviewAddressByReviewId;
 
     DecentravellerReviewCloneFactory private reviewFactory;
     uint256 private currentReviewId = 0;
@@ -59,17 +59,17 @@ contract DecentravellerPlace is Initializable {
             _imagesHashes,
             _score
         );
-        reviewsAddressByReviewId[currentReviewId] = reviewAddress;
+        reviewAddressByReviewId[currentReviewId] = reviewAddress;
     }
 
     function getReviewAddress(
         uint256 _reviewId
     ) external view returns (address) {
-        if (reviewsAddressByReviewId[_reviewId] == address(0)) {
+        if (reviewAddressByReviewId[_reviewId] == address(0)) {
             revert Review__NonExistent(_reviewId);
         }
 
-        return reviewsAddressByReviewId[_reviewId];
+        return reviewAddressByReviewId[_reviewId];
     }
 
     function getCurrentReviewId() external view returns (uint256) {
