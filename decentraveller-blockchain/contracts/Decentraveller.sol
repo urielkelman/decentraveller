@@ -20,7 +20,7 @@ contract Decentraveller {
     mapping(uint256 => address) private placeAddressByPlaceId;
 
     function getNextPlaceId() external view returns (uint256 placeId) {
-        return lastPlaceId;
+        return lastPlaceId + 1;
     }
 
     function addPlace(
