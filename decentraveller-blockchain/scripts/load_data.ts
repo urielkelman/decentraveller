@@ -1,9 +1,12 @@
 import { ethers, run, network } from "hardhat";
-import { Decentraveller } from "../typechain-types";
+import { Decentraveller, DecentravellerPlace } from "../typechain-types";
 import { readFileSync } from "fs";
+
+const DEFAULT_MOCK_HASHES = ["0xhash1", "0xhash2", "0xhash3"];
 
 const main = async () => {
     const signers = await ethers.getSigners();
+    /*Contracts are connected to different signers */
     let decentravellerContracts: Decentraveller[] = await Promise.all(
         signers.map(
             async (s) =>
@@ -20,24 +23,24 @@ const main = async () => {
     let businessFile = readFileSync("data/business_sample.json", "utf-8");
     var yelp2id = new Map<string, bigint>();
     for (const line of businessFile.split(/\r?\n/)) {
-        let business_data = JSON.parse(line);
+        let businessData = JSON.parse(line);
         let randomContract =
             decentravellerContracts[
                 Math.floor(Math.random() * decentravellerContracts.length)
             ];
-        const place_id = await randomContract.getNextPlaceId();
+        const placeId = await randomContract.getNextPlaceId();
         const result = await randomContract.addPlace(
-            business_data["name"],
-            business_data["latitude"].toString(),
-            business_data["longitude"].toString(),
-            business_data["address"],
+            businessData["name"],
+            businessData["latitude"].toString(),
+            businessData["longitude"].toString(),
+            businessData["address"],
             0
         );
 
         if (await result.wait(1)) {
-            yelp2id.set(business_data["business_id"], place_id.toBigInt());
+            yelp2id.set(businessData["business_id"], placeId.toBigInt());
             console.log(
-                `Place with id ${place_id} inserted with signer ${await randomContract.signer.getAddress()}`
+                `Place with id ${placeId} inserted with signer ${await randomContract.signer.getAddress()}`
             );
         } else {
             throw Error("Error inserting place");
@@ -45,17 +48,27 @@ const main = async () => {
     }
 
     console.log("Starting review load");
-    let review_file = readFileSync("data/reviews_sample.json", "utf-8");
-    for (const line of review_file.split(/\r?\n/)) {
-        /*let randomContract =
-            decentravellerContracts[
-                Math.floor(Math.random() * decentravellerContracts.length)
-            ];
-        let reviewData = JSON.parse(line);
-        let blockchainBusId = yelp2id.get(reviewData["business_id"])!;
-        const result = await randomContract.addReview(
-            blockchainBusId,
-            reviewData["text"]
+    const reviewFile = readFileSync("data/reviews_sample.json", "utf-8");
+    for (const line of reviewFile.split(/\r?\n/)) {
+        const randomIndex = Math.floor(
+            Math.random() * decentravellerContracts.length
+        );
+        const randomContract = decentravellerContracts[randomIndex];
+        const signerConnectedToContract = signers[randomIndex];
+        const reviewData = JSON.parse(line);
+        const blockchainBusId = yelp2id.get(reviewData["business_id"])!;
+        const placeContractAddress = await randomContract.getPlaceAddress(
+            blockchainBusId
+        );
+        const placeContract: DecentravellerPlace = await ethers.getContractAt(
+            "DecentravellerPlace",
+            placeContractAddress,
+            signerConnectedToContract
+        );
+        const result = await placeContract.addReview(
+            reviewData["text"],
+            DEFAULT_MOCK_HASHES,
+            Math.round(parseFloat(reviewData["starts"]))
         );
         const resp = await result.wait(1);
         if (!resp) {
@@ -65,7 +78,7 @@ const main = async () => {
             `Review inserted: ${
                 resp.blockHash
             } with signer ${await randomContract.signer.getAddress()}`
-        );*/
+        );
     }
 };
 
