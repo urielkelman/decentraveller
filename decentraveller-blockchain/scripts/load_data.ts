@@ -9,25 +9,26 @@ const main = async () => {
     /*Contracts are connected to different signers */
     let decentravellerContracts: Decentraveller[] = await Promise.all(
         signers.map(
-            async (s) =>
+            async (signer) =>
                 await ethers.getContractAt(
                     "Decentraveller",
                     "0x9fe46736679d2d9a65f0992f2272de9f3c7fa6e0",
-                    s
+                    signer
                 )
         )
     );
 
     console.log("Starting business load");
-
-    let businessFile = readFileSync("data/business_sample.json", "utf-8");
+    console.log("aaaaaaaaaa");
+    const businessFile = readFileSync("data/business_sample.json", "utf-8");
     var yelp2id = new Map<string, bigint>();
     for (const line of businessFile.split(/\r?\n/)) {
-        let businessData = JSON.parse(line);
-        let randomContract =
+        const businessData = JSON.parse(line);
+        const randomContract =
             decentravellerContracts[
                 Math.floor(Math.random() * decentravellerContracts.length)
             ];
+        console.log(randomContract);
         const placeId = await randomContract.getNextPlaceId();
         const result = await randomContract.addPlace(
             businessData["name"],
