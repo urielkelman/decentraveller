@@ -1,4 +1,4 @@
-import { ethers, run, network } from "hardhat";
+import { ethers } from "hardhat";
 import { Decentraveller, DecentravellerPlace } from "../typechain-types";
 import { readFileSync } from "fs";
 
@@ -12,14 +12,13 @@ const main = async () => {
             async (signer) =>
                 await ethers.getContractAt(
                     "Decentraveller",
-                    "0x9fe46736679d2d9a65f0992f2272de9f3c7fa6e0",
+                    "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9",
                     signer
                 )
         )
     );
 
     console.log("Starting business load");
-    console.log("aaaaaaaaaa");
     const businessFile = readFileSync("data/business_sample.json", "utf-8");
     var yelp2id = new Map<string, bigint>();
     for (const line of businessFile.split(/\r?\n/)) {
@@ -28,8 +27,8 @@ const main = async () => {
             decentravellerContracts[
                 Math.floor(Math.random() * decentravellerContracts.length)
             ];
-        console.log(randomContract);
-        const placeId = await randomContract.getNextPlaceId();
+        const placeId =
+            (await randomContract.getCurrentPlaceId()).toBigInt() + BigInt(1);
         const result = await randomContract.addPlace(
             businessData["name"],
             businessData["latitude"].toString(),
@@ -39,7 +38,7 @@ const main = async () => {
         );
 
         if (await result.wait(1)) {
-            yelp2id.set(businessData["business_id"], placeId.toBigInt());
+            yelp2id.set(businessData["business_id"], placeId);
             console.log(
                 `Place with id ${placeId} inserted with signer ${await randomContract.signer.getAddress()}`
             );
@@ -58,20 +57,28 @@ const main = async () => {
         const signerConnectedToContract = signers[randomIndex];
         const reviewData = JSON.parse(line);
         const blockchainBusId = yelp2id.get(reviewData["business_id"])!;
+        console.log("a");
         const placeContractAddress = await randomContract.getPlaceAddress(
             blockchainBusId
         );
+        console.log("b");
+
         const placeContract: DecentravellerPlace = await ethers.getContractAt(
             "DecentravellerPlace",
             placeContractAddress,
             signerConnectedToContract
         );
+        console.log("c");
         const result = await placeContract.addReview(
             reviewData["text"],
             DEFAULT_MOCK_HASHES,
-            Math.round(parseFloat(reviewData["starts"]))
+            Math.round(parseFloat(reviewData["stars"]))
         );
+        console.log("d");
+
         const resp = await result.wait(1);
+        console.log("e");
+
         if (!resp) {
             throw Error("Error inserting review");
         }

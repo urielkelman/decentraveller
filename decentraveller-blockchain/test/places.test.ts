@@ -21,7 +21,7 @@ describe("Decentraveller and places ", function () {
     });
 
     it("Should start with placeId 0", async function () {
-        const currentPlaceId = await decentraveller.lastPlaceId();
+        const currentPlaceId = await decentraveller.getCurrentPlaceId();
         assert.equal(currentPlaceId.toString(), "0");
     });
 
@@ -34,7 +34,7 @@ describe("Decentraveller and places ", function () {
             0
         );
 
-        const currentPlaceId = await decentraveller.lastPlaceId();
+        const currentPlaceId = await decentraveller.getCurrentPlaceId();
         assert.equal(currentPlaceId.toString(), "1");
     });
 
