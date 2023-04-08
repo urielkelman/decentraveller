@@ -49,43 +49,40 @@ const main = async () => {
 
     console.log("Starting review load");
     const reviewFile = readFileSync("data/reviews_sample.json", "utf-8");
-    await Promise.all(
-        reviewFile.split(/\r?\n/).map(async (line: string): Promise<void> => {
-            const randomIndex = Math.floor(
-                Math.random() * decentravellerContracts.length
-            );
-            const randomContract = decentravellerContracts[randomIndex];
-            const signerConnectedToContract = signers[randomIndex];
-            const reviewData = JSON.parse(line);
-            const blockchainBusId = yelp2id.get(reviewData["business_id"])!;
-            const placeContractAddress = await randomContract.getPlaceAddress(
-                blockchainBusId
-            );
+    for (const line of reviewFile.split(/\r?\n/)) {
+        const randomIndex = Math.floor(
+            Math.random() * decentravellerContracts.length
+        );
+        const randomContract = decentravellerContracts[randomIndex];
+        const signerConnectedToContract = signers[randomIndex];
+        const reviewData = JSON.parse(line);
+        const blockchainBusId = yelp2id.get(reviewData["business_id"])!;
+        const placeContractAddress = await randomContract.getPlaceAddress(
+            blockchainBusId
+        );
 
-            const placeContract: DecentravellerPlace =
-                await ethers.getContractAt(
-                    "DecentravellerPlace",
-                    placeContractAddress,
-                    signerConnectedToContract
-                );
-            const result = await placeContract.addReview(
-                reviewData["text"],
-                DEFAULT_MOCK_HASHES,
-                Math.round(parseFloat(reviewData["stars"]))
-            );
+        const placeContract: DecentravellerPlace = await ethers.getContractAt(
+            "DecentravellerPlace",
+            placeContractAddress,
+            signerConnectedToContract
+        );
+        const result = await placeContract.addReview(
+            reviewData["text"],
+            DEFAULT_MOCK_HASHES,
+            Math.round(parseFloat(reviewData["stars"]))
+        );
 
-            const resp = await result.wait(1);
+        const resp = await result.wait(1);
 
-            if (!resp) {
-                throw Error("Error inserting review");
-            }
-            console.log(
-                `Review inserted: ${
-                    resp.blockHash
-                } with signer ${await randomContract.signer.getAddress()}`
-            );
-        })
-    );
+        if (!resp) {
+            throw Error("Error inserting review");
+        }
+        console.log(
+            `Review inserted: ${
+                resp.blockHash
+            } with signer ${await randomContract.signer.getAddress()}`
+        );
+    }
 };
 
 main()
