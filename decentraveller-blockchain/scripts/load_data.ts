@@ -47,7 +47,7 @@ const main = async () => {
         }
     }
 
-    console.log("Starting review load");
+    /* console.log("Starting review load");
     const reviewFile = readFileSync("data/reviews_sample.json", "utf-8");
     for (const line of reviewFile.split(/\r?\n/)) {
         const randomIndex = Math.floor(
@@ -82,7 +82,7 @@ const main = async () => {
                 resp.blockHash
             } with signer ${await randomContract.signer.getAddress()}`
         );
-    }
+    } */
 };
 
 main()
