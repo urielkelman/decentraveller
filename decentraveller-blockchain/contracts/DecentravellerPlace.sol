@@ -3,7 +3,11 @@ pragma solidity ^0.8.9;
 
 import "./Decentraveller.sol";
 import "./DecentravellerPlaceCategory.sol";
+import "./DecentravellerReviewCloneFactory.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+
+error Review__NonExistent(uint256 reviewId);
+error Review__InvalidScore(uint8 score);
 
 contract DecentravellerPlace is Initializable {
     uint256 public placeId;
@@ -13,7 +17,10 @@ contract DecentravellerPlace is Initializable {
     string public physicalAddress;
     DecentravellerPlaceCategory public category;
     address public placeCreator;
-    string[] public reviews;
+    mapping(uint256 => address) reviewAddressByReviewId;
+
+    DecentravellerReviewCloneFactory private reviewFactory;
+    uint256 private currentReviewId = 0;
 
     function initialize(
         uint256 _placeId,
@@ -22,7 +29,8 @@ contract DecentravellerPlace is Initializable {
         string memory _longitude,
         string memory _physicalAddress,
         DecentravellerPlaceCategory _category,
-        address _placeCreator
+        address _placeCreator,
+        address _reviewFactory
     ) public initializer {
         placeId = _placeId;
         name = _name;
@@ -31,13 +39,40 @@ contract DecentravellerPlace is Initializable {
         physicalAddress = _physicalAddress;
         category = _category;
         placeCreator = _placeCreator;
+        reviewFactory = DecentravellerReviewCloneFactory(_reviewFactory);
     }
 
-    function addReview(string memory _review) public {
-        reviews.push(_review);
+    function addReview(
+        string memory _reviewText,
+        string[] memory _imagesHashes,
+        uint8 _score
+    ) public {
+        if (_score > 5) {
+            revert Review__InvalidScore(_score);
+        }
+        currentReviewId++;
+        address reviewAddress = reviewFactory.createNewReview(
+            currentReviewId,
+            placeId,
+            msg.sender,
+            _reviewText,
+            _imagesHashes,
+            _score
+        );
+        reviewAddressByReviewId[currentReviewId] = reviewAddress;
     }
 
-    function getReviews() external view returns (string[] memory) {
-        return reviews;
+    function getReviewAddress(
+        uint256 _reviewId
+    ) external view returns (address) {
+        if (reviewAddressByReviewId[_reviewId] == address(0)) {
+            revert Review__NonExistent(_reviewId);
+        }
+
+        return reviewAddressByReviewId[_reviewId];
+    }
+
+    function getCurrentReviewId() external view returns (uint256) {
+        return currentReviewId;
     }
 }
