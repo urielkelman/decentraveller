@@ -5,6 +5,11 @@
         "internalType": "address",
         "name": "_decentravellerPlaceImplementation",
         "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_decentravellerReviewCloneFactory",
+        "type": "address"
       }
     ],
     "stateMutability": "nonpayable",

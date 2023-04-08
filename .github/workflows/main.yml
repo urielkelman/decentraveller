@@ -12,8 +12,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+    - name: Build images
+      run: make docker-image
     - name: Run environment
-      run: docker-compose up -d
+      run: make docker-compose-up
     - name: Load sample data
       run: docker-compose -f docker-compose-tests.yml run load-sample-data
     - name: Check ETL

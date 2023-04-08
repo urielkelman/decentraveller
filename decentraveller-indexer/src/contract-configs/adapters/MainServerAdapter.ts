@@ -13,11 +13,12 @@ class MainServerAdapter {
             .withUrl(eventRequest.endpoint)
             .build();
 
-        console.log("Axios request:", axiosRequest);
+        // console.log("Axios request:", axiosRequest);
 
         try {
-            const response = await axios.request(axiosRequest);
-            console.log(response);
+            await axios.request(axiosRequest);
+            // const response = await axios.request(axiosRequest);
+            // console.log(response);
         } catch (error) {
             console.log("An error happened", error);
         }

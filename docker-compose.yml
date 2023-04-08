@@ -14,7 +14,7 @@ services:
       - POSTGRES_DB=webapi
 
   api:
-    build: decentraveller-api/
+    image: decentraveller-api:latest
     command: uvicorn src.app:app --host 0.0.0.0
     ports:
       - 8000:8000
@@ -24,7 +24,7 @@ services:
       - database
   
   blockchain:
-    build: decentraveller-blockchain/
+    image: decentraveller-blockchain:latest
     command: yarn start:local
     expose:
       - 8545
@@ -32,7 +32,7 @@ services:
       - 8545:8545
 
   indexer:
-    build: decentraveller-indexer/
+    image: decentraveller-indexer:latest
     command: npm start
     environment:
       - BLOCKCHAIN_URI=http://blockchain:8545
