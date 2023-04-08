@@ -11,73 +11,65 @@ import "hardhat-deploy";
 
 dotenv.config();
 
-var config: HardhatUserConfig;
+const localhostHost = process.env.LOCALHOST_HOST_ADDRESS || "localhost";
 
-if(process.env.GOERLI_RPC_URL) {
+const baseConfig: HardhatUserConfig = {
+    solidity: "0.8.17",
+    defaultNetwork: "hardhat",
+    networks: {
+        localhost: {
+            url: `http://${localhostHost}:8545/`,
+            chainId: 31337,
+        },
+    },
+    gasReporter: {
+        enabled: true,
+        outputFile: "gas-report.txt",
+        noColors: true,
+        currency: "USD",
+        token: "MATIC",
+    },
+    namedAccounts: {
+        deployer: {
+            default: 0,
+        },
+        user: {
+            default: 1,
+        },
+        reviewer: {
+            default: 2,
+        },
+    },
+};
+
+const getFullConfig = (): HardhatUserConfig => {
     const GOERLI_RPC_URL = process.env.GOERLI_RPC_URL as string;
     const PRIVATE_KEY = process.env.PRIVATE_KEY as string;
     const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY as string;
     const COINMARKETCAP_API_KEY = process.env.COINMARKETCAP_API_KEY as string;
 
-    config = {
-        solidity: "0.8.17",
-        defaultNetwork: "hardhat",
+    return {
+        ...baseConfig,
         networks: {
+            ...baseConfig.networks,
             goerli: {
                 url: GOERLI_RPC_URL,
                 accounts: [PRIVATE_KEY],
                 chainId: 5,
             },
-            /* Localhost network, which is run by 'yarn hardhat node' is a different blockchain that the default one.
-            The default only lives for a script execution, while the other one is a process that can run an arbitrary amount of time.  */
         },
         etherscan: {
             apiKey: ETHERSCAN_API_KEY,
         },
         gasReporter: {
-            enabled: true,
-            outputFile: "gas-report.txt",
-            noColors: true,
-            currency: "USD",
+            ...baseConfig.gasReporter,
             coinmarketcap: COINMARKETCAP_API_KEY,
-            token: "MATIC",
-        },
-        namedAccounts: {
-            deployer: {
-                default: 0,
-            },
-            user: {
-                default: 1,
-            },
         },
     };
-} else {
-    let localhost_host = "localhost"
+};
 
-    if(process.env.LOCALHOST_HOST_ADDRESS){
-        localhost_host = process.env.LOCALHOST_HOST_ADDRESS
-    }
-
-    config = {
-        solidity: "0.8.17",
-        defaultNetwork: "hardhat",
-        networks: {
-            /* Localhost network, which is run by 'yarn hardhat node' is a different blockchain that the default one.
-            The default only lives for a script execution, while the other one is a process that can run an arbitrary amount of time.  */
-            localhost: {
-                url: `http://${localhost_host}:8545/`,
-                chainId: 31337,
-            },
-        },
-        namedAccounts: {
-            deployer: {
-                default: 0,
-            },
-            user: {
-                default: 1,
-            },
-        },
-    };
-}
+const config: HardhatUserConfig = process.env.GOERLI_RPC_URL
+    ? getFullConfig()
+    : baseConfig;
 
 export default config;

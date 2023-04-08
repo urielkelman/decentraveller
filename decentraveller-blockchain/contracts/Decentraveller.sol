@@ -1,27 +1,23 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
 
-// Uncomment this line to use console.log
-// import "hardhat/console.sol";
-
 import "./DecentravellerPlace.sol";
 import "./DecentravellerPlaceCategory.sol";
 import "./DecentravellerPlaceCloneFactory.sol";
+import "hardhat/console.sol";
+
+error Place__NonExistent(uint256 placeId);
 
 contract Decentraveller {
-    uint256 public lastPlaceId;
+    uint256 private currentPlaceId;
     DecentravellerPlaceCloneFactory placeFactory;
 
     constructor(address _placesFactory) {
         placeFactory = DecentravellerPlaceCloneFactory(_placesFactory);
-        lastPlaceId = 0;
+        currentPlaceId = 0;
     }
 
-    mapping(uint256 => address) public placesAddressByPlaceId;
-
-    function getNextPlaceId() external view returns (uint256 placeId) {
-        return lastPlaceId;
-    }
+    mapping(uint256 => address) private placeAddressByPlaceId;
 
     function addPlace(
         string memory _name,
@@ -29,9 +25,11 @@ contract Decentraveller {
         string memory _longitude,
         string memory _physicalAddress,
         DecentravellerPlaceCategory category
-    ) public returns (uint256 placeId){
-        placesAddressByPlaceId[lastPlaceId] = placeFactory.createNewPlace(
-            lastPlaceId,
+    ) public returns (uint256 placeId) {
+        currentPlaceId += 1;
+
+        placeAddressByPlaceId[currentPlaceId] = placeFactory.createNewPlace(
+            currentPlaceId,
             _name,
             _latitude,
             _longitude,
@@ -39,28 +37,19 @@ contract Decentraveller {
             category,
             msg.sender
         );
-        lastPlaceId += 1;
-        return lastPlaceId - 1;
+
+        return currentPlaceId;
     }
 
-    function addReview(uint256 _placeId, string memory _review) public {
-        require(
-            placesAddressByPlaceId[_placeId] != address(0),
-            "Review must be added to an existent place"
-        );
-        DecentravellerPlace(placesAddressByPlaceId[_placeId]).addReview(
-            _review
-        );
+    function getPlaceAddress(uint256 placeId) external view returns (address) {
+        address placeAddress = placeAddressByPlaceId[placeId];
+        if (placeAddress == address(0)) {
+            revert Place__NonExistent(placeId);
+        }
+        return placeAddress;
     }
 
-    function getReviews(
-        uint256 _placeId
-    ) external view returns (string[] memory) {
-        require(
-            placesAddressByPlaceId[_placeId] != address(0),
-            "Place does not exist"
-        );
-        return
-            DecentravellerPlace(placesAddressByPlaceId[_placeId]).getReviews();
+    function getCurrentPlaceId() external view returns (uint256) {
+        return currentPlaceId;
     }
 }

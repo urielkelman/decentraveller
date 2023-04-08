@@ -6,7 +6,7 @@ import EventTransformer from "./EventTransformer";
 
 class NewPlaceTransformer extends EventTransformer<NewPlaceRequestBody> {
     public transformEvent(event: any[]): EventRequest<NewPlaceRequestBody> {
-        console.log(event);
+        // console.log(event);
         return {
             endpoint: eventEndpoints.NEW_PLACE_ENDPOINT,
             method: HTTPMethod.POST,
