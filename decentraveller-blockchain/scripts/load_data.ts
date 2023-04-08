@@ -57,27 +57,22 @@ const main = async () => {
         const signerConnectedToContract = signers[randomIndex];
         const reviewData = JSON.parse(line);
         const blockchainBusId = yelp2id.get(reviewData["business_id"])!;
-        console.log("a");
         const placeContractAddress = await randomContract.getPlaceAddress(
             blockchainBusId
         );
-        console.log("b");
 
         const placeContract: DecentravellerPlace = await ethers.getContractAt(
             "DecentravellerPlace",
             placeContractAddress,
             signerConnectedToContract
         );
-        console.log("c");
         const result = await placeContract.addReview(
             reviewData["text"],
             DEFAULT_MOCK_HASHES,
             Math.round(parseFloat(reviewData["stars"]))
         );
-        console.log("d");
 
         const resp = await result.wait(1);
-        console.log("e");
 
         if (!resp) {
             throw Error("Error inserting review");
