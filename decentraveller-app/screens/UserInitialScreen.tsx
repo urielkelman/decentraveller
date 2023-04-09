@@ -7,7 +7,8 @@ import WrongChainModal from './login/WrongChainModal';
 
 const DecentravellerInitialScreen = () => {
     const appContext = useAppContext();
-    const stackToRender: JSX.Element = appContext.connectionContext === null ? <LoginNavigator /> : <RootNavigator />;
+    // const stackToRender: JSX.Element = appContext.connectionContext === null ? <LoginNavigator /> : <RootNavigator />;
+    const stackToRender: JSX.Element = <RootNavigator />;
     return (
         <NavigationContainer>
             <WrongChainModal />

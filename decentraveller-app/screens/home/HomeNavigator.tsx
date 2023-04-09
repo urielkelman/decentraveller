@@ -1,6 +1,6 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import Home from './Home';
-import CreatePlace from './CreatePlace';
+import CreatePlace from './place/CreatePlace';
 
 type HomeStackScreens = {
     Home: undefined;

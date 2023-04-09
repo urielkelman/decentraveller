@@ -1,4 +1,4 @@
-import addPlaceABI from './abis/addPlaceABI.json';
+import mainContractABI from './abis/mainContractABI.json';
 import { Blockchain } from './config';
 
 interface AddressesByBlockchain {
@@ -24,7 +24,7 @@ const decentravellerMainContract: DecentravellerContract = {
     functions: {
         addPlace: {
             functionName: 'addPlace',
-            functionABI: JSON.stringify(addPlaceABI),
+            functionABI: JSON.stringify(mainContractABI),
         },
     },
 };
