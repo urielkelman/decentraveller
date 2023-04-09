@@ -18,6 +18,7 @@ const HomeNavigator = () => {
                 component={CreatePlace}
                 options={{
                     title: 'Add new place',
+                    headerMode: 'screen',
                 }}
             />
         </HomeStackNavigator.Navigator>
