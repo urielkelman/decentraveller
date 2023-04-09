@@ -17,7 +17,6 @@ const Home = ({ navigation }) => {
     return (
         <View style={{ flex: 1 }}>
             <Button title={'Disconnect wallet'} onPress={killSession} />
-            <Text>{connector.accounts[0]}</Text>
             <TouchableOpacity
                 style={{ paddingTop: 35, flex: 1, flexDirection: 'row' }}
                 onPress={() => navigation.navigate('CreatePlace')}
