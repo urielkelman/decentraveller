@@ -36,10 +36,10 @@ def test_create_review(cleanup):
                                  "score": 5,
                                  "owner": "of49d9adf9b",
                                  "text": "Muy bueno el combo de sebastian yatra",
-                                 "images": {},
+                                 "images": [],
                                  "state": "UNCENSORED"},
                            )
-    assert response.status_code == 200
+    assert response.status_code == 201
 
     response = client.get("/review/0")
     assert response.status_code == 200
@@ -48,7 +48,7 @@ def test_create_review(cleanup):
                                "score": 5,
                                "owner": "of49d9adf9b",
                                "text": "Muy bueno el combo de sebastian yatra",
-                               "images": {},
+                               "images": [],
                                "state": "UNCENSORED"}
 
     response = client.get("/review/1")
@@ -76,10 +76,10 @@ def test_get_reviews_by_place(cleanup):
                                  "score": 5,
                                  "owner": "of49d9adf9b",
                                  "text": "Muy bueno el combo de sebastian yatra",
-                                 "images": {},
+                                 "images": [],
                                  "state": "UNCENSORED"},
                            )
-    assert response.status_code == 200
+    assert response.status_code == 201
 
     response = client.post("/review",
                            json={"id": 1,
@@ -87,10 +87,10 @@ def test_get_reviews_by_place(cleanup):
                                  "score": 5,
                                  "owner": "of49d9adf9b",
                                  "text": "Me pedi un mcflurry oreo",
-                                 "images": {},
+                                 "images": [],
                                  "state": "UNCENSORED"},
                            )
-    assert response.status_code == 200
+    assert response.status_code == 201
 
     response = client.post("/review",
                            json={"id": 2,
@@ -98,10 +98,10 @@ def test_get_reviews_by_place(cleanup):
                                  "score": 3,
                                  "owner": "of49d9adf9b",
                                  "text": "Me atendieron mal",
-                                 "images": {},
+                                 "images": [],
                                  "state": "UNCENSORED"},
                            )
-    assert response.status_code == 200
+    assert response.status_code == 201
 
     response = client.get("/place/0/reviews", params={"page": 0, "per_page": 2})
     assert response.status_code == 200
@@ -111,14 +111,14 @@ def test_get_reviews_by_place(cleanup):
                                   "score": 5,
                                   "owner": "of49d9adf9b",
                                   "text": "Muy bueno el combo de sebastian yatra",
-                                  "images": {},
+                                  "images": [],
                                   "state": "UNCENSORED"}
     assert response.json()[1] == {"id": 1,
                                   "placeId": 0,
                                   "score": 5,
                                   "owner": "of49d9adf9b",
                                   "text": "Me pedi un mcflurry oreo",
-                                  "images": {},
+                                  "images": [],
                                   "state": "UNCENSORED"}
     response = client.get("/place/0/reviews", params={"page": 1, "per_page": 2})
     assert response.status_code == 200
@@ -128,5 +128,5 @@ def test_get_reviews_by_place(cleanup):
                                   "score": 3,
                                   "owner": "of49d9adf9b",
                                   "text": "Me atendieron mal",
-                                  "images": {},
+                                  "images": [],
                                   "state": "UNCENSORED"}

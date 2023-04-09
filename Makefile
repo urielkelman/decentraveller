@@ -10,6 +10,10 @@ docker-image:
 	cd decentraveller-indexer && docker build -f Dockerfile -t "decentraveller-indexer:latest" .
 .PHONY: docker-image
 
+docker-image-indexer:
+	cd decentraveller-indexer && docker build -f Dockerfile -t "decentraveller-indexer:latest" .
+.PHONY: docker-image-indexer
+
 docker-compose-up:
 	docker-compose -f docker-compose.yml up -d --remove-orphans
 .PHONY: docker-compose-up

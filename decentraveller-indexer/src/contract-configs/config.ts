@@ -1,11 +1,12 @@
 import { ethers } from "ethers";
-import * as dotenv from "dotenv";
-import decentravellerPlaceABI from "../contract-configs/abis/decentravellerPlaceCloneFactoryABI.json";
-import EventTransformer from "./transformers/EventTransformer";
-import { newPlaceTransformer } from "./transformers/NewPlaceTransformer";
-import { EventRequestBody } from "./adapters/types";
+import decentravellerPlaceFactoryABI from "../contract-configs/abis/decentravellerPlaceCloneFactoryABI.json";
+import decentravellerReviewFactoryABI from "../contract-configs/abis/decentravellerReviewCloneFactoryABI.json";
+import EventTransformer from "../transformers/EventTransformer";
+import { newPlaceTransformer } from "../transformers/NewPlaceTransformer";
+import { EventRequestBody } from "../adapters/types";
+import { newReviewTransformer } from "../transformers/NewReviewTransformer";
 
-let blockchainUri = process.env.BLOCKCHAIN_URI || "http://127.0.0.1:8545";
+const blockchainUri = process.env.BLOCKCHAIN_URI || "http://127.0.0.1:8545";
 
 export interface EventToListen<B extends EventRequestBody> {
     readonly contract: ethers.Contract;
@@ -16,6 +17,8 @@ export interface EventToListen<B extends EventRequestBody> {
 const CONTRACT_ADDRESSES = {
     DECENTRAVELLER_PLACE_CLONE_FACTORY:
         "0xcf7ed3acca5a467e9e704c703e8d87f634fb0fc9",
+    DECENTRAVELLER_REVIEW_CLONE_FACTORY:
+        "0xe7f1725e7734ce288f8367e1bb143e90bb3f0512",
 };
 
 export const provider = new ethers.providers.WebSocketProvider(blockchainUri);
@@ -23,7 +26,14 @@ export const provider = new ethers.providers.WebSocketProvider(blockchainUri);
 const decentravellerPlaceCloneFactoryContract: ethers.Contract =
     new ethers.Contract(
         CONTRACT_ADDRESSES.DECENTRAVELLER_PLACE_CLONE_FACTORY,
-        decentravellerPlaceABI,
+        decentravellerPlaceFactoryABI,
+        provider
+    );
+
+const decentravellerReviewCloneFactoryContract: ethers.Contract =
+    new ethers.Contract(
+        CONTRACT_ADDRESSES.DECENTRAVELLER_REVIEW_CLONE_FACTORY,
+        decentravellerReviewFactoryABI,
         provider
     );
 
@@ -32,5 +42,10 @@ export const eventsToListen: Array<EventToListen<any>> = [
         contract: decentravellerPlaceCloneFactoryContract,
         eventName: "NewPlace",
         transformer: newPlaceTransformer,
+    },
+    {
+        contract: decentravellerReviewCloneFactoryContract,
+        eventName: "NewReview",
+        transformer: newReviewTransformer,
     },
 ];
