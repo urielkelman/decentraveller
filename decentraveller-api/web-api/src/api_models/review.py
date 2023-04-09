@@ -1,4 +1,4 @@
-from typing import NewType, Dict, Any
+from typing import NewType, Optional
 
 from fastapi_utils.api_model import APIModel
 
@@ -15,7 +15,7 @@ class ReviewBody(APIModel):
     score: int
     owner: str
     text: str
-    images: Dict[str, Any]
+    images: list[str]
     state: str
 
 
