@@ -44,7 +44,7 @@ class ReviewCBV:
 
         return query
 
-    @review_router.post("/review")
+    @review_router.post("/review", status_code=201)
     def create_review(self, review: ReviewInDB) -> ReviewInDB:
         """
         Creates a new review in the database

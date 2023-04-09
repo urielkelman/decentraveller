@@ -13,7 +13,7 @@ const API_ENDPOINT = process.env.API_ENDPOINT;
 class AxiosRequestBuilder {
     private url: string | undefined;
     private method: string | undefined;
-    private body: { [key: string]: string | number };
+    private body: { [key: string]: string | number | string[] };
     private headers: { [key: string]: string };
 
     constructor() {
@@ -33,7 +33,9 @@ class AxiosRequestBuilder {
         return this;
     }
 
-    withBody(body: { [key: string]: string | number }): AxiosRequestBuilder {
+    withBody(body: {
+        [key: string]: string | number | string[];
+    }): AxiosRequestBuilder {
         this.body = body;
         return this;
     }
