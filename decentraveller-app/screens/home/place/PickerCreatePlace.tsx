@@ -1,27 +1,41 @@
 import DropDownPicker from 'react-native-dropdown-picker';
-import { View } from 'react-native';
-import React from "react";
-
-export interface PickerItem {
-    label: string;
-    value: string;
-}
+import { Text, View } from 'react-native';
+import React from 'react';
+import { addPlaceIndicationTextStyles } from '../../../styles/addPlaceScreensStyles';
+import { PickerItem } from './CreatePlaceContext';
 
 export type PickerCreatePlaceProps = {
-  items: PickerItem[];
-  setItems: React.Dispatch<React.SetStateAction<PickerItem[]>>;
+    titleText: string;
+    items: PickerItem[];
+    setItems: React.Dispatch<React.SetStateAction<PickerItem[]>>;
+    value: string;
+    setValue: React.Dispatch<React.SetStateAction<string>>;
+    open: boolean;
+    setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const PickerCreatePlace: React.FC<PickerCreatePlaceProps> = () => {
-    const [open, setOpen] = React.useState<boolean>(false);
-    const [items, setItems] = React.useState<PickerItem[]>([]);
-
-    return <View>
-        <DropDownPicker
-            open={open}
-            setOpen={setOpen}
-        />
-    </View>;
+const PickerCreatePlace: React.FC<PickerCreatePlaceProps> = ({
+    titleText,
+    items,
+    setItems,
+    value,
+    setValue,
+    open,
+    setOpen,
+}) => {
+    return (
+        <View style={addPlaceIndicationTextStyles.container}>
+            <Text style={addPlaceIndicationTextStyles.text}>{titleText}</Text>
+            <DropDownPicker
+                open={open}
+                setOpen={setOpen}
+                items={items}
+                setItems={setItems}
+                value={value}
+                setValue={setValue}
+            />
+        </View>
+    );
 };
 
 export default PickerCreatePlace;

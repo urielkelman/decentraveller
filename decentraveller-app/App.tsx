@@ -19,6 +19,7 @@ export default function App() {
         Montserrat_700Bold,
         Dosis_600SemiBold,
         Montserrat_800ExtraBold,
+        Montserrat_400Regular,
     });
 
     useEffect(() => {

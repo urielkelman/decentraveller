@@ -37,4 +37,15 @@ const addPlaceScreenStyles = StyleSheet.create({
     },
 });
 
-export { addPlaceHeadingTextStyles, addPlaceDescriptionTextStyles, addPlaceScreenStyles };
+const addPlaceIndicationTextStyles = StyleSheet.create({
+    container: {},
+    text: {
+        fontSize: height * 0.024,
+        fontFamily: 'Montserrat_400Regular',
+        color: '#676666',
+        display: 'flex',
+        flexDirection: 'row',
+    },
+});
+
+export { addPlaceHeadingTextStyles, addPlaceDescriptionTextStyles, addPlaceScreenStyles, addPlaceIndicationTextStyles };
