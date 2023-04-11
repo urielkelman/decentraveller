@@ -1,10 +1,10 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import Home from './Home';
-import CreatePlace from './place/CreatePlace';
+import CreatePlaceFirstScreen from './place/CreatePlaceFirstScreen';
 
 type HomeStackScreens = {
     Home: undefined;
-    CreatePlace: undefined;
+    CreatePlaceFirstScreen: undefined;
 };
 
 const HomeStackNavigator = createStackNavigator<HomeStackScreens>();
@@ -14,8 +14,8 @@ const HomeNavigator = () => {
         <HomeStackNavigator.Navigator initialRouteName="Home">
             <HomeStackNavigator.Screen name="Home" component={Home} />
             <HomeStackNavigator.Screen
-                name="CreatePlace"
-                component={CreatePlace}
+                name="CreatePlaceFirstScreen"
+                component={CreatePlaceFirstScreen}
                 options={{
                     title: 'Add new place',
                     headerMode: 'screen',
