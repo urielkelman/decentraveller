@@ -6,6 +6,7 @@ import { PickerItem } from './CreatePlaceContext';
 
 export type PickerCreatePlaceProps = {
     titleText: string;
+    dropdownPlaceholder: string;
     items: PickerItem[];
     setItems: React.Dispatch<React.SetStateAction<PickerItem[]>>;
     value: string;
@@ -16,6 +17,7 @@ export type PickerCreatePlaceProps = {
 
 const PickerCreatePlace: React.FC<PickerCreatePlaceProps> = ({
     titleText,
+    dropdownPlaceholder,
     items,
     setItems,
     value,
@@ -33,6 +35,9 @@ const PickerCreatePlace: React.FC<PickerCreatePlaceProps> = ({
                 setItems={setItems}
                 value={value}
                 setValue={setValue}
+                style={addPlaceIndicationTextStyles.inputField}
+                placeholder={dropdownPlaceholder}
+                textStyle={addPlaceIndicationTextStyles.pickerInputField}
             />
         </View>
     );

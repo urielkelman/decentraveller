@@ -24,10 +24,10 @@ const CreatePlaceContext = React.createContext<CreatePlaceContextType | null>(nu
 
 const CreatePlaceProvider: React.FC<React.ReactNode> = ({ children }) => {
     const [placeTypePickerItems, setPlaceTypePickerItems] = React.useState<PickerItem[]>([
-        { label: 'GASTRONOMY', value: '0' },
-        { label: 'ACCOMODATION', value: '1' },
-        { label: 'ENTERTAINMENT', value: '2' },
-        { label: 'OTHERS', value: '3' },
+        { label: 'Gastronomy', value: '0' },
+        { label: 'Accommodation', value: '1' },
+        { label: 'Entertainment', value: '2' },
+        { label: 'Others', value: '3' },
     ]);
     const [placeTypePickerValue, setPlaceTypePickerValue] = React.useState<string>(null);
     const [placeTypePickerOpen, setPlaceTypePickerOpen] = React.useState<boolean>(false);
@@ -52,5 +52,9 @@ const CreatePlaceProvider: React.FC<React.ReactNode> = ({ children }) => {
         </CreatePlaceContext.Provider>
     );
 };
+
+export const useCreatePlaceContext = (): CreatePlaceContextType => {
+    return (React.useContext(CreatePlaceContext) as CreatePlaceContextType);
+}
 
 export default CreatePlaceProvider;
