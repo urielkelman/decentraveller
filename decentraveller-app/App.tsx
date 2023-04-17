@@ -6,7 +6,7 @@ import AppContextProvider from './context/AppContext';
 import { Dosis_600SemiBold } from '@expo-google-fonts/dosis';
 import {
     Montserrat_400Regular,
-    Montserrat_600SemiBold,
+    Montserrat_500Medium,
     Montserrat_700Bold,
     Montserrat_800ExtraBold,
 } from '@expo-google-fonts/montserrat';
@@ -20,6 +20,7 @@ export default function App() {
         Dosis_600SemiBold,
         Montserrat_800ExtraBold,
         Montserrat_400Regular,
+        Montserrat_500Medium,
     });
 
     useEffect(() => {

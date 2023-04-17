@@ -38,14 +38,36 @@ const addPlaceScreenStyles = StyleSheet.create({
 });
 
 const addPlaceIndicationTextStyles = StyleSheet.create({
-    container: {},
+    container: {
+        flexDirection: "column",
+        marginLeft: width * 0.1,
+        marginRight: width * 0.1,
+        marginBottom: height * 0.02,
+    },
     text: {
         fontSize: height * 0.024,
-        fontFamily: 'Montserrat_400Regular',
+        fontFamily: 'Montserrat_500Medium',
         color: '#676666',
         display: 'flex',
         flexDirection: 'row',
     },
+    inputField: {
+        borderRadius: 20,
+        borderColor: 'white',
+    },
+    pickerInputField: {
+        fontFamily: 'Montserrat_500Medium',
+        fontSize: height * 0.024,
+    },
+    textInputContainer: {
+        width: '80%',
+    },
+    textInputField: {
+        fontFamily: 'Montserrat_500Medium',
+        fontSize: height * 0.024,
+        backgroundColor: 'white',
+        borderRadius: 20,
+    }
 });
 
 export { addPlaceHeadingTextStyles, addPlaceDescriptionTextStyles, addPlaceScreenStyles, addPlaceIndicationTextStyles };
