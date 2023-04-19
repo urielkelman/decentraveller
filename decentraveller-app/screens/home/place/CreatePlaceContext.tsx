@@ -54,7 +54,7 @@ const CreatePlaceProvider: React.FC<React.ReactNode> = ({ children }) => {
 };
 
 export const useCreatePlaceContext = (): CreatePlaceContextType => {
-    return (React.useContext(CreatePlaceContext) as CreatePlaceContextType);
-}
+    return React.useContext(CreatePlaceContext) as CreatePlaceContextType;
+};
 
 export default CreatePlaceProvider;
