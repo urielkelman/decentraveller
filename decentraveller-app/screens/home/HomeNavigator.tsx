@@ -1,11 +1,13 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import Home from './Home';
-import CreatePlaceFirstScreen from './place/CreatePlaceFirstScreen';
-import CreatePlaceProvider from "./place/CreatePlaceContext";
+import CreatePlaceNameScreen from './place/CreatePlaceNameScreen';
+import CreatePlaceProvider from './place/CreatePlaceContext';
+import CreatePlaceLocationScreen from './place/CreatePlaceLocationScreen';
 
-type HomeStackScreens = {
+export type HomeStackScreens = {
     Home: undefined;
-    CreatePlaceFirstScreen: undefined;
+    CreatePlaceNameScreen: undefined;
+    CreatePlaceLocationScreen: undefined;
 };
 
 const HomeStackNavigator = createStackNavigator<HomeStackScreens>();
@@ -16,10 +18,18 @@ const HomeNavigator = () => {
             <HomeStackNavigator.Navigator initialRouteName="Home">
                 <HomeStackNavigator.Screen name="Home" component={Home} />
                 <HomeStackNavigator.Screen
-                    name="CreatePlaceFirstScreen"
-                    component={CreatePlaceFirstScreen}
+                    name="CreatePlaceNameScreen"
+                    component={CreatePlaceNameScreen}
                     options={{
                         title: 'Add new place',
+                        headerMode: 'screen',
+                    }}
+                />
+                <HomeStackNavigator.Screen
+                    name="CreatePlaceLocationScreen"
+                    component={CreatePlaceLocationScreen}
+                    options={{
+                        title: 'Select location',
                         headerMode: 'screen',
                     }}
                 />

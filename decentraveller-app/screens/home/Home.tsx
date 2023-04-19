@@ -19,7 +19,7 @@ const Home = ({ navigation }) => {
             <Button title={'Disconnect wallet'} onPress={killSession} />
             <TouchableOpacity
                 style={{ paddingTop: 35, flex: 1, flexDirection: 'row' }}
-                onPress={() => navigation.navigate('CreatePlaceFirstScreen')}
+                onPress={() => navigation.navigate('CreatePlaceNameScreen', { headerShown: false })}
             >
                 <Feather name="plus-circle" size={24} color="black" style={{ paddingRight: 10 }} />
                 <Text>Add a place</Text>

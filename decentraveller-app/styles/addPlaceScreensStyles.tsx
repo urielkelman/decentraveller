@@ -34,15 +34,16 @@ const addPlaceScreenStyles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: '#FFE1E1',
+        height: '100%',
     },
 });
 
 const addPlaceIndicationTextStyles = StyleSheet.create({
     container: {
-        flexDirection: "column",
+        flexDirection: 'column',
         marginLeft: width * 0.1,
         marginRight: width * 0.1,
-        marginBottom: height * 0.02,
+        marginBottom: height * 0.05,
     },
     text: {
         fontSize: height * 0.024,
@@ -50,6 +51,7 @@ const addPlaceIndicationTextStyles = StyleSheet.create({
         color: '#676666',
         display: 'flex',
         flexDirection: 'row',
+        marginBottom: height * 0.01,
     },
     inputField: {
         borderRadius: 20,
@@ -67,7 +69,42 @@ const addPlaceIndicationTextStyles = StyleSheet.create({
         fontSize: height * 0.024,
         backgroundColor: 'white',
         borderRadius: 20,
-    }
+        padding: height * 0.013,
+        paddingLeft: width * 0.025,
+    },
 });
 
-export { addPlaceHeadingTextStyles, addPlaceDescriptionTextStyles, addPlaceScreenStyles, addPlaceIndicationTextStyles };
+const addPlaceButtonStyle = StyleSheet.create({
+    buttonTextView: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        flex: 8,
+    },
+    button: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        height: height / 12,
+        backgroundColor: '#983B46',
+        width: width * 0.8,
+        minHeight: height * 0.06,
+        margin: height * 0.01,
+        borderRadius: width * 0.06,
+        marginTop: height * 0.05,
+    },
+    text: {
+        color: 'white',
+        fontFamily: 'Montserrat_800ExtraBold',
+        fontWeight: 'bold',
+        fontSize: height * 0.029,
+        lineHeight: height * 0.03,
+    },
+});
+
+export {
+    addPlaceHeadingTextStyles,
+    addPlaceDescriptionTextStyles,
+    addPlaceScreenStyles,
+    addPlaceIndicationTextStyles,
+    addPlaceButtonStyle,
+};

@@ -1,12 +1,12 @@
-import React from "react";
-import {TextInput, View} from "react-native";
-import {addPlaceIndicationTextStyles} from "../../../styles/addPlaceScreensStyles";
+import React from 'react';
+import { TextInput, View } from 'react-native';
+import { addPlaceIndicationTextStyles } from '../../../styles/addPlaceScreensStyles';
 
 export type CreatePlaceTextInputProps = {
     text: string | undefined;
     setTextValue: React.Dispatch<React.SetStateAction<string>>;
     placeholder: string;
-}
+};
 
 const CreatePlaceTextInput: React.FC<CreatePlaceTextInputProps> = ({ text, setTextValue, placeholder }) => (
     <View style={addPlaceIndicationTextStyles.textInputContainer}>
@@ -17,6 +17,6 @@ const CreatePlaceTextInput: React.FC<CreatePlaceTextInputProps> = ({ text, setTe
             onChangeText={setTextValue}
         />
     </View>
-)
+);
 
 export default CreatePlaceTextInput;
