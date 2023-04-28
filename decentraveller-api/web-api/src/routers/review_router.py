@@ -8,7 +8,7 @@ from starlette.status import HTTP_404_NOT_FOUND
 
 from src.api_models.place import PlaceID
 from src.api_models.review import ReviewInDB, ReviewId
-from src.deps import get_db
+from src.dependencies import get_db
 from src.orms.review import ReviewORM
 
 review_router = InferringRouter()

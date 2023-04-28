@@ -1,14 +1,15 @@
-from typing import Optional
+from typing import Optional, Annotated
 
 from fastapi import Depends, HTTPException
 from fastapi_utils.cbv import cbv
 from fastapi_utils.inferring_router import InferringRouter
 from sqlalchemy.orm import Session
-from starlette.status import HTTP_404_NOT_FOUND
+from starlette.status import HTTP_404_NOT_FOUND, HTTP_500_INTERNAL_SERVER_ERROR
 
 from src.api_models.place import PlaceID, PlaceUpdate, PlaceInDB, PlaceBody
-from src.deps import get_db
+from src.dependencies import get_db
 from src.orms.place import PlaceORM
+from src.dependencies.geocoding_api import GeoCodingAPI, GeoCodingAPIError
 
 place_router = InferringRouter()
 
@@ -16,6 +17,7 @@ place_router = InferringRouter()
 @cbv(place_router)
 class PlaceCBV:
     session: Session = Depends(get_db)
+    geo_coder: GeoCodingAPI = Depends(GeoCodingAPI)
 
     @staticmethod
     def query_place(session: Session, place_id: PlaceID) -> Optional[PlaceORM]:
@@ -36,11 +38,19 @@ class PlaceCBV:
         Creates a new place in the database
 
         :param place: the place data for creation
+        :param geo_coder: geo coder api object
         :return: the place data
         """
+        if not place.latitude or not place.longitude:
+            try:
+                place.longitude, place.latitude = self.geo_coder.forward_geocoding(place.address)
+            except GeoCodingAPIError:
+                raise HTTPException(status_code=HTTP_500_INTERNAL_SERVER_ERROR,
+                                    detail="Geocoding is not available. "
+                                           "Try again later or provide latitude and longitude.")
         place_orm = PlaceORM(id=place.id, name=place.name, address=place.address,
                              latitude=place.latitude, longitude=place.longitude,
-                             open_hours=place.open_hours, categories=place.categories,
+                             categories=place.categories,
                              sub_categories=place.sub_categories)
         self.session.add(place_orm)
         self.session.commit()
@@ -73,11 +83,13 @@ class PlaceCBV:
         if place_orm is None:
             raise HTTPException(status_code=HTTP_404_NOT_FOUND)
 
+        if not place.latitude or not place.longitude:
+            place.longitude, place.latitude = self.geo_coder.forward_geocoding(place.address)
+
         place_orm.name = place.name
         place_orm.address = place.address
         place_orm.latitude = place.latitude
         place_orm.longitude = place.longitude
-        place_orm.open_hours = place.open_hours
         place_orm.categories = place.categories
         place_orm.sub_categories = place.sub_categories
 
