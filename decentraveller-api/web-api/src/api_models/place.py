@@ -10,10 +10,9 @@ class PlaceBody(APIModel):
     Place API Model
     """
     name: str
-    address: Optional[str]
-    latitude: float
-    longitude: float
-    open_hours: Optional[Dict[str, Any]]
+    address: str
+    latitude: Optional[float]
+    longitude: Optional[float]
     categories: Optional[str]
     sub_categories: Optional[str]
 
@@ -26,12 +25,11 @@ class PlaceUpdate(APIModel):
     address: Union[str, None]
     latitude: Union[float, None]
     longitude: Union[float, None]
-    open_hours: Union[Dict[str, Any], None]
     categories: Union[str, None]
     sub_categories: Union[str, None]
 
 
-class PlaceInDB(PlaceUpdate):
+class PlaceInDB(PlaceBody):
     """
     Place API Model
     """

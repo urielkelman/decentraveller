@@ -25,7 +25,6 @@ def test_create_place(cleanup):
                                  "address": "Av. Callao & Av. Santa Fe",
                                  "latitude": -34.595983,
                                  "longitude": -58.393329,
-                                 "openHours": {"Monday - Monday": "24hs"},
                                  "categories": "Fast food"},
                            )
     assert response.status_code == 201
@@ -37,10 +36,20 @@ def test_create_place(cleanup):
                                "address": "Av. Callao & Av. Santa Fe",
                                "latitude": -34.595983,
                                "longitude": -58.393329,
-                               "openHours": {"Monday - Monday": "24hs"},
                                "categories": "Fast food",
                                "subCategories": None}
 
+def test_create_place_no_geocoding(cleanup):
+    response = client.get("/place/0")
+    assert response.status_code == 404
+
+    response = client.post("/place",
+                           json={"id": 0,
+                                 "name": "McDonalds",
+                                 "address": "Av. Callao & Av. Santa Fe",
+                                 "categories": "Fast food"},
+                           )
+    assert response.status_code == 500
 
 def test_overwrite_place(cleanup):
     response = client.get("/place/0")
@@ -52,7 +61,6 @@ def test_overwrite_place(cleanup):
                                  "address": "Av. Callao & Av. Santa Fe",
                                  "latitude": -34.595983,
                                  "longitude": -58.393329,
-                                 "openHours": {"Monday - Monday": "24hs"},
                                  "categories": "Fast food"},
                            )
     assert response.status_code == 201
@@ -61,7 +69,6 @@ def test_overwrite_place(cleanup):
                                 "address": "Av. Callao & Av. Santa Fe",
                                 "latitude": -34.595983,
                                 "longitude": -58.393329,
-                                "openHours": {"Monday - Monday": "24hs"},
                                 "categories": "Fast food",
                                 "subCategories": "American"},
                           )
@@ -74,7 +81,6 @@ def test_overwrite_place(cleanup):
                                "address": "Av. Callao & Av. Santa Fe",
                                "latitude": -34.595983,
                                "longitude": -58.393329,
-                               "openHours": {"Monday - Monday": "24hs"},
                                "categories": "Fast food",
                                "subCategories": "American"}
 
@@ -89,7 +95,6 @@ def test_update_place(cleanup):
                                  "address": "Av. Callao & Av. Santa Fe",
                                  "latitude": -34.595983,
                                  "longitude": -58.393329,
-                                 "openHours": {"Monday - Monday": "24hs"},
                                  "categories": "Fast food"},
                            )
     assert response.status_code == 201
@@ -105,6 +110,5 @@ def test_update_place(cleanup):
                                "address": "Av. Callao & Av. Santa Fe",
                                "latitude": -34.595983,
                                "longitude": -58.393329,
-                               "openHours": {"Monday - Monday": "24hs"},
                                "categories": "Fast food,American",
                                "subCategories": "Economic"}
