@@ -9,7 +9,6 @@ from starlette.status import HTTP_404_NOT_FOUND, HTTP_500_INTERNAL_SERVER_ERROR
 from src.api_models.place import PlaceID, PlaceUpdate, PlaceInDB, PlaceBody
 from src.dependencies import get_db
 from src.orms.place import PlaceORM
-from src.dependencies.geocoding_api import GeoCodingAPI, GeoCodingAPIError
 
 place_router = InferringRouter()
 
@@ -17,7 +16,6 @@ place_router = InferringRouter()
 @cbv(place_router)
 class PlaceCBV:
     session: Session = Depends(get_db)
-    geo_coder: GeoCodingAPI = Depends(GeoCodingAPI)
 
     @staticmethod
     def query_place(session: Session, place_id: PlaceID) -> Optional[PlaceORM]:
@@ -41,13 +39,6 @@ class PlaceCBV:
         :param geo_coder: geo coder api object
         :return: the place data
         """
-        if not place.latitude or not place.longitude:
-            try:
-                place.longitude, place.latitude = self.geo_coder.forward_geocoding(place.address)
-            except GeoCodingAPIError:
-                raise HTTPException(status_code=HTTP_500_INTERNAL_SERVER_ERROR,
-                                    detail="Geocoding is not available. "
-                                           "Try again later or provide latitude and longitude.")
         place_orm = PlaceORM(id=place.id, name=place.name, address=place.address,
                              latitude=place.latitude, longitude=place.longitude,
                              categories=place.categories,

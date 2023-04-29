@@ -39,18 +39,6 @@ def test_create_place(cleanup):
                                "categories": "Fast food",
                                "subCategories": None}
 
-def test_create_place_no_geocoding(cleanup):
-    response = client.get("/place/0")
-    assert response.status_code == 404
-
-    response = client.post("/place",
-                           json={"id": 0,
-                                 "name": "McDonalds",
-                                 "address": "Av. Callao & Av. Santa Fe",
-                                 "categories": "Fast food"},
-                           )
-    assert response.status_code == 500
-
 def test_overwrite_place(cleanup):
     response = client.get("/place/0")
     assert response.status_code == 404
