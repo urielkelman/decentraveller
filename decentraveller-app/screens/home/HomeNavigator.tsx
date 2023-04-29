@@ -1,11 +1,11 @@
 import { createStackNavigator } from '@react-navigation/stack';
-import Home from './Home';
 import CreatePlaceNameScreen from './place/CreatePlaceNameScreen';
 import CreatePlaceProvider from './place/CreatePlaceContext';
 import CreatePlaceLocationScreen from './place/CreatePlaceLocationScreen';
+import RootNavigator from "./RootNavigator";
 
 export type HomeStackScreens = {
-    Home: undefined;
+    RootTabNavigator: undefined;
     CreatePlaceNameScreen: undefined;
     CreatePlaceLocationScreen: undefined;
 };
@@ -15,8 +15,8 @@ const HomeStackNavigator = createStackNavigator<HomeStackScreens>();
 const HomeNavigator = () => {
     return (
         <CreatePlaceProvider>
-            <HomeStackNavigator.Navigator initialRouteName="Home">
-                <HomeStackNavigator.Screen name="Home" component={Home} />
+            <HomeStackNavigator.Navigator initialRouteName="RootTabNavigator">
+                <HomeStackNavigator.Screen name="RootTabNavigator" component={RootNavigator} />
                 <HomeStackNavigator.Screen
                     name="CreatePlaceNameScreen"
                     component={CreatePlaceNameScreen}

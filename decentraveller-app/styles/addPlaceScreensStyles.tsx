@@ -10,7 +10,7 @@ const addPlaceHeadingTextStyles = StyleSheet.create({
         fontSize: height * 0.042,
         lineHeight: height * 0.055,
         textAlign: 'center',
-        marginTop: height * 0.07,
+        marginTop: height * 0.015,
         marginRight: width * 0.04,
         marginLeft: width * 0.04,
     },
