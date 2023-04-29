@@ -11,8 +11,8 @@ class PlaceBody(APIModel):
     """
     name: str
     address: str
-    latitude: Optional[float]
-    longitude: Optional[float]
+    latitude: float
+    longitude: float
     categories: Optional[str]
     sub_categories: Optional[str]
 
