@@ -1,0 +1,100 @@
+[
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_decentravellerReviewImplementation",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "constructor"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "internalType": "uint256",
+                "name": "reviewId",
+                "type": "uint256"
+            },
+            {
+                "indexed": true,
+                "internalType": "uint256",
+                "name": "placeId",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "address",
+                "name": "_owner",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "internalType": "string",
+                "name": "_reviewText",
+                "type": "string"
+            },
+            {
+                "indexed": false,
+                "internalType": "string[]",
+                "name": "_imagesHashes",
+                "type": "string[]"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint8",
+                "name": "_score",
+                "type": "uint8"
+            }
+        ],
+        "name": "NewReview",
+        "type": "event"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "_reviewId",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "_placeId",
+                "type": "uint256"
+            },
+            {
+                "internalType": "address",
+                "name": "_owner",
+                "type": "address"
+            },
+            {
+                "internalType": "string",
+                "name": "_reviewText",
+                "type": "string"
+            },
+            {
+                "internalType": "string[]",
+                "name": "_imagesHashes",
+                "type": "string[]"
+            },
+            {
+                "internalType": "uint8",
+                "name": "_score",
+                "type": "uint8"
+            }
+        ],
+        "name": "createNewReview",
+        "outputs": [
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    }
+]

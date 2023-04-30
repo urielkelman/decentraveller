@@ -1,6 +1,6 @@
 import { HTTPMethod } from "./AxiosRequestBuilder";
 
-export type EventRequestBody = { [key: string]: string | number };
+export type EventRequestBody = { [key: string]: string | number | string[] };
 
 export interface EventRequest<T extends EventRequestBody> {
     endpoint: string;
@@ -16,4 +16,14 @@ export interface NewPlaceRequestBody extends EventRequestBody {
     category: string;
     latitude: string;
     longitude: string;
+}
+
+export interface NewReviewRequestBody extends EventRequestBody {
+    id: number;
+    owner: string;
+    placeId: number;
+    score: number;
+    text: string;
+    images: string[];
+    state: string;
 }

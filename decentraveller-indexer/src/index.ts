@@ -1,4 +1,4 @@
-import { mainServerAdapter } from "./contract-configs/adapters/MainServerAdapter";
+import { mainServerAdapter } from "./adapters/MainServerAdapter";
 import { eventsToListen, provider } from "./contract-configs/config";
 
 eventsToListen.forEach(({ contract, eventName, transformer }) => {
