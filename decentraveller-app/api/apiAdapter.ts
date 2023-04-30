@@ -1,16 +1,30 @@
-import {GeocodingResponse} from "./response/geocoding";
-import HttpConnector from "../connectors/HttpConnector";
+import { GeocodingResponse } from './response/geocoding';
+import { httpAPIConnector, HttpConnector, HttpGetRequest } from '../connectors/HttpConnector';
+import { FORWARD_GEOCODING_ENDPOINT } from './config';
 
 class ApiAdapter {
-    private baseUrl: string
-    private httpConnector: HttpConnector
+    private httpConnector: HttpConnector;
 
-    constructor(baseUrl: string, httpConnector: HttpConnector) {
-        this.baseUrl = baseUrl;
+    constructor(httpConnector: HttpConnector) {
         this.httpConnector = httpConnector;
     }
 
-    async getGeocoding(physicalAddress: string, country: string): GeocodingResponse {
+    async getGeocoding(physicalAddress: string, country: string): Promise<GeocodingResponse> {
+        const httpRequest: HttpGetRequest = {
+            url: FORWARD_GEOCODING_ENDPOINT,
+            queryParams: {
+                address: physicalAddress,
+                country,
+            },
+            onError: () => {
+                console.log('An error happened when trying to geocode.');
+            },
+        };
 
+        return await httpAPIConnector.get(httpRequest);
     }
 }
+
+const apiAdapter = new ApiAdapter(httpAPIConnector);
+
+export { apiAdapter };

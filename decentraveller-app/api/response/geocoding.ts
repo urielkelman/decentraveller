@@ -1,9 +1,9 @@
 export type GeocodingElementResponse = {
     fullAddress: string;
     latitude: string;
-    longitude: string
-}
+    longitude: string;
+};
 
 export type GeocodingResponse = {
-    results: GeocodingElementResponse[]
-}
+    results: GeocodingElementResponse[];
+};

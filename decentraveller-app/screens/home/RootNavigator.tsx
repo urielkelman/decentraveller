@@ -4,7 +4,7 @@ import { sizesConfig } from '../../config/sizesConfig';
 import React from 'react';
 import { useDeviceDimensions } from '../../context/AppContext';
 import ConnectWalletScreen from '../login/ConnectWalletScreen';
-import Home from "./Home";
+import Home from './Home';
 
 type RootStackScreens = {
     Home: undefined;

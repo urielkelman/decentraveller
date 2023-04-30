@@ -1,4 +1,5 @@
 import React from 'react';
+import {ISOCodeByCountry} from "./countriesConfig";
 
 export interface PickerItem {
     label: string;
@@ -18,6 +19,7 @@ export type CreatePlaceContextType = {
     placeTypePicker: PickerStateContextType;
     placeName: string;
     setPlaceName: (string) => void;
+    countryPicker: PickerStateContextType;
 };
 
 const CreatePlaceContext = React.createContext<CreatePlaceContextType | null>(null);
@@ -32,6 +34,13 @@ const CreatePlaceProvider: React.FC<React.ReactNode> = ({ children }) => {
     const [placeTypePickerValue, setPlaceTypePickerValue] = React.useState<string>(null);
     const [placeTypePickerOpen, setPlaceTypePickerOpen] = React.useState<boolean>(false);
     const [placeName, setPlaceName] = React.useState<string>(null);
+    const [countryPickerItems, setCountryPickerItems] = React.useState<PickerItem[]>(
+        Object.keys(ISOCodeByCountry).map(country => (
+            { label: country, value: ISOCodeByCountry[country]}
+        ))
+    );
+    const [countryPickerValue, setCountryPickerValue] = React.useState<string>(null);
+    const [countryPickerOpen, setCountryPickerOpen] = React.useState<boolean>(false);
 
     return (
         <CreatePlaceContext.Provider
@@ -46,6 +55,15 @@ const CreatePlaceProvider: React.FC<React.ReactNode> = ({ children }) => {
                 },
                 placeName,
                 setPlaceName,
+                countryPicker: {
+                    items: countryPickerItems,
+                    setItems: setCountryPickerItems,
+                    value: countryPickerValue,
+                    setValue: setCountryPickerValue,
+                    open: countryPickerOpen,
+                    setOpen: setCountryPickerOpen
+
+                }
             }}
         >
             {children}

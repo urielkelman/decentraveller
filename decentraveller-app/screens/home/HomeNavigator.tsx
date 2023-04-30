@@ -2,7 +2,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import CreatePlaceNameScreen from './place/CreatePlaceNameScreen';
 import CreatePlaceProvider from './place/CreatePlaceContext';
 import CreatePlaceLocationScreen from './place/CreatePlaceLocationScreen';
-import RootNavigator from "./RootNavigator";
+import RootNavigator from './RootNavigator';
 
 export type HomeStackScreens = {
     RootTabNavigator: undefined;
