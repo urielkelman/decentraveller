@@ -1,11 +1,38 @@
+import axios from "axios";
+
 export type HttpGetRequest = {
     url: string;
-    queryParams: { [key: string]: string }
+    queryParams: { [key: string]: string };
+    onError: () => void;
 }
 
 class HttpConnector {
-    async get<T>(): Promise<T> {
-        const { data, status } =
+    private readonly baseURL: string;
+
+    constructor(baseURL: string) {
+        this.baseURL = baseURL;
+    }
+
+    async get<T>(httpRequest: HttpGetRequest): Promise<T> {
+        try {
+            const { data } = await axios.get<T>(
+                httpRequest.url,
+                {
+                    baseURL: this.baseURL,
+                    params: httpRequest.queryParams,
+                }
+            )
+            return data
+        } catch (error) {
+            if(axios.isAxiosError(error)) {
+                console.log(error.status)
+                console.log(error.message)
+            } else {
+                console.log(error)
+            }
+            httpRequest.onError();
+        }
+
     }
 }
 
