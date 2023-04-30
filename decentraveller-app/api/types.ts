@@ -1,12 +1,11 @@
 export enum HTTPMethod {
-    GET = "get",
+    GET = 'get',
 }
 
-export type ApiRequestQueryParams = {}
+export type ApiRequestQueryParams = {};
 
 export type ApiRequest = {
     url: string;
     method: string;
     apiRequestParams: ApiRequestQueryParams;
-}
-
+};

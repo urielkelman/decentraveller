@@ -13,6 +13,7 @@ export type PickerCreatePlaceProps = {
     setValue: React.Dispatch<React.SetStateAction<string>>;
     open: boolean;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    searchable: boolean;
 };
 
 const PickerCreatePlace: React.FC<PickerCreatePlaceProps> = ({
@@ -24,6 +25,7 @@ const PickerCreatePlace: React.FC<PickerCreatePlaceProps> = ({
     setValue,
     open,
     setOpen,
+    searchable,
 }) => {
     return (
         <View style={addPlaceIndicationTextStyles.container}>
@@ -38,6 +40,7 @@ const PickerCreatePlace: React.FC<PickerCreatePlaceProps> = ({
                 style={addPlaceIndicationTextStyles.inputField}
                 placeholder={dropdownPlaceholder}
                 textStyle={addPlaceIndicationTextStyles.pickerInputField}
+                searchable={searchable}
             />
         </View>
     );
