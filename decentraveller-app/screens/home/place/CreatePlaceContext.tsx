@@ -20,6 +20,7 @@ export type CreatePlaceContextType = {
     placeName: string;
     setPlaceName: (string) => void;
     countryPicker: PickerStateContextType;
+    addressPicker: PickerStateContextType;
 };
 
 const CreatePlaceContext = React.createContext<CreatePlaceContextType | null>(null);
@@ -34,13 +35,18 @@ const CreatePlaceProvider: React.FC<React.ReactNode> = ({ children }) => {
     const [placeTypePickerValue, setPlaceTypePickerValue] = React.useState<string>(null);
     const [placeTypePickerOpen, setPlaceTypePickerOpen] = React.useState<boolean>(false);
     const [placeName, setPlaceName] = React.useState<string>(null);
+
+    const [countryPickerValue, setCountryPickerValue] = React.useState<string>(null);
+    const [countryPickerOpen, setCountryPickerOpen] = React.useState<boolean>(false);
     const [countryPickerItems, setCountryPickerItems] = React.useState<PickerItem[]>(
         Object.keys(ISOCodeByCountry).map(country => (
             { label: country, value: ISOCodeByCountry[country]}
         ))
     );
-    const [countryPickerValue, setCountryPickerValue] = React.useState<string>(null);
-    const [countryPickerOpen, setCountryPickerOpen] = React.useState<boolean>(false);
+
+    const [addressPickerValue, setAddressPickerValue] = React.useState<string>(null);
+    const [addressPickerOpen, setAddressPickerOpen] = React.useState<boolean>(false);
+    const [addressPickerItems, setAddressPickerItems] = React.useState<PickerItem[]>([]);
 
     return (
         <CreatePlaceContext.Provider
@@ -62,7 +68,14 @@ const CreatePlaceProvider: React.FC<React.ReactNode> = ({ children }) => {
                     setValue: setCountryPickerValue,
                     open: countryPickerOpen,
                     setOpen: setCountryPickerOpen
-
+                },
+                addressPicker: {
+                    items: addressPickerItems,
+                    setItems: setAddressPickerItems,
+                    value: addressPickerValue,
+                    setValue: setAddressPickerValue,
+                    open: addressPickerOpen,
+                    setOpen: setAddressPickerOpen,
                 }
             }}
         >
