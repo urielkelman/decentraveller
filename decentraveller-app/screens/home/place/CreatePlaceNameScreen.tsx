@@ -31,6 +31,7 @@ const CreatePlaceNameScreen = ({ navigation }) => {
                 setValue={placeTypePicker.setValue}
                 open={placeTypePicker.open}
                 setOpen={placeTypePicker.setOpen}
+                onOpen={placeTypePicker.onOpen}
                 searchable={false}
             />
             <CreatePlaceTextInput

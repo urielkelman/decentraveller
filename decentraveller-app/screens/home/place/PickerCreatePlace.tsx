@@ -13,7 +13,10 @@ export type PickerCreatePlaceProps = {
     setValue: React.Dispatch<React.SetStateAction<string>>;
     open: boolean;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    onOpen: () => void;
     searchable: boolean;
+    zIndex?: number;
+    zIndexInverse?: number;
     onChangeSearchText?: (text: string) => void | undefined;
 };
 
@@ -25,9 +28,12 @@ const PickerCreatePlace: React.FC<PickerCreatePlaceProps> = ({
     value,
     setValue,
     open,
+    onOpen,
     setOpen,
+    zIndex = 1000,
+    zIndexInverse = 1000,
     searchable,
-    onChangeSearchText = undefined
+    onChangeSearchText = undefined,
 }) => {
     return (
         <View style={addPlaceIndicationTextStyles.container}>
@@ -35,6 +41,7 @@ const PickerCreatePlace: React.FC<PickerCreatePlaceProps> = ({
             <DropDownPicker
                 open={open}
                 setOpen={setOpen}
+                onOpen={onOpen}
                 items={items}
                 setItems={setItems}
                 value={value}
@@ -42,6 +49,8 @@ const PickerCreatePlace: React.FC<PickerCreatePlaceProps> = ({
                 style={addPlaceIndicationTextStyles.inputField}
                 placeholder={dropdownPlaceholder}
                 textStyle={addPlaceIndicationTextStyles.pickerInputField}
+                zIndex={zIndex}
+                zIndexInverse={zIndexInverse}
                 searchable={searchable}
                 onChangeSearchText={onChangeSearchText}
             />
@@ -51,6 +60,6 @@ const PickerCreatePlace: React.FC<PickerCreatePlaceProps> = ({
 
 PickerCreatePlace.defaultProps = {
     onChangeSearchText: undefined,
-}
+};
 
 export default PickerCreatePlace;
