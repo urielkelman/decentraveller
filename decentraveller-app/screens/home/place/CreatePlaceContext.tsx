@@ -1,9 +1,15 @@
 import React from 'react';
-import {ISOCodeByCountry} from "./countriesConfig";
+import { ISOCodeByCountry } from './countriesConfig';
+
+export interface GeocodingElement {
+    address: string;
+    latitude: string;
+    longitude: string;
+}
 
 export interface PickerItem {
     label: string;
-    value: string;
+    value: string | GeocodingElement;
 }
 
 export type PickerStateContextType = {
@@ -13,6 +19,7 @@ export type PickerStateContextType = {
     setValue: React.Dispatch<React.SetStateAction<string>>;
     open: boolean;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    onOpen: () => void;
 };
 
 export type CreatePlaceContextType = {
@@ -22,6 +29,12 @@ export type CreatePlaceContextType = {
     countryPicker: PickerStateContextType;
     addressPicker: PickerStateContextType;
 };
+
+enum CREATE_PLACE_PICKER {
+    PLACE_TYPE,
+    COUNTRY,
+    ADDRESS,
+}
 
 const CreatePlaceContext = React.createContext<CreatePlaceContextType | null>(null);
 
@@ -39,14 +52,31 @@ const CreatePlaceProvider: React.FC<React.ReactNode> = ({ children }) => {
     const [countryPickerValue, setCountryPickerValue] = React.useState<string>(null);
     const [countryPickerOpen, setCountryPickerOpen] = React.useState<boolean>(false);
     const [countryPickerItems, setCountryPickerItems] = React.useState<PickerItem[]>(
-        Object.keys(ISOCodeByCountry).map(country => (
-            { label: country, value: ISOCodeByCountry[country]}
-        ))
+        Object.keys(ISOCodeByCountry).map((country) => ({ label: country, value: ISOCodeByCountry[country] }))
     );
 
     const [addressPickerValue, setAddressPickerValue] = React.useState<string>(null);
     const [addressPickerOpen, setAddressPickerOpen] = React.useState<boolean>(false);
     const [addressPickerItems, setAddressPickerItems] = React.useState<PickerItem[]>([]);
+
+    const onOpenPicker = (pickerOpened: CREATE_PLACE_PICKER) => {
+        switch (pickerOpened) {
+            case CREATE_PLACE_PICKER.COUNTRY:
+                setAddressPickerOpen(false);
+                setPlaceTypePickerOpen(false);
+                return;
+            case CREATE_PLACE_PICKER.PLACE_TYPE:
+                setCountryPickerOpen(false);
+                setAddressPickerOpen(false);
+                return;
+            case CREATE_PLACE_PICKER.ADDRESS:
+                setCountryPickerOpen(false);
+                setPlaceTypePickerOpen(false);
+                return;
+            default:
+                return;
+        }
+    };
 
     return (
         <CreatePlaceContext.Provider
@@ -58,6 +88,7 @@ const CreatePlaceProvider: React.FC<React.ReactNode> = ({ children }) => {
                     setValue: setPlaceTypePickerValue,
                     open: placeTypePickerOpen,
                     setOpen: setPlaceTypePickerOpen,
+                    onOpen: () => onOpenPicker(CREATE_PLACE_PICKER.PLACE_TYPE),
                 },
                 placeName,
                 setPlaceName,
@@ -67,7 +98,8 @@ const CreatePlaceProvider: React.FC<React.ReactNode> = ({ children }) => {
                     value: countryPickerValue,
                     setValue: setCountryPickerValue,
                     open: countryPickerOpen,
-                    setOpen: setCountryPickerOpen
+                    setOpen: setCountryPickerOpen,
+                    onOpen: () => onOpenPicker(CREATE_PLACE_PICKER.COUNTRY),
                 },
                 addressPicker: {
                     items: addressPickerItems,
@@ -76,7 +108,8 @@ const CreatePlaceProvider: React.FC<React.ReactNode> = ({ children }) => {
                     setValue: setAddressPickerValue,
                     open: addressPickerOpen,
                     setOpen: setAddressPickerOpen,
-                }
+                    onOpen: () => onOpenPicker(CREATE_PLACE_PICKER.ADDRESS),
+                },
             }}
         >
             {children}

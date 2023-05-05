@@ -245,5 +245,5 @@ export const ISOCodeByCountry = {
     Zambia: 'ZM',
     Zimbabwe: 'ZW',
     'North Macedonia': 'MK',
-    Češka: 'CZ'
-}
+    Češka: 'CZ',
+};
