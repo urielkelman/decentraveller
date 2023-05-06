@@ -17,6 +17,10 @@ const main = async () => {
                 )
         )
     );
+    console.log("Registering profiles");
+    for (const [i, c] of decentravellerContracts.entries()){
+        c.registerProfile(`user${i}`, `Usuario ${i}`, 'AR', 0, 0);
+    }
 
     console.log("Starting business load");
     const businessFile = readFileSync("data/business_sample.json", "utf-8");
