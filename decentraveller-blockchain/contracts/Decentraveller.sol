@@ -11,7 +11,7 @@ error Profile__NicknameInUse(string nickname);
 error Address__Unregistered(address sender);
 
 contract Decentraveller {
-    event ProfileUpdate(
+    event UpdatedProfile(
         address owner,
         string nickname,
         string name,
@@ -47,7 +47,7 @@ contract Decentraveller {
         profilesByowner[msg.sender].gender = _gender;
         profilesByowner[msg.sender].interest = _interest;
 
-        emit ProfileUpdate(
+        emit UpdatedProfile(
             msg.sender,
             _nickname,
             _name,

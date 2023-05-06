@@ -16,7 +16,8 @@ library DecentravellerDataTypes {
 
     enum DecentravellerInterest {
         GASTRONOMY,
-        OTHER
+        ACCOMODATION,
+        ENTERTAINMENT
     }
 
     struct DecentravellerProfile {
