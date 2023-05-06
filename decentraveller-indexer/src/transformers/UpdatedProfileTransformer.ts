@@ -46,6 +46,6 @@ class UpdatedProfileTransformer extends EventTransformer<NewProfileRequestBody> 
     }
 }
 
-const newReviewTransformer = new UpdatedProfileTransformer();
+const updatedProfileTransformer = new UpdatedProfileTransformer();
 
-export { newReviewTransformer };
+export { updatedProfileTransformer };
