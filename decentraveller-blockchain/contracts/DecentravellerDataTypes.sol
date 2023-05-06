@@ -21,7 +21,7 @@ library DecentravellerDataTypes {
 
     struct DecentravellerProfile {
         address owner;
-        string username;
+        string nickname;
         string name;
         string country;
         DecentravellerGender gender;
