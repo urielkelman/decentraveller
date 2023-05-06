@@ -2,15 +2,25 @@
 pragma solidity ^0.8.9;
 
 import "./DecentravellerPlace.sol";
-import "./DecentravellerPlaceCategory.sol";
+import "./DecentravellerDataTypes.sol";
 import "./DecentravellerPlaceCloneFactory.sol";
 import "hardhat/console.sol";
 
 error Place__NonExistent(uint256 placeId);
 
 contract Decentraveller {
+    event NewProfile(
+        address owner,
+        string username,
+        string name,
+        string country,
+        DecentravellerDataTypes.DecentravellerGender gender,
+        string interest
+    );
+
     uint256 private currentPlaceId;
     DecentravellerPlaceCloneFactory placeFactory;
+    mapping(address => DecentravellerDataTypes.DecentravellerProfile) profilesByowner;
 
     constructor(address _placesFactory) {
         placeFactory = DecentravellerPlaceCloneFactory(_placesFactory);
@@ -24,7 +34,7 @@ contract Decentraveller {
         string memory _latitude,
         string memory _longitude,
         string memory _physicalAddress,
-        DecentravellerPlaceCategory category
+        DecentravellerDataTypes.DecentravellerPlaceCategory category
     ) public returns (uint256 placeId) {
         currentPlaceId += 1;
 
