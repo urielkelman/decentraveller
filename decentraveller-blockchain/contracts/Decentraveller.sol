@@ -22,30 +22,33 @@ contract Decentraveller {
 
     uint256 private currentPlaceId;
     DecentravellerPlaceCloneFactory placeFactory;
-    mapping(address => DecentravellerDataTypes.DecentravellerProfile) profilesByowner;
+    mapping(address => DecentravellerDataTypes.DecentravellerProfile) profilesByOwner;
     mapping(string => address) ownersByNicknames;
 
     function registerProfile(
-        string memory _nickname,
-        string memory _name,
-        string memory _country,
+        string calldata _nickname,
+        string calldata _name,
+        string calldata _country,
         DecentravellerDataTypes.DecentravellerGender _gender,
         DecentravellerDataTypes.DecentravellerInterest _interest
     ) public returns (address owner) {
-        if(ownersByNicknames[_nickname] != address(0) && ownersByNicknames[_nickname] != msg.sender){
+        address nicknameOwner = ownersByNicknames[_nickname];
+        if (nicknameOwner != address(0) && nicknameOwner != msg.sender) {
             revert Profile__NicknameInUse(_nickname);
         }
-        if(profilesByowner[msg.sender].owner != address(0)){
+
+        if (profilesByOwner[msg.sender].owner != address(0)) {
             // Nickname change
-            delete ownersByNicknames[profilesByowner[msg.sender].nickname];
+            delete ownersByNicknames[profilesByOwner[msg.sender].nickname];
         }
+
         ownersByNicknames[_nickname] = msg.sender;
-        profilesByowner[msg.sender].owner = msg.sender;
-        profilesByowner[msg.sender].nickname = _nickname;
-        profilesByowner[msg.sender].name = _name;
-        profilesByowner[msg.sender].country = _country;
-        profilesByowner[msg.sender].gender = _gender;
-        profilesByowner[msg.sender].interest = _interest;
+        profilesByOwner[msg.sender].owner = msg.sender;
+        profilesByOwner[msg.sender].nickname = _nickname;
+        profilesByOwner[msg.sender].name = _name;
+        profilesByOwner[msg.sender].country = _country;
+        profilesByOwner[msg.sender].gender = _gender;
+        profilesByOwner[msg.sender].interest = _interest;
 
         emit UpdatedProfile(
             msg.sender,
@@ -73,7 +76,8 @@ contract Decentraveller {
         string memory _physicalAddress,
         DecentravellerDataTypes.DecentravellerPlaceCategory category
     ) public returns (uint256 placeId) {
-        if(profilesByowner[msg.sender].owner == address(0)) revert Address__Unregistered(msg.sender);
+        if (profilesByOwner[msg.sender].owner == address(0))
+            revert Address__Unregistered(msg.sender);
         currentPlaceId += 1;
 
         placeAddressByPlaceId[currentPlaceId] = placeFactory.createNewPlace(
