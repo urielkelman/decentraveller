@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Float, JSON, Integer
+from sqlalchemy import Column, String, Float, Integer
 from sqlalchemy.orm import relationship
 
 from src.orms import Base
@@ -17,4 +17,3 @@ class PlaceORM(Base):
     longitude = Column(Float, nullable=False)
     categories = Column(String, nullable=True)
     sub_categories = Column(String, nullable=True)
-    review = relationship("ReviewORM", uselist=False)
