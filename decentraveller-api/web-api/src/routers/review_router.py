@@ -4,12 +4,13 @@ from fastapi import Depends, HTTPException
 from fastapi_utils.cbv import cbv
 from fastapi_utils.inferring_router import InferringRouter
 from sqlalchemy.orm import Session, Query
-from starlette.status import HTTP_404_NOT_FOUND
+from starlette.status import HTTP_404_NOT_FOUND, HTTP_400_BAD_REQUEST
 
 from src.api_models.place import PlaceID
 from src.api_models.review import ReviewInDB, ReviewId
 from src.dependencies import get_db
 from src.orms.review import ReviewORM
+from sqlalchemy.exc import IntegrityError
 
 review_router = InferringRouter()
 
@@ -50,15 +51,19 @@ class ReviewCBV:
         Creates a new review in the database
 
         :param review: the review data for creation
-        :return: the place data
+        :return: the review data
         """
-        review_orm = ReviewORM(id=review.id, place_id=review.place_id,
-                               score=review.score, owner=review.owner,
-                               text=review.text, images=review.images,
-                               state=review.state)
-        self.session.add(review_orm)
-        self.session.commit()
-        return ReviewInDB.from_orm(review_orm)
+        try:
+            review_orm = ReviewORM(id=review.id, place_id=review.place_id,
+                                   score=review.score, owner=review.owner,
+                                   text=review.text, images=review.images,
+                                   state=review.state)
+            self.session.add(review_orm)
+            self.session.commit()
+            return ReviewInDB.from_orm(review_orm)
+        except IntegrityError as e:
+            raise HTTPException(status_code=HTTP_400_BAD_REQUEST,
+                                detail="Either the place or the profile does not exist")
 
     @review_router.get("/review/{review_id}")
     def get_review(self, review_id: ReviewId) -> ReviewInDB:

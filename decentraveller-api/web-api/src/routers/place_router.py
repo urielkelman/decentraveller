@@ -1,10 +1,10 @@
-from typing import Optional, Annotated
+from typing import Optional
 
 from fastapi import Depends, HTTPException
 from fastapi_utils.cbv import cbv
 from fastapi_utils.inferring_router import InferringRouter
 from sqlalchemy.orm import Session
-from starlette.status import HTTP_404_NOT_FOUND, HTTP_500_INTERNAL_SERVER_ERROR
+from starlette.status import HTTP_404_NOT_FOUND
 
 from src.api_models.place import PlaceID, PlaceUpdate, PlaceInDB, PlaceBody
 from src.dependencies import get_db
