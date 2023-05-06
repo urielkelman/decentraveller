@@ -20,7 +20,13 @@ const main = async () => {
     console.log("Registering profiles");
     for (const [i, c] of decentravellerContracts.entries()){
         const result = await c.registerProfile(`user${i}`, `Usuario ${i}`, 'AR', 0, 0);
-        
+        if (await result.wait(1)) {
+            console.log(
+                `Profile registered for signer ${await c.signer.getAddress()}`
+            );
+        } else {
+            throw Error("Error registering profile");
+        }
     }
 
     console.log("Starting business load");
