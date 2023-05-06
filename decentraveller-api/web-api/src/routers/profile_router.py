@@ -9,6 +9,7 @@ from starlette.status import HTTP_400_BAD_REQUEST, HTTP_404_NOT_FOUND
 from src.api_models.profile import ProfileBody
 from src.dependencies import get_db
 from src.orms.profile import ProfileORM
+from sqlalchemy.exc import IntegrityError
 
 profile_router = InferringRouter()
 
@@ -30,9 +31,13 @@ class ProfileCBV:
         """
         if owner:
             profile: Optional[ProfileORM] = session.query(ProfileORM).get(owner)
-        else:
+            if profile and nickname and profile.nickname != nickname:
+                return None
+        elif nickname:
             profile: Optional[ProfileORM] = session.query(ProfileORM). \
                 filter(ProfileORM.nickname == nickname).first()
+        else:
+            return None
         return profile
 
     @profile_router.get("/profile")
@@ -65,15 +70,20 @@ class ProfileCBV:
         :param profile: the profile data for creation
         :return: the profile data
         """
-        profile_orm = self.query_profile(self.session, profile.owner, profile.nickname)
+        profile_orm = self.query_profile(self.session, profile.owner, None)
         if profile_orm:
             update_data = profile.dict(exclude_unset=True)
             for k, v in update_data.items():
                 profile_orm.__setattr__(k, v)
         else:
+
             profile_orm = ProfileORM(owner=profile.owner, nickname=profile.nickname,
                                      name=profile.name, country=profile.country,
                                      gender=profile.gender, interest=profile.interest)
-        self.session.add(profile_orm)
-        self.session.commit()
+            self.session.add(profile_orm)
+        try:
+            self.session.commit()
+        except IntegrityError:
+            raise HTTPException(status_code=HTTP_400_BAD_REQUEST,
+                                detail="The nickname is already in use.")
         return ProfileBody.from_orm(profile_orm)

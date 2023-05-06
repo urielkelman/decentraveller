@@ -4,7 +4,8 @@ from fastapi import Depends, HTTPException
 from fastapi_utils.cbv import cbv
 from fastapi_utils.inferring_router import InferringRouter
 from sqlalchemy.orm import Session
-from starlette.status import HTTP_404_NOT_FOUND
+from sqlalchemy.exc import IntegrityError
+from starlette.status import HTTP_404_NOT_FOUND, HTTP_400_BAD_REQUEST
 
 from src.api_models.place import PlaceID, PlaceUpdate, PlaceInDB, PlaceBody
 from src.dependencies import get_db
@@ -44,7 +45,11 @@ class PlaceCBV:
                              categories=place.categories,
                              sub_categories=place.sub_categories)
         self.session.add(place_orm)
-        self.session.commit()
+        try:
+            self.session.commit()
+        except IntegrityError:
+            raise HTTPException(status_code=HTTP_400_BAD_REQUEST,
+                                detail="The place id is already on the database.")
         return PlaceInDB.from_orm(place_orm)
 
     @place_router.get("/place/{place_id}")
