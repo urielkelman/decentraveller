@@ -27,3 +27,12 @@ export interface NewReviewRequestBody extends EventRequestBody {
     images: string[];
     state: string;
 }
+
+export interface NewProfileRequestBody extends EventRequestBody {
+    owner: string;
+    nickname: string;
+    name: string;
+    country: string;
+    gender: string;
+    interest: string;
+}
