@@ -19,7 +19,8 @@ const main = async () => {
     );
     console.log("Registering profiles");
     for (const [i, c] of decentravellerContracts.entries()){
-        c.registerProfile(`user${i}`, `Usuario ${i}`, 'AR', 0, 0);
+        const result = await c.registerProfile(`user${i}`, `Usuario ${i}`, 'AR', 0, 0);
+        
     }
 
     console.log("Starting business load");
