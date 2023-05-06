@@ -15,6 +15,31 @@ def test_missing_place_404(cleanup):
     assert response.status_code == 404
 
 
+def test_create_place_same_key(cleanup):
+    response = client.get("/place/0")
+    assert response.status_code == 404
+
+    response = client.post("/place",
+                           json={"id": 0,
+                                 "name": "McDonalds",
+                                 "address": "Av. Callao & Av. Santa Fe",
+                                 "latitude": -34.595983,
+                                 "longitude": -58.393329,
+                                 "categories": "Fast food"},
+                           )
+    assert response.status_code == 201
+
+    response = client.post("/place",
+                           json={"id": 0,
+                                 "name": "La Bisteca",
+                                 "address": "Puerto Madero",
+                                 "latitude": -34.595983,
+                                 "longitude": -58.393329,
+                                 "categories": "Tenedor libre"},
+                           )
+    assert response.status_code == 400
+
+
 def test_create_place(cleanup):
     response = client.get("/place/0")
     assert response.status_code == 404

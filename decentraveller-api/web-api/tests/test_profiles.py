@@ -56,3 +56,67 @@ def test_create_profile(cleanup):
                                  "gender": "Otro",
                                  "interest": "Otro"}
 
+def test_profile_overwrite(cleanup):
+    response = client.post("/profile",
+                           json={"owner": "of49d9adf9b",
+                                 "nickname": "test",
+                                 "name": "Tester",
+                                 "country": "AR",
+                                 "gender": "Otro",
+                                 "interest": "Otro"},
+                           )
+    assert response.status_code == 201
+
+    response = client.post("/profile",
+                           json={"owner": "of49d9adf9b",
+                                 "nickname": "test2",
+                                 "name": "Tester",
+                                 "country": "AR",
+                                 "gender": "Otro",
+                                 "interest": "Otro"},
+                           )
+    assert response.status_code == 201
+
+    response = client.get("/profile", params={'owner': 'of49d9adf9b'})
+    assert response.status_code == 200
+    assert response.json() == {"owner": "of49d9adf9b",
+                               "nickname": "test2",
+                               "name": "Tester",
+                               "country": "AR",
+                               "gender": "Otro",
+                               "interest": "Otro"}
+
+def test_profile_search_mismatching_nickname_404(cleanup):
+    response = client.post("/profile",
+                           json={"owner": "of49d9adf9b",
+                                 "nickname": "test",
+                                 "name": "Tester",
+                                 "country": "AR",
+                                 "gender": "Otro",
+                                 "interest": "Otro"},
+                           )
+    assert response.status_code == 201
+
+    response = client.get("/profile", params={'owner': 'of49d9adf9b', 'nickname': 'test2'})
+    assert response.status_code == 404
+
+def test_profile_create_repeated_nickname_400(cleanup):
+    response = client.post("/profile",
+                           json={"owner": "of49d9adf9b",
+                                 "nickname": "test",
+                                 "name": "Tester",
+                                 "country": "AR",
+                                 "gender": "Otro",
+                                 "interest": "Otro"},
+                           )
+    assert response.status_code == 201
+
+    response = client.post("/profile",
+                           json={"owner": "of49d9adf8b",
+                                 "nickname": "test",
+                                 "name": "Tester",
+                                 "country": "AR",
+                                 "gender": "Otro",
+                                 "interest": "Otro"},
+                           )
+    assert response.status_code == 400
