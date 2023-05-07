@@ -61,20 +61,8 @@
       {
         "indexed": false,
         "internalType": "string",
-        "name": "name",
-        "type": "string"
-      },
-      {
-        "indexed": false,
-        "internalType": "string",
         "name": "country",
         "type": "string"
-      },
-      {
-        "indexed": false,
-        "internalType": "enum DecentravellerDataTypes.DecentravellerGender",
-        "name": "gender",
-        "type": "uint8"
       },
       {
         "indexed": false,
@@ -166,18 +154,8 @@
       },
       {
         "internalType": "string",
-        "name": "_name",
-        "type": "string"
-      },
-      {
-        "internalType": "string",
         "name": "_country",
         "type": "string"
-      },
-      {
-        "internalType": "enum DecentravellerDataTypes.DecentravellerGender",
-        "name": "_gender",
-        "type": "uint8"
       },
       {
         "internalType": "enum DecentravellerDataTypes.DecentravellerInterest",

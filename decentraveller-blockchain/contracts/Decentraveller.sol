@@ -14,9 +14,7 @@ contract Decentraveller {
     event UpdatedProfile(
         address owner,
         string nickname,
-        string name,
         string country,
-        DecentravellerDataTypes.DecentravellerGender gender,
         DecentravellerDataTypes.DecentravellerInterest interest
     );
 
@@ -27,9 +25,7 @@ contract Decentraveller {
 
     function registerProfile(
         string calldata _nickname,
-        string calldata _name,
         string calldata _country,
-        DecentravellerDataTypes.DecentravellerGender _gender,
         DecentravellerDataTypes.DecentravellerInterest _interest
     ) public returns (address owner) {
         address nicknameOwner = ownersByNicknames[_nickname];
@@ -45,17 +41,13 @@ contract Decentraveller {
         ownersByNicknames[_nickname] = msg.sender;
         profilesByOwner[msg.sender].owner = msg.sender;
         profilesByOwner[msg.sender].nickname = _nickname;
-        profilesByOwner[msg.sender].name = _name;
         profilesByOwner[msg.sender].country = _country;
-        profilesByOwner[msg.sender].gender = _gender;
         profilesByOwner[msg.sender].interest = _interest;
 
         emit UpdatedProfile(
             msg.sender,
             _nickname,
-            _name,
             _country,
-            _gender,
             _interest
         );
 

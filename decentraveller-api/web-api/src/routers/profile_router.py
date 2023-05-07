@@ -78,8 +78,8 @@ class ProfileCBV:
         else:
 
             profile_orm = ProfileORM(owner=profile.owner, nickname=profile.nickname,
-                                     name=profile.name, country=profile.country,
-                                     gender=profile.gender, interest=profile.interest)
+                                     country=profile.country,
+                                     interest=profile.interest)
             self.session.add(profile_orm)
         try:
             self.session.commit()
