@@ -55,9 +55,7 @@ def test_create_review_no_place(cleanup):
     response = client.post("/profile",
                            json={"owner": "of49d9adf9b",
                                  "nickname": "test",
-                                 "name": "Tester",
                                  "country": "AR",
-                                 "gender": "Otro",
                                  "interest": "Otro"},
                            )
     assert response.status_code == 201
@@ -77,9 +75,7 @@ def test_create_review(cleanup):
     response = client.post("/profile",
                            json={"owner": "of49d9adf9b",
                                  "nickname": "test",
-                                 "name": "Tester",
                                  "country": "AR",
-                                 "gender": "Otro",
                                  "interest": "Otro"},
                            )
     assert response.status_code == 201
@@ -127,9 +123,7 @@ def test_get_reviews_by_place(cleanup):
     response = client.post("/profile",
                            json={"owner": "of49d9adf9b",
                                  "nickname": "test",
-                                 "name": "Tester",
                                  "country": "AR",
-                                 "gender": "Otro",
                                  "interest": "Otro"},
                            )
     assert response.status_code == 201

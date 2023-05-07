@@ -7,7 +7,5 @@ class ProfileBody(APIModel):
     """
     owner: str
     nickname: str
-    name: str
     country: str
-    gender: str
     interest: str

@@ -11,7 +11,5 @@ class ProfileORM(Base):
     __tablename__ = "profiles"
     owner = Column(String, nullable=False, unique=True, primary_key=True)
     nickname = Column(String, nullable=False, unique=True)
-    name = Column(String, nullable=False)
     country = Column(String, nullable=False)
-    gender = Column(String, nullable=False)
     interest = Column(String, nullable=False)

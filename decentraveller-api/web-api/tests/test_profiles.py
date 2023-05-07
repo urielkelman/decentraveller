@@ -22,9 +22,7 @@ def test_create_profile(cleanup):
     response = client.post("/profile",
                            json={"owner": "of49d9adf9b",
                                  "nickname": "test",
-                                 "name": "Tester",
                                  "country": "AR",
-                                 "gender": "Otro",
                                  "interest": "Otro"},
                            )
     assert response.status_code == 201
@@ -33,36 +31,28 @@ def test_create_profile(cleanup):
     assert response.status_code == 200
     assert response.json() == {"owner": "of49d9adf9b",
                                  "nickname": "test",
-                                 "name": "Tester",
                                  "country": "AR",
-                                 "gender": "Otro",
                                  "interest": "Otro"}
 
     response = client.get("/profile", params={'nickname': 'test'})
     assert response.status_code == 200
     assert response.json() == {"owner": "of49d9adf9b",
                                  "nickname": "test",
-                                 "name": "Tester",
                                  "country": "AR",
-                                 "gender": "Otro",
                                  "interest": "Otro"}
 
     response = client.get("/profile", params={'owner': 'of49d9adf9b', 'nickname': 'test'})
     assert response.status_code == 200
     assert response.json() == {"owner": "of49d9adf9b",
                                  "nickname": "test",
-                                 "name": "Tester",
                                  "country": "AR",
-                                 "gender": "Otro",
                                  "interest": "Otro"}
 
 def test_profile_overwrite(cleanup):
     response = client.post("/profile",
                            json={"owner": "of49d9adf9b",
                                  "nickname": "test",
-                                 "name": "Tester",
                                  "country": "AR",
-                                 "gender": "Otro",
                                  "interest": "Otro"},
                            )
     assert response.status_code == 201
@@ -70,9 +60,7 @@ def test_profile_overwrite(cleanup):
     response = client.post("/profile",
                            json={"owner": "of49d9adf9b",
                                  "nickname": "test2",
-                                 "name": "Tester",
                                  "country": "AR",
-                                 "gender": "Otro",
                                  "interest": "Otro"},
                            )
     assert response.status_code == 201
@@ -81,18 +69,14 @@ def test_profile_overwrite(cleanup):
     assert response.status_code == 200
     assert response.json() == {"owner": "of49d9adf9b",
                                "nickname": "test2",
-                               "name": "Tester",
                                "country": "AR",
-                               "gender": "Otro",
                                "interest": "Otro"}
 
 def test_profile_search_mismatching_nickname_404(cleanup):
     response = client.post("/profile",
                            json={"owner": "of49d9adf9b",
                                  "nickname": "test",
-                                 "name": "Tester",
                                  "country": "AR",
-                                 "gender": "Otro",
                                  "interest": "Otro"},
                            )
     assert response.status_code == 201
@@ -104,9 +88,7 @@ def test_profile_create_repeated_nickname_400(cleanup):
     response = client.post("/profile",
                            json={"owner": "of49d9adf9b",
                                  "nickname": "test",
-                                 "name": "Tester",
                                  "country": "AR",
-                                 "gender": "Otro",
                                  "interest": "Otro"},
                            )
     assert response.status_code == 201
@@ -114,9 +96,7 @@ def test_profile_create_repeated_nickname_400(cleanup):
     response = client.post("/profile",
                            json={"owner": "of49d9adf8b",
                                  "nickname": "test",
-                                 "name": "Tester",
                                  "country": "AR",
-                                 "gender": "Otro",
                                  "interest": "Otro"},
                            )
     assert response.status_code == 400

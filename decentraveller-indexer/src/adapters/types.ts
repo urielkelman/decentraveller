@@ -31,8 +31,6 @@ export interface NewReviewRequestBody extends EventRequestBody {
 export interface NewProfileRequestBody extends EventRequestBody {
     owner: string;
     nickname: string;
-    name: string;
     country: string;
-    gender: string;
     interest: string;
 }

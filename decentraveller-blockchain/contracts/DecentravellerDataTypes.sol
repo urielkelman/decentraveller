@@ -8,12 +8,6 @@ library DecentravellerDataTypes {
         ENTERTAINMENT
     }
 
-    enum DecentravellerGender {
-        MALE,
-        FEMALE,
-        OTHER
-    }
-
     enum DecentravellerInterest {
         GASTRONOMY,
         ACCOMODATION,
@@ -25,7 +19,6 @@ library DecentravellerDataTypes {
         string nickname;
         string name;
         string country;
-        DecentravellerGender gender;
         DecentravellerInterest interest;
     }
 }

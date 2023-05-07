@@ -11,25 +11,10 @@ class UpdatedProfileTransformer extends EventTransformer<NewProfileRequestBody> 
             body: {
                 owner: event[0],
                 nickname: event[1],
-                name: event[2],
-                country: event[3],
-                gender: this.genderNumberToString(event[4]),
-                interest: this.interestNumberToString(event[5])
+                country: event[2],
+                interest: this.interestNumberToString(event[3])
             },
         };
-    }
-
-    private genderNumberToString(category: number): string {
-        switch (category) {
-            case 0:
-                return "MALE";
-            case 1:
-                return "FEMALE";
-            case 2:
-                return "OTHER";
-            default:
-                return "UNKNOWN";
-        }
     }
 
     private interestNumberToString(category: number): string {
