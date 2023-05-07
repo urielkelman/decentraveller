@@ -14,10 +14,13 @@ export type PickerCreatePlaceProps = {
     open: boolean;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
     onOpen: () => void;
+    onClose?: () => void;
     searchable: boolean;
     zIndex?: number;
     zIndexInverse?: number;
     onChangeSearchText?: (text: string) => void | undefined;
+    loading?: boolean
+    disableLocalSearch?: boolean
 };
 
 const PickerCreatePlace: React.FC<PickerCreatePlaceProps> = ({
@@ -34,6 +37,8 @@ const PickerCreatePlace: React.FC<PickerCreatePlaceProps> = ({
     zIndexInverse = 1000,
     searchable,
     onChangeSearchText = undefined,
+    loading = false,
+    disableLocalSearch = false
 }) => {
     return (
         <View style={addPlaceIndicationTextStyles.container}>
@@ -49,10 +54,15 @@ const PickerCreatePlace: React.FC<PickerCreatePlaceProps> = ({
                 style={addPlaceIndicationTextStyles.inputField}
                 placeholder={dropdownPlaceholder}
                 textStyle={addPlaceIndicationTextStyles.pickerInputField}
+                dropDownDirection="BOTTOM"
+                max={5}
+                itemSeparator={true}
                 zIndex={zIndex}
                 zIndexInverse={zIndexInverse}
                 searchable={searchable}
                 onChangeSearchText={onChangeSearchText}
+                loading={loading}
+                disableLocalSearch={disableLocalSearch}
             />
         </View>
     );
