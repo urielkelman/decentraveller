@@ -62,7 +62,7 @@ const addPlaceIndicationTextStyles = StyleSheet.create({
     },
     pickerInputField: {
         fontFamily: 'Montserrat_500Medium',
-        fontSize: height * 0.020,
+        fontSize: height * 0.02,
     },
     textInputContainer: {
         width: '80%',
