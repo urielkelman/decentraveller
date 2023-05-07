@@ -2,12 +2,15 @@ import { KeyboardAvoidingView, Text } from 'react-native';
 import { addPlaceScreenStyles } from '../../../styles/addPlaceScreensStyles';
 import HeadingTextCreatePlace from './HeadingTextCreatePlace';
 import { addPlaceScreenWordings } from './wording';
-import React, {useState} from 'react';
-import { PickerItem, useCreatePlaceContext } from './CreatePlaceContext';
+import React, { useState } from 'react';
+import {GeocodingElement, PickerItem, useCreatePlaceContext} from './CreatePlaceContext';
 import CreatePlacePicker from './PickerCreatePlace';
 import { GeocodingElementResponse, GeocodingResponse } from '../../../api/response/geocoding';
 import { apiAdapter } from '../../../api/apiAdapter';
-import CreatePlaceButton from "./CreatePlaceButton";
+import CreatePlaceButton from './CreatePlaceButton';
+import {mockApiAdapter} from "../../../api/mockApiAdapter";
+import {blockchainAdapter} from "../../../blockchain/blockhainAdapter";
+import {useWalletConnect} from "@walletconnect/react-native-dapp";
 
 const MINIMUM_ADDRESS_LENGTH_TO_SHOW_PICKER = 3;
 
@@ -16,7 +19,9 @@ const getAndParseGeocoding = async (
     country: string,
     addressPickerSetItems: React.Dispatch<React.SetStateAction<PickerItem[]>>
 ) => {
-    const geocodingResponse: GeocodingResponse = await apiAdapter.getGeocoding(addressText, country);
+    // const geocodingResponse: GeocodingResponse = await apiAdapter.getGeocoding(addressText, country);ç
+    const geocodingResponse: GeocodingResponse = await mockApiAdapter.getGeocoding(addressText, country);
+    console.log(geocodingResponse);
     addressPickerSetItems(
         geocodingResponse.results.map((element: GeocodingElementResponse) => ({
             label: element.fullAddress,
@@ -31,27 +36,41 @@ const getAndParseGeocoding = async (
 };
 
 const CreatePlaceLocationScreen = () => {
-    const { placeName, countryPicker, addressPicker } = useCreatePlaceContext();
+    const { placeName, placeTypePicker, countryPicker, addressPicker } = useCreatePlaceContext();
     const [lastSearchTextLength, setLastSearchTextLength] = React.useState<number>(0);
     const [loadingGeocodingResponse, setLoadingGeocodingResponse] = React.useState<boolean>(false);
+    const connector = useWalletConnect();
+
 
     const onChangeSearchAddressText = async (text: string) => {
         addressPicker.setValue(text);
-        if (text.length > MINIMUM_ADDRESS_LENGTH_TO_SHOW_PICKER && countryPicker.value
-        && text.length > lastSearchTextLength) {
+        if (
+            text.length > MINIMUM_ADDRESS_LENGTH_TO_SHOW_PICKER &&
+            countryPicker.value &&
+            text.length > lastSearchTextLength
+        ) {
             console.log('Searching for text address: ', addressPicker.value);
             setLoadingGeocodingResponse(true);
             await getAndParseGeocoding(text, countryPicker.value, addressPicker.setItems);
             setLoadingGeocodingResponse(false);
-        } else if(text.length <= MINIMUM_ADDRESS_LENGTH_TO_SHOW_PICKER) {
+        } else if (text.length <= MINIMUM_ADDRESS_LENGTH_TO_SHOW_PICKER) {
             addressPicker.setItems([]);
         }
         setLastSearchTextLength(text.length);
     };
 
     const onFinish = async () => {
-        console.log('On finish!')
-    }
+        const selectedGeocodingElement: GeocodingElement = JSON.parse(addressPicker.value);
+        const transactionHash = await blockchainAdapter.createAddNewPlaceTransaction(
+            connector,
+            placeName,
+            selectedGeocodingElement.latitude,
+            selectedGeocodingElement.longitude,
+            selectedGeocodingElement.address,
+            parseInt(placeTypePicker.value)
+        );
+        console.log("Transaction confirmed with hash", transactionHash);
+    };
 
     return (
         <KeyboardAvoidingView style={addPlaceScreenStyles.container} behavior="padding" keyboardVerticalOffset={40}>

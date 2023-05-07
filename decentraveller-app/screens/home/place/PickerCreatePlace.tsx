@@ -19,8 +19,8 @@ export type PickerCreatePlaceProps = {
     zIndex?: number;
     zIndexInverse?: number;
     onChangeSearchText?: (text: string) => void | undefined;
-    loading?: boolean
-    disableLocalSearch?: boolean
+    loading?: boolean;
+    disableLocalSearch?: boolean;
 };
 
 const PickerCreatePlace: React.FC<PickerCreatePlaceProps> = ({
@@ -38,7 +38,7 @@ const PickerCreatePlace: React.FC<PickerCreatePlaceProps> = ({
     searchable,
     onChangeSearchText = undefined,
     loading = false,
-    disableLocalSearch = false
+    disableLocalSearch = false,
 }) => {
     return (
         <View style={addPlaceIndicationTextStyles.container}>

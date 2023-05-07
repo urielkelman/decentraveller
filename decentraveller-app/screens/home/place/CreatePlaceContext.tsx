@@ -72,7 +72,7 @@ const CreatePlaceProvider: React.FC<React.ReactNode> = ({ children }) => {
             case CREATE_PLACE_PICKER.ADDRESS:
                 setCountryPickerOpen(false);
                 setPlaceTypePickerOpen(false);
-                setAddressPickerItems(addressPickerItems.filter(item => item.value === addressPickerValue));
+                setAddressPickerItems(addressPickerItems.filter((item) => item.value === addressPickerValue));
                 return;
             default:
                 return;

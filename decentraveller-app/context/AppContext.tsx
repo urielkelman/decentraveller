@@ -6,7 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const AppContext = React.createContext<AppContextType | null>(null);
 
-const DEFAULT_CHAIN_ID = 5;
+const DEFAULT_CHAIN_ID = 31337;
 const DEFAULT_RPC = 'https://goerli.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161';
 
 interface UpdateSessionPayloadParams {
@@ -26,7 +26,7 @@ const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
                 id: 1,
                 jsonrpc: '2.0',
                 method: 'wallet_switchEthereumChain',
-                params: [{ chainId: '0x5' }],
+                params: [{ chainId: '0x7A69' }],
             });
         } catch (e) {
             console.log('Error updating', e);
@@ -61,6 +61,7 @@ const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
 
     React.useEffect(() => {
         console.log('connected:', connector.connected);
+        console.log(connector.chainId)
         if (connector.connected) {
             updateConnectionContext(connector.accounts[0], connector.chainId);
 
@@ -76,7 +77,7 @@ const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
                     console.log('Full payload', payload);
                     const params: UpdateSessionPayloadParams = payload.params[0];
                     console.log(params);
-                    console.log('sesion_update');
+                    console.log('session_update');
                     updateConnectionContext(params.accounts[0], params.chainId);
                 });
             }
