@@ -13,6 +13,7 @@ const addPlaceHeadingTextStyles = StyleSheet.create({
         marginTop: height * 0.015,
         marginRight: width * 0.04,
         marginLeft: width * 0.04,
+        marginBottom: height * 0.025,
     },
 });
 
@@ -24,7 +25,9 @@ const addPlaceDescriptionTextStyles = StyleSheet.create({
         fontSize: height * 0.024,
         lineHeight: height * 0.04,
         textAlign: 'center',
-        margin: width * 0.04,
+        marginLeft: width * 0.04,
+        marginRight: width * 0.04,
+        marginBottom: width * 0.04,
     },
 });
 
@@ -59,7 +62,7 @@ const addPlaceIndicationTextStyles = StyleSheet.create({
     },
     pickerInputField: {
         fontFamily: 'Montserrat_500Medium',
-        fontSize: height * 0.024,
+        fontSize: height * 0.020,
     },
     textInputContainer: {
         width: '80%',
