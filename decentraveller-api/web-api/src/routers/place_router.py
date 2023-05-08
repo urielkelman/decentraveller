@@ -42,8 +42,7 @@ class PlaceCBV:
         """
         place_orm = PlaceORM(id=place.id, name=place.name, address=place.address,
                              latitude=place.latitude, longitude=place.longitude,
-                             categories=place.categories,
-                             sub_categories=place.sub_categories)
+                             category=place.category)
         self.session.add(place_orm)
         try:
             self.session.commit()
@@ -86,8 +85,7 @@ class PlaceCBV:
         place_orm.address = place.address
         place_orm.latitude = place.latitude
         place_orm.longitude = place.longitude
-        place_orm.categories = place.categories
-        place_orm.sub_categories = place.sub_categories
+        place_orm.categories = place.category
 
         self.session.add(place_orm)
         self.session.commit()

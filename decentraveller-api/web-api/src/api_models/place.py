@@ -1,8 +1,17 @@
 from typing import NewType, Union, Optional
-
+import enum
 from fastapi_utils.api_model import APIModel
 
 PlaceID = NewType("PlaceId", int)
+
+
+class PlaceCategory(str, enum.Enum):
+    """
+    Categories for places
+    """
+    GASTRONOMY = "GASTRONOMY"
+    ACCOMMODATION = "ACCOMMODATION"
+    ENTERTAINMENT = "ENTERTAINMENT"
 
 
 class PlaceBody(APIModel):
@@ -13,8 +22,7 @@ class PlaceBody(APIModel):
     address: str
     latitude: float
     longitude: float
-    categories: Optional[str]
-    sub_categories: Optional[str]
+    category: Optional[PlaceCategory]
 
 
 class PlaceUpdate(APIModel):
@@ -25,8 +33,7 @@ class PlaceUpdate(APIModel):
     address: Union[str, None]
     latitude: Union[float, None]
     longitude: Union[float, None]
-    categories: Union[str, None]
-    sub_categories: Union[str, None]
+    category: Union[PlaceCategory, None]
 
 
 class PlaceInDB(PlaceBody):

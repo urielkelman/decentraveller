@@ -22,7 +22,7 @@ class UpdatedProfileTransformer extends EventTransformer<NewProfileRequestBody> 
             case 0:
                 return "GASTRONOMY";
             case 1:
-                return "ACCOMODATION";
+                return "ACCOMMODATION";
             case 2:
                 return "ENTERTAINMENT";
             default:
