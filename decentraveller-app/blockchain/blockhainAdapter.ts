@@ -10,7 +10,7 @@ class BlockchainAdapter {
         } else {
             return ethers.getDefaultProvider(chainId);
         }
-    };
+    }
 
     private async populateAndSend(
         connector: WalletConnect,
@@ -19,9 +19,10 @@ class BlockchainAdapter {
         ...args: unknown[]
     ): Promise<string> {
         const provider: ethers.providers.Provider = await this.getProvider(connector.chainId);
-        console.log(connector.chainId)
+        console.log("block number", await provider.getBlockNumber());
+        console.log(connector.chainId);
         const blockchain: Blockchain = BlockchainByConnectorChainId[connector.chainId];
-        console.log("b", blockchain)
+        console.log('b', blockchain);
         const contractAddress: string = contract.addressesByBlockchain[blockchain];
         const contractFunction: ContractFunction = contract.functions[functionName];
         const ethersContract: ethers.Contract = new ethers.Contract(
@@ -31,20 +32,23 @@ class BlockchainAdapter {
         );
         const populatedTransaction: ethers.PopulatedTransaction = await ethersContract.populateTransaction[
             contractFunction.functionName
-            ].call(this, ...args);
+        ].call(this, ...args);
         const connectedAccount: string = connector.accounts[0];
+        console.log('About to send')
         const transactionHash: string = await connector.sendTransaction({
             from: connectedAccount,
             to: contractAddress,
             data: populatedTransaction.data,
         });
+        console.log('About to wait')
 
         await provider.waitForTransaction(transactionHash);
+        console.log('se fini')
 
         return transactionHash;
-    };
+    }
 
-    async createAddNewPlaceTransaction (
+    async createAddNewPlaceTransaction(
         connector: WalletConnect,
         placeName: string,
         latitude: string,
@@ -66,7 +70,7 @@ class BlockchainAdapter {
         } catch (e) {
             console.log(e);
         }
-    };
+    }
 }
 
 const blockchainAdapter = new BlockchainAdapter();

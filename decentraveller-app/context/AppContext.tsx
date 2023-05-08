@@ -8,6 +8,8 @@ export const AppContext = React.createContext<AppContextType | null>(null);
 
 const DEFAULT_CHAIN_ID = 31337;
 const DEFAULT_RPC = 'https://goerli.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161';
+const UNRECOGNIZED_CHAIN_ID_MESSAGE = (chainId) =>
+    `Unrecognized chain ID "${chainId}". Try adding the chain using wallet_addEthereumChain first.`;
 
 interface UpdateSessionPayloadParams {
     accounts: string[];
@@ -26,10 +28,32 @@ const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
                 id: 1,
                 jsonrpc: '2.0',
                 method: 'wallet_switchEthereumChain',
-                params: [{ chainId: '0x7A69' }],
+                params: [{ chainId: '0x7a69' }],
             });
         } catch (e) {
-            console.log('Error updating', e);
+            if (e.message === UNRECOGNIZED_CHAIN_ID_MESSAGE('0x7a69')) {
+                try {
+                    await connector.sendCustomRequest({
+                        id: 2,
+                        jsonrpc: '2.0',
+                        method: 'wallet_addEthereumChain',
+                        params: [
+                            {
+                                chainId: '0x7a69',
+                                chainName: 'Local Hardhat',
+                                nativeCurrency: {
+                                    name: 'Ethereum',
+                                    symbol: 'ETH',
+                                    decimals: 18,
+                                },
+                                rpcUrls: ['https://10.0.2.2:8545/'],
+                            },
+                        ],
+                    });
+                } catch (e) {
+                    console.log('An error happened when trying to add ethereum chain.', e);
+                }
+            }
         }
     };
 
@@ -61,7 +85,7 @@ const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
 
     React.useEffect(() => {
         console.log('connected:', connector.connected);
-        console.log(connector.chainId)
+        console.log(connector.chainId);
         if (connector.connected) {
             updateConnectionContext(connector.accounts[0], connector.chainId);
 

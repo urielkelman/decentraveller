@@ -3,7 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { useAppContext } from '../context/AppContext';
 import WrongChainModal from './login/WrongChainModal';
 import HomeNavigator from './home/HomeNavigator';
-import LoginNavigator from "./login/LoginNavigator";
+import LoginNavigator from './login/LoginNavigator';
 
 const DecentravellerInitialScreen = () => {
     const appContext = useAppContext();
