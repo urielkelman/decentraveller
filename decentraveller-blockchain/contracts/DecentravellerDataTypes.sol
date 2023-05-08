@@ -10,7 +10,7 @@ library DecentravellerDataTypes {
 
     enum DecentravellerInterest {
         GASTRONOMY,
-        ACCOMODATION,
+        ACCOMMODATION,
         ENTERTAINMENT
     }
 

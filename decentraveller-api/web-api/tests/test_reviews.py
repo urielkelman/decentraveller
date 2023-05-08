@@ -56,7 +56,7 @@ def test_create_review_no_place(cleanup):
                            json={"owner": "of49d9adf9b",
                                  "nickname": "test",
                                  "country": "AR",
-                                 "interest": "Otro"},
+                                 "interest": "ACCOMMODATION"},
                            )
     assert response.status_code == 201
 
@@ -76,7 +76,7 @@ def test_create_review(cleanup):
                            json={"owner": "of49d9adf9b",
                                  "nickname": "test",
                                  "country": "AR",
-                                 "interest": "Otro"},
+                                 "interest": "ACCOMMODATION"},
                            )
     assert response.status_code == 201
 
@@ -124,7 +124,7 @@ def test_get_reviews_by_place(cleanup):
                            json={"owner": "of49d9adf9b",
                                  "nickname": "test",
                                  "country": "AR",
-                                 "interest": "Otro"},
+                                 "interest": "ACCOMMODATION"},
                            )
     assert response.status_code == 201
 
