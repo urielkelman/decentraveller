@@ -3,14 +3,14 @@ import { addPlaceScreenStyles } from '../../../styles/addPlaceScreensStyles';
 import HeadingTextCreatePlace from './HeadingTextCreatePlace';
 import { addPlaceScreenWordings } from './wording';
 import React, { useState } from 'react';
-import {GeocodingElement, PickerItem, useCreatePlaceContext} from './CreatePlaceContext';
+import { GeocodingElement, PickerItem, useCreatePlaceContext } from './CreatePlaceContext';
 import CreatePlacePicker from './PickerCreatePlace';
 import { GeocodingElementResponse, GeocodingResponse } from '../../../api/response/geocoding';
 import { apiAdapter } from '../../../api/apiAdapter';
 import CreatePlaceButton from './CreatePlaceButton';
-import {mockApiAdapter} from "../../../api/mockApiAdapter";
-import {blockchainAdapter} from "../../../blockchain/blockhainAdapter";
-import {useWalletConnect} from "@walletconnect/react-native-dapp";
+import { mockApiAdapter } from '../../../api/mockApiAdapter';
+import { blockchainAdapter } from '../../../blockchain/blockhainAdapter';
+import { useWalletConnect } from '@walletconnect/react-native-dapp';
 
 const MINIMUM_ADDRESS_LENGTH_TO_SHOW_PICKER = 3;
 
@@ -41,7 +41,6 @@ const CreatePlaceLocationScreen = () => {
     const [loadingGeocodingResponse, setLoadingGeocodingResponse] = React.useState<boolean>(false);
     const connector = useWalletConnect();
 
-
     const onChangeSearchAddressText = async (text: string) => {
         addressPicker.setValue(text);
         if (
@@ -69,7 +68,7 @@ const CreatePlaceLocationScreen = () => {
             selectedGeocodingElement.address,
             parseInt(placeTypePicker.value)
         );
-        console.log("Transaction confirmed with hash", transactionHash);
+        console.log('Transaction confirmed with hash', transactionHash);
     };
 
     return (
