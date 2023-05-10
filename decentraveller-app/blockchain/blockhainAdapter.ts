@@ -4,9 +4,9 @@ import { ContractFunction, DecentravellerContract, decentravellerMainContract } 
 import { Blockchain, BlockchainByConnectorChainId, LOCAL_DEVELOPMENT_CHAIN_ID } from './config';
 
 class BlockchainAdapter {
-    private async getProvider(chainId: number): Promise<ethers.providers.Provider> {
+    private getProvider(chainId: number): ethers.providers.Provider {
         if (chainId === LOCAL_DEVELOPMENT_CHAIN_ID) {
-            return new ethers.providers.JsonRpcProvider('http://10.0.2.2:8545/');
+            return new ethers.providers.JsonRpcProvider('http://10.0.2.2:8545');
         } else {
             return ethers.getDefaultProvider(chainId);
         }
@@ -18,7 +18,10 @@ class BlockchainAdapter {
         functionName: string,
         ...args: unknown[]
     ): Promise<string> {
-        const provider: ethers.providers.Provider = await this.getProvider(connector.chainId);
+
+        fetch('10.0.0.2:8000/geocoding/forward?address=Honduras&country=AR').then(r => console.log(r)).catch(e => console.log('error', e));
+
+        const provider: ethers.providers.Provider = this.getProvider(connector.chainId);
         console.log("block number", await provider.getBlockNumber());
         console.log(connector.chainId);
         const blockchain: Blockchain = BlockchainByConnectorChainId[connector.chainId];
