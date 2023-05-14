@@ -1,5 +1,6 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import CreatePlaceNameScreen from './place/CreatePlaceNameScreen';
+import RegistrationForm from './users/registration/RegistrationForm';
 import CreatePlaceProvider from './place/CreatePlaceContext';
 import CreatePlaceLocationScreen from './place/CreatePlaceLocationScreen';
 import RootNavigator from './RootNavigator';
@@ -7,6 +8,7 @@ import RootNavigator from './RootNavigator';
 export type HomeStackScreens = {
     RootTabNavigator: undefined;
     CreatePlaceNameScreen: undefined;
+    RegistrationForm: undefined;
     CreatePlaceLocationScreen: undefined;
 };
 
@@ -30,6 +32,14 @@ const HomeNavigator = () => {
                     component={CreatePlaceLocationScreen}
                     options={{
                         title: 'Select location',
+                        headerMode: 'screen',
+                    }}
+                />
+                <HomeStackNavigator.Screen
+                    name="RegistrationForm"
+                    component={RegistrationForm}
+                    options={{
+                        title: 'Registration form',
                         headerMode: 'screen',
                     }}
                 />
