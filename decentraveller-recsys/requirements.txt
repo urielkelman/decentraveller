@@ -1,9 +1,7 @@
-fastapi[all]
-fastapi-utils
-uvicorn[standard]
 SQLAlchemy
 alembic==1.8.1
 psycopg2
-requests
 pillow
+pandas
+scikit-learn
 weaviate-client

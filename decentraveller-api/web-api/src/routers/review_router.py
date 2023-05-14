@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session, Query
 from starlette.status import HTTP_404_NOT_FOUND, HTTP_400_BAD_REQUEST
 
 from src.api_models.place import PlaceID
-from src.api_models.review import ReviewInDB, ReviewId
+from src.api_models.review import ReviewInDB, ReviewId, ReviewBody
 from src.dependencies import get_db
 from src.orms.review import ReviewORM
 from sqlalchemy.exc import IntegrityError
@@ -46,7 +46,7 @@ class ReviewCBV:
         return query
 
     @review_router.post("/review", status_code=201)
-    def create_review(self, review: ReviewInDB) -> ReviewInDB:
+    def create_review(self, review: ReviewBody) -> ReviewInDB:
         """
         Creates a new review in the database
 
@@ -54,7 +54,7 @@ class ReviewCBV:
         :return: the review data
         """
         try:
-            review_orm = ReviewORM(id=review.id, place_id=review.place_id,
+            review_orm = ReviewORM(place_id=review.place_id,
                                    score=review.score, owner=review.owner,
                                    text=review.text, images=review.images,
                                    state=review.state)
