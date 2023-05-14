@@ -2,7 +2,7 @@ import { Dimensions, StyleSheet } from 'react-native';
 
 const { height, width } = Dimensions.get('window');
 
-const addPlaceHeadingTextStyles = StyleSheet.create({
+const registrationHeadingTextStyles = StyleSheet.create({
     text: {
         color: 'black',
         fontFamily: 'Montserrat_800ExtraBold',
@@ -17,7 +17,7 @@ const addPlaceHeadingTextStyles = StyleSheet.create({
     },
 });
 
-const addPlaceDescriptionTextStyles = StyleSheet.create({
+const registrationDescriptionTextStyles = StyleSheet.create({
     text: {
         color: 'black',
         fontFamily: 'Montserrat_800ExtraBold',
@@ -31,7 +31,7 @@ const addPlaceDescriptionTextStyles = StyleSheet.create({
     },
 });
 
-const addPlaceScreenStyles = StyleSheet.create({
+const registrationScreenStyles = StyleSheet.create({
     container: {
         flexDirection: 'column',
         justifyContent: 'center',
@@ -41,7 +41,7 @@ const addPlaceScreenStyles = StyleSheet.create({
     },
 });
 
-const addPlaceIndicationTextStyles = StyleSheet.create({
+const registrationIndicationTextStyles = StyleSheet.create({
     container: {
         flexDirection: 'column',
         marginLeft: width * 0.1,
@@ -77,7 +77,7 @@ const addPlaceIndicationTextStyles = StyleSheet.create({
     },
 });
 
-const addPlaceButtonStyle = StyleSheet.create({
+const registrationButtonStyle = StyleSheet.create({
     buttonTextView: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -105,9 +105,9 @@ const addPlaceButtonStyle = StyleSheet.create({
 });
 
 export {
-    addPlaceHeadingTextStyles,
-    addPlaceDescriptionTextStyles,
-    addPlaceScreenStyles,
-    addPlaceIndicationTextStyles,
-    addPlaceButtonStyle,
+    registrationHeadingTextStyles,
+    registrationDescriptionTextStyles,
+    registrationScreenStyles,
+    registrationIndicationTextStyles,
+    registrationButtonStyle,
 };

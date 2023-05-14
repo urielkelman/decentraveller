@@ -1,23 +1,17 @@
 import React from 'react';
-import { TextInput, StyleSheet } from 'react-native';
+import {TextInput, StyleSheet, View} from 'react-native';
+import {registrationIndicationTextStyles} from "../../../../styles/registrationScreensStyles";
 
-const FormInput = ({ placeholder, onChangeText }) => (
-    <TextInput
-        placeholder={placeholder}
-        onChangeText={onChangeText}
-        style={styles.input}
-    />
+const FormInput = ({ text, setTextValue, placeholder }) => (
+    <View style={registrationIndicationTextStyles.textInputContainer}>
+        <TextInput
+            style={registrationIndicationTextStyles.textInputField}
+            placeholder={placeholder}
+            value={text}
+            onChangeText={setTextValue}
+        />
+    </View>
 );
 
-const styles = StyleSheet.create({
-    input: {
-        height: 40,
-        margin: 12,
-        borderWidth: 1,
-        padding: 10,
-        borderRadius: 5,
-        borderColor: 'withe',
-    },
-});
 
 export default FormInput;

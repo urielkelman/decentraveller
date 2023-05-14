@@ -5,6 +5,8 @@ export interface PickerUserItem {
     value: string;
 }
 
+// TODO: Use this context to fill all pickers
+
 export type PickerUserStateContextType = {
     items: PickerUserItem[];
     setItems: React.Dispatch<React.SetStateAction<PickerUserItem[]>>;

@@ -1,7 +1,7 @@
 import { KeyboardAvoidingView, View } from 'react-native';
 import React from 'react';
 import HeadingTextCreatePlace from './HeadingTextCreatePlace';
-import { addPlaceScreenStyles } from '../../../styles/addPlaceScreensStyles';
+import { registrationScreenStyles } from '../../../styles/registrationScreensStyles';
 import DescriptionTextCreatePlace from './DescriptionTextCreatePlace';
 import { addPlaceScreenWordings } from './wording';
 import { useCreatePlaceContext } from './CreatePlaceContext';
@@ -19,7 +19,7 @@ const CreatePlaceNameScreen = ({ navigation }) => {
     };
 
     return (
-        <KeyboardAvoidingView style={addPlaceScreenStyles.container} behavior="padding">
+        <KeyboardAvoidingView style={registrationScreenStyles.container} behavior="padding">
             <HeadingTextCreatePlace text={addPlaceScreenWordings.CREATE_PLACE_HEADING} />
             <DescriptionTextCreatePlace />
             <CreatePlacePicker

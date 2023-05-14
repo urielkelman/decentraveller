@@ -1,25 +1,13 @@
 import React from 'react';
-import { TouchableOpacity, Text, StyleSheet } from 'react-native';
+import {TouchableOpacity, Text, StyleSheet, View} from 'react-native';
+import {registrationButtonStyle} from "../../../../styles/registrationScreensStyles";
 
 const NextButton = ({ title, onPress }) => (
-    <TouchableOpacity style={styles.button} onPress={onPress}>
-        <Text style={styles.buttonText}>{title}</Text>
+    <TouchableOpacity style={registrationButtonStyle.button} onPress={onPress}>
+        <View style={registrationButtonStyle.buttonTextView}>
+            <Text style={registrationButtonStyle.text}>{title}</Text>
+        </View>
     </TouchableOpacity>
 );
-
-const styles = StyleSheet.create({
-    button: {
-        backgroundColor: '#983B46',
-        padding: 10,
-        borderRadius: 5,
-        margin: 12,
-    },
-    buttonText: {
-        color: 'white',
-        fontWeight: 'bold',
-        textAlign: 'center',
-        fontSize: 16,
-    },
-});
 
 export default NextButton;

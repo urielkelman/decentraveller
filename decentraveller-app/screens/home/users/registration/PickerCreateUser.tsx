@@ -2,33 +2,7 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import {PickerUserItem} from "./CreateUserContext";
-
-const addUserIndicationTextStyles = StyleSheet.create({
-    container: {
-        flexDirection: 'column',
-    },
-    text: {
-        fontFamily: 'Montserrat_500Medium',
-        color: '#676666',
-        display: 'flex',
-        flexDirection: 'row',
-    },
-    inputField: {
-        borderRadius: 20,
-        borderColor: 'white',
-    },
-    pickerInputField: {
-        fontFamily: 'Montserrat_500Medium',
-    },
-    textInputContainer: {
-        width: '80%',
-    },
-    textInputField: {
-        fontFamily: 'Montserrat_500Medium',
-        backgroundColor: 'white',
-        borderRadius: 20,
-    },
-});
+import {registrationIndicationTextStyles} from "../../../../styles/registrationScreensStyles";
 
 export type PickerCreateUserProps = {
     titleText: string;
@@ -63,8 +37,8 @@ const PickerCreateUser: React.FC<PickerCreateUserProps> = ({
     onChangeSearchText = undefined,
 }) => {
     return (
-        <View style={addUserIndicationTextStyles.container}>
-            <Text style={addUserIndicationTextStyles.text}>{titleText}</Text>
+        <View style={registrationIndicationTextStyles.container}>
+            <Text style={registrationIndicationTextStyles.text}>{titleText}</Text>
             <DropDownPicker
                 open={open}
                 setOpen={setOpen}
@@ -73,9 +47,9 @@ const PickerCreateUser: React.FC<PickerCreateUserProps> = ({
                 setItems={setItems}
                 value={value}
                 setValue={setValue}
-                style={addUserIndicationTextStyles.inputField}
+                style={registrationIndicationTextStyles.inputField}
                 placeholder={dropdownPlaceholder}
-                textStyle={addUserIndicationTextStyles.pickerInputField}
+                textStyle={registrationIndicationTextStyles.pickerInputField}
                 zIndex={zIndex}
                 zIndexInverse={zIndexInverse}
                 searchable={searchable}

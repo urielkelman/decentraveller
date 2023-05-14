@@ -1,5 +1,5 @@
 import { Text, View } from 'react-native';
-import { addPlaceHeadingTextStyles } from '../../../styles/addPlaceScreensStyles';
+import { registrationHeadingTextStyles } from '../../../styles/registrationScreensStyles';
 import React from 'react';
 
 export type HeadingTextCreatePlaceProps = {
@@ -8,7 +8,7 @@ export type HeadingTextCreatePlaceProps = {
 
 const HeadingTextCreatePlace: React.FC<HeadingTextCreatePlaceProps> = ({ text }) => (
     <View>
-        <Text style={addPlaceHeadingTextStyles.text}>{text}</Text>
+        <Text style={registrationHeadingTextStyles.text}>{text}</Text>
     </View>
 );
 
