@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 
 from fastapi import Depends, HTTPException
 from fastapi_utils.cbv import cbv
@@ -112,3 +112,13 @@ class PlaceCBV:
         self.session.add(place_orm)
         self.session.commit()
         return PlaceInDB.from_orm(place_orm)
+
+    @place_router.get("/place/{place_id}/similars")
+    def get_recommendation(self, place_id: PlaceID) -> List[PlaceInDB]:
+        """
+        Get place recommendations by another place id
+
+        :param place_id: the place id to query
+        :return: the places data
+        """
+        raise HTTPException(status_code=HTTP_404_NOT_FOUND)

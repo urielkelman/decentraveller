@@ -9,7 +9,7 @@ class ReviewORM(Base):
     """
     __tablename__ = "reviews"
 
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     place_id = Column(ForeignKey("places.id"), nullable=False)
     score = Column(Integer, nullable=False)
     owner = Column(ForeignKey("profiles.owner"), nullable=False)

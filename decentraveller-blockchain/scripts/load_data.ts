@@ -30,7 +30,7 @@ const main = async () => {
     }
 
     console.log("Starting business load");
-    const businessFile = readFileSync("data/business_sample.json", "utf-8");
+    const businessFile = readFileSync("data/places_sample.json", "utf-8");
     var yelp2id = new Map<string, bigint>();
     for (const line of businessFile.split(/\r?\n/)) {
         const businessData = JSON.parse(line);
@@ -60,15 +60,29 @@ const main = async () => {
 
     console.log("Starting review load");
     const reviewFile = readFileSync("data/reviews_sample.json", "utf-8");
+    var yelp2owner = new Map<string, number>();
+    var owner2yelp = new Set<number>();
+    var contractIndex = Math.floor(
+        Math.random() * decentravellerContracts.length
+    );
     for (const line of reviewFile.split(/\r?\n/)) {
-        const randomIndex = Math.floor(
+        const reviewData = JSON.parse(line);
+        contractIndex = Math.floor(
             Math.random() * decentravellerContracts.length
         );
-        const randomContract = decentravellerContracts[randomIndex];
-        const signerConnectedToContract = signers[randomIndex];
-        const reviewData = JSON.parse(line);
+        if (yelp2owner.has(reviewData['user_id'])){
+            contractIndex = yelp2owner.get(reviewData['user_id'])!;
+        } else {
+            while(owner2yelp.has(contractIndex)){
+                contractIndex = (contractIndex + 1) % decentravellerContracts.length
+            }
+            yelp2owner.set(reviewData['user_id'], contractIndex);
+            owner2yelp.add(contractIndex);
+        }
+        const signerContract = decentravellerContracts[contractIndex];
+        const signerConnectedToContract = signers[contractIndex];
         const blockchainBusId = yelp2id.get(reviewData["business_id"])!;
-        const placeContractAddress = await randomContract.getPlaceAddress(
+        const placeContractAddress = await signerContract.getPlaceAddress(
             blockchainBusId
         );
 
@@ -91,7 +105,7 @@ const main = async () => {
         console.log(
             `Review inserted: ${
                 resp.blockHash
-            } with signer ${await randomContract.signer.getAddress()}`
+            } with signer ${await signerContract.signer.getAddress()}`
         );
     }
 };
