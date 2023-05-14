@@ -24,6 +24,13 @@ const Home = ({ navigation }) => {
                 <Feather name="plus-circle" size={24} color="black" style={{ paddingRight: 10 }} />
                 <Text>Add a place</Text>
             </TouchableOpacity>
+            <TouchableOpacity
+                style={{ paddingTop: 35, flex: 1, flexDirection: 'row' }}
+                onPress={() => navigation.navigate('RegistrationForm', { headerShown: false })}
+            >
+                <Feather name="plus-circle" size={24} color="black" style={{ paddingRight: 10 }} />
+                <Text>Add user</Text>
+            </TouchableOpacity>
         </View>
     );
 };
