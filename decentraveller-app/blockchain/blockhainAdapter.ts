@@ -1,3 +1,4 @@
+import "@ethersproject/shims"
 import { ethers } from 'ethers';
 import WalletConnect from '@walletconnect/client';
 import { ContractFunction, DecentravellerContract, decentravellerMainContract } from './contracts';
@@ -5,7 +6,10 @@ import { Blockchain, BlockchainByConnectorChainId, LOCAL_DEVELOPMENT_CHAIN_ID } 
 
 class BlockchainAdapter {
     private getProvider(chainId: number): ethers.providers.Provider {
+        console.log('chainId', chainId)
+        console.log('constante', LOCAL_DEVELOPMENT_CHAIN_ID)
         if (chainId === LOCAL_DEVELOPMENT_CHAIN_ID) {
+            console.log('json provider')
             return new ethers.providers.JsonRpcProvider('http://10.0.2.2:8545');
         } else {
             return ethers.getDefaultProvider(chainId);
@@ -19,7 +23,8 @@ class BlockchainAdapter {
         ...args: unknown[]
     ): Promise<string> {
 
-        fetch('10.0.0.2:8000/geocoding/forward?address=Honduras&country=AR').then(r => console.log(r)).catch(e => console.log('error', e));
+        console.log('connected', connector.connected)
+
 
         const provider: ethers.providers.Provider = this.getProvider(connector.chainId);
         console.log("block number", await provider.getBlockNumber());
