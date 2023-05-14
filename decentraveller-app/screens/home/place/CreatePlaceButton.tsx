@@ -1,6 +1,6 @@
 import { Text, TouchableOpacity, View } from 'react-native';
 import React from 'react';
-import { addPlaceButtonStyle } from '../../../styles/addPlaceScreensStyles';
+import { registrationButtonStyle } from '../../../styles/registrationScreensStyles';
 
 export type CreatePlaceButtonProps = {
     text: string;
@@ -9,9 +9,9 @@ export type CreatePlaceButtonProps = {
 
 const CreatePlaceButton: React.FC<CreatePlaceButtonProps> = ({ text, onPress }) => {
     return (
-        <TouchableOpacity style={addPlaceButtonStyle.button} onPress={onPress}>
-            <View style={addPlaceButtonStyle.buttonTextView}>
-                <Text style={addPlaceButtonStyle.text}>{text}</Text>
+        <TouchableOpacity style={registrationButtonStyle.button} onPress={onPress}>
+            <View style={registrationButtonStyle.buttonTextView}>
+                <Text style={registrationButtonStyle.text}>{text}</Text>
             </View>
         </TouchableOpacity>
     );

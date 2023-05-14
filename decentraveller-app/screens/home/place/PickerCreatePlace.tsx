@@ -1,7 +1,7 @@
 import DropDownPicker from 'react-native-dropdown-picker';
 import { Text, View } from 'react-native';
 import React from 'react';
-import { addPlaceIndicationTextStyles } from '../../../styles/addPlaceScreensStyles';
+import { registrationIndicationTextStyles } from '../../../styles/registrationScreensStyles';
 import { PickerItem } from './CreatePlaceContext';
 
 export type PickerCreatePlaceProps = {
@@ -41,8 +41,8 @@ const PickerCreatePlace: React.FC<PickerCreatePlaceProps> = ({
     disableLocalSearch = false,
 }) => {
     return (
-        <View style={addPlaceIndicationTextStyles.container}>
-            <Text style={addPlaceIndicationTextStyles.text}>{titleText}</Text>
+        <View style={registrationIndicationTextStyles.container}>
+            <Text style={registrationIndicationTextStyles.text}>{titleText}</Text>
             <DropDownPicker
                 open={open}
                 setOpen={setOpen}
@@ -51,9 +51,9 @@ const PickerCreatePlace: React.FC<PickerCreatePlaceProps> = ({
                 setItems={setItems}
                 value={value}
                 setValue={setValue}
-                style={addPlaceIndicationTextStyles.inputField}
+                style={registrationIndicationTextStyles.inputField}
                 placeholder={dropdownPlaceholder}
-                textStyle={addPlaceIndicationTextStyles.pickerInputField}
+                textStyle={registrationIndicationTextStyles.pickerInputField}
                 dropDownDirection="BOTTOM"
                 max={5}
                 itemSeparator={true}

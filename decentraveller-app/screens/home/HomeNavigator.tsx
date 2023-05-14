@@ -1,6 +1,6 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import CreatePlaceNameScreen from './place/CreatePlaceNameScreen';
-import RegistrationForm from './users/registration/RegistrationForm';
+import RegisterUserScreen from './users/registration/RegisterUserScreen';
 import CreatePlaceProvider from './place/CreatePlaceContext';
 import CreatePlaceLocationScreen from './place/CreatePlaceLocationScreen';
 import RootNavigator from './RootNavigator';
@@ -8,7 +8,7 @@ import RootNavigator from './RootNavigator';
 export type HomeStackScreens = {
     RootTabNavigator: undefined;
     CreatePlaceNameScreen: undefined;
-    RegistrationForm: undefined;
+    RegisterUserScreen: undefined;
     CreatePlaceLocationScreen: undefined;
 };
 
@@ -36,10 +36,10 @@ const HomeNavigator = () => {
                     }}
                 />
                 <HomeStackNavigator.Screen
-                    name="RegistrationForm"
-                    component={RegistrationForm}
+                    name="RegisterUserScreen"
+                    component={RegisterUserScreen}
                     options={{
-                        title: 'Registration form',
+                        title: 'Welcome to Decentraveller',
                         headerMode: 'screen',
                     }}
                 />

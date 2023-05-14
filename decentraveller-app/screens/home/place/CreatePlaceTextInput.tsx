@@ -1,6 +1,6 @@
 import React from 'react';
 import { TextInput, View } from 'react-native';
-import { addPlaceIndicationTextStyles } from '../../../styles/addPlaceScreensStyles';
+import { registrationIndicationTextStyles } from '../../../styles/registrationScreensStyles';
 
 export type CreatePlaceTextInputProps = {
     text: string | undefined;
@@ -9,9 +9,9 @@ export type CreatePlaceTextInputProps = {
 };
 
 const CreatePlaceTextInput: React.FC<CreatePlaceTextInputProps> = ({ text, setTextValue, placeholder }) => (
-    <View style={addPlaceIndicationTextStyles.textInputContainer}>
+    <View style={registrationIndicationTextStyles.textInputContainer}>
         <TextInput
-            style={addPlaceIndicationTextStyles.textInputField}
+            style={registrationIndicationTextStyles.textInputField}
             placeholder={placeholder}
             value={text}
             onChangeText={setTextValue}

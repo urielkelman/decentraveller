@@ -1,5 +1,5 @@
 import { KeyboardAvoidingView, Text } from 'react-native';
-import { addPlaceScreenStyles } from '../../../styles/addPlaceScreensStyles';
+import { registrationScreenStyles } from '../../../styles/registrationScreensStyles';
 import HeadingTextCreatePlace from './HeadingTextCreatePlace';
 import { addPlaceScreenWordings } from './wording';
 import React, { useState } from 'react';
@@ -72,7 +72,7 @@ const CreatePlaceLocationScreen = () => {
     };
 
     return (
-        <KeyboardAvoidingView style={addPlaceScreenStyles.container} behavior="padding" keyboardVerticalOffset={40}>
+        <KeyboardAvoidingView style={registrationScreenStyles.container} behavior="padding" keyboardVerticalOffset={40}>
             <HeadingTextCreatePlace text={addPlaceScreenWordings.CREATE_PLACE_LOCATION_HEADING(placeName)} />
             <CreatePlacePicker
                 titleText={addPlaceScreenWordings.CREATE_PLACE_PLACEHOLDER_COUNTRY}
