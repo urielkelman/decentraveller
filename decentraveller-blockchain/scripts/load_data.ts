@@ -17,6 +17,17 @@ const main = async () => {
                 )
         )
     );
+    console.log("Registering profiles");
+    for (const [i, c] of decentravellerContracts.entries()){
+        const result = await c.registerProfile(`user${i}`, 'AR', 0);
+        if (await result.wait(1)) {
+            console.log(
+                `Profile registered for signer ${await c.signer.getAddress()}`
+            );
+        } else {
+            throw Error("Error registering profile");
+        }
+    }
 
     console.log("Starting business load");
     const businessFile = readFileSync("data/business_sample.json", "utf-8");
@@ -47,7 +58,7 @@ const main = async () => {
         }
     }
 
-    /* console.log("Starting review load");
+    console.log("Starting review load");
     const reviewFile = readFileSync("data/reviews_sample.json", "utf-8");
     for (const line of reviewFile.split(/\r?\n/)) {
         const randomIndex = Math.floor(
@@ -82,7 +93,7 @@ const main = async () => {
                 resp.blockHash
             } with signer ${await randomContract.signer.getAddress()}`
         );
-    } */
+    }
 };
 
 main()
