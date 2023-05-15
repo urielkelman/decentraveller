@@ -23,13 +23,13 @@ class MockApiAdapter {
 
     async getUser(wallet: string): Promise<UserResponse> {
         switch (wallet) {
-            case "mati-404": {
+            case "mati": {
                 return MatiUserResponse;
             }
-            case "uri-200": {
+            case "uri": {
                 return UriUserResponse;
             }
-            case "gian-200": {
+            case "gian": {
                 return GianUserResponse;
             }
         }
