@@ -3,9 +3,10 @@ import { View, Text, StyleSheet } from 'react-native';
 import NicknameTextInput from './NicknameTextInput';
 import PickerCreateUser from './PickerCreateUser';
 import NextButton from './NextButton';
-import {addPlaceScreenWordings} from "../../place/wording";
+import {addPlaceScreenWordings} from "../../home/place/wording";
 import {PickerUserItem, useCreateUserContext} from './CreateUserContext';
-import {useCreatePlaceContext} from "../../place/CreatePlaceContext";
+import {PickerItem, useCreatePlaceContext} from "../../home/place/CreatePlaceContext";
+import {ISOCodeByCountry} from "../../home/place/countriesConfig";
 
 const RegisterUserScreen = () => {
 
@@ -19,12 +20,19 @@ const RegisterUserScreen = () => {
     const [interestPickerValue, setInterestPickerValue] = React.useState<string>(null);
     const [interestPickerOpen, setInterestPickerOpen] = React.useState<boolean>(false);
 
-    const {countryPicker} = useCreatePlaceContext();
+    const [countryPickerValue, setCountryPickerValue] = React.useState<string>(null);
+    const [countryPickerOpen, setCountryPickerOpen] = React.useState<boolean>(false);
+    const [countryPickerItems, setCountryPickerItems] = React.useState<PickerItem[]>(
+        Object.keys(ISOCodeByCountry).map((country) => ({ label: country, value: ISOCodeByCountry[country] }))
+    );
 
 
     const onOpenPicker = () => {
         setInterestPickerOpen(true);
+        setCountryPickerOpen(false);
     };
+
+
 
     const handleSubmit = () => {};
     const setNick = () => {};
@@ -41,13 +49,13 @@ const RegisterUserScreen = () => {
             <PickerCreateUser
                 titleText={addPlaceScreenWordings.CREATE_PLACE_PLACEHOLDER_COUNTRY}
                 dropdownPlaceholder={addPlaceScreenWordings.CREATE_PLACE_COUNTRY_PLACEHOLDER}
-                items={countryPicker.items}
-                setItems={countryPicker.setItems}
-                value={countryPicker.value}
-                setValue={countryPicker.setValue}
-                open={countryPicker.open}
-                setOpen={countryPicker.setOpen}
-                onOpen={countryPicker.onOpen}
+                items={countryPickerItems}
+                setItems={setCountryPickerItems}
+                value={countryPickerValue}
+                setValue={setCountryPickerValue}
+                open={countryPickerOpen}
+                setOpen={setCountryPickerOpen}
+                onOpen={() => onOpenPicker}
                 searchable={true}
                 zIndex={3000}
                 zIndexInverse={1000}

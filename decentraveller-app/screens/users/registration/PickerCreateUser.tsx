@@ -2,7 +2,7 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import {PickerUserItem} from "./CreateUserContext";
-import {registrationIndicationTextStyles} from "../../../../styles/registrationScreensStyles";
+import {registrationIndicationTextStyles} from "../../../styles/registrationScreensStyles";
 
 export type PickerCreateUserProps = {
     titleText: string;

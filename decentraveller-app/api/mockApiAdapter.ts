@@ -1,5 +1,7 @@
 import { GeocodingResponse } from './response/geocoding';
 import { Honduras4709GeocodingResponse, HondurasGeocodingResponse } from './mocks/geocoding';
+import {UserResponse} from "./response/user";
+import {GianUserResponse, MatiUserResponse, UriUserResponse} from "./mocks/user";
 
 const searchTextHondurasResponse = ['Honduras', 'Honduras ', 'Honduras 4', 'Honduras 47', 'Honduras 470'];
 
@@ -16,6 +18,20 @@ class MockApiAdapter {
                 return {
                     results: [],
                 };
+        }
+    }
+
+    async getUser(wallet: string): Promise<UserResponse> {
+        switch (wallet) {
+            case "mati-404": {
+                return MatiUserResponse;
+            }
+            case "uri-200": {
+                return UriUserResponse;
+            }
+            case "gian-200": {
+                return GianUserResponse;
+            }
         }
     }
 }
