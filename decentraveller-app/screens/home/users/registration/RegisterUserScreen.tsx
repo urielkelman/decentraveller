@@ -1,6 +1,6 @@
 import React, {useContext, useState} from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import FormInput from './FormInput';
+import NicknameTextInput from './NicknameTextInput';
 import PickerCreateUser from './PickerCreateUser';
 import NextButton from './NextButton';
 import {addPlaceScreenWordings} from "../../place/wording";
@@ -33,7 +33,7 @@ const RegisterUserScreen = () => {
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Tell us about you!</Text>
-            <FormInput
+            <NicknameTextInput
                 text={""}
                 placeholder="Nickname"
                 setTextValue={(value) => setNick()}

@@ -2,7 +2,7 @@ import React from 'react';
 import {TextInput, StyleSheet, View} from 'react-native';
 import {registrationIndicationTextStyles} from "../../../../styles/registrationScreensStyles";
 
-const FormInput = ({ text, setTextValue, placeholder }) => (
+const NicknameTextInput = ({ text, setTextValue, placeholder }) => (
     <View style={registrationIndicationTextStyles.textInputContainer}>
         <TextInput
             style={registrationIndicationTextStyles.textInputField}
@@ -13,5 +13,4 @@ const FormInput = ({ text, setTextValue, placeholder }) => (
     </View>
 );
 
-
-export default FormInput;
+export default NicknameTextInput;
