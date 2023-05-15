@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { useAppContext } from '../context/AppContext';
 import WrongChainModal from './login/WrongChainModal';
@@ -16,7 +16,7 @@ const DecentravellerInitialScreen = () => {
     const checkUser = async () => {
         //const wallet = appContext.connectionContext.connectedAddress;
         //const response = await apiAdapter.getUser(wallet);
-        const wallet = "uri"
+        const wallet = "mati"
         const response = await mockApiAdapter.getUser(wallet);
         console.log(response)
         if (response.code === 200) {
