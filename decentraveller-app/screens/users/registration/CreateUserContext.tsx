@@ -20,6 +20,8 @@ export type PickerUserStateContextType = {
 export type CreateUserContextType = {
     interestPicker: PickerUserStateContextType;
     countryPicker: PickerUserStateContextType;
+    nickname: string;
+    setNickname: (string) => void;
 };
 
 enum CREATE_USER_PICKER {
@@ -30,6 +32,8 @@ enum CREATE_USER_PICKER {
 const CreateUserContext = React.createContext<CreateUserContextType | null>(null);
 
 const CreateUserProvider: React.FC<React.ReactNode> = ({ children }) => {
+    const [nickname, setNickname] = React.useState<string>(null);
+
     const [interestPickerItems, setInterestPickerItems] = React.useState<PickerUserItem[]>([
         { label: 'Gastronomy', value: '0' },
         { label: 'Accommodation', value: '1' },
@@ -80,7 +84,9 @@ const CreateUserProvider: React.FC<React.ReactNode> = ({ children }) => {
                     open: countryPickerOpen,
                     setOpen: setCountryPickerOpen,
                     onOpen: () => onOpenPicker(CREATE_USER_PICKER.COUNTRY),
-                }
+                },
+                nickname: nickname,
+                setNickname: setNickname
             }}
         >
             {children}

@@ -1,32 +1,27 @@
-import React, {useContext, useState} from 'react';
+import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import NicknameTextInput from './NicknameTextInput';
 import PickerCreateUser from './PickerCreateUser';
 import NextButton from './NextButton';
-import {addPlaceScreenWordings} from "../../home/place/wording";
-import {PickerUserItem, useCreateUserContext} from './CreateUserContext';
-import {PickerItem, useCreatePlaceContext} from "../../home/place/CreatePlaceContext";
-import {ISOCodeByCountry} from "../../home/place/countriesConfig";
+import {useCreateUserContext} from './CreateUserContext';
 
 const RegisterUserScreen = () => {
 
-    const {interestPicker, countryPicker}  = useCreateUserContext()
+    const {interestPicker, countryPicker, nickname, setNickname}  = useCreateUserContext()
 
     const handleSubmit = () => {};
-    const setNick = () => {};
-
 
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Tell us about you!</Text>
             <NicknameTextInput
-                text={""}
+                text={nickname}
                 placeholder="Nickname"
-                setTextValue={(value) => setNick()}
+                setTextValue={setNickname}
             />
             <PickerCreateUser
-                titleText={addPlaceScreenWordings.CREATE_PLACE_PLACEHOLDER_COUNTRY}
-                dropdownPlaceholder={addPlaceScreenWordings.CREATE_PLACE_COUNTRY_PLACEHOLDER}
+                titleText={"Country"}
+                dropdownPlaceholder={"Select Country"}
                 items={countryPicker.items}
                 setItems={countryPicker.setItems}
                 value={countryPicker.value}
@@ -54,7 +49,7 @@ const RegisterUserScreen = () => {
             />
 
 
-            <NextButton title="Next" onPress={handleSubmit} />
+            <NextButton title="Finish" onPress={handleSubmit} />
         </View>
     );
 };
