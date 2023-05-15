@@ -77,9 +77,9 @@ const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
         });
         /* This effect allow us to clean sessions that the WalletConnect connector stores in the AsyncStorage */
         const wipeAsyncStorage = async () => {
-            console.log('wiping async storage')
+            console.log('wiping async storage');
             await AsyncStorage.clear();
-            console.log("wiped async storage")
+            console.log('wiped async storage');
             setWipedStorageDone(true);
             setConnectionContext(null);
         };
@@ -98,8 +98,8 @@ const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
 
     React.useEffect(() => {
         console.log('connected:', connector.connected);
-        console.log('session:', connector.session)
-        console.log(connector.chainId)
+        console.log('session:', connector.session);
+        console.log(connector.chainId);
 
         if (connector.connected) {
             /*if(!wipedStorageDone) {
@@ -122,7 +122,7 @@ const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
                     const params: UpdateSessionPayloadParams = payload.params[0];
                     console.log(params);
                     console.log('session_update');
-                    if(params.chainId !== connectionContext.connectedChainId) {
+                    if (params.chainId !== connectionContext.connectedChainId) {
                         updateConnectionContext(params.accounts[0], params.chainId);
                     }
                 });
