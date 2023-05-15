@@ -16,7 +16,7 @@ const DecentravellerInitialScreen = () => {
     const checkUser = async () => {
         //const wallet = appContext.connectionContext.connectedAddress;
         //const response = await apiAdapter.getUser(wallet);
-        const wallet = "mati"
+        const wallet = "uri"
         const response = await mockApiAdapter.getUser(wallet);
         console.log(response)
         if (response.code === 200) {

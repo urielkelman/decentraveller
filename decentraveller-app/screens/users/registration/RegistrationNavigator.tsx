@@ -1,6 +1,7 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import RegisterUserScreen from "./RegisterUserScreen";
 import WelcomeUserScreen from "./WelcomeUserScreen";
+import CreateUserProvider from "./CreateUserContext";
 
 type RegistrationStackParamList = {
     RegisterUserScreen: undefined;
@@ -11,17 +12,19 @@ const RegistrationStackNavigator = createStackNavigator<RegistrationStackParamLi
 
 const RegistrationNavigator = () => {
     return (
-        <RegistrationStackNavigator.Navigator screenOptions={{ headerShown: false }}>
-            <RegistrationStackNavigator.Screen
-                name="WelcomeUserScreen"
-                component={WelcomeUserScreen}
-            />
-            <RegistrationStackNavigator.Screen
-                name="RegisterUserScreen"
-                component={RegisterUserScreen}
-            />
-        </RegistrationStackNavigator.Navigator>
-    );
+        <CreateUserProvider>
+            <RegistrationStackNavigator.Navigator screenOptions={{ headerShown: false }}>
+                <RegistrationStackNavigator.Screen
+                    name="WelcomeUserScreen"
+                    component={WelcomeUserScreen}
+                />
+                <RegistrationStackNavigator.Screen
+                    name="RegisterUserScreen"
+                    component={RegisterUserScreen}
+                />
+            </RegistrationStackNavigator.Navigator>
+        </CreateUserProvider>
+        );
 };
 
 export default RegistrationNavigator;
