@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.9;
+pragma solidity ^0.8.17;
 
 import "./DecentravellerPlace.sol";
 import "./DecentravellerDataTypes.sol";
@@ -7,6 +7,7 @@ import "./DecentravellerPlaceCloneFactory.sol";
 import "hardhat/console.sol";
 
 error Place__NonExistent(uint256 placeId);
+error Place__AlreadyExistent(uint256 placeId);
 error Profile__NicknameInUse(string nickname);
 error Address__Unregistered(address sender);
 
@@ -20,6 +21,8 @@ contract Decentraveller {
 
     uint256 private currentPlaceId;
     DecentravellerPlaceCloneFactory placeFactory;
+    mapping(uint256 => address) private placeAddressByPlaceId;
+    mapping(string => uint) private placeIdByPlaceLocation;
     mapping(address => DecentravellerDataTypes.DecentravellerProfile) profilesByOwner;
     mapping(string => address) ownersByNicknames;
 
@@ -44,12 +47,7 @@ contract Decentraveller {
         profilesByOwner[msg.sender].country = _country;
         profilesByOwner[msg.sender].interest = _interest;
 
-        emit UpdatedProfile(
-            msg.sender,
-            _nickname,
-            _country,
-            _interest
-        );
+        emit UpdatedProfile(msg.sender, _nickname, _country, _interest);
 
         return msg.sender;
     }
@@ -59,8 +57,6 @@ contract Decentraveller {
         currentPlaceId = 0;
     }
 
-    mapping(uint256 => address) private placeAddressByPlaceId;
-
     function addPlace(
         string memory _name,
         string memory _latitude,
@@ -68,10 +64,19 @@ contract Decentraveller {
         string memory _physicalAddress,
         DecentravellerDataTypes.DecentravellerPlaceCategory category
     ) public returns (uint256 placeId) {
-        if (profilesByOwner[msg.sender].owner == address(0))
+        if (profilesByOwner[msg.sender].owner == address(0)) {
             revert Address__Unregistered(msg.sender);
-        currentPlaceId += 1;
+        }
 
+        string memory locationIdentifier = string.concat(_latitude, _longitude);
+        uint256 placeIdForLocation = placeIdByPlaceLocation[locationIdentifier];
+        /* placeForLocation being zero means that there is not another place with the specified location */
+        if (placeIdForLocation != 0) {
+            revert Place__AlreadyExistent(placeIdForLocation);
+        }
+
+        currentPlaceId += 1;
+        placeIdByPlaceLocation[locationIdentifier] = currentPlaceId;
         placeAddressByPlaceId[currentPlaceId] = placeFactory.createNewPlace(
             currentPlaceId,
             _name,
