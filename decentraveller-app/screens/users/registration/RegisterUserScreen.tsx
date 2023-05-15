@@ -10,6 +10,7 @@ import {ISOCodeByCountry} from "../../home/place/countriesConfig";
 
 const RegisterUserScreen = () => {
 
+    // TODO: Improve this
     const [interestPickerItems, setInterestPickerItems] = React.useState<PickerUserItem[]>([
         { label: 'Gastronomy', value: '0' },
         { label: 'Accommodation', value: '1' },
