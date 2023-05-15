@@ -1,4 +1,4 @@
-from typing import NewType, Optional
+from typing import NewType
 
 from fastapi_utils.api_model import APIModel
 

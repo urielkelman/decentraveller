@@ -2,7 +2,7 @@
 pragma solidity ^0.8.9;
 
 import "./DecentravellerPlace.sol";
-import "./DecentravellerPlaceCategory.sol";
+import "./DecentravellerDataTypes.sol";
 import "@openzeppelin/contracts/proxy/Clones.sol";
 
 contract DecentravellerPlaceCloneFactory {
@@ -14,7 +14,7 @@ contract DecentravellerPlaceCloneFactory {
         address indexed placeCreator,
         string placeName,
         string physicalAddress,
-        DecentravellerPlaceCategory category,
+        DecentravellerDataTypes.DecentravellerPlaceCategory category,
         string latitude,
         string longitude
     );
@@ -33,7 +33,7 @@ contract DecentravellerPlaceCloneFactory {
         string memory _latitude,
         string memory _longitude,
         string memory _physicalAddress,
-        DecentravellerPlaceCategory _category,
+        DecentravellerDataTypes.DecentravellerPlaceCategory _category,
         address _placeCreator
     ) external returns (address) {
         address placeCloneAddress = Clones.clone(
