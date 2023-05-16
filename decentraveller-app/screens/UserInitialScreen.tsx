@@ -17,25 +17,29 @@ const DecentravellerInitialScreen = () => {
         //const wallet = appContext.connectionContext.connectedAddress;
         //const response = await apiAdapter.getUser(wallet);
         const wallet = "uri"
-        const response = await mockApiAdapter.getUser(wallet);
-        console.log(response)
-        if (response.code === 200) {
-            return;
-        } else {
-            // TODO: catch this promise rejection
-            throw new PromiseRejectionEvent("Error 404", { promise: Promise.reject() });
-        }
+        return await mockApiAdapter.getUser(wallet);
     };
 
     useEffect(() => {
-        if (appContext.connectionContext === null) {
-            setRenderStack(<LoginNavigator />);
-        } else {
-            let promise = checkUser();
-            promise.then(() => setRenderStack(<HomeNavigator />))
-            promise.catch(() => setRenderStack(<RegistrationNavigator />))
+        (async () => {
+            try {
+                if (appContext.connectionContext === null) {
+                    setRenderStack(<LoginNavigator />);
+                } else {
+                    const response = await checkUser();
+                    console.log(response);
 
-        }
+                    if (response.code === 200) {
+                        setRenderStack(<HomeNavigator />);
+                    } else {
+                        console.log('Usuario no encontrado');
+                        setRenderStack(<RegistrationNavigator />);
+                    }
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        })();
     }, [appContext.connectionContext]);
 
     return (
