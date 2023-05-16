@@ -1,6 +1,6 @@
 import {ActivityIndicator, Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
-import { addPlaceButtonStyle } from '../../../styles/addPlaceScreensStyles';
+import { registrationButtonStyle } from '../../../styles/registrationScreensStyles';
 
 export type CreatePlaceButtonProps = {
     text: string;
@@ -10,12 +10,12 @@ export type CreatePlaceButtonProps = {
 
 const CreatePlaceButton: React.FC<CreatePlaceButtonProps> = ({ text, onPress, loading }) => {
     return (
-        <TouchableOpacity style={addPlaceButtonStyle.button} onPress={onPress}>
-            <View style={addPlaceButtonStyle.buttonTextView}>
+        <TouchableOpacity style={registrationButtonStyle.button} onPress={onPress}>
+            <View style={registrationButtonStyle.buttonTextView}>
                 {loading ? (
                     <ActivityIndicator color="white" />
                 ) : (
-                    <Text style={addPlaceButtonStyle.text}>{text}</Text>
+                    <Text style={registrationButtonStyle.text}>{text}</Text>
                 )}
             </View>
         </TouchableOpacity>

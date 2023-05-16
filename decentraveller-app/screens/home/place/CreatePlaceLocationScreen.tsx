@@ -116,7 +116,7 @@ const CreatePlaceLocationScreen = () => {
                 disableLocalSearch={true}
             />
             <CreatePlaceButton text={'Finish'} loading={loadingAddPlaceResponse} onPress={onFinish} />
-            <ModalError errorText={'Error ocurred'} visible={showErrorModal} handleCloseModal={() => setShowErrorModal(false)} />
+            <ModalError errorText={'Error ocurred'} visible={false} handleCloseModal={() => setShowErrorModal(false)} />
         </KeyboardAvoidingView>
     );
 };
