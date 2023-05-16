@@ -15,7 +15,71 @@ def test_missing_review_404(cleanup):
     assert response.status_code == 404
 
 
+def test_create_review_no_foreign_keys(cleanup):
+    response = client.post("/review",
+                           json={"id": 0,
+                                 "placeId": 0,
+                                 "score": 5,
+                                 "owner": "of49d9adf9b",
+                                 "text": "Muy bueno el combo de sebastian yatra",
+                                 "images": [],
+                                 "state": "UNCENSORED"},
+                           )
+    assert response.status_code == 400
+
+def test_create_review_no_profile(cleanup):
+    response = client.post("/place",
+                           json={"id": 0,
+                                 "name": "McDonalds",
+                                 "address": "Av. Callao & Av. Santa Fe",
+                                 "latitude": -34.595983,
+                                 "longitude": -58.393329,
+                                 "openHours": {"Monday - Monday": "24hs"},
+                                 "categories": "Fast food"},
+                           )
+    assert response.status_code == 201
+
+    response = client.post("/review",
+                           json={"id": 0,
+                                 "placeId": 0,
+                                 "score": 5,
+                                 "owner": "of49d9adf9b",
+                                 "text": "Muy bueno el combo de sebastian yatra",
+                                 "images": [],
+                                 "state": "UNCENSORED"},
+                           )
+    assert response.status_code == 400
+
+
+def test_create_review_no_place(cleanup):
+    response = client.post("/profile",
+                           json={"owner": "of49d9adf9b",
+                                 "nickname": "test",
+                                 "country": "AR",
+                                 "interest": "ACCOMMODATION"},
+                           )
+    assert response.status_code == 201
+
+    response = client.post("/review",
+                           json={"id": 0,
+                                 "placeId": 0,
+                                 "score": 5,
+                                 "owner": "of49d9adf9b",
+                                 "text": "Muy bueno el combo de sebastian yatra",
+                                 "images": [],
+                                 "state": "UNCENSORED"},
+                           )
+    assert response.status_code == 400
+
 def test_create_review(cleanup):
+    response = client.post("/profile",
+                           json={"owner": "of49d9adf9b",
+                                 "nickname": "test",
+                                 "country": "AR",
+                                 "interest": "ACCOMMODATION"},
+                           )
+    assert response.status_code == 201
+
     response = client.post("/place",
                            json={"id": 0,
                                  "name": "McDonalds",
@@ -56,6 +120,14 @@ def test_create_review(cleanup):
 
 
 def test_get_reviews_by_place(cleanup):
+    response = client.post("/profile",
+                           json={"owner": "of49d9adf9b",
+                                 "nickname": "test",
+                                 "country": "AR",
+                                 "interest": "ACCOMMODATION"},
+                           )
+    assert response.status_code == 201
+
     response = client.post("/place",
                            json={"id": 0,
                                  "name": "McDonalds",

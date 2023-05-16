@@ -1,10 +1,12 @@
-from typing import NamedTuple, List
-import requests
 import os
+from typing import NamedTuple, List
+
+import requests
 
 FORWARD_GEOCODING_ENDPOINT = "https://api.mapbox.com/geocoding/v5/mapbox.places/{address}.json?access_token={api_key}" \
                              "&limit=10&country={country}"
 ALLOWED_PLACE_TYPES = {'address', 'poi'}
+
 
 class GeoCodingAPIError(RuntimeError):
     """
@@ -33,8 +35,10 @@ class GeoCodingAPI:
     """
     Geo coding API
     """
+
     def __init__(self):
-        self.api_key = os.getenv('MAPBOX_API_KEY')
+        # self.api_key = os.getenv('MAPBOX_API_KEY')
+        self.api_key = 'pk.eyJ1IjoidXJpenRlayIsImEiOiJjbGd2cHk2ZGIwNDgxM2RxdHB2bno0bHh2In0.3yedjB2istGKYvbkTOYp9g'
 
     def forward_geocoding(self, address: str, country: str) -> List[GeoCodedLocation]:
         """

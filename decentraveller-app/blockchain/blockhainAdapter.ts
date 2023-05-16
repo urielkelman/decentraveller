@@ -1,12 +1,16 @@
+import '@ethersproject/shims';
 import { ethers } from 'ethers';
 import WalletConnect from '@walletconnect/client';
 import { ContractFunction, DecentravellerContract, decentravellerMainContract } from './contracts';
 import { Blockchain, BlockchainByConnectorChainId, LOCAL_DEVELOPMENT_CHAIN_ID } from './config';
 
 class BlockchainAdapter {
-    private async getProvider(chainId: number): Promise<ethers.providers.Provider> {
+    private getProvider(chainId: number): ethers.providers.Provider {
+        console.log('chainId', chainId);
+        console.log('constante', LOCAL_DEVELOPMENT_CHAIN_ID);
         if (chainId === LOCAL_DEVELOPMENT_CHAIN_ID) {
-            return new ethers.providers.JsonRpcProvider('http://10.0.2.2:8545/');
+            console.log('json provider');
+            return new ethers.providers.JsonRpcProvider('http://10.0.2.2:8545');
         } else {
             return ethers.getDefaultProvider(chainId);
         }
@@ -18,11 +22,8 @@ class BlockchainAdapter {
         functionName: string,
         ...args: unknown[]
     ): Promise<string> {
-        const provider: ethers.providers.Provider = await this.getProvider(connector.chainId);
-        console.log("block number", await provider.getBlockNumber());
-        console.log(connector.chainId);
+        const provider: ethers.providers.Provider = this.getProvider(connector.chainId);
         const blockchain: Blockchain = BlockchainByConnectorChainId[connector.chainId];
-        console.log('b', blockchain);
         const contractAddress: string = contract.addressesByBlockchain[blockchain];
         const contractFunction: ContractFunction = contract.functions[functionName];
         const ethersContract: ethers.Contract = new ethers.Contract(
@@ -34,17 +35,15 @@ class BlockchainAdapter {
             contractFunction.functionName
         ].call(this, ...args);
         const connectedAccount: string = connector.accounts[0];
-        console.log('About to send')
+        console.log('About to send');
         const transactionHash: string = await connector.sendTransaction({
             from: connectedAccount,
             to: contractAddress,
             data: populatedTransaction.data,
         });
-        console.log('About to wait')
-
+        console.log('About to wait');
         await provider.waitForTransaction(transactionHash);
-        console.log('se fini')
-
+        console.log('Transaction finished: ', transactionHash);
         return transactionHash;
     }
 
@@ -54,7 +53,8 @@ class BlockchainAdapter {
         latitude: string,
         longitude: string,
         physicalAddress: string,
-        placeCategory: number
+        placeCategory: number,
+        onErrorAddingPlace: () => void
     ): Promise<string> {
         try {
             return await this.populateAndSend(
@@ -69,6 +69,7 @@ class BlockchainAdapter {
             );
         } catch (e) {
             console.log(e);
+            onErrorAddingPlace();
         }
     }
 }

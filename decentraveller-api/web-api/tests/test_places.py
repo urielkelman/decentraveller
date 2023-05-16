@@ -15,6 +15,31 @@ def test_missing_place_404(cleanup):
     assert response.status_code == 404
 
 
+def test_create_place_same_key(cleanup):
+    response = client.get("/place/0")
+    assert response.status_code == 404
+
+    response = client.post("/place",
+                           json={"id": 0,
+                                 "name": "McDonalds",
+                                 "address": "Av. Callao & Av. Santa Fe",
+                                 "latitude": -34.595983,
+                                 "longitude": -58.393329,
+                                 "category": "GASTRONOMY"},
+                           )
+    assert response.status_code == 201
+
+    response = client.post("/place",
+                           json={"id": 0,
+                                 "name": "La Bisteca",
+                                 "address": "Puerto Madero",
+                                 "latitude": -34.595983,
+                                 "longitude": -58.393329,
+                                 "category": "GASTRONOMY"},
+                           )
+    assert response.status_code == 400
+
+
 def test_create_place(cleanup):
     response = client.get("/place/0")
     assert response.status_code == 404
@@ -25,7 +50,7 @@ def test_create_place(cleanup):
                                  "address": "Av. Callao & Av. Santa Fe",
                                  "latitude": -34.595983,
                                  "longitude": -58.393329,
-                                 "categories": "Fast food"},
+                                 "category": "GASTRONOMY"},
                            )
     assert response.status_code == 201
 
@@ -36,8 +61,7 @@ def test_create_place(cleanup):
                                "address": "Av. Callao & Av. Santa Fe",
                                "latitude": -34.595983,
                                "longitude": -58.393329,
-                               "categories": "Fast food",
-                               "subCategories": None}
+                               "category": "GASTRONOMY"}
 
 def test_overwrite_place(cleanup):
     response = client.get("/place/0")
@@ -49,7 +73,7 @@ def test_overwrite_place(cleanup):
                                  "address": "Av. Callao & Av. Santa Fe",
                                  "latitude": -34.595983,
                                  "longitude": -58.393329,
-                                 "categories": "Fast food"},
+                                 "category": "GASTRONOMY"},
                            )
     assert response.status_code == 201
     response = client.put("/place/0",
@@ -57,8 +81,7 @@ def test_overwrite_place(cleanup):
                                 "address": "Av. Callao & Av. Santa Fe",
                                 "latitude": -34.595983,
                                 "longitude": -58.393329,
-                                "categories": "Fast food",
-                                "subCategories": "American"},
+                                "category": "GASTRONOMY"},
                           )
     assert response.status_code == 200
 
@@ -69,8 +92,7 @@ def test_overwrite_place(cleanup):
                                "address": "Av. Callao & Av. Santa Fe",
                                "latitude": -34.595983,
                                "longitude": -58.393329,
-                               "categories": "Fast food",
-                               "subCategories": "American"}
+                               "category": "GASTRONOMY"}
 
 
 def test_update_place(cleanup):
@@ -83,12 +105,11 @@ def test_update_place(cleanup):
                                  "address": "Av. Callao & Av. Santa Fe",
                                  "latitude": -34.595983,
                                  "longitude": -58.393329,
-                                 "categories": "Fast food"},
+                                 "category": "GASTRONOMY"},
                            )
     assert response.status_code == 201
     response = client.patch("/place/0",
-                            json={"categories": "Fast food,American",
-                                  "subCategories": "Economic"})
+                            json={"category": "GASTRONOMY"})
     assert response.status_code == 200
 
     response = client.get("/place/0")
@@ -98,5 +119,4 @@ def test_update_place(cleanup):
                                "address": "Av. Callao & Av. Santa Fe",
                                "latitude": -34.595983,
                                "longitude": -58.393329,
-                               "categories": "Fast food,American",
-                               "subCategories": "Economic"}
+                               "category": "GASTRONOMY"}
