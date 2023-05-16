@@ -4,12 +4,24 @@ import NicknameTextInput from './NicknameTextInput';
 import PickerCreateUser from './PickerCreateUser';
 import NextButton from './NextButton';
 import {useCreateUserContext} from './CreateUserContext';
+import {blockchainAdapter} from "../../../blockchain/blockhainAdapter";
+import {useWalletConnect} from "@walletconnect/react-native-dapp";
 
 const RegisterUserScreen = () => {
 
     const {interestPicker, countryPicker, nickname, setNickname}  = useCreateUserContext()
+    const connector = useWalletConnect();
 
-    const handleSubmit = () => {};
+
+    const handleSubmit = async () => {
+        const transactionHash = await blockchainAdapter.createRegisterUserTransaction(
+            connector,
+            nickname,
+            countryPicker.value,
+            interestPicker.value,
+        );
+        console.log('Transaction confirmed with hash', transactionHash);
+    };
 
     return (
         <View style={styles.container}>
