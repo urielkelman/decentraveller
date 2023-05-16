@@ -1,17 +1,22 @@
-import { Text, TouchableOpacity, View } from 'react-native';
+import {ActivityIndicator, Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
-import { registrationButtonStyle } from '../../../styles/registrationScreensStyles';
+import { addPlaceButtonStyle } from '../../../styles/addPlaceScreensStyles';
 
 export type CreatePlaceButtonProps = {
     text: string;
     onPress: () => void;
+    loading: boolean;
 };
 
-const CreatePlaceButton: React.FC<CreatePlaceButtonProps> = ({ text, onPress }) => {
+const CreatePlaceButton: React.FC<CreatePlaceButtonProps> = ({ text, onPress, loading }) => {
     return (
-        <TouchableOpacity style={registrationButtonStyle.button} onPress={onPress}>
-            <View style={registrationButtonStyle.buttonTextView}>
-                <Text style={registrationButtonStyle.text}>{text}</Text>
+        <TouchableOpacity style={addPlaceButtonStyle.button} onPress={onPress}>
+            <View style={addPlaceButtonStyle.buttonTextView}>
+                {loading ? (
+                    <ActivityIndicator color="white" />
+                ) : (
+                    <Text style={addPlaceButtonStyle.text}>{text}</Text>
+                )}
             </View>
         </TouchableOpacity>
     );

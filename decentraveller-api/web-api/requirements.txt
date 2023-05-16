@@ -5,3 +5,4 @@ SQLAlchemy
 alembic==1.8.1
 psycopg2
 requests
+pillow

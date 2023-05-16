@@ -19,6 +19,7 @@ interface UpdateSessionPayloadParams {
 const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
     const [connectionContext, setConnectionContext] = React.useState<ConnectionContext>(null);
     const [subscriptionsDone, setSubscriptionsDone] = React.useState<boolean>(false);
+    const [wipedStorageDone, setWipedStorageDone] = React.useState<boolean>(false);
 
     const connector = useWalletConnect();
 
@@ -66,9 +67,21 @@ const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
     );
 
     React.useEffect(() => {
+        AsyncStorage.getAllKeys((err, keys) => {
+            AsyncStorage.multiGet(keys, (error, stores) => {
+                stores.map((result, i, store) => {
+                    console.log({ [store[i][0]]: store[i][1] });
+                    return true;
+                });
+            });
+        });
         /* This effect allow us to clean sessions that the WalletConnect connector stores in the AsyncStorage */
         const wipeAsyncStorage = async () => {
+            console.log('wiping async storage');
             await AsyncStorage.clear();
+            console.log('wiped async storage');
+            setWipedStorageDone(true);
+            setConnectionContext(null);
         };
 
         wipeAsyncStorage().catch((e) => console.log('There was a problem wiping async storage', e));
@@ -85,8 +98,15 @@ const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
 
     React.useEffect(() => {
         console.log('connected:', connector.connected);
+        console.log('session:', connector.session);
         console.log(connector.chainId);
+
         if (connector.connected) {
+            /*if(!wipedStorageDone) {
+                console.log('Wait for async storage wipe done');
+                return;
+            }*/
+
             updateConnectionContext(connector.accounts[0], connector.chainId);
 
             if (!subscriptionsDone) {
@@ -102,7 +122,9 @@ const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
                     const params: UpdateSessionPayloadParams = payload.params[0];
                     console.log(params);
                     console.log('session_update');
-                    updateConnectionContext(params.accounts[0], params.chainId);
+                    if (params.chainId !== connectionContext.connectedChainId) {
+                        updateConnectionContext(params.accounts[0], params.chainId);
+                    }
                 });
             }
         }

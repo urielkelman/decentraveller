@@ -11,35 +11,38 @@ import CreatePlaceButton from './CreatePlaceButton';
 import { mockApiAdapter } from '../../../api/mockApiAdapter';
 import { blockchainAdapter } from '../../../blockchain/blockhainAdapter';
 import { useWalletConnect } from '@walletconnect/react-native-dapp';
+import ModalError from "../../commons/ModalError";
 
 const MINIMUM_ADDRESS_LENGTH_TO_SHOW_PICKER = 3;
-
-const getAndParseGeocoding = async (
-    addressText: string,
-    country: string,
-    addressPickerSetItems: React.Dispatch<React.SetStateAction<PickerItem[]>>
-) => {
-    // const geocodingResponse: GeocodingResponse = await apiAdapter.getGeocoding(addressText, country);ç
-    const geocodingResponse: GeocodingResponse = await mockApiAdapter.getGeocoding(addressText, country);
-    console.log(geocodingResponse);
-    addressPickerSetItems(
-        geocodingResponse.results.map((element: GeocodingElementResponse) => ({
-            label: element.fullAddress,
-            /* We stringify the object since and object type can't be the value type of a picker item. */
-            value: JSON.stringify({
-                address: element.fullAddress,
-                latitude: element.latitude,
-                longitude: element.longitude,
-            }),
-        }))
-    );
-};
 
 const CreatePlaceLocationScreen = () => {
     const { placeName, placeTypePicker, countryPicker, addressPicker } = useCreatePlaceContext();
     const [lastSearchTextLength, setLastSearchTextLength] = React.useState<number>(0);
     const [loadingGeocodingResponse, setLoadingGeocodingResponse] = React.useState<boolean>(false);
+    const [loadingAddPlaceResponse, setLoadingAddPlaceResponse] = React.useState<boolean>(false);
+    const [showErrorModal, setShowErrorModal] = React.useState<boolean>(false);
     const connector = useWalletConnect();
+
+    const getAndParseGeocoding = async (addressText: string, country: string) => {
+        try {
+            console.log('geocoding');
+            // const geocodingResponse: GeocodingResponse = await apiAdapter.getGeocoding(addressText, country);
+            const geocodingResponse: GeocodingResponse = await mockApiAdapter.getGeocoding(addressText, country);
+            addressPicker.setItems(
+                geocodingResponse.results.map((element: GeocodingElementResponse) => ({
+                    label: element.fullAddress,
+                    /* We stringify the object since and object type can't be the value type of a picker item. */
+                    value: JSON.stringify({
+                        address: element.fullAddress,
+                        latitude: element.latitude,
+                        longitude: element.longitude,
+                    }),
+                }))
+            );
+        } catch (e) {
+            setLoadingGeocodingResponse(false);
+        }
+    };
 
     const onChangeSearchAddressText = async (text: string) => {
         addressPicker.setValue(text);
@@ -50,7 +53,7 @@ const CreatePlaceLocationScreen = () => {
         ) {
             console.log('Searching for text address: ', addressPicker.value);
             setLoadingGeocodingResponse(true);
-            await getAndParseGeocoding(text, countryPicker.value, addressPicker.setItems);
+            await getAndParseGeocoding(text, countryPicker.value);
             setLoadingGeocodingResponse(false);
         } else if (text.length <= MINIMUM_ADDRESS_LENGTH_TO_SHOW_PICKER) {
             addressPicker.setItems([]);
@@ -58,7 +61,12 @@ const CreatePlaceLocationScreen = () => {
         setLastSearchTextLength(text.length);
     };
 
+    const onErrorAddingPlace = () => {
+        setShowErrorModal(true);
+    }
+
     const onFinish = async () => {
+        setLoadingAddPlaceResponse(true);
         const selectedGeocodingElement: GeocodingElement = JSON.parse(addressPicker.value);
         const transactionHash = await blockchainAdapter.createAddNewPlaceTransaction(
             connector,
@@ -66,8 +74,10 @@ const CreatePlaceLocationScreen = () => {
             selectedGeocodingElement.latitude,
             selectedGeocodingElement.longitude,
             selectedGeocodingElement.address,
-            parseInt(placeTypePicker.value)
+            parseInt(placeTypePicker.value),
+            onErrorAddingPlace
         );
+        setLoadingAddPlaceResponse(false);
         console.log('Transaction confirmed with hash', transactionHash);
     };
 
@@ -105,7 +115,8 @@ const CreatePlaceLocationScreen = () => {
                 loading={loadingGeocodingResponse}
                 disableLocalSearch={true}
             />
-            <CreatePlaceButton text={'Finish'} onPress={onFinish} />
+            <CreatePlaceButton text={'Finish'} loading={loadingAddPlaceResponse} onPress={onFinish} />
+            <ModalError errorText={'Error ocurred'} visible={showErrorModal} handleCloseModal={() => setShowErrorModal(false)} />
         </KeyboardAvoidingView>
     );
 };

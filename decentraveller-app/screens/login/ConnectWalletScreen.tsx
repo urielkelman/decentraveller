@@ -14,9 +14,13 @@ import {
 const ConnectWalletScreen = () => {
     const connector = useWalletConnect();
 
-    const connectWallet = React.useCallback(() => {
+    const connectWallet = React.useCallback(async () => {
         console.log('Trying to connect....');
-        return connector.connect();
+        try {
+            return await connector.connect();
+        } catch (e) {
+            console.error('Error when requesting wallet connection', e);
+        }
     }, [connector]);
 
     return (
