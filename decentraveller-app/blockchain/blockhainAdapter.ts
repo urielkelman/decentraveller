@@ -49,7 +49,7 @@ class BlockchainAdapter {
             console.log('About to wait');
             const txReceipt = await provider.waitForTransaction(transactionHash);
             if(txReceipt.status == 0) {
-                throw new
+                throw new Error("An exception happened during transaction execution.")
             }
             return transactionHash;
         }, BLOCKCHAIN_TIMEOUT_IN_MILLIS, BLOCKCHAIN_TRANSACTION_TASK_NAME);
