@@ -122,7 +122,7 @@ const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
                     const params: UpdateSessionPayloadParams = payload.params[0];
                     console.log(params);
                     console.log('session_update');
-                    if (params.chainId !== connectionContext.connectedChainId) {
+                    if (connectionContext && params.chainId !== connectionContext.connectedChainId) {
                         updateConnectionContext(params.accounts[0], params.chainId);
                     }
                 });

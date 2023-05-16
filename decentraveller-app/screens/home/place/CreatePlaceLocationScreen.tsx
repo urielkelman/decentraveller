@@ -11,7 +11,7 @@ import CreatePlaceButton from './CreatePlaceButton';
 import { mockApiAdapter } from '../../../api/mockApiAdapter';
 import { blockchainAdapter } from '../../../blockchain/blockhainAdapter';
 import { useWalletConnect } from '@walletconnect/react-native-dapp';
-import ModalError from "../../commons/ModalError";
+import InformativeModal from '../../commons/InformativeModal';
 
 const MINIMUM_ADDRESS_LENGTH_TO_SHOW_PICKER = 3;
 
@@ -25,7 +25,6 @@ const CreatePlaceLocationScreen = () => {
 
     const getAndParseGeocoding = async (addressText: string, country: string) => {
         try {
-            console.log('geocoding');
             // const geocodingResponse: GeocodingResponse = await apiAdapter.getGeocoding(addressText, country);
             const geocodingResponse: GeocodingResponse = await mockApiAdapter.getGeocoding(addressText, country);
             addressPicker.setItems(
@@ -51,7 +50,6 @@ const CreatePlaceLocationScreen = () => {
             countryPicker.value &&
             text.length > lastSearchTextLength
         ) {
-            console.log('Searching for text address: ', addressPicker.value);
             setLoadingGeocodingResponse(true);
             await getAndParseGeocoding(text, countryPicker.value);
             setLoadingGeocodingResponse(false);
@@ -63,7 +61,7 @@ const CreatePlaceLocationScreen = () => {
 
     const onErrorAddingPlace = () => {
         setShowErrorModal(true);
-    }
+    };
 
     const onFinish = async () => {
         setLoadingAddPlaceResponse(true);
@@ -116,7 +114,12 @@ const CreatePlaceLocationScreen = () => {
                 disableLocalSearch={true}
             />
             <CreatePlaceButton text={'Finish'} loading={loadingAddPlaceResponse} onPress={onFinish} />
-            <ModalError errorText={'Error ocurred'} visible={showErrorModal} handleCloseModal={() => setShowErrorModal(false)} />
+            <InformativeModal
+                informativeText={'Error ocurred'}
+                visible={showErrorModal}
+                closeModalText={'Close'}
+                handleCloseModal={() => setShowErrorModal(false)}
+            />
         </KeyboardAvoidingView>
     );
 };
