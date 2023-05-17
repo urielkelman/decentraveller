@@ -1,17 +1,17 @@
 import { KeyboardAvoidingView, Text } from 'react-native';
 import { addPlaceScreenStyles } from '../../../styles/addPlaceScreensStyles';
-import HeadingTextCreatePlace from './HeadingTextCreatePlace';
+import DecentravellerHeadingText from '../../../commons/components/DecentravellerHeadingText';
 import { addPlaceScreenWordings } from './wording';
 import React, { useState } from 'react';
 import { GeocodingElement, PickerItem, useCreatePlaceContext } from './CreatePlaceContext';
-import CreatePlacePicker from './PickerCreatePlace';
+import CreatePlacePicker from '../../../commons/components/DecentravellerPicker';
 import { GeocodingElementResponse, GeocodingResponse } from '../../../api/response/geocoding';
 import { apiAdapter } from '../../../api/apiAdapter';
-import CreatePlaceButton from './CreatePlaceButton';
+import DecentravellerButton from '../../../commons/components/DecentravellerButton';
 import { mockApiAdapter } from '../../../api/mockApiAdapter';
 import { blockchainAdapter } from '../../../blockchain/blockhainAdapter';
 import { useWalletConnect } from '@walletconnect/react-native-dapp';
-import InformativeModal from '../../commons/InformativeModal';
+import DecentravellerInformativeModal from '../../../commons/components/DecentravellerInformativeModal';
 
 const MINIMUM_ADDRESS_LENGTH_TO_SHOW_PICKER = 3;
 
@@ -82,8 +82,12 @@ const CreatePlaceLocationScreen = () => {
     const backgroundOpacity = showErrorModal ? 0.5 : 1;
 
     return (
-        <KeyboardAvoidingView style={{...addPlaceScreenStyles.container, opacity: backgroundOpacity}} behavior="padding" keyboardVerticalOffset={40}>
-            <HeadingTextCreatePlace text={addPlaceScreenWordings.CREATE_PLACE_LOCATION_HEADING(placeName)} />
+        <KeyboardAvoidingView
+            style={{ ...addPlaceScreenStyles.container, opacity: backgroundOpacity }}
+            behavior="padding"
+            keyboardVerticalOffset={40}
+        >
+            <DecentravellerHeadingText text={addPlaceScreenWordings.CREATE_PLACE_LOCATION_HEADING(placeName)} />
             <CreatePlacePicker
                 titleText={addPlaceScreenWordings.CREATE_PLACE_PLACEHOLDER_COUNTRY}
                 dropdownPlaceholder={addPlaceScreenWordings.CREATE_PLACE_COUNTRY_PLACEHOLDER}
@@ -115,8 +119,8 @@ const CreatePlaceLocationScreen = () => {
                 loading={loadingGeocodingResponse}
                 disableLocalSearch={true}
             />
-            <CreatePlaceButton text={'Finish'} loading={loadingAddPlaceResponse} onPress={onFinish} />
-            <InformativeModal
+            <DecentravellerButton text={'Finish'} loading={loadingAddPlaceResponse} onPress={onFinish} />
+            <DecentravellerInformativeModal
                 informativeText={'Error ocurred'}
                 visible={showErrorModal}
                 closeModalText={'Close'}

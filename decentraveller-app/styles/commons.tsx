@@ -1,4 +1,4 @@
-import {Dimensions, StyleSheet} from "react-native";
+import { Dimensions, StyleSheet } from 'react-native';
 
 const { height, width } = Dimensions.get('window');
 
@@ -32,9 +32,7 @@ const modalStyles = StyleSheet.create({
         fontFamily: 'Montserrat_700Bold',
         fontSize: height * 0.02,
         margin: height * 0.015,
-
     },
 });
-
 
 export { modalStyles };

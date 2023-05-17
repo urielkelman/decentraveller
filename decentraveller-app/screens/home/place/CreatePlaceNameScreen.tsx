@@ -1,13 +1,13 @@
 import { KeyboardAvoidingView, View } from 'react-native';
 import React from 'react';
-import HeadingTextCreatePlace from './HeadingTextCreatePlace';
+import DecentravellerHeadingText from '../../../commons/components/DecentravellerHeadingText';
 import { addPlaceScreenStyles } from '../../../styles/addPlaceScreensStyles';
-import DescriptionTextCreatePlace from './DescriptionTextCreatePlace';
+import DecentravellerDescriptionText from '../../../commons/components/DecentravellerDescriptionText';
 import { addPlaceScreenWordings } from './wording';
 import { useCreatePlaceContext } from './CreatePlaceContext';
-import CreatePlacePicker from './PickerCreatePlace';
-import CreatePlaceTextInput from './CreatePlaceTextInput';
-import CreatePlaceButton from './CreatePlaceButton';
+import CreatePlacePicker from '../../../commons/components/DecentravellerPicker';
+import DecentravellerTextInput from '../../../commons/components/DecentravellerTextInput';
+import DecentravellerButton from '../../../commons/components/DecentravellerButton';
 
 const CreatePlaceNameScreen = ({ navigation }) => {
     const { placeTypePicker, placeName, setPlaceName } = useCreatePlaceContext();
@@ -20,8 +20,8 @@ const CreatePlaceNameScreen = ({ navigation }) => {
 
     return (
         <KeyboardAvoidingView style={addPlaceScreenStyles.container} behavior="padding">
-            <HeadingTextCreatePlace text={addPlaceScreenWordings.CREATE_PLACE_HEADING} />
-            <DescriptionTextCreatePlace />
+            <DecentravellerHeadingText text={addPlaceScreenWordings.CREATE_PLACE_HEADING} />
+            <DecentravellerDescriptionText />
             <CreatePlacePicker
                 titleText={addPlaceScreenWordings.CREATE_PLACE_PLACEHOLDER_PLACE_TYPE}
                 dropdownPlaceholder={addPlaceScreenWordings.CREATE_PLACE_DROPDOWN_PLACEHOLDER}
@@ -34,12 +34,12 @@ const CreatePlaceNameScreen = ({ navigation }) => {
                 onOpen={placeTypePicker.onOpen}
                 searchable={false}
             />
-            <CreatePlaceTextInput
+            <DecentravellerTextInput
                 text={placeName}
                 setTextValue={setPlaceName}
                 placeholder={addPlaceScreenWordings.CREATE_PLACE_PLACE_NAME_INPUT_PLACEHOLDER}
             />
-            <CreatePlaceButton text={'Next'} onPress={onClickContinue} />
+            <DecentravellerButton text={'Next'} onPress={onClickContinue} />
         </KeyboardAvoidingView>
     );
 };
