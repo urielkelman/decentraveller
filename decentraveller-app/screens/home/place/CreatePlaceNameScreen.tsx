@@ -39,7 +39,7 @@ const CreatePlaceNameScreen = ({ navigation }) => {
                 setTextValue={setPlaceName}
                 placeholder={addPlaceScreenWordings.CREATE_PLACE_PLACE_NAME_INPUT_PLACEHOLDER}
             />
-            <DecentravellerButton text={'Next'} onPress={onClickContinue} />
+            <DecentravellerButton loading={false} text={'Next'} onPress={onClickContinue} />
         </KeyboardAvoidingView>
     );
 };
