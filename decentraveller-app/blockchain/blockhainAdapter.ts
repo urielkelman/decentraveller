@@ -85,7 +85,8 @@ class BlockchainAdapter {
         connector: WalletConnect,
         nickname: string,
         country: string,
-        interest: string
+        interest: string,
+        onError: () => void
     ): Promise<string> {
         try {
             return await this.populateAndSend(
@@ -98,6 +99,7 @@ class BlockchainAdapter {
             );
         } catch (e) {
             console.log(e);
+            onError()
         }
     }
 }
