@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import {View, Text, StyleSheet, KeyboardAvoidingView} from 'react-native';
 import {useCreateUserContext} from './CreateUserContext';
 import {blockchainAdapter} from "../../../blockchain/blockhainAdapter";
 import {useWalletConnect} from "@walletconnect/react-native-dapp";
@@ -7,10 +7,12 @@ import DecentravellerButton from "../../../commons/components/DecentravellerButt
 import DecentravellerTextInput from "../../../commons/components/DecentravellerTextInput";
 import DecentravellerPicker from "../../../commons/components/DecentravellerPicker";
 import {registrationScreenStyles} from "../../../styles/registrationScreensStyles";
+import DecentravellerInformativeModal from "../../../commons/components/DecentravellerInformativeModal";
 
 const RegisterUserScreen = () => {
 
     const {interestPicker, countryPicker, nickname, setNickname}  = useCreateUserContext()
+    const [showErrorModal, setShowErrorModal] = React.useState<boolean>(false);
     const connector = useWalletConnect();
 
 
@@ -20,12 +22,22 @@ const RegisterUserScreen = () => {
             nickname,
             countryPicker.value,
             interestPicker.value,
+            onError
         );
         console.log('Transaction confirmed with hash', transactionHash);
     };
+    const onError = () => {
+        setShowErrorModal(true);
+    };
+
+    const backgroundOpacity = showErrorModal ? 0.5 : 1;
 
     return (
-        <View style={registrationScreenStyles.container}>
+        <KeyboardAvoidingView
+            style={{ ...registrationScreenStyles.container, opacity: backgroundOpacity }}
+            behavior="padding"
+            keyboardVerticalOffset={40}
+        >
             <Text style={registrationScreenStyles.title}>Tell us about you!</Text>
             <DecentravellerTextInput
                 text={nickname}
@@ -60,10 +72,15 @@ const RegisterUserScreen = () => {
                 zIndex={3000}
                 zIndexInverse={1000}
             />
-
-
             <DecentravellerButton loading={false} text="Finish" onPress={handleSubmit} />
-        </View>
+            <DecentravellerInformativeModal
+                informativeText={'Error on registration, please try later'}
+                visible={showErrorModal}
+                closeModalText={'Close'}
+                handleCloseModal={() => setShowErrorModal(false)}
+            />
+        </KeyboardAvoidingView>
+
     );
 };
 
