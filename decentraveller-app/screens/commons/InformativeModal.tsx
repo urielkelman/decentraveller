@@ -1,5 +1,6 @@
 import React from 'react';
 import { Modal, TouchableOpacity, View, Text } from 'react-native';
+import {modalStyles} from "../../styles/commons";
 
 export type ModalErrorProps = {
     informativeText: string;
@@ -15,19 +16,12 @@ const InformativeModal: React.FC<ModalErrorProps> = ({
     handleCloseModal,
 }) => {
     return (
-        <Modal visible={visible} transparent>
-            <View
-                style={{
-                    flex: 1,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                }}
-            >
-                <View style={{ backgroundColor: '#fff', padding: 20 }}>
-                    <Text>{informativeText}</Text>
-                    <TouchableOpacity onPress={handleCloseModal}>
-                        <Text>{closeModalText}</Text>
+        <Modal visible={visible} transparent animationType="slide" >
+            <View style={modalStyles.modalContainer}>
+                <View style={modalStyles.modalContent}>
+                    <Text style={modalStyles.modalText}>{informativeText}</Text>
+                    <TouchableOpacity style={modalStyles.modalButton} onPress={handleCloseModal}>
+                        <Text style={modalStyles.modalButtonText}>{closeModalText}</Text>
                     </TouchableOpacity>
                 </View>
             </View>
