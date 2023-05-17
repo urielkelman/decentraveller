@@ -1,13 +1,14 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { useAppContext } from '../context/AppContext';
-import LoginNavigator from './login/LoginNavigator';
-import RootNavigator from './home/RootNavigator';
 import WrongChainModal from './login/WrongChainModal';
+import HomeNavigator from './home/HomeNavigator';
+import LoginNavigator from './login/LoginNavigator';
 
 const DecentravellerInitialScreen = () => {
     const appContext = useAppContext();
-    const stackToRender: JSX.Element = appContext.connectionContext === null ? <LoginNavigator /> : <RootNavigator />;
+    const stackToRender: JSX.Element = appContext.connectionContext === null ? <LoginNavigator /> : <HomeNavigator />;
+    // const stackToRender: JSX.Element = <HomeNavigator />;
     return (
         <NavigationContainer>
             <WrongChainModal />

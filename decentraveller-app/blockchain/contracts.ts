@@ -1,4 +1,4 @@
-import addPlaceABI from './abis/addPlaceABI.json';
+import mainContractABI from './abis/mainContractABI.json';
 import { Blockchain } from './config';
 
 interface AddressesByBlockchain {
@@ -18,13 +18,13 @@ export interface DecentravellerContract {
 
 const decentravellerMainContract: DecentravellerContract = {
     addressesByBlockchain: {
-        LOCALHOST: '0x9fe46736679d2d9a65f0992f2272de9f3c7fa6e0',
+        LOCALHOST: '0xdc64a140aa3e981100a9beca4e685f962f0cf6c9',
         GOERLI: '0x86D8E6Fa6A84C866a6b84C9f14F6339F49DfF6a2',
     },
     functions: {
         addPlace: {
             functionName: 'addPlace',
-            functionABI: JSON.stringify(addPlaceABI),
+            functionABI: JSON.stringify(mainContractABI),
         },
     },
 };

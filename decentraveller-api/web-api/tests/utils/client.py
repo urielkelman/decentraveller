@@ -3,7 +3,7 @@ from typing import Generator
 from fastapi.testclient import TestClient
 
 from src.app import app
-from src.deps import get_db
+from src.dependencies import get_db
 
 
 def get_test_db() -> Generator:
