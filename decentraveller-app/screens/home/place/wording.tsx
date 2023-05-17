@@ -9,5 +9,4 @@ export const addPlaceScreenWordings = {
     CREATE_PLACE_PLACEHOLDER_COUNTRY: 'Country',
     CREATE_PLACE_COUNTRY_PLACEHOLDER: 'Select country',
     CREATE_PLACE_ADDRESS_PLACEHOLDER: 'Search address...',
-    
 };
