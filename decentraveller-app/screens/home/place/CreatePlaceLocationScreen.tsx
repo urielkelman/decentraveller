@@ -79,8 +79,10 @@ const CreatePlaceLocationScreen = () => {
         console.log('Transaction confirmed with hash', transactionHash);
     };
 
+    const backgroundOpacity = showErrorModal ? 0.5 : 1;
+
     return (
-        <KeyboardAvoidingView style={addPlaceScreenStyles.container} behavior="padding" keyboardVerticalOffset={40}>
+        <KeyboardAvoidingView style={{...addPlaceScreenStyles.container, opacity: backgroundOpacity}} behavior="padding" keyboardVerticalOffset={40}>
             <HeadingTextCreatePlace text={addPlaceScreenWordings.CREATE_PLACE_LOCATION_HEADING(placeName)} />
             <CreatePlacePicker
                 titleText={addPlaceScreenWordings.CREATE_PLACE_PLACEHOLDER_COUNTRY}

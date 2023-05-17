@@ -10,10 +10,7 @@ const BLOCKCHAIN_TRANSACTION_TASK_NAME = 'Blockchain transaction'
 
 class BlockchainAdapter {
     private getProvider(chainId: number): ethers.providers.Provider {
-        console.log('chainId', chainId);
-        console.log('constante', LOCAL_DEVELOPMENT_CHAIN_ID);
         if (chainId === LOCAL_DEVELOPMENT_CHAIN_ID) {
-            console.log('json provider');
             return new ethers.providers.JsonRpcProvider('http://10.0.2.2:8545');
         } else {
             return ethers.getDefaultProvider(chainId);
@@ -39,16 +36,14 @@ class BlockchainAdapter {
             contractFunction.functionName
         ].call(this, ...args);
         const connectedAccount: string = connector.accounts[0];
-        console.log('About to send');
         return await withTimeout(async () => {
             const transactionHash: string = await connector.sendTransaction({
                 from: connectedAccount,
                 to: contractAddress,
                 data: populatedTransaction.data,
             });
-            console.log('About to wait');
             const txReceipt = await provider.waitForTransaction(transactionHash);
-            if(txReceipt.status == 0) {
+            if(txReceipt.status === 1) {
                 throw new Error("An exception happened during transaction execution.")
             }
             return transactionHash;
