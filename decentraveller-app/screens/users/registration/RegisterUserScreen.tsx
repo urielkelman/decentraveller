@@ -1,11 +1,11 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import NicknameTextInput from './NicknameTextInput';
 import PickerCreateUser from './PickerCreateUser';
 import {useCreateUserContext} from './CreateUserContext';
 import {blockchainAdapter} from "../../../blockchain/blockhainAdapter";
 import {useWalletConnect} from "@walletconnect/react-native-dapp";
 import DecentravellerButton from "../../../commons/components/DecentravellerButton";
+import DecentravellerTextInput from "../../../commons/components/DecentravellerTextInput";
 
 const RegisterUserScreen = () => {
 
@@ -26,7 +26,7 @@ const RegisterUserScreen = () => {
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Tell us about you!</Text>
-            <NicknameTextInput
+            <DecentravellerTextInput
                 text={nickname}
                 placeholder="Nickname"
                 setTextValue={setNickname}
