@@ -1,11 +1,12 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import PickerCreateUser from './PickerCreateUser';
 import {useCreateUserContext} from './CreateUserContext';
 import {blockchainAdapter} from "../../../blockchain/blockhainAdapter";
 import {useWalletConnect} from "@walletconnect/react-native-dapp";
 import DecentravellerButton from "../../../commons/components/DecentravellerButton";
 import DecentravellerTextInput from "../../../commons/components/DecentravellerTextInput";
+import DecentravellerPicker from "../../../commons/components/DecentravellerPicker";
+import {registrationScreenStyles} from "../../../styles/registrationScreensStyles";
 
 const RegisterUserScreen = () => {
 
@@ -24,14 +25,14 @@ const RegisterUserScreen = () => {
     };
 
     return (
-        <View style={styles.container}>
-            <Text style={styles.title}>Tell us about you!</Text>
+        <View style={registrationScreenStyles.container}>
+            <Text style={registrationScreenStyles.title}>Tell us about you!</Text>
             <DecentravellerTextInput
                 text={nickname}
                 placeholder="Nickname"
                 setTextValue={setNickname}
             />
-            <PickerCreateUser
+            <DecentravellerPicker
                 titleText={"Country"}
                 dropdownPlaceholder={"Select Country"}
                 items={countryPicker.items}
@@ -45,7 +46,7 @@ const RegisterUserScreen = () => {
                 zIndex={3000}
                 zIndexInverse={1000}
             />
-            <PickerCreateUser
+            <DecentravellerPicker
                 titleText={"Interest"}
                 dropdownPlaceholder={"Gastronomy"}
                 items={interestPicker.items}
@@ -65,20 +66,5 @@ const RegisterUserScreen = () => {
         </View>
     );
 };
-
-const styles = StyleSheet.create({
-    container: {
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#FFE1E1',
-        height: '100%',
-    },
-    title: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        marginBottom: 30,
-    },
-});
 
 export default RegisterUserScreen;
