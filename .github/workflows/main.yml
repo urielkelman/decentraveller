@@ -2,12 +2,14 @@ name: Tests
 run-name: ${{ github.actor }} 
 on: [push]
 jobs:
+
   api_tests:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
     - name: Run tests
       run: docker-compose -f docker-compose-tests.yml run api-unit-tests
+
   integration_tests:
     runs-on: ubuntu-latest
     steps:
@@ -15,9 +17,26 @@ jobs:
     - name: Build images
       run: make docker-image
     - name: Run environment
-      run: make docker-compose-up
+      run: make docker-compose-up 
     - name: Load sample data
       run: docker-compose -f docker-compose-tests.yml run load-sample-data
     - name: Check ETL
       run: ./check_status.sh
+
+  blockchain_tests:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [14.x]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: yarn install
+      - run: yarn hardhat compile
+      - run: yarn hardhat test
+
+
 
