@@ -1,6 +1,6 @@
 import React from 'react';
 import { Modal, TouchableOpacity, View, Text } from 'react-native';
-import {modalStyles} from "../../styles/commons";
+import { modalStyles } from '../../styles/commons';
 
 export type ModalErrorProps = {
     informativeText: string;
@@ -9,14 +9,14 @@ export type ModalErrorProps = {
     handleCloseModal: () => void;
 };
 
-const InformativeModal: React.FC<ModalErrorProps> = ({
+const DecentravellerInformativeModal: React.FC<ModalErrorProps> = ({
     informativeText,
     visible,
     closeModalText,
     handleCloseModal,
 }) => {
     return (
-        <Modal visible={visible} transparent animationType="slide" >
+        <Modal visible={visible} transparent animationType="slide">
             <View style={modalStyles.modalContainer}>
                 <View style={modalStyles.modalContent}>
                     <Text style={modalStyles.modalText}>{informativeText}</Text>
@@ -29,4 +29,4 @@ const InformativeModal: React.FC<ModalErrorProps> = ({
     );
 };
 
-export default InformativeModal;
+export default DecentravellerInformativeModal;

@@ -1,6 +1,6 @@
 import { ActivityIndicator, Text, TouchableOpacity, View } from 'react-native';
 import React from 'react';
-import { addPlaceButtonStyle } from '../../../styles/addPlaceScreensStyles';
+import { addPlaceButtonStyle } from '../../styles/addPlaceScreensStyles';
 
 export type CreatePlaceButtonProps = {
     text: string;
@@ -8,7 +8,7 @@ export type CreatePlaceButtonProps = {
     loading: boolean;
 };
 
-const CreatePlaceButton: React.FC<CreatePlaceButtonProps> = ({ text, onPress, loading }) => {
+const DecentravellerButton: React.FC<CreatePlaceButtonProps> = ({ text, onPress, loading }) => {
     return (
         <TouchableOpacity style={addPlaceButtonStyle.button} onPress={onPress}>
             <View style={addPlaceButtonStyle.buttonTextView}>
@@ -18,4 +18,4 @@ const CreatePlaceButton: React.FC<CreatePlaceButtonProps> = ({ text, onPress, lo
     );
 };
 
-export default CreatePlaceButton;
+export default DecentravellerButton;

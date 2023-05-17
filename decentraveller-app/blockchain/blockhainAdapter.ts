@@ -1,12 +1,12 @@
 import '@ethersproject/shims';
-import {ethers} from 'ethers';
+import { ethers } from 'ethers';
 import WalletConnect from '@walletconnect/client';
-import {ContractFunction, DecentravellerContract, decentravellerMainContract} from './contracts';
-import {Blockchain, BlockchainByConnectorChainId, LOCAL_DEVELOPMENT_CHAIN_ID} from './config';
-import {withTimeout} from '../commons/utils';
+import { ContractFunction, DecentravellerContract, decentravellerMainContract } from './contracts';
+import { Blockchain, BlockchainByConnectorChainId, LOCAL_DEVELOPMENT_CHAIN_ID } from './config';
+import { withTimeout } from '../commons/utils';
 
 const BLOCKCHAIN_TIMEOUT_IN_MILLIS = 5000;
-const BLOCKCHAIN_TRANSACTION_TASK_NAME = 'Blockchain transaction'
+const BLOCKCHAIN_TRANSACTION_TASK_NAME = 'Blockchain transaction';
 
 class BlockchainAdapter {
     private getProvider(chainId: number): ethers.providers.Provider {
@@ -36,18 +36,23 @@ class BlockchainAdapter {
             contractFunction.functionName
         ].call(this, ...args);
         const connectedAccount: string = connector.accounts[0];
-        return await withTimeout(async () => {
-            const transactionHash: string = await connector.sendTransaction({
-                from: connectedAccount,
-                to: contractAddress,
-                data: populatedTransaction.data,
-            });
-            const txReceipt = await provider.waitForTransaction(transactionHash);
-            if(txReceipt.status === 1) {
-                throw new Error("An exception happened during transaction execution.")
-            }
-            return transactionHash;
-        }, BLOCKCHAIN_TIMEOUT_IN_MILLIS, BLOCKCHAIN_TRANSACTION_TASK_NAME);
+        return await withTimeout(
+            async () => {
+                const transactionHash: string = await connector.sendTransaction({
+                    from: connectedAccount,
+                    to: contractAddress,
+                    data: populatedTransaction.data,
+                });
+                const txReceipt = await provider.waitForTransaction(transactionHash);
+                if (txReceipt.status === 0) {
+                    console.log(txReceipt);
+                    throw new Error('An exception happened during transaction execution.');
+                }
+                return transactionHash;
+            },
+            BLOCKCHAIN_TIMEOUT_IN_MILLIS,
+            BLOCKCHAIN_TRANSACTION_TASK_NAME
+        );
     }
 
     async createAddNewPlaceTransaction(

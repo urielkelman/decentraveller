@@ -1,8 +1,8 @@
 import DropDownPicker from 'react-native-dropdown-picker';
 import { Text, View } from 'react-native';
 import React from 'react';
-import { addPlaceIndicationTextStyles } from '../../../styles/addPlaceScreensStyles';
-import { PickerItem } from './CreatePlaceContext';
+import { addPlaceIndicationTextStyles } from '../../styles/addPlaceScreensStyles';
+import { PickerItem } from '../../screens/home/place/CreatePlaceContext';
 
 export type PickerCreatePlaceProps = {
     titleText: string;
@@ -23,7 +23,7 @@ export type PickerCreatePlaceProps = {
     disableLocalSearch?: boolean;
 };
 
-const PickerCreatePlace: React.FC<PickerCreatePlaceProps> = ({
+const DecentravellerPicker: React.FC<PickerCreatePlaceProps> = ({
     titleText,
     dropdownPlaceholder,
     items,
@@ -68,8 +68,8 @@ const PickerCreatePlace: React.FC<PickerCreatePlaceProps> = ({
     );
 };
 
-PickerCreatePlace.defaultProps = {
+DecentravellerPicker.defaultProps = {
     onChangeSearchText: undefined,
 };
 
-export default PickerCreatePlace;
+export default DecentravellerPicker;
