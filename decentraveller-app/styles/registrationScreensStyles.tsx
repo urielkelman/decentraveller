@@ -39,6 +39,11 @@ const registrationScreenStyles = StyleSheet.create({
         backgroundColor: '#FFE1E1',
         height: '100%',
     },
+    title: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        marginBottom: 30,
+    },
 });
 
 const registrationScreenTextStyle = StyleSheet.create({
