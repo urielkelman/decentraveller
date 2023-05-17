@@ -1,7 +1,6 @@
-from sqlalchemy import Column, String, Float, JSON, Integer
-from sqlalchemy.orm import relationship
-
+from sqlalchemy import Column, String, Float, Integer, Enum
 from src.orms import Base
+from src.api_models.place import PlaceCategory
 
 
 class PlaceORM(Base):
@@ -12,10 +11,7 @@ class PlaceORM(Base):
 
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False)
-    address = Column(String, nullable=True)
+    address = Column(String, nullable=False)
     latitude = Column(Float, nullable=False)
     longitude = Column(Float, nullable=False)
-    open_hours = Column(JSON, nullable=True)
-    categories = Column(String, nullable=True)
-    sub_categories = Column(String, nullable=True)
-    review = relationship("ReviewORM", uselist=False)
+    category = Column(Enum(PlaceCategory), nullable=True)

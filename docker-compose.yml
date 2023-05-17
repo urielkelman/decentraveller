@@ -2,8 +2,6 @@ version: "3.9"
 services:
   database:
     image: postgres:15
-    volumes:
-      - postgres_data:/var/lib/postgresql/data/
     expose:
       - 5432
     ports:
@@ -14,8 +12,8 @@ services:
       - POSTGRES_DB=webapi
 
   api:
-    image: decentraveller-api:latest
-    command: uvicorn src.app:app --host 0.0.0.0
+    build: decentraveller-api/
+    command: uvicorn src.app:app --host 0.0.0.0 --log-level debug
     ports:
       - 8000:8000
     environment:
@@ -43,6 +41,3 @@ services:
         condition: on-failure
         delay: 5s
         max_attempts: 2
-
-volumes:
-  postgres_data:

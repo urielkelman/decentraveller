@@ -4,10 +4,11 @@ from fastapi import Depends, HTTPException
 from fastapi_utils.cbv import cbv
 from fastapi_utils.inferring_router import InferringRouter
 from sqlalchemy.orm import Session
-from starlette.status import HTTP_404_NOT_FOUND
+from sqlalchemy.exc import IntegrityError
+from starlette.status import HTTP_404_NOT_FOUND, HTTP_400_BAD_REQUEST
 
 from src.api_models.place import PlaceID, PlaceUpdate, PlaceInDB, PlaceBody
-from src.deps import get_db
+from src.dependencies import get_db
 from src.orms.place import PlaceORM
 
 place_router = InferringRouter()
@@ -36,14 +37,18 @@ class PlaceCBV:
         Creates a new place in the database
 
         :param place: the place data for creation
+        :param geo_coder: geo coder api object
         :return: the place data
         """
         place_orm = PlaceORM(id=place.id, name=place.name, address=place.address,
                              latitude=place.latitude, longitude=place.longitude,
-                             open_hours=place.open_hours, categories=place.categories,
-                             sub_categories=place.sub_categories)
+                             category=place.category)
         self.session.add(place_orm)
-        self.session.commit()
+        try:
+            self.session.commit()
+        except IntegrityError:
+            raise HTTPException(status_code=HTTP_400_BAD_REQUEST,
+                                detail="The place id is already on the database.")
         return PlaceInDB.from_orm(place_orm)
 
     @place_router.get("/place/{place_id}")
@@ -73,13 +78,14 @@ class PlaceCBV:
         if place_orm is None:
             raise HTTPException(status_code=HTTP_404_NOT_FOUND)
 
+        if not place.latitude or not place.longitude:
+            place.longitude, place.latitude = self.geo_coder.forward_geocoding(place.address)
+
         place_orm.name = place.name
         place_orm.address = place.address
         place_orm.latitude = place.latitude
         place_orm.longitude = place.longitude
-        place_orm.open_hours = place.open_hours
-        place_orm.categories = place.categories
-        place_orm.sub_categories = place.sub_categories
+        place_orm.categories = place.category
 
         self.session.add(place_orm)
         self.session.commit()
