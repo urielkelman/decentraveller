@@ -14,7 +14,7 @@ class GeocodingCBV:
     geocoding_api: GeoCodingAPI = Depends(GeoCodingAPI)
 
     @geocoding_router.get("/geocoding/forward")
-    def forward_geocoding(self, address: str,1 country: str) -> ForwardGeoCodingResults:
+    def forward_geocoding(self, address: str, country: str) -> ForwardGeoCodingResults:
         """
         Forward geocoding
 

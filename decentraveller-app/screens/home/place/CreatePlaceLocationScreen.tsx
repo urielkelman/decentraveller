@@ -1,17 +1,17 @@
 import { KeyboardAvoidingView, Text } from 'react-native';
-import { registrationScreenStyles } from '../../../styles/registrationScreensStyles';
-import HeadingTextCreatePlace from './HeadingTextCreatePlace';
+import { addPlaceScreenStyles } from '../../../styles/addPlaceScreensStyles';
+import DecentravellerHeadingText from '../../../commons/components/DecentravellerHeadingText';
 import { addPlaceScreenWordings } from './wording';
 import React, { useState } from 'react';
 import { GeocodingElement, PickerItem, useCreatePlaceContext } from './CreatePlaceContext';
-import CreatePlacePicker from './PickerCreatePlace';
+import CreatePlacePicker from '../../../commons/components/DecentravellerPicker';
 import { GeocodingElementResponse, GeocodingResponse } from '../../../api/response/geocoding';
 import { apiAdapter } from '../../../api/apiAdapter';
-import CreatePlaceButton from './CreatePlaceButton';
+import DecentravellerButton from '../../../commons/components/DecentravellerButton';
 import { mockApiAdapter } from '../../../api/mockApiAdapter';
 import { blockchainAdapter } from '../../../blockchain/blockhainAdapter';
 import { useWalletConnect } from '@walletconnect/react-native-dapp';
-import ModalError from "../../commons/ModalError";
+import DecentravellerInformativeModal from '../../../commons/components/DecentravellerInformativeModal';
 
 const MINIMUM_ADDRESS_LENGTH_TO_SHOW_PICKER = 3;
 
@@ -25,7 +25,6 @@ const CreatePlaceLocationScreen = () => {
 
     const getAndParseGeocoding = async (addressText: string, country: string) => {
         try {
-            console.log('geocoding');
             // const geocodingResponse: GeocodingResponse = await apiAdapter.getGeocoding(addressText, country);
             const geocodingResponse: GeocodingResponse = await mockApiAdapter.getGeocoding(addressText, country);
             addressPicker.setItems(
@@ -51,7 +50,6 @@ const CreatePlaceLocationScreen = () => {
             countryPicker.value &&
             text.length > lastSearchTextLength
         ) {
-            console.log('Searching for text address: ', addressPicker.value);
             setLoadingGeocodingResponse(true);
             await getAndParseGeocoding(text, countryPicker.value);
             setLoadingGeocodingResponse(false);
@@ -63,7 +61,7 @@ const CreatePlaceLocationScreen = () => {
 
     const onErrorAddingPlace = () => {
         setShowErrorModal(true);
-    }
+    };
 
     const onFinish = async () => {
         setLoadingAddPlaceResponse(true);
@@ -81,9 +79,15 @@ const CreatePlaceLocationScreen = () => {
         console.log('Transaction confirmed with hash', transactionHash);
     };
 
+    const backgroundOpacity = showErrorModal ? 0.5 : 1;
+
     return (
-        <KeyboardAvoidingView style={registrationScreenStyles.container} behavior="padding" keyboardVerticalOffset={40}>
-            <HeadingTextCreatePlace text={addPlaceScreenWordings.CREATE_PLACE_LOCATION_HEADING(placeName)} />
+        <KeyboardAvoidingView
+            style={{ ...addPlaceScreenStyles.container, opacity: backgroundOpacity }}
+            behavior="padding"
+            keyboardVerticalOffset={40}
+        >
+            <DecentravellerHeadingText text={addPlaceScreenWordings.CREATE_PLACE_LOCATION_HEADING(placeName)} />
             <CreatePlacePicker
                 titleText={addPlaceScreenWordings.CREATE_PLACE_PLACEHOLDER_COUNTRY}
                 dropdownPlaceholder={addPlaceScreenWordings.CREATE_PLACE_COUNTRY_PLACEHOLDER}
@@ -115,8 +119,13 @@ const CreatePlaceLocationScreen = () => {
                 loading={loadingGeocodingResponse}
                 disableLocalSearch={true}
             />
-            <CreatePlaceButton text={'Finish'} loading={loadingAddPlaceResponse} onPress={onFinish} />
-            <ModalError errorText={'Error ocurred'} visible={false} handleCloseModal={() => setShowErrorModal(false)} />
+            <DecentravellerButton text={'Finish'} loading={loadingAddPlaceResponse} onPress={onFinish} />
+            <DecentravellerInformativeModal
+                informativeText={'Error ocurred'}
+                visible={showErrorModal}
+                closeModalText={'Close'}
+                handleCloseModal={() => setShowErrorModal(false)}
+            />
         </KeyboardAvoidingView>
     );
 };

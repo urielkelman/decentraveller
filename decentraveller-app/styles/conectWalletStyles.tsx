@@ -2,8 +2,6 @@ import { StyleSheet, TextStyle, Dimensions } from 'react-native';
 
 const { height, width } = Dimensions.get('window');
 
-console.log(height, width);
-
 const connectWalletScreenTextStyle = StyleSheet.create({
     container: {
         flex: 1,
