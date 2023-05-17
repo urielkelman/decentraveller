@@ -34,10 +34,11 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-      - run: cd decentraveller-blockchain
-      - run: yarn install
-      - run: yarn hardhat compile
-      - run: yarn hardhat test
+      - run: |
+          cd decentraveller-blockchain
+          yarn install
+          yarn hardhat compile
+          yarn hardhat test
 
 
 
