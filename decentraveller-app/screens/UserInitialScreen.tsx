@@ -14,10 +14,12 @@ const DecentravellerInitialScreen = () => {
     const appContext = useAppContext();
 
     const checkUser = async () => {
-        //const wallet = appContext.connectionContext.connectedAddress;
-        //const response = await apiAdapter.getUser(wallet);
-        const wallet = "mati"
-        return await mockApiAdapter.getUser(wallet);
+        //const adapter = mockApiAdapter
+        //const wallet = "mati"
+
+        const adapter = apiAdapter
+        const wallet = appContext.connectionContext.connectedAddress;
+        return await adapter.getUser(wallet);
     };
 
     useEffect(() => {
