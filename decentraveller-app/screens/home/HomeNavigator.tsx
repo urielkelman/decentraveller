@@ -1,6 +1,5 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import CreatePlaceNameScreen from './place/CreatePlaceNameScreen';
-import RegisterUserScreen from '../users/registration/RegisterUserScreen';
 import CreatePlaceProvider from './place/CreatePlaceContext';
 import CreatePlaceLocationScreen from './place/CreatePlaceLocationScreen';
 import RootNavigator from './RootNavigator';

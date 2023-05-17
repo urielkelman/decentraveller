@@ -2,6 +2,7 @@ import React from 'react';
 import {View, Text, StyleSheet, KeyboardAvoidingView} from 'react-native';
 import {useCreateUserContext} from './CreateUserContext';
 import {blockchainAdapter} from "../../../blockchain/blockhainAdapter";
+import {mockBlockchainAdapter} from "../../../blockchain/mockBlockchainAdapter";
 import {useWalletConnect} from "@walletconnect/react-native-dapp";
 import DecentravellerButton from "../../../commons/components/DecentravellerButton";
 import DecentravellerTextInput from "../../../commons/components/DecentravellerTextInput";
@@ -9,7 +10,7 @@ import DecentravellerPicker from "../../../commons/components/DecentravellerPick
 import {registrationScreenStyles} from "../../../styles/registrationScreensStyles";
 import DecentravellerInformativeModal from "../../../commons/components/DecentravellerInformativeModal";
 
-const RegisterUserScreen = () => {
+const RegisterUserScreen = ({navigation}) => {
 
     const {interestPicker, countryPicker, nickname, setNickname}  = useCreateUserContext()
     const [showErrorModal, setShowErrorModal] = React.useState<boolean>(false);
@@ -17,7 +18,10 @@ const RegisterUserScreen = () => {
 
 
     const handleSubmit = async () => {
-        const transactionHash = await blockchainAdapter.createRegisterUserTransaction(
+        const adapter = blockchainAdapter
+        //const adapter = mockBlockchainAdapter
+
+        const transactionHash = await adapter.createRegisterUserTransaction(
             connector,
             nickname,
             countryPicker.value,
@@ -25,6 +29,7 @@ const RegisterUserScreen = () => {
             onError
         );
         console.log('Transaction confirmed with hash', transactionHash);
+        if (!showErrorModal) {navigation.navigate("SuccessRegisterUserScreen")}
     };
     const onError = () => {
         setShowErrorModal(true);
