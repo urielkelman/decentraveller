@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import NextButton from './NextButton';
 import {registrationScreenTextStyle, subTitleTextStyle, WelcomeStyles} from "../../../styles/registrationScreensStyles";
+import DecentravellerButton from "../../../commons/components/DecentravellerButton";
 
 const WelcomeUserScreen = ({ navigation }) => {
     const onClickContinue = () => {
@@ -20,7 +20,7 @@ const WelcomeUserScreen = ({ navigation }) => {
             <Text style={subTitleTextStyle} adjustsFontSizeToFit={true} numberOfLines={2}>
                 To manage you better we want to ask you for some data, but hey! They are completely optional
             </Text>
-            <NextButton title="Next" onPress={onClickContinue} />
+            <DecentravellerButton loading={false} text="Next" onPress={onClickContinue} />
         </View>
     );
 };

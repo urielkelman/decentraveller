@@ -2,10 +2,10 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import NicknameTextInput from './NicknameTextInput';
 import PickerCreateUser from './PickerCreateUser';
-import NextButton from './NextButton';
 import {useCreateUserContext} from './CreateUserContext';
 import {blockchainAdapter} from "../../../blockchain/blockhainAdapter";
 import {useWalletConnect} from "@walletconnect/react-native-dapp";
+import DecentravellerButton from "../../../commons/components/DecentravellerButton";
 
 const RegisterUserScreen = () => {
 
@@ -61,7 +61,7 @@ const RegisterUserScreen = () => {
             />
 
 
-            <NextButton title="Finish" onPress={handleSubmit} />
+            <DecentravellerButton loading={false} text="Finish" onPress={handleSubmit} />
         </View>
     );
 };
