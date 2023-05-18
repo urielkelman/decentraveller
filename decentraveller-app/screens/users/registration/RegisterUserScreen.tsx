@@ -9,6 +9,7 @@ import DecentravellerTextInput from '../../../commons/components/DecentravellerT
 import DecentravellerPicker from '../../../commons/components/DecentravellerPicker';
 import { registrationScreenStyles } from '../../../styles/registrationScreensStyles';
 import DecentravellerInformativeModal from '../../../commons/components/DecentravellerInformativeModal';
+import {registerUserScreenWordings} from "./wording";
 
 const RegisterUserScreen = ({ navigation }) => {
     const { interestPicker, countryPicker, nickname, setNickname } = useCreateUserContext();
@@ -46,8 +47,8 @@ const RegisterUserScreen = ({ navigation }) => {
             <Text style={registrationScreenStyles.title}>Tell us about you!</Text>
             <DecentravellerTextInput text={nickname} placeholder="Nickname" setTextValue={setNickname} />
             <DecentravellerPicker
-                titleText={'Country'}
-                dropdownPlaceholder={'Select Country'}
+                titleText={registerUserScreenWordings.REGISTER_USER_TITLE_COUNTRY}
+                dropdownPlaceholder={registerUserScreenWordings.REGISTER_USER_COUNTRY_PLACEHOLDER}
                 items={countryPicker.items}
                 setItems={countryPicker.setItems}
                 value={countryPicker.value}
@@ -60,8 +61,8 @@ const RegisterUserScreen = ({ navigation }) => {
                 zIndexInverse={1000}
             />
             <DecentravellerPicker
-                titleText={'Interest'}
-                dropdownPlaceholder={'Gastronomy'}
+                titleText={registerUserScreenWordings.REGISTER_USER_TITLE_INTEREST}
+                dropdownPlaceholder={registerUserScreenWordings.REGISTER_USER_INTEREST_PLACEHOLDER}
                 items={interestPicker.items}
                 setItems={interestPicker.setItems}
                 value={interestPicker.value}
@@ -75,7 +76,7 @@ const RegisterUserScreen = ({ navigation }) => {
             />
             <DecentravellerButton loading={false} text="Finish" onPress={handleSubmit} />
             <DecentravellerInformativeModal
-                informativeText={'Error on registration, please try later'}
+                informativeText={registerUserScreenWordings.REGISTER_USER_ERROR_INFORMATIVE_TEXT}
                 visible={showErrorModal}
                 closeModalText={'Close'}
                 handleCloseModal={() => setShowErrorModal(false)}

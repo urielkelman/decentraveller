@@ -25,9 +25,10 @@ class ApiAdapter {
         return await httpAPIConnector.get(httpRequest);
     }
 
-    async getUser(wallet: string, onFailed: () => void): Promise<UserResponse> {
+    async getUser(walletAddress: string, onFailed: () => void): Promise<UserResponse> {
+
         const httpRequest: HttpGetRequest = {
-            url: GET_USER_ENDPOINT + '/' + wallet,
+            url: `${GET_USER_ENDPOINT}/${walletAddress}`,
             queryParams: {},
             onError: (e) => {
                 onFailed();

@@ -3,7 +3,7 @@ import { addPlaceScreenStyles } from '../../../styles/addPlaceScreensStyles';
 import DecentravellerHeadingText from '../../../commons/components/DecentravellerHeadingText';
 import { addPlaceScreenWordings } from './wording';
 import React, { useState } from 'react';
-import { GeocodingElement, PickerItem, useCreatePlaceContext } from './CreatePlaceContext';
+import { GeocodingElement, useCreatePlaceContext } from './CreatePlaceContext';
 import CreatePlacePicker from '../../../commons/components/DecentravellerPicker';
 import { GeocodingElementResponse, GeocodingResponse } from '../../../api/response/geocoding';
 import { apiAdapter } from '../../../api/apiAdapter';
