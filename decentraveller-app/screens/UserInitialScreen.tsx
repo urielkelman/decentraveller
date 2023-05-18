@@ -10,44 +10,48 @@ import {mockApiAdapter} from '../api/mockApiAdapter';
 
 
 const DecentravellerInitialScreen = () => {
-    const [renderStack, setRenderStack] = React.useState(null);
+    const [stackToRender, setStackToRender] = React.useState<'Login' | 'Home' | 'Registration'>()
     const appContext = useAppContext();
 
-    const checkUser = async () => {
+    const getUser = async () => {
         //const adapter = mockApiAdapter
         //const wallet = "mati"
 
         const adapter = apiAdapter
         const wallet = appContext.connectionContext.connectedAddress;
-        return await adapter.getUser(wallet);
+        return await adapter.getUser(wallet, () => setStackToRender('Registration'));
     };
 
     useEffect(() => {
+        // http, setStack, loading
         (async () => {
-            try {
-                if (appContext.connectionContext === null) {
-                    setRenderStack(<LoginNavigator />);
-                } else {
-                    const response = await checkUser();
-                    console.log(response);
-
-                    if (response.code === 200) {
-                        setRenderStack(<HomeNavigator />);
-                    } else {
-                        console.log('Usuario no encontrado');
-                        setRenderStack(<RegistrationNavigator />);
-                    }
-                }
-            } catch (error) {
-                console.error('Error:', error);
+            if (!appContext.connectionContext) {
+                setStackToRender('Login');
+            } else {
+                await getUser();
+                setStackToRender('Home');
             }
+
         })();
     }, [appContext.connectionContext]);
+
+    const onSuccessfulRegistration = () => {
+        setStackToRender('Home');
+    }
+
+    const navigatorToRender = () => { switch (stackToRender) {
+        case "Home":
+            return <HomeNavigator />;
+        case "Login":
+            return <LoginNavigator />;
+        case "Registration":
+            return <RegistrationNavigator  onSuccess={onSuccessfulRegistration}/>;
+    }}
 
     return (
         <NavigationContainer>
             <WrongChainModal />
-            {renderStack}
+            {navigatorToRender()}
         </NavigationContainer>
     );
 };

@@ -4,6 +4,7 @@ import WelcomeUserScreen from "./WelcomeUserScreen";
 import CreateUserProvider from "./CreateUserContext";
 import SuccessRegisterUserScreen from "./SuccessRegisterUserScreen";
 import HomeNavigator from '../../home/HomeNavigator';
+import React from "react";
 
 
 type RegistrationStackParamList = {
@@ -13,9 +14,13 @@ type RegistrationStackParamList = {
     HomeNavigator: undefined;
 };
 
+export type RegistrationProps = {
+    onSuccess: () => void;
+}
+
 const RegistrationStackNavigator = createStackNavigator<RegistrationStackParamList>();
 
-const RegistrationNavigator = () => {
+const RegistrationNavigator: React.FC<RegistrationProps> = ({ onSuccess }) => {
     return (
         <CreateUserProvider>
             <RegistrationStackNavigator.Navigator screenOptions={{ headerShown: false }}>
@@ -25,6 +30,7 @@ const RegistrationNavigator = () => {
                 />
                 <RegistrationStackNavigator.Screen
                     name="RegisterUserScreen"
+                    /* Pass on success so we can change the navigator in the initial screen */
                     component={RegisterUserScreen}
                 />
                 <RegistrationStackNavigator.Screen
