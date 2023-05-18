@@ -8,7 +8,5 @@ export type UserElementResponse = {
 };
 
 export type UserResponse = {
-    /* remover */
-    code: HttpStatusCode;
-    results: UserElementResponse[];
+    results: UserElementResponse;
 };
