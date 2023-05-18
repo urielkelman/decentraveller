@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { View, Text, StyleSheet, KeyboardAvoidingView } from 'react-native';
 import { useCreateUserContext } from './CreateUserContext';
 import { blockchainAdapter } from '../../../blockchain/blockhainAdapter';
@@ -14,9 +14,11 @@ import {registerUserScreenWordings} from "./wording";
 const RegisterUserScreen = ({ navigation }) => {
     const { interestPicker, countryPicker, nickname, setNickname } = useCreateUserContext();
     const [showErrorModal, setShowErrorModal] = React.useState<boolean>(false);
+    const [isSubmitted, setIsSubmitted] = React.useState<boolean>(false);
     const connector = useWalletConnect();
 
     const handleSubmit = async () => {
+
         const adapter = blockchainAdapter;
         //const adapter = mockBlockchainAdapter
 
@@ -28,13 +30,17 @@ const RegisterUserScreen = ({ navigation }) => {
             onError
         );
         console.log('Transaction confirmed with hash', transactionHash);
-        if (!showErrorModal) {
-            navigation.navigate('SuccessRegisterUserScreen');
-        }
+        setIsSubmitted(true)
     };
     const onError = () => {
         setShowErrorModal(true);
     };
+
+    useEffect(() => {
+        if (isSubmitted && !showErrorModal) {
+            navigation.navigate('SuccessRegisterUserScreen');
+        }
+    }, [showErrorModal, isSubmitted]);
 
     const backgroundOpacity = showErrorModal ? 0.5 : 1;
 
@@ -79,7 +85,11 @@ const RegisterUserScreen = ({ navigation }) => {
                 informativeText={registerUserScreenWordings.REGISTER_USER_ERROR_INFORMATIVE_TEXT}
                 visible={showErrorModal}
                 closeModalText={'Close'}
-                handleCloseModal={() => setShowErrorModal(false)}
+                handleCloseModal={() => {
+                    setShowErrorModal(false)
+                    setIsSubmitted(false)
+                    }
+                }
             />
         </KeyboardAvoidingView>
     );
