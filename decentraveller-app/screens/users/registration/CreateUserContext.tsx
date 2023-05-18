@@ -1,25 +1,11 @@
 import React from 'react';
-import {PickerItem} from "../../home/place/CreatePlaceContext";
 import {ISOCodeByCountry} from "../../home/place/countriesConfig";
-
-export interface PickerUserItem {
-    label: string;
-    value: string;
-}
-
-export type PickerUserStateContextType = {
-    items: PickerUserItem[];
-    setItems: React.Dispatch<React.SetStateAction<PickerUserItem[]>>;
-    value: string;
-    setValue: React.Dispatch<React.SetStateAction<string>>;
-    open: boolean;
-    setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-    onOpen: () => void;
-};
+import {PickerItem, PickerStateContextType} from "../../../commons/types";
+import {interestsItems} from "../../../commons/global";
 
 export type CreateUserContextType = {
-    interestPicker: PickerUserStateContextType;
-    countryPicker: PickerUserStateContextType;
+    interestPicker: PickerStateContextType;
+    countryPicker: PickerStateContextType;
     nickname: string;
     setNickname: (string) => void;
 };
@@ -34,12 +20,7 @@ const CreateUserContext = React.createContext<CreateUserContextType | null>(null
 const CreateUserProvider: React.FC<React.ReactNode> = ({ children }) => {
     const [nickname, setNickname] = React.useState<string>(null);
 
-    const [interestPickerItems, setInterestPickerItems] = React.useState<PickerUserItem[]>([
-        { label: 'Gastronomy', value: '0' },
-        { label: 'Accommodation', value: '1' },
-        { label: 'Entertainment', value: '2' },
-        { label: 'Others', value: '3' },
-    ]);
+    const [interestPickerItems, setInterestPickerItems] = React.useState<PickerItem[]>(interestsItems);
 
     const [interestPickerValue, setInterestPickerValue] = React.useState<string>(null);
     const [interestPickerOpen, setInterestPickerOpen] = React.useState<boolean>(false);
