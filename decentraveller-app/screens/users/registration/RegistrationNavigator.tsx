@@ -33,6 +33,7 @@ const RegistrationNavigator: React.FC<RegistrationProps> = ({ onSuccess }) => {
                     name="SuccessRegisterUserScreen"
                     component={SuccessRegisterUserScreen}
                 />
+                {/* Esto no deberia hacer mas falta */}
                 <RegistrationStackNavigator.Screen name="HomeNavigator" component={HomeNavigator} />
             </RegistrationStackNavigator.Navigator>
         </CreateUserProvider>
