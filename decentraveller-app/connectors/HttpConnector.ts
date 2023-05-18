@@ -4,7 +4,7 @@ import { API_ENDPOINT } from '../api/config';
 export type HttpGetRequest = {
     url: string;
     queryParams: { [key: string]: string };
-    onError: () => void;
+    onError: (e) => void;
 };
 
 class HttpConnector {
@@ -28,7 +28,7 @@ class HttpConnector {
             } else {
                 console.log(error);
             }
-            httpRequest.onError();
+            httpRequest.onError(error);
         }
     }
 }

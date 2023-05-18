@@ -9,7 +9,7 @@ export interface GeocodingElement {
 
 export interface PickerItem {
     label: string;
-    value: string | GeocodingElement;
+    value: string;
 }
 
 export type PickerStateContextType = {
@@ -72,6 +72,7 @@ const CreatePlaceProvider: React.FC<React.ReactNode> = ({ children }) => {
             case CREATE_PLACE_PICKER.ADDRESS:
                 setCountryPickerOpen(false);
                 setPlaceTypePickerOpen(false);
+                setAddressPickerItems(addressPickerItems.filter((item) => item.value === addressPickerValue));
                 return;
             default:
                 return;

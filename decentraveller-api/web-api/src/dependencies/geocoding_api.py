@@ -37,7 +37,8 @@ class GeoCodingAPI:
     """
 
     def __init__(self):
-        self.api_key = os.getenv('MAPBOX_API_KEY')
+        # self.api_key = os.getenv('MAPBOX_API_KEY')
+        self.api_key = 'pk.eyJ1IjoidXJpenRlayIsImEiOiJjbGd2cHk2ZGIwNDgxM2RxdHB2bno0bHh2In0.3yedjB2istGKYvbkTOYp9g'
 
     def forward_geocoding(self, address: str, country: str) -> List[GeoCodedLocation]:
         """

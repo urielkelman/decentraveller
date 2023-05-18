@@ -16,8 +16,8 @@ class ApiAdapter {
                 address: physicalAddress,
                 country,
             },
-            onError: () => {
-                console.log('An error happened when trying to geocode.');
+            onError: (e) => {
+                console.log('An error happened when trying to geocode.', e);
             },
         };
 
