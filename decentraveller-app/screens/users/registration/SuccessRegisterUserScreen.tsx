@@ -1,16 +1,19 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text } from 'react-native';
 import {
-    registrationScreenTextStyle,
     subTitleTextStyle,
     WelcomeStyles,
 } from '../../../styles/registrationScreensStyles';
 import DecentravellerButton from '../../../commons/components/DecentravellerButton';
-import { useNavigation } from '@react-navigation/native';
 
-const SuccessRegisterUserScreen = ({ navigation }) => {
+type SuccessRegisterUserScreenProps = {
+    onSuccess: () => void;
+};
+const SuccessRegisterUserScreen: React.FC<SuccessRegisterUserScreenProps> = (props) => {
+    const { onSuccess } = props;
+
     const onClickContinue = () => {
-        navigation.navigate('HomeNavigator');
+        onSuccess()
     };
 
     return (
