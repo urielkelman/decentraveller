@@ -1,7 +1,7 @@
 import React from 'react';
 import { ISOCodeByCountry } from './countriesConfig';
-import {PickerItem, PickerStateContextType} from "../../../commons/types";
-import {interestsItems} from "../../../commons/global";
+import { PickerItem, PickerStateContextType } from '../../../commons/types';
+import { interestsItems } from '../../../commons/global';
 
 export interface GeocodingElement {
     address: string;

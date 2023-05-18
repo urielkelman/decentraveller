@@ -99,7 +99,7 @@ class BlockchainAdapter {
             );
         } catch (e) {
             console.log(e);
-            onError()
+            onError();
         }
     }
 }

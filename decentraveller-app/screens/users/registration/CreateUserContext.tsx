@@ -1,7 +1,7 @@
 import React from 'react';
-import {ISOCodeByCountry} from "../../home/place/countriesConfig";
-import {PickerItem, PickerStateContextType} from "../../../commons/types";
-import {interestsItems} from "../../../commons/global";
+import { ISOCodeByCountry } from '../../home/place/countriesConfig';
+import { PickerItem, PickerStateContextType } from '../../../commons/types';
+import { interestsItems } from '../../../commons/global';
 
 export type CreateUserContextType = {
     interestPicker: PickerStateContextType;
@@ -12,7 +12,7 @@ export type CreateUserContextType = {
 
 enum CREATE_USER_PICKER {
     INTEREST,
-    COUNTRY
+    COUNTRY,
 }
 
 const CreateUserContext = React.createContext<CreateUserContextType | null>(null);
@@ -67,7 +67,7 @@ const CreateUserProvider: React.FC<React.ReactNode> = ({ children }) => {
                     onOpen: () => onOpenPicker(CREATE_USER_PICKER.COUNTRY),
                 },
                 nickname: nickname,
-                setNickname: setNickname
+                setNickname: setNickname,
             }}
         >
             {children}

@@ -1,7 +1,7 @@
 import { GeocodingResponse } from './response/geocoding';
 import { httpAPIConnector, HttpConnector, HttpGetRequest } from '../connectors/HttpConnector';
-import {FORWARD_GEOCODING_ENDPOINT, GET_USER_ENDPOINT} from './config';
-import {UserResponse} from "./response/user";
+import { FORWARD_GEOCODING_ENDPOINT, GET_USER_ENDPOINT } from './config';
+import { UserResponse } from './response/user';
 
 class ApiAdapter {
     private httpConnector: HttpConnector;
