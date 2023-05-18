@@ -1,14 +1,14 @@
-import {HttpStatusCode} from "axios";
+import { HttpStatusCode } from 'axios';
 
 export type UserElementResponse = {
     owner: string;
     nickname: string;
     country: string;
-    interest: string
+    interest: string;
 };
 
 export type UserResponse = {
     /* remover */
-    code: HttpStatusCode
+    code: HttpStatusCode;
     results: UserElementResponse[];
 };

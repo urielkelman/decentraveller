@@ -1,7 +1,11 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import {registrationScreenTextStyle, subTitleTextStyle, WelcomeStyles} from "../../../styles/registrationScreensStyles";
-import DecentravellerButton from "../../../commons/components/DecentravellerButton";
+import {
+    registrationScreenTextStyle,
+    subTitleTextStyle,
+    WelcomeStyles,
+} from '../../../styles/registrationScreensStyles';
+import DecentravellerButton from '../../../commons/components/DecentravellerButton';
 
 const WelcomeUserScreen = ({ navigation }) => {
     const onClickContinue = () => {
