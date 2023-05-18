@@ -11,6 +11,7 @@ import {mockApiAdapter} from '../api/mockApiAdapter';
 
 const DecentravellerInitialScreen = () => {
     const [stackToRender, setStackToRender] = React.useState<'Login' | 'Home' | 'Registration'>()
+    const [userLoading, setUserLoading] = React.useState<boolean>(false);
     const appContext = useAppContext();
 
     const getUser = async () => {
@@ -19,7 +20,11 @@ const DecentravellerInitialScreen = () => {
 
         const adapter = apiAdapter
         const wallet = appContext.connectionContext.connectedAddress;
-        return await adapter.getUser(wallet, () => setStackToRender('Registration'));
+        await adapter.getUser(wallet, () => {
+            setStackToRender('Registration');
+            setUserLoading(false);
+        });
+        setUserLoading(false);
     };
 
     useEffect(() => {
@@ -28,6 +33,7 @@ const DecentravellerInitialScreen = () => {
             if (!appContext.connectionContext) {
                 setStackToRender('Login');
             } else {
+                setUserLoading(true)
                 await getUser();
                 setStackToRender('Home');
             }
@@ -51,6 +57,7 @@ const DecentravellerInitialScreen = () => {
     return (
         <NavigationContainer>
             <WrongChainModal />
+            {/* evaluate loading user and render a generica loading component if appropiate */}
             {navigatorToRender()}
         </NavigationContainer>
     );
