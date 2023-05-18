@@ -21,6 +21,7 @@ describe("Places and Reviews", function () {
             "Decentraveller",
             user
         );
+        await decentraveller.registerProfile("Messi", "AR", 0);
 
         const addPlaceTxResponse = await decentraveller.addPlace(
             "Shami shawarma",

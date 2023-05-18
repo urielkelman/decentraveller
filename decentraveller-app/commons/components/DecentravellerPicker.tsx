@@ -1,8 +1,8 @@
 import DropDownPicker from 'react-native-dropdown-picker';
 import { Text, View } from 'react-native';
 import React from 'react';
-import { addPlaceIndicationTextStyles } from '../../../styles/addPlaceScreensStyles';
-import { PickerItem } from './CreatePlaceContext';
+import { addPlaceIndicationTextStyles } from '../../styles/addPlaceScreensStyles';
+import { PickerItem } from '../../screens/home/place/CreatePlaceContext';
 
 export type PickerCreatePlaceProps = {
     titleText: string;
@@ -14,13 +14,16 @@ export type PickerCreatePlaceProps = {
     open: boolean;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
     onOpen: () => void;
+    onClose?: () => void;
     searchable: boolean;
     zIndex?: number;
     zIndexInverse?: number;
     onChangeSearchText?: (text: string) => void | undefined;
+    loading?: boolean;
+    disableLocalSearch?: boolean;
 };
 
-const PickerCreatePlace: React.FC<PickerCreatePlaceProps> = ({
+const DecentravellerPicker: React.FC<PickerCreatePlaceProps> = ({
     titleText,
     dropdownPlaceholder,
     items,
@@ -34,6 +37,8 @@ const PickerCreatePlace: React.FC<PickerCreatePlaceProps> = ({
     zIndexInverse = 1000,
     searchable,
     onChangeSearchText = undefined,
+    loading = false,
+    disableLocalSearch = false,
 }) => {
     return (
         <View style={addPlaceIndicationTextStyles.container}>
@@ -49,17 +54,22 @@ const PickerCreatePlace: React.FC<PickerCreatePlaceProps> = ({
                 style={addPlaceIndicationTextStyles.inputField}
                 placeholder={dropdownPlaceholder}
                 textStyle={addPlaceIndicationTextStyles.pickerInputField}
+                dropDownDirection="BOTTOM"
+                max={5}
+                itemSeparator={true}
                 zIndex={zIndex}
                 zIndexInverse={zIndexInverse}
                 searchable={searchable}
                 onChangeSearchText={onChangeSearchText}
+                loading={loading}
+                disableLocalSearch={disableLocalSearch}
             />
         </View>
     );
 };
 
-PickerCreatePlace.defaultProps = {
+DecentravellerPicker.defaultProps = {
     onChangeSearchText: undefined,
 };
 
-export default PickerCreatePlace;
+export default DecentravellerPicker;

@@ -23,7 +23,8 @@
                 "foregroundImage": "./assets/adaptive-icon.png",
                 "backgroundColor": "#FFFFFF"
             },
-            "package": "com.urielkelman.decentravellerapp"
+            "package": "com.urielkelman.decentravellerapp",
+            "permissions": ["INTERNET"]
         },
         "web": {
             "favicon": "./assets/favicon.png"

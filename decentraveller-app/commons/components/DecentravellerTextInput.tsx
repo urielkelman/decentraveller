@@ -1,6 +1,6 @@
 import React from 'react';
 import { TextInput, View } from 'react-native';
-import { addPlaceIndicationTextStyles } from '../../../styles/addPlaceScreensStyles';
+import { addPlaceIndicationTextStyles } from '../../styles/addPlaceScreensStyles';
 
 export type CreatePlaceTextInputProps = {
     text: string | undefined;
@@ -8,7 +8,7 @@ export type CreatePlaceTextInputProps = {
     placeholder: string;
 };
 
-const CreatePlaceTextInput: React.FC<CreatePlaceTextInputProps> = ({ text, setTextValue, placeholder }) => (
+const DecentravellerTextInput: React.FC<CreatePlaceTextInputProps> = ({ text, setTextValue, placeholder }) => (
     <View style={addPlaceIndicationTextStyles.textInputContainer}>
         <TextInput
             style={addPlaceIndicationTextStyles.textInputField}
@@ -19,4 +19,4 @@ const CreatePlaceTextInput: React.FC<CreatePlaceTextInputProps> = ({ text, setTe
     </View>
 );
 
-export default CreatePlaceTextInput;
+export default DecentravellerTextInput;
