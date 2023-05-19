@@ -1,6 +1,7 @@
 import { GeocodingResponse } from './response/geocoding';
 import { httpAPIConnector, HttpConnector, HttpGetRequest } from '../connectors/HttpConnector';
-import { FORWARD_GEOCODING_ENDPOINT } from './config';
+import { FORWARD_GEOCODING_ENDPOINT, GET_USER_ENDPOINT } from './config';
+import { UserResponse } from './response/user';
 
 class ApiAdapter {
     private httpConnector: HttpConnector;
@@ -18,6 +19,19 @@ class ApiAdapter {
             },
             onError: (e) => {
                 console.log('An error happened when trying to geocode.', e);
+            },
+        };
+
+        return await httpAPIConnector.get(httpRequest);
+    }
+
+    async getUser(walletAddress: string, onFailed: () => void): Promise<UserResponse> {
+
+        const httpRequest: HttpGetRequest = {
+            url: `${GET_USER_ENDPOINT}/${walletAddress}`,
+            queryParams: {},
+            onError: (e) => {
+                onFailed();
             },
         };
 
