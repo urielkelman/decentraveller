@@ -1,13 +1,16 @@
 import { BottomTabNavigationOptions, createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { AntDesign } from '@expo/vector-icons';
+import {AntDesign, FontAwesome} from '@expo/vector-icons';
 import { sizesConfig } from '../../config/sizesConfig';
 import React from 'react';
 import { useDeviceDimensions } from '../../context/AppContext';
-import ConnectWalletScreen from '../login/ConnectWalletScreen';
 import Home from './Home';
+import ExplorePlacesScreen from "./ExplorePlacesScreen";
+import CommunityScreen from "./CommunityScreen";
 
 type RootStackScreens = {
     Home: undefined;
+    ExplorePlaces: undefined;
+    Community: undefined;
 };
 
 const RootTabNavigator = createBottomTabNavigator<RootStackScreens>();
@@ -23,28 +26,30 @@ const DEFAULT_BOTTOM_TAB_ICONS_COLOR = "#FFE1E1"
 const RootNavigator = () => {
 
     const getTabBarIcon = (
-        route: Readonly<{ key: string; name: 'ConnectWalletScreen' | 'Home'; path?: string }>,
+        route: Readonly<{ key: string; name: 'Home' | 'ExplorePlaces' | 'Community' ; path?: string }>,
         iconSize: number
     ) => {
         return ({ focused, color, size }: bottomTabElementProps): JSX.Element => {
-            if (route.name === 'ConnectWalletScreen') {
-                return <AntDesign name="home" size={iconSize} color={DEFAULT_BOTTOM_TAB_ICONS_COLOR} />;
-            } else if (route.name === 'Home') {
-                console.log('asd')
-                return <AntDesign name="user" size={iconSize} color={DEFAULT_BOTTOM_TAB_ICONS_COLOR} />;
+            switch (route.name) {
+                case 'Home':
+                    return <FontAwesome name="home" size={iconSize} color={DEFAULT_BOTTOM_TAB_ICONS_COLOR} />;
+                case 'ExplorePlaces':
+                    return <FontAwesome name="globe" size={iconSize} color={DEFAULT_BOTTOM_TAB_ICONS_COLOR} />;
+                case 'Community':
+                    return <FontAwesome name="group" size={iconSize} color={DEFAULT_BOTTOM_TAB_ICONS_COLOR} />
+                default:
+                    return <FontAwesome name="home" size={iconSize} color={DEFAULT_BOTTOM_TAB_ICONS_COLOR} />;
             }
-            return <AntDesign name="home" size={iconSize} color={DEFAULT_BOTTOM_TAB_ICONS_COLOR} />;
         };
     };
 
     const getBottomTabNavigatorScreenOptions = (
-        route: Readonly<{ key: string; name: 'Home'; path?: string }>
+        route: Readonly<{ key: string; name: 'Home' | 'ExplorePlaces' | 'Community' ; path?: string }>
     ): BottomTabNavigationOptions => {
         const deviceDimensions = useDeviceDimensions();
-        console.log(route)
         return {
             tabBarIcon: getTabBarIcon(route, deviceDimensions.width / sizesConfig.bottomTabIconSizeWidthInverseFraction),
-            tabBarActiveTintColor: 'black',
+            tabBarActiveTintColor: '#983B46',
             tabBarInactiveTintColor: 'gray',
             tabBarStyle: {
                 height: deviceDimensions.height / sizesConfig.bottomTabHeightInverseFraction,
@@ -66,6 +71,9 @@ const RootNavigator = () => {
             screenOptions={({ route }) => getBottomTabNavigatorScreenOptions(route)}
         >
             <RootTabNavigator.Screen name="Home" component={Home} />
+            <RootTabNavigator.Screen name="ExplorePlaces" options={{title: 'Explore'}} component={ExplorePlacesScreen} />
+            <RootTabNavigator.Screen name="Community" component={CommunityScreen} />
+
         </RootTabNavigator.Navigator>
     );
 };
