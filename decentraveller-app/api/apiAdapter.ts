@@ -23,6 +23,10 @@ class ApiAdapter {
 
         return await httpAPIConnector.get(httpRequest);
     }
+
+    async getRecommendedPlaces(userAddress: string): Promise<string> {
+        return "asd";
+    }
 }
 
 const apiAdapter = new ApiAdapter(httpAPIConnector);
