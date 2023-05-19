@@ -52,7 +52,6 @@ const DecentravellerInitialScreen = () => {
     return (
         <NavigationContainer>
             <WrongChainModal />
-            {/* evaluate loading user and render a generica loading component if appropiate */}
             {navigatorToRender()}
         </NavigationContainer>
     );

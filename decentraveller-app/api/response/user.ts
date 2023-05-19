@@ -1,4 +1,3 @@
-import { HttpStatusCode } from 'axios';
 
 export type UserElementResponse = {
     owner: string;
@@ -8,5 +7,5 @@ export type UserElementResponse = {
 };
 
 export type UserResponse = {
-    results: UserElementResponse;
+    UserElementResponse;
 };
