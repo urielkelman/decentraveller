@@ -31,12 +31,12 @@ with client.batch as batch:
     batch.batch_size = DEFAULT_BATCH_SIZE
     batch.dynamic = True
     for i in range(len(place_ids)):
-        data_obj = {"id": str(place_ids[i]),
-                    "place_id": int(place_ids[i]),
+        data_obj = {"place_id": int(place_ids[i]),
                     "latitude": place_locations[place_ids[i]]["latitude"],
                     "longitude": place_locations[place_ids[i]]["longitude"]}
         batch.add_data_object(
             data_obj,
             PLACE_CLASS_NAME,
-            vector=arr[i].flatten().tolist()
+            vector=arr[i].flatten().tolist(),
+            uuid=weaviate.util.generate_uuid5(place_ids[i])
         )
