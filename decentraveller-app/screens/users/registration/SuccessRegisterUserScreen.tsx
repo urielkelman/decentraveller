@@ -10,8 +10,7 @@ import {registerUserScreenWordings} from "./wording";
 type SuccessRegisterUserScreenProps = {
     onSuccess: () => void;
 };
-const SuccessRegisterUserScreen: React.FC<SuccessRegisterUserScreenProps> = (props) => {
-    const { onSuccess } = props;
+const SuccessRegisterUserScreen: React.FC<{ onSuccess: () => void }> = ({ onSuccess }) => {
 
     const onClickContinue = () => {
         onSuccess()
