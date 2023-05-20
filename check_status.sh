@@ -27,4 +27,34 @@ else
   echo "Test profile is created - OK"
 fi
 
+status_code=$(curl --write-out %{http_code} --silent --output /dev/null "http://localhost:8000/place/1/similars")
+
+if [[ "$status_code" -ne 200 ]] ; then
+  echo "Test place recommendation cold start - FAILED"
+  exit 1
+else
+  echo "Test place recommendation cold start - OK"
+fi
+
+status_code=$(curl --write-out %{http_code} --silent --output /dev/null "http://localhost:8000/place/9/similars")
+
+if [[ "$status_code" -ne 404 ]] ; then
+  echo "Test place does not have recommendations - FAILED"
+  exit 1
+else
+  echo "Test place does not have recommendations - OK"
+fi
+
+docker-compose up embedding_updater_job
+
+status_code=$(curl --write-out %{http_code} --silent --output /dev/null "http://localhost:8000/place/9/similars")
+
+if [[ "$status_code" -ne 200 ]] ; then
+  echo "Test place now has vector recommendations - FAILED"
+  exit 1
+else
+  echo "Test place now has vector recommendations - OK"
+fi
+
+
 exit 0

@@ -62,16 +62,14 @@ const main = async () => {
     const reviewFile = readFileSync("data/reviews_sample.json", "utf-8");
     var yelp2owner = new Map<string, number>();
     var owner2yelp = new Set<number>();
-    var contractIndex = Math.floor(
-        Math.random() * decentravellerContracts.length
-    );
+    var contractIndex = 0;
     for (const line of reviewFile.split(/\r?\n/)) {
         const reviewData = JSON.parse(line);
         contractIndex = Math.floor(
             Math.random() * decentravellerContracts.length
         );
         if (yelp2owner.has(reviewData['user_id'])){
-            contractIndex = yelp2owner.get(reviewData['user_id'])!;
+            contractIndex = 0;
         } else {
             while(owner2yelp.has(contractIndex)){
                 contractIndex = (contractIndex + 1) % decentravellerContracts.length
