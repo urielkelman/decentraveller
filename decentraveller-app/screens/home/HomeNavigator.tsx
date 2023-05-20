@@ -1,3 +1,4 @@
+import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createStackNavigator } from '@react-navigation/stack';
 import CreatePlaceNameScreen from './place/CreatePlaceNameScreen';
 import CreatePlaceProvider from './place/CreatePlaceContext';
@@ -11,31 +12,42 @@ export type HomeStackScreens = {
 };
 
 const HomeStackNavigator = createStackNavigator<HomeStackScreens>();
+const Drawer = createDrawerNavigator();
 
 const HomeNavigator = () => {
     return (
         <CreatePlaceProvider>
-            <HomeStackNavigator.Navigator initialRouteName="RootTabNavigator">
-                <HomeStackNavigator.Screen name="RootTabNavigator" component={RootNavigator} />
-                <HomeStackNavigator.Screen
-                    name="CreatePlaceNameScreen"
-                    component={CreatePlaceNameScreen}
-                    options={{
-                        title: 'Add new place',
-                        headerMode: 'screen',
-                    }}
-                />
-                <HomeStackNavigator.Screen
-                    name="CreatePlaceLocationScreen"
-                    component={CreatePlaceLocationScreen}
-                    options={{
-                        title: 'Select location',
-                        headerMode: 'screen',
-                    }}
-                />
-            </HomeStackNavigator.Navigator>
+            <Drawer.Navigator initialRouteName="Home" /* ver que opciones puedo sumar al drawer */>
+                <Drawer.Screen name="Home" component={HomeStackNavigatorScreen} />
+                <Drawer.Screen name="Explore" component={null} /* agregar el explore cuando este *//>
+            </Drawer.Navigator>
         </CreatePlaceProvider>
     );
 };
 
+const HomeStackNavigatorScreen = () => {
+    return (
+        <HomeStackNavigator.Navigator initialRouteName="RootTabNavigator">
+            <HomeStackNavigator.Screen name="RootTabNavigator" component={RootNavigator} />
+            <HomeStackNavigator.Screen
+                name="CreatePlaceNameScreen"
+                component={CreatePlaceNameScreen}
+                options={{
+                    title: 'Add new place',
+                    headerMode: 'screen',
+                }}
+            />
+            <HomeStackNavigator.Screen
+                name="CreatePlaceLocationScreen"
+                component={CreatePlaceLocationScreen}
+                options={{
+                    title: 'Select location',
+                    headerMode: 'screen',
+                }}
+            />
+        </HomeStackNavigator.Navigator>
+    );
+};
+
 export default HomeNavigator;
+
