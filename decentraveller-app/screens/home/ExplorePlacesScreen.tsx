@@ -14,8 +14,7 @@ const ExplorePlacesScreen = ({ navigation }) => {
         console.log('session killed');
     };
 
-    console.log('Explore')
-
+    console.log('Explore');
 
     return (
         <View style={{ flex: 1 }}>

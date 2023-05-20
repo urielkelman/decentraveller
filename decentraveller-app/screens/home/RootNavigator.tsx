@@ -1,11 +1,11 @@
 import { BottomTabNavigationOptions, createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import {AntDesign, FontAwesome} from '@expo/vector-icons';
+import { AntDesign, FontAwesome } from '@expo/vector-icons';
 import { sizesConfig } from '../../config/sizesConfig';
 import React from 'react';
 import { useDeviceDimensions } from '../../context/AppContext';
-import Home from './Home';
-import ExplorePlacesScreen from "./ExplorePlacesScreen";
-import CommunityScreen from "./CommunityScreen";
+import HomeScreen from './HomeScreen';
+import ExplorePlacesScreen from './ExplorePlacesScreen';
+import CommunityScreen from './CommunityScreen';
 
 type RootStackScreens = {
     Home: undefined;
@@ -21,12 +21,11 @@ type bottomTabElementProps = {
     size: number;
 };
 
-const DEFAULT_BOTTOM_TAB_ICONS_COLOR = "#FFE1E1"
+const DEFAULT_BOTTOM_TAB_ICONS_COLOR = '#FFE1E1';
 
 const RootNavigator = () => {
-
     const getTabBarIcon = (
-        route: Readonly<{ key: string; name: 'Home' | 'ExplorePlaces' | 'Community' ; path?: string }>,
+        route: Readonly<{ key: string; name: 'Home' | 'ExplorePlaces' | 'Community'; path?: string }>,
         iconSize: number
     ) => {
         return ({ focused, color, size }: bottomTabElementProps): JSX.Element => {
@@ -36,7 +35,7 @@ const RootNavigator = () => {
                 case 'ExplorePlaces':
                     return <FontAwesome name="globe" size={iconSize} color={DEFAULT_BOTTOM_TAB_ICONS_COLOR} />;
                 case 'Community':
-                    return <FontAwesome name="group" size={iconSize} color={DEFAULT_BOTTOM_TAB_ICONS_COLOR} />
+                    return <FontAwesome name="group" size={iconSize} color={DEFAULT_BOTTOM_TAB_ICONS_COLOR} />;
                 default:
                     return <FontAwesome name="home" size={iconSize} color={DEFAULT_BOTTOM_TAB_ICONS_COLOR} />;
             }
@@ -44,11 +43,14 @@ const RootNavigator = () => {
     };
 
     const getBottomTabNavigatorScreenOptions = (
-        route: Readonly<{ key: string; name: 'Home' | 'ExplorePlaces' | 'Community' ; path?: string }>
+        route: Readonly<{ key: string; name: 'Home' | 'ExplorePlaces' | 'Community'; path?: string }>
     ): BottomTabNavigationOptions => {
         const deviceDimensions = useDeviceDimensions();
         return {
-            tabBarIcon: getTabBarIcon(route, deviceDimensions.width / sizesConfig.bottomTabIconSizeWidthInverseFraction),
+            tabBarIcon: getTabBarIcon(
+                route,
+                deviceDimensions.width / sizesConfig.bottomTabIconSizeWidthInverseFraction
+            ),
             tabBarActiveTintColor: '#983B46',
             tabBarInactiveTintColor: 'gray',
             tabBarStyle: {
@@ -70,10 +72,13 @@ const RootNavigator = () => {
             backBehavior="initialRoute"
             screenOptions={({ route }) => getBottomTabNavigatorScreenOptions(route)}
         >
-            <RootTabNavigator.Screen name="Home" component={Home} />
-            <RootTabNavigator.Screen name="ExplorePlaces" options={{title: 'Explore'}} component={ExplorePlacesScreen} />
+            <RootTabNavigator.Screen name="Home" component={HomeScreen} />
+            <RootTabNavigator.Screen
+                name="ExplorePlaces"
+                options={{ title: 'Explore' }}
+                component={ExplorePlacesScreen}
+            />
             <RootTabNavigator.Screen name="Community" component={CommunityScreen} />
-
         </RootTabNavigator.Navigator>
     );
 };
