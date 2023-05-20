@@ -1,4 +1,3 @@
-
 export type UserElementResponse = {
     owner: string;
     nickname: string;

@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, StyleSheet, KeyboardAvoidingView } from 'react-native';
 import { useCreateUserContext } from './CreateUserContext';
 import { blockchainAdapter } from '../../../blockchain/blockhainAdapter';
@@ -9,16 +9,14 @@ import DecentravellerTextInput from '../../../commons/components/DecentravellerT
 import DecentravellerPicker from '../../../commons/components/DecentravellerPicker';
 import { registrationScreenStyles } from '../../../styles/registrationScreensStyles';
 import DecentravellerInformativeModal from '../../../commons/components/DecentravellerInformativeModal';
-import {registerUserScreenWordings} from "./wording";
+import { registerUserScreenWordings } from './wording';
 
 const RegisterUserScreen = ({ navigation }) => {
     const { interestPicker, countryPicker, nickname, setNickname } = useCreateUserContext();
     const [showErrorModal, setShowErrorModal] = React.useState<boolean>(false);
-    const [isSubmitted, setIsSubmitted] = React.useState<boolean>(false);
     const connector = useWalletConnect();
 
     const handleSubmit = async () => {
-
         const adapter = blockchainAdapter;
         //const adapter = mockBlockchainAdapter
 
@@ -30,17 +28,11 @@ const RegisterUserScreen = ({ navigation }) => {
             onError
         );
         console.log('Transaction confirmed with hash', transactionHash);
-        setIsSubmitted(true)
+        navigation.navigate('SuccessRegisterUserScreen');
     };
     const onError = () => {
         setShowErrorModal(true);
     };
-
-    useEffect(() => {
-        if (isSubmitted && !showErrorModal) {
-            navigation.navigate('SuccessRegisterUserScreen');
-        }
-    }, [showErrorModal, isSubmitted]);
 
     const backgroundOpacity = showErrorModal ? 0.5 : 1;
 
@@ -86,10 +78,8 @@ const RegisterUserScreen = ({ navigation }) => {
                 visible={showErrorModal}
                 closeModalText={'Close'}
                 handleCloseModal={() => {
-                    setShowErrorModal(false)
-                    setIsSubmitted(false)
-                    }
-                }
+                    setShowErrorModal(false);
+                }}
             />
         </KeyboardAvoidingView>
     );

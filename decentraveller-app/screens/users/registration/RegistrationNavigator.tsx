@@ -8,7 +8,7 @@ import React from 'react';
 type RegistrationStackParamList = {
     RegisterUserScreen: undefined;
     WelcomeUserScreen: undefined;
-    SuccessRegisterUserScreen:  { onSuccess?: () => void };
+    SuccessRegisterUserScreen: { onSuccess?: () => void };
 };
 
 export type RegistrationProps = {
@@ -22,14 +22,9 @@ const RegistrationNavigator: React.FC<RegistrationProps> = ({ onSuccess }) => {
         <CreateUserProvider>
             <RegistrationStackNavigator.Navigator screenOptions={{ headerShown: false }}>
                 <RegistrationStackNavigator.Screen name="WelcomeUserScreen" component={WelcomeUserScreen} />
-                <RegistrationStackNavigator.Screen
-                    name="RegisterUserScreen"
-                    component={RegisterUserScreen}
-                />
+                <RegistrationStackNavigator.Screen name="RegisterUserScreen" component={RegisterUserScreen} />
                 <RegistrationStackNavigator.Screen name="SuccessRegisterUserScreen">
-                    {(props) => (
-                        <SuccessRegisterUserScreen {...props} onSuccess={onSuccess} />
-                    )}
+                    {(props) => <SuccessRegisterUserScreen {...props} onSuccess={onSuccess} />}
                 </RegistrationStackNavigator.Screen>
             </RegistrationStackNavigator.Navigator>
         </CreateUserProvider>

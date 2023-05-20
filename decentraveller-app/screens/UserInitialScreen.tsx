@@ -21,8 +21,8 @@ const DecentravellerInitialScreen = () => {
         const wallet = appContext.connectionContext.connectedAddress;
         const user = await adapter.getUser(wallet, () => {});
 
-        const render = user ? 'Home' : 'Registration'
-        setStackToRender(render)
+        const render = user ? 'Home' : 'Registration';
+        setStackToRender(render);
     };
 
     useEffect(() => {

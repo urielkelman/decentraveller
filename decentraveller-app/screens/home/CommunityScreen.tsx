@@ -14,7 +14,7 @@ const CommunityScreen = ({ navigation }) => {
         console.log('session killed');
     };
 
-    console.log('Community')
+    console.log('Community');
 
     return (
         <View style={{ flex: 1 }}>
