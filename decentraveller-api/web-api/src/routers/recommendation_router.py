@@ -16,7 +16,7 @@ from src.orms.review import ReviewORM
 recommendation_router = InferringRouter()
 
 NEAR_PLACE_DISTANCE = 0.03
-MINIMUM_REVIEWS_TO_RECOMMEND = 10
+MINIMUM_REVIEWS_TO_RECOMMEND = 4
 
 
 @cbv(recommendation_router)
@@ -53,7 +53,7 @@ class RecommendationCBV:
         similars = []
         vector_similars = self.vector_database.get_similars_to_place(place_id, limit)
         if vector_similars:
-            vector_similars = PlaceORM.query.filter(PlaceORM.id.in_(tuple(vector_similars))).all()
+            vector_similars = self.session.query(PlaceORM).filter(PlaceORM.id.in_(tuple(vector_similars))).all()
             similars += [PlaceInDB.from_orm(p) for p in vector_similars]
         if len(similars) < limit:
             place = self.query_place(self.session, place_id)
@@ -69,7 +69,7 @@ class RecommendationCBV:
                 join(nearby, nearby.c.id == ReviewORM.place_id). \
                 group_by(ReviewORM.place_id). \
                 having(func.count(distinct(ReviewORM.owner)) >= MINIMUM_REVIEWS_TO_RECOMMEND). \
-                order_by(func.avg(ReviewORM.score).desc()). \
+                order_by((func.avg(ReviewORM.score) * func.count(distinct(ReviewORM.owner))).desc()). \
                 limit(limit).subquery()
             distance_similars = self.session.query(PlaceORM). \
                 join(distance_similars, distance_similars.c.place_id == PlaceORM.id).all()

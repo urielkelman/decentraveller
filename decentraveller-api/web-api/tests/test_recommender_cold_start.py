@@ -123,7 +123,7 @@ def test_recommendation_few_reviews_404(cleanup, setup_dataset):
                                      "interest": "ACCOMMODATION"},
                                )
         assert response.status_code == 201
-    for i in range(9):
+    for i in range(3):
         response = client.post("/review",
                                json={"placeId": 0,
                                      "score": 5,
