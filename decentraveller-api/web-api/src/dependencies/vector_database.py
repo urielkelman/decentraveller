@@ -44,7 +44,7 @@ class VectorDatabase:
                 return None
             return [r[PLACE_ID_FIELD_NAME]
                     for r in result[1:]
-                    if r['certainty'] > MINIMUM_CERTAINTY]
+                    if r['_additional']['certainty'] > MINIMUM_CERTAINTY]
         except weaviate.exceptions.UnexpectedStatusCodeException:
             # Schema does not exist
             return None

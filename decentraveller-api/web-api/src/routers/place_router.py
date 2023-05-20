@@ -1,9 +1,8 @@
-from typing import Optional, List
+from typing import Optional
 
-from fastapi import Depends, HTTPException, Query
+from fastapi import Depends, HTTPException
 from fastapi_utils.cbv import cbv
 from fastapi_utils.inferring_router import InferringRouter
-from sqlalchemy import func
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
 from starlette.status import HTTP_404_NOT_FOUND, HTTP_400_BAD_REQUEST
@@ -11,13 +10,9 @@ from starlette.status import HTTP_404_NOT_FOUND, HTTP_400_BAD_REQUEST
 from src.api_models.place import PlaceID, PlaceUpdate, PlaceInDB, PlaceBody
 from src.dependencies import get_db
 from src.orms.place import PlaceORM
-from src.orms.review import ReviewORM
 from src.dependencies.vector_database import VectorDatabase
 
 place_router = InferringRouter()
-
-NEAR_PLACE_DISTANCE = 0.1
-MINIMUM_REVIEWS_TO_RECOMMEND = 10
 
 
 @cbv(place_router)
@@ -119,39 +114,3 @@ class PlaceCBV:
         self.session.add(place_orm)
         self.session.commit()
         return PlaceInDB.from_orm(place_orm)
-
-    @place_router.get("/place/{place_id}/similars")
-    def get_recommendation(self, place_id: PlaceID,
-                           limit: int = Query(default=5)) -> List[PlaceInDB]:
-        """
-        Get place recommendations by another place id
-
-        :param place_id: the place id to query
-        :param limit: limit of similars
-        :return: the places data
-        """
-        similars = []
-        vector_similars = self.vector_database.get_similars_to_place(place_id, limit)
-        if vector_similars:
-            vector_similars = PlaceORM.query.filter(PlaceORM.id.in_(tuple(vector_similars))).all()
-            similars += [PlaceInDB.from_orm(p) for p in vector_similars]
-        if len(similars) < limit:
-            place = self.query_place(self.session, place_id)
-            if not place:
-                raise HTTPException(status_code=HTTP_404_NOT_FOUND)
-            nearby = self.session.query(PlaceORM).\
-                filter(PlaceORM.latitude >= place.latitude - NEAR_PLACE_DISTANCE).\
-                filter(PlaceORM.latitude <= place.latitude + NEAR_PLACE_DISTANCE).\
-                filter(PlaceORM.longitude >= place.longitude - NEAR_PLACE_DISTANCE).\
-                filter(PlaceORM.longitude <= place.longitude + NEAR_PLACE_DISTANCE).subquery()
-            distance_similars = self.session.query(ReviewORM.place_id, func.avg(ReviewORM.score)).\
-                join(nearby, nearby.id == ReviewORM.place_id). \
-                group_by(ReviewORM.place_id). \
-                having(func.count(ReviewORM.id) >= MINIMUM_REVIEWS_TO_RECOMMEND). \
-                order_by(func.avg(ReviewORM.score).desc()).\
-                limit(limit).all()
-            similars += [PlaceInDB.from_orm(p) for p in distance_similars]
-        if similars:
-            similars = similars[:limit]
-            return similars
-        raise HTTPException(status_code=HTTP_404_NOT_FOUND)
