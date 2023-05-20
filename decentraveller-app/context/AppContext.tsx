@@ -47,7 +47,7 @@ const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
                                     symbol: 'ETH',
                                     decimals: 18,
                                 },
-                                rpcUrls: ['https://10.0.2.2:8545/'],
+                                rpcUrls: ['http://10.0.2.2:8545/'],
                             },
                         ],
                     });
