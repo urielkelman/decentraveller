@@ -26,6 +26,10 @@ const decentravellerMainContract: DecentravellerContract = {
             functionName: 'addPlace',
             functionABI: JSON.stringify(mainContractABI),
         },
+        registerUser: {
+            functionName: 'registerUser',
+            functionABI: JSON.stringify(mainContractABI),
+        },
     },
 };
 
