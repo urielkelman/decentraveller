@@ -62,7 +62,7 @@ class RecommendationCBV:
             filter(PlaceORM.latitude <= latitude + degree_distance). \
             filter(PlaceORM.longitude >= longitude - degree_distance). \
             filter(PlaceORM.longitude <= longitude + degree_distance). \
-            filter(not_(PlaceORM.id.in_(tuple(excluded_place_ids)))).subquery()
+            filter(not_(PlaceORM.id.in_(excluded_place_ids))).subquery()
         distance_similars = session.query(ReviewORM.place_id). \
             join(nearby, nearby.c.id == ReviewORM.place_id). \
             group_by(ReviewORM.place_id). \
@@ -105,6 +105,26 @@ class RecommendationCBV:
             similars = similars[:limit]
             return similars
 
+    @staticmethod
+    def get_best_places(session: Session, excluded_place_ids: List[PlaceID],
+                        limit: int = 5) -> List[PlaceInDB]:
+        """
+        Get the best places of the whole site
+
+        :param session: the db session
+        :param excluded_place_ids: the place ids to exclude
+        :param limit: the limit to query
+        :return: the best places
+        """
+        best_places = session.query(ReviewORM.place_id). \
+            filter(not_(ReviewORM.place_id.in_(excluded_place_ids))). \
+            group_by(ReviewORM.place_id). \
+            order_by((func.avg(ReviewORM.score) * func.log(func.count(distinct(ReviewORM.owner)))).desc()). \
+            limit(limit)
+        best_places = [PlaceInDB.from_orm(RecommendationCBV.query_place(session, i))
+                       for i in best_places]
+        return best_places
+
     @recommendation_router.get("/place/{place_id}/similars")
     def get_place_similars(self, place_id: PlaceID,
                            limit: int = Query(default=5)) -> List[PlaceInDB]:
@@ -146,13 +166,13 @@ class RecommendationCBV:
         place_similars = []
         for place_id in last_places[:LAST_VISITED_PLACES_TO_QUERY_SIMILARS]:
             place_similars.append(self.get_similars_to_place(self.session, self.vector_database,
-                                                         place_id,
-                                                         2 * (limit // LAST_VISITED_PLACES_TO_QUERY_SIMILARS)))
+                                                             place_id,
+                                                             2 * (limit // LAST_VISITED_PLACES_TO_QUERY_SIMILARS)))
         result = []
         places_to_avoid = set(last_places)
         if place_similars:
             place_similars = [[p for p in sims if p.id not in places_to_avoid]
-                               for sims in place_similars]
+                              for sims in place_similars]
             while len(result) < limit and all(len(sims) > 0
                                               for sims in place_similars):
                 for sims in place_similars:
@@ -164,13 +184,42 @@ class RecommendationCBV:
             places_to_avoid.update([r.id for r in result])
 
         if len(result) < limit:
-            best_places = self.session.query(ReviewORM.place_id). \
-                filter(not_(ReviewORM.place_id.in_(list(places_to_avoid)))).\
-                group_by(ReviewORM.place_id). \
-                order_by((func.avg(ReviewORM.score) * func.log(func.count(distinct(ReviewORM.owner)))).desc()).\
-                limit(limit - len(result))
-            best_places = [PlaceInDB.from_orm(self.query_place(self.session, i))
-                           for i in best_places]
+            best_places = self.get_best_places(self.session,
+                                               list(places_to_avoid),
+                                               limit - len(result))
+            result += best_places
+
+        if result:
+            return result
+
+        raise HTTPException(status_code=HTTP_404_NOT_FOUND)
+
+    @recommendation_router.get("/recommendations")
+    def get_home_recommendation(self,
+                                limit: int = Query(default=20),
+                                latitude: Optional[float] = Query(default=None),
+                                longitude: Optional[float] = Query(default=None)) -> List[PlaceInDB]:
+        """
+        Get profile recommendations based on the location
+
+        :param limit: the limit of results
+        :param latitude: latitude of the user, if provided used to recommend
+        :param longitude: longitude of the user, if provided used to recommend
+        :return: the places data
+        """
+        result = []
+        places_to_avoid = set()
+        if latitude and longitude:
+            nearby = self.get_good_nearby_places(self.session, latitude, longitude,
+                                                  NEAR_PLACE_DISTANCE, [], limit)
+            if nearby:
+                result += [p for p in nearby[:limit - len(result)]]
+                places_to_avoid.update([r.id for r in result])
+
+        if len(result) < limit:
+            best_places = self.get_best_places(self.session,
+                                               list(places_to_avoid),
+                                               limit - len(result))
             result += best_places
 
         if result:
