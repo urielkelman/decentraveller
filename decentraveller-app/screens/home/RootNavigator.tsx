@@ -3,9 +3,11 @@ import { AntDesign } from '@expo/vector-icons';
 import { sizesConfig } from '../../config/sizesConfig';
 import React from 'react';
 import { useDeviceDimensions } from '../../context/AppContext';
-import Home from './Home';
+import HomeNavigatorStack from "./HomeNavigatorStack";
+import CreatePlaceNameScreen from "./place/CreatePlaceNameScreen";
 type RootStackScreens = {
     Home: undefined;
+    ConnectWalletScreen: undefined;
 };
 
 const RootTabNavigator = createBottomTabNavigator<RootStackScreens>();
@@ -58,7 +60,10 @@ const RootNavigator = () => {
             backBehavior="initialRoute"
             screenOptions={({ route }) => getBottomTabNavigatorScreenOptions(route)}
         >
-            <RootTabNavigator.Screen name="Home" component={Home} />
+            <RootTabNavigator.Screen name="Home" component={HomeNavigatorStack} />
+
+            {/*Add for testing behaviour, drop after code review*/}
+            <RootTabNavigator.Screen name="ConnectWalletScreen" component={CreatePlaceNameScreen} options={{title: 'Create Place'}}/>
         </RootTabNavigator.Navigator>
     );
 };

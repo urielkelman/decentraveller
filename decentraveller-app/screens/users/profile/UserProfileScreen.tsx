@@ -14,7 +14,7 @@ const UserProfileScreen = ({ navigation }) => {
 
     return (
         <View style={WelcomeStyles.container}>
-            <Text style={WelcomeStyles.title}>{registerUserScreenWordings.REGISTER_WELCOME_TITLE}</Text>
+            <Text style={WelcomeStyles.title}>{"[PLACE HOLDER OF]"}</Text>
             <View style={registrationScreenTextStyle.container}>
                 <Text style={registrationScreenTextStyle.title} adjustsFontSizeToFit={true} numberOfLines={1}>
                     <Text style={registrationScreenTextStyle.blackText}>Decen</Text>
@@ -22,7 +22,7 @@ const UserProfileScreen = ({ navigation }) => {
                 </Text>
             </View>
             <Text style={subTitleTextStyle} adjustsFontSizeToFit={true} numberOfLines={2}>
-                {registerUserScreenWordings.REGISTER_WELCOME_SUB_TITLE}
+                {"[PROFILE SCREEN IN PROGRESS...]"}
             </Text>
         </View>
     );
