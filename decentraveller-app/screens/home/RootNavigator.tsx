@@ -3,9 +3,7 @@ import { AntDesign } from '@expo/vector-icons';
 import { sizesConfig } from '../../config/sizesConfig';
 import React from 'react';
 import { useDeviceDimensions } from '../../context/AppContext';
-import ConnectWalletScreen from '../login/ConnectWalletScreen';
 import Home from './Home';
-
 type RootStackScreens = {
     Home: undefined;
 };
