@@ -1,9 +1,8 @@
-import { createDrawerNavigator } from '@react-navigation/drawer';
+import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import CreatePlaceNameScreen from './place/CreatePlaceNameScreen';
-import CreatePlaceProvider from './place/CreatePlaceContext';
-import CreatePlaceLocationScreen from './place/CreatePlaceLocationScreen';
 import RootNavigator from './RootNavigator';
+import CreatePlaceNameScreen from "./place/CreatePlaceNameScreen";
+import CreatePlaceLocationScreen from "./place/CreatePlaceLocationScreen";
 
 export type HomeStackScreens = {
     RootTabNavigator: undefined;
@@ -12,23 +11,11 @@ export type HomeStackScreens = {
 };
 
 const HomeStackNavigator = createStackNavigator<HomeStackScreens>();
-const Drawer = createDrawerNavigator();
 
-const HomeNavigator = () => {
-    return (
-        <CreatePlaceProvider>
-            <Drawer.Navigator initialRouteName="Home" /* ver que opciones puedo sumar al drawer */>
-                <Drawer.Screen name="Home" component={HomeStackNavigatorScreen} />
-                <Drawer.Screen name="Explore" component={null} /* agregar el explore cuando este *//>
-            </Drawer.Navigator>
-        </CreatePlaceProvider>
-    );
-};
-
-const HomeStackNavigatorScreen = () => {
+const HomeStackNavigatorStack = () => {
     return (
         <HomeStackNavigator.Navigator initialRouteName="RootTabNavigator">
-            <HomeStackNavigator.Screen name="RootTabNavigator" component={RootNavigator} />
+            <HomeStackNavigator.Screen name="RootTabNavigator"  component={RootNavigator} />
             <HomeStackNavigator.Screen
                 name="CreatePlaceNameScreen"
                 component={CreatePlaceNameScreen}
@@ -49,5 +36,4 @@ const HomeStackNavigatorScreen = () => {
     );
 };
 
-export default HomeNavigator;
-
+export default HomeStackNavigatorStack;
