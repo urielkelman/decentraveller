@@ -11,7 +11,6 @@ from src.api_models.profile import ProfileBody
 from src.dependencies import get_db
 from src.dependencies.avatar_generator import AvatarGenerator
 from src.orms.profile import ProfileORM
-from src.api_models.place import PlaceInDB
 
 profile_router = InferringRouter()
 
@@ -104,14 +103,4 @@ class ProfileCBV:
             raise HTTPException(status_code=HTTP_400_BAD_REQUEST,
                                 detail="The nickname is already in use.")
         return ProfileBody.from_orm(profile_orm)
-
-    @profile_router.get("/profile/{owner}/recommendations")
-    def get_recommendation(self, owner: str) -> List[PlaceInDB]:
-        """
-        Get profile recommendations base on the last places liked
-
-        :param owner: the owner of the profile
-        :return: the places data
-        """
-        raise HTTPException(status_code=HTTP_404_NOT_FOUND)
 
