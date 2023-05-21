@@ -1,10 +1,14 @@
+import { DecentravellerPlaceCategory } from '../../context/types';
+
 export type PlaceResponse = {
     id: number;
     name: string;
     address: string;
     latitude: string;
     longitude: string;
-    category: 'GASTRONOMY' | 'ENTERTAINMENT' | 'ACCOMMODATION' | 'OTHER';
+    category: DecentravellerPlaceCategory;
+    score: number;
+    reviewCount: number;
 };
 
 export type PlacesResponse = {

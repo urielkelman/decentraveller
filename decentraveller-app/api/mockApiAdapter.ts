@@ -47,6 +47,8 @@ class MockApiAdapter {
                     latitude: '-34.590716',
                     longitude: '-58.427125',
                     category: 'GASTRONOMY',
+                    score: 4.8,
+                    reviewCount: 25,
                 },
                 {
                     id: 2,
@@ -55,6 +57,8 @@ class MockApiAdapter {
                     latitude: '-34.675893',
                     longitude: '-58.508822',
                     category: 'GASTRONOMY',
+                    score: 3.7,
+                    reviewCount: 102,
                 },
                 {
                     id: 3,
@@ -63,6 +67,8 @@ class MockApiAdapter {
                     latitude: '-34.621728',
                     longitude: '-58.80039',
                     category: 'ACCOMMODATION',
+                    score: 4.2,
+                    reviewCount: 43,
                 },
             ],
         };
