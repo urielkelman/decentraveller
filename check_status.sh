@@ -56,5 +56,22 @@ else
   echo "Test place now has vector recommendations - OK"
 fi
 
+status_code=$(curl --write-out %{http_code} --silent --output /dev/null "http://localhost:8000/profile/0xcd3B766CCDd6AE721141F452C550Ca635964ce71/recommendations")
+
+if [[ "$status_code" -ne 200 ]] ; then
+  echo "Test profile has recommendations - FAILED"
+  exit 1
+else
+  echo "Test profile has recommendations - OK"
+fi
+
+status_code=$(curl --write-out %{http_code} --silent --output /dev/null "http://localhost:8000/recommendations")
+
+if [[ "$status_code" -ne 200 ]] ; then
+  echo "Home has recommendations - FAILED"
+  exit 1
+else
+  echo "Home has recommendations - OK"
+fi
 
 exit 0
