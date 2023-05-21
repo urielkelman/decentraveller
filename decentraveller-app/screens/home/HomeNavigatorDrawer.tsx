@@ -7,16 +7,20 @@ import {
     DrawerItemList
 } from '@react-navigation/drawer';
 import {drawerStyles} from "../../styles/drawerStyles";
-import UserProfileScreen from "../users/profile/UserProfileScreen";
 import HomeNavigatorStack from "./HomeNavigatorStack";
+import {useAppContext} from "../../context/AppContext";
+import {obfuscateAddress} from "../../commons/utils";
 
 const Drawer = createDrawerNavigator();
+
 const CustomDrawerContent = (props: DrawerContentComponentProps) => {
+    const {nickname} = useAppContext().userNickname
+    const {walletAddress} = useAppContext().userWalletAddress
 
     const user = {
         profileImage: require('./cryptochica.png'),
-        name: 'Ana Cruz',
-        walletAddress: '0xb794...9268',
+        name: nickname,
+        walletAddress: obfuscateAddress(walletAddress),
     };
 
     return (

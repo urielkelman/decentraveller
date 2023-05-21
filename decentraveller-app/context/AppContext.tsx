@@ -1,5 +1,5 @@
 import React from 'react';
-import { AppContextType, ConnectionContext, DeviceDimensions } from './types';
+import {AppContextType, ConnectionContext, DeviceDimensions, UserNickname, UserWalletAddress} from './types';
 import { Dimensions } from 'react-native';
 import { useWalletConnect } from '@walletconnect/react-native-dapp';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -20,6 +20,9 @@ const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
     const [connectionContext, setConnectionContext] = React.useState<ConnectionContext>(null);
     const [subscriptionsDone, setSubscriptionsDone] = React.useState<boolean>(false);
     const [wipedStorageDone, setWipedStorageDone] = React.useState<boolean>(false);
+
+    const [nickname, setUserNickname] = React.useState<string>('');
+    const [walletAddress, setUserWalletAddress] = React.useState<string>('');
 
     const connector = useWalletConnect();
 
@@ -64,6 +67,22 @@ const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
             height: Dimensions.get('window').height,
         }),
         []
+    );
+
+    const userNickname: UserNickname = React.useMemo<UserNickname>(
+        () => ({
+            nickname: nickname,
+            setUserNickname: setUserNickname,
+        }),
+        [nickname]
+    );
+
+    const userWalletAddress: UserWalletAddress = React.useMemo<UserWalletAddress>(
+        () => ({
+            walletAddress: walletAddress,
+            setUserWalletAddress: setUserWalletAddress,
+        }),
+        [walletAddress]
     );
 
     React.useEffect(() => {
@@ -127,6 +146,8 @@ const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
                 setConnectionContext,
                 pushChangeUpdate,
                 cleanConnectionContext,
+                userNickname,
+                userWalletAddress
             }}
         >
             {children}
