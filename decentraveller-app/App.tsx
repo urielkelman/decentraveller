@@ -38,7 +38,7 @@ export default function App() {
 
     return (
         <AppContextProvider>
-            <UserInitialScreen />
+            <DecentravellerInitialScreen />
         </AppContextProvider>
     );
 }
