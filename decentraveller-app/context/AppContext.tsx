@@ -43,7 +43,7 @@ const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
                                 chainId: '0x7a69',
                                 chainName: 'Local Hardhat',
                                 nativeCurrency: {
-                                    name: 'Ethereum',
+                                    nameText: 'Ethereum',
                                     symbol: 'ETH',
                                     decimals: 18,
                                 },

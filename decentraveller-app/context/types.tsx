@@ -16,3 +16,5 @@ export type AppContextType = {
     pushChangeUpdate: () => void;
     deviceDimensions: DeviceDimensions;
 };
+
+export type DecentravellerPlaceCategory = 'GASTRONOMY' | 'ENTERTAINMENT' | 'ACCOMMODATION' | 'OTHER';

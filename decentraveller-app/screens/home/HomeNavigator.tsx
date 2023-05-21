@@ -5,7 +5,7 @@ import CreatePlaceLocationScreen from './place/CreatePlaceLocationScreen';
 import RootNavigator from './RootNavigator';
 
 export type HomeStackScreens = {
-    RootTabNavigator: undefined;
+    'Decentraveller Home': undefined;
     CreatePlaceNameScreen: undefined;
     CreatePlaceLocationScreen: undefined;
 };
@@ -15,8 +15,8 @@ const HomeStackNavigator = createStackNavigator<HomeStackScreens>();
 const HomeNavigator = () => {
     return (
         <CreatePlaceProvider>
-            <HomeStackNavigator.Navigator initialRouteName="RootTabNavigator">
-                <HomeStackNavigator.Screen name="RootTabNavigator" component={RootNavigator} />
+            <HomeStackNavigator.Navigator initialRouteName="Decentraveller Home">
+                <HomeStackNavigator.Screen name="Decentraveller Home" component={RootNavigator} />
                 <HomeStackNavigator.Screen
                     name="CreatePlaceNameScreen"
                     component={CreatePlaceNameScreen}
