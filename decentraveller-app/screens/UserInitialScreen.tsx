@@ -7,7 +7,7 @@ import RegistrationNavigator from './users/registration/RegistrationNavigator';
 import { apiAdapter } from '../api/apiAdapter';
 import { mockApiAdapter } from '../api/mockApiAdapter';
 import HomeNavigatorDrawer from "./home/HomeNavigatorDrawer";
-import HomeNavigatorStack from "./home/HomeNavigatorStack";
+import HomeNavigator from "./home/HomeNavigator";
 
 const DecentravellerInitialScreen = () => {
     const [stackToRender, setStackToRender] = React.useState<'Login' | 'Home' | 'Registration'>();
@@ -49,7 +49,7 @@ const DecentravellerInitialScreen = () => {
     const navigatorToRender = () => {
         switch (stackToRender) {
             case 'Home':
-                return <HomeNavigatorDrawer />;
+                return <HomeNavigator />;
             case 'Login':
                 return <LoginNavigator />;
             case 'Registration':

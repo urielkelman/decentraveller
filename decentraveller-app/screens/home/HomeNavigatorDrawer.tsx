@@ -7,9 +7,11 @@ import {
     DrawerItemList
 } from '@react-navigation/drawer';
 import {drawerStyles} from "../../styles/drawerStyles";
-import HomeNavigatorStack from "./HomeNavigatorStack";
+import HomeNavigator from "./HomeNavigator";
 import {useAppContext} from "../../context/AppContext";
 import {obfuscateAddress} from "../../commons/utils";
+import UserProfileScreen from "../users/profile/UserProfileScreen";
+import Home from "./Home";
 
 const Drawer = createDrawerNavigator();
 
@@ -50,7 +52,8 @@ const HomeNavigatorDrawer = () => {
                 <CustomDrawerContent {...drawerProps} />
             )}
         >
-            <Drawer.Screen name="Home" component={HomeNavigatorStack} />
+            <Drawer.Screen name="Places" component={Home} />
+            <Drawer.Screen name="Profile" component={UserProfileScreen} />
         </Drawer.Navigator>
     );
 };
