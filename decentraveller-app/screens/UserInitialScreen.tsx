@@ -2,22 +2,22 @@ import React, { useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { useAppContext } from '../context/AppContext';
 import WrongChainModal from './login/WrongChainModal';
-import HomeNavigator from './home/HomeNavigator';
 import LoginNavigator from './login/LoginNavigator';
 import RegistrationNavigator from './users/registration/RegistrationNavigator';
 import { apiAdapter } from '../api/apiAdapter';
 import { mockApiAdapter } from '../api/mockApiAdapter';
+import HomeNavigator from "./home/HomeNavigator";
 
 const DecentravellerInitialScreen = () => {
     const [stackToRender, setStackToRender] = React.useState<'Login' | 'Home' | 'Registration'>();
     const appContext = useAppContext();
 
     const getUser = async () => {
-        //const adapter = mockApiAdapter
-        //const wallet = "uri"
+        const adapter = mockApiAdapter
+        const wallet = "uri"
 
-        const adapter = apiAdapter;
-        const wallet = appContext.connectionContext.connectedAddress;
+        //const adapter = apiAdapter;
+        //const wallet = appContext.connectionContext.connectedAddress;
         const user = await adapter.getUser(wallet, () => {});
 
         const render = user ? 'Home' : 'Registration'

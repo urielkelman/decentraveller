@@ -12,7 +12,7 @@ import {
     Montserrat_800ExtraBold,
 } from '@expo-google-fonts/montserrat';
 import { useFonts } from 'expo-font';
-import FakeInitialScreen from "./screens/FakeInitialScreen";
+import UserInitialScreen from "./screens/UserInitialScreen";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -38,7 +38,7 @@ export default function App() {
 
     return (
         <AppContextProvider>
-            <FakeInitialScreen />
+            <UserInitialScreen />
         </AppContextProvider>
     );
 }
