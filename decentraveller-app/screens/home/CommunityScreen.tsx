@@ -13,7 +13,7 @@ const CommunityScreen = ({ navigation }) => {
         await connector.killSession();
         console.log('session killed');
     };
-    
+
     return (
         <View style={{ flex: 1 }}>
             <Button title={'Disconnect wallet'} onPress={killSession} />
