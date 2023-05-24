@@ -6,9 +6,7 @@ import { countryFlagSize, placeItemStyle, rateReviewIcon, starComponentStyle } f
 // @ts-ignore
 import eretzMockImage from '../../../assets/mock_images/eretz-restaurant-in-buenos.jpg';
 import { ISOCodeByCountry } from './countriesConfig';
-import { useDeviceDimensions } from '../../../context/AppContext';
 import { Rating } from 'react-native-rating-element';
-import { sc } from 'react-native-country-flag/dist/flags/flagsIndex';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 
@@ -37,16 +35,6 @@ const StarComponent = ({ score: number }) => {
         />
     );
 };
-
-const styles = StyleSheet.create({
-    container: {
-        width: 100, // Adjust the width of the star component
-        height: 100, // Adjust the height of the star component
-        backgroundColor: 'white',
-        borderRadius: 10,
-        overflow: 'hidden',
-    },
-});
 
 const PlaceItem: React.FC<PlaceItemProps> = ({
     id,
