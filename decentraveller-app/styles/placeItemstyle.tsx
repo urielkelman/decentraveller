@@ -32,7 +32,6 @@ const placeItemStyle = StyleSheet.create({
         fontSize: height * 0.025,
     },
     countryFlag: {
-        size: width * 0.04,
         marginLeft: width * 0.04,
         marginTop: height * 0.005,
     },
@@ -65,4 +64,6 @@ const rateReviewIcon = {
     },
 };
 
-export { placeItemStyle, starComponentStyle, rateReviewIcon };
+const countryFlagSize = width * 0.04;
+
+export { placeItemStyle, starComponentStyle, rateReviewIcon, countryFlagSize };
