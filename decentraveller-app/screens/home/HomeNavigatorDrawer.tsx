@@ -9,7 +9,6 @@ import {
 import {drawerStyles} from "../../styles/drawerStyles";
 import {useAppContext} from "../../context/AppContext";
 import {obfuscateAddress} from "../../commons/utils";
-import Home from "./Home";
 import UserProfileScreen from "../users/profile/UserProfileScreen";
 import RootNavigator from "./RootNavigator";
 
