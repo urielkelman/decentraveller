@@ -4,7 +4,7 @@ import { useAppContext } from '../../context/AppContext';
 import React from 'react';
 import { Feather } from '@expo/vector-icons';
 
-const Home = ({ navigation }) => {
+const ExplorePlacesScreen = ({ navigation }) => {
     const connector = useWalletConnect();
     const appContext = useAppContext();
 
@@ -14,18 +14,14 @@ const Home = ({ navigation }) => {
         console.log('session killed');
     };
 
+    console.log('Explore');
+
     return (
         <View style={{ flex: 1 }}>
             <Button title={'Disconnect wallet'} onPress={killSession} />
-            <TouchableOpacity
-                style={{ paddingTop: 35, flex: 1, flexDirection: 'row' }}
-                onPress={() => navigation.navigate('CreatePlaceNameScreen', { headerShown: false })}
-            >
-                <Feather name="plus-circle" size={24} color="black" style={{ paddingRight: 10 }} />
-                <Text>Add a place</Text>
-            </TouchableOpacity>
+            <Text>Explore places</Text>
         </View>
     );
 };
 
-export default Home;
+export default ExplorePlacesScreen;
