@@ -6,10 +6,24 @@ import {
     WelcomeStyles,
 } from '../../../styles/registrationScreensStyles';
 import {registerUserScreenWordings} from "../registration/wording";
+import {createStackNavigator} from "@react-navigation/stack";
+import {HomeStackScreens} from "../../home/HomeNavigator";
+import CreatePlaceProvider from "../../home/place/CreatePlaceContext";
+import RootNavigator from "../../home/RootNavigator";
+import CreatePlaceNameScreen from "../../home/place/CreatePlaceNameScreen";
+import CreatePlaceLocationScreen from "../../home/place/CreatePlaceLocationScreen";
+import DecentravellerButton from "../../../commons/components/DecentravellerButton";
+
+export type UserProfileScreens = {
+    UserProfileScreen: undefined;
+};
+
+const HomeStackNavigator = createStackNavigator<UserProfileScreens>();
+
 
 const UserProfileScreen = ({ navigation }) => {
     const onClickContinue = () => {
-        navigation.navigate('RegisterUserScreen');
+        navigation.navigate('UserProfileEditScreen');
     };
 
     return (
@@ -21,6 +35,7 @@ const UserProfileScreen = ({ navigation }) => {
                     <Text style={registrationScreenTextStyle.redText}>Traveller</Text>
                 </Text>
             </View>
+            <DecentravellerButton loading={false} text="Continue to profile" onPress={onClickContinue} />
             <Text style={subTitleTextStyle} adjustsFontSizeToFit={true} numberOfLines={2}>
                 {"[PROFILE SCREEN IN PROGRESS...]"}
             </Text>
@@ -28,4 +43,12 @@ const UserProfileScreen = ({ navigation }) => {
     );
 };
 
-export default UserProfileScreen;
+const UserNavigator = () => {
+    return (
+        <HomeStackNavigator.Navigator initialRouteName="UserProfileScreen" screenOptions={{headerShown: false}}>
+            <HomeStackNavigator.Screen name="UserProfileScreen"  component={UserProfileScreen} />
+        </HomeStackNavigator.Navigator>
+    );
+};
+
+export default UserNavigator;
