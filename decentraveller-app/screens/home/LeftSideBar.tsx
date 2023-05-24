@@ -19,7 +19,8 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
     const {walletAddress} = useAppContext().userWalletAddress
 
     const user = {
-        profileImage: require('./cryptochica.png'),
+        // TODO: Take profileImage from backend when implementation is developed
+        profileImage: require('../../assets/mock_images/cryptochica.png'),
         name: nickname,
         walletAddress: obfuscateAddress(walletAddress),
     };
@@ -44,7 +45,7 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
     );
 };
 
-const HomeNavigatorDrawer = ({ navigation }) => {
+const LeftSideBar = () => {
     return (
         <Drawer.Navigator
             drawerContent={(drawerProps) => (
@@ -59,5 +60,5 @@ const HomeNavigatorDrawer = ({ navigation }) => {
 };
 
 
-export default HomeNavigatorDrawer;
+export default LeftSideBar;
 
