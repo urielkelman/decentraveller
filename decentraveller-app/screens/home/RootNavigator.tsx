@@ -3,7 +3,6 @@ import { AntDesign } from '@expo/vector-icons';
 import { sizesConfig } from '../../config/sizesConfig';
 import React from 'react';
 import { useDeviceDimensions } from '../../context/AppContext';
-import HomeNavigatorStack from "./HomeNavigatorStack";
 import CreatePlaceNameScreen from "./place/CreatePlaceNameScreen";
 import Home from "./Home";
 type RootStackScreens = {
