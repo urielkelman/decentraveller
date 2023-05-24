@@ -26,7 +26,6 @@ class ApiAdapter {
     }
 
     async getUser(walletAddress: string, onFailed: () => void): Promise<UserResponse> {
-
         const httpRequest: HttpGetRequest = {
             url: `${GET_USER_ENDPOINT}/${walletAddress}`,
             queryParams: {},

@@ -12,7 +12,7 @@ import {
     Montserrat_800ExtraBold,
 } from '@expo-google-fonts/montserrat';
 import { useFonts } from 'expo-font';
-import UserInitialScreen from "./screens/UserInitialScreen";
+import UserInitialScreen from './screens/UserInitialScreen';
 
 SplashScreen.preventAutoHideAsync();
 
