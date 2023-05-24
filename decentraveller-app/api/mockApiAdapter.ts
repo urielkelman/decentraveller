@@ -24,7 +24,7 @@ class MockApiAdapter {
     async getUser(wallet: string, onFailed: () => void): Promise<UserResponse> {
         switch (wallet) {
             case 'mati': {
-                return null
+                return null;
             }
             case 'uri': {
                 return UriUserResponse;

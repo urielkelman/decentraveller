@@ -10,12 +10,12 @@ export interface DeviceDimensions {
 }
 
 export interface UserNickname {
-    nickname: string,
-    setUserNickname: (string) => void
+    nickname: string;
+    setUserNickname: (string) => void;
 }
 
 export interface UserWalletAddress {
-    walletAddress: string,
+    walletAddress: string;
     setUserWalletAddress: (string) => void;
 }
 
@@ -25,6 +25,6 @@ export type AppContextType = {
     cleanConnectionContext: () => void;
     pushChangeUpdate: () => void;
     deviceDimensions: DeviceDimensions;
-    userNickname: UserNickname,
-    userWalletAddress: UserWalletAddress
+    userNickname: UserNickname;
+    userWalletAddress: UserWalletAddress;
 };

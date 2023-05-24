@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, StyleSheet, KeyboardAvoidingView } from 'react-native';
 import { useCreateUserContext } from './CreateUserContext';
 import { blockchainAdapter } from '../../../blockchain/blockhainAdapter';
@@ -9,7 +9,7 @@ import DecentravellerTextInput from '../../../commons/components/DecentravellerT
 import DecentravellerPicker from '../../../commons/components/DecentravellerPicker';
 import { registrationScreenStyles } from '../../../styles/registrationScreensStyles';
 import DecentravellerInformativeModal from '../../../commons/components/DecentravellerInformativeModal';
-import {registerUserScreenWordings} from "./wording";
+import { registerUserScreenWordings } from './wording';
 
 const RegisterUserScreen = ({ navigation }) => {
     const { interestPicker, countryPicker, nickname, setNickname } = useCreateUserContext();
@@ -18,7 +18,6 @@ const RegisterUserScreen = ({ navigation }) => {
     const connector = useWalletConnect();
 
     const handleSubmit = async () => {
-
         const adapter = blockchainAdapter;
         //const adapter = mockBlockchainAdapter
 
@@ -30,7 +29,7 @@ const RegisterUserScreen = ({ navigation }) => {
             onError
         );
         console.log('Transaction confirmed with hash', transactionHash);
-        setIsSubmitted(true)
+        setIsSubmitted(true);
     };
     const onError = () => {
         setShowErrorModal(true);
@@ -86,10 +85,9 @@ const RegisterUserScreen = ({ navigation }) => {
                 visible={showErrorModal}
                 closeModalText={'Close'}
                 handleCloseModal={() => {
-                    setShowErrorModal(false)
-                    setIsSubmitted(false)
-                    }
-                }
+                    setShowErrorModal(false);
+                    setIsSubmitted(false);
+                }}
             />
         </KeyboardAvoidingView>
     );

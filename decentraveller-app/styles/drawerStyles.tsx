@@ -1,4 +1,4 @@
-import {StyleSheet} from "react-native";
+import { StyleSheet } from 'react-native';
 
 const drawerStyles = StyleSheet.create({
     userContainer: {
@@ -28,7 +28,6 @@ const drawerStyles = StyleSheet.create({
         fontSize: 16,
         fontWeight: '100',
         fontFamily: 'sans-serif-light',
-
     },
     drawerContent: {
         flex: 1,
@@ -45,6 +44,4 @@ const drawerStyles = StyleSheet.create({
     },
 });
 
-export {
-    drawerStyles
-}
+export { drawerStyles };
