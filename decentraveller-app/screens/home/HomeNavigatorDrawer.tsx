@@ -7,11 +7,11 @@ import {
     DrawerItemList
 } from '@react-navigation/drawer';
 import {drawerStyles} from "../../styles/drawerStyles";
-import HomeNavigator from "./HomeNavigator";
 import {useAppContext} from "../../context/AppContext";
 import {obfuscateAddress} from "../../commons/utils";
-import UserProfileScreen from "../users/profile/UserProfileScreen";
 import Home from "./Home";
+import UserProfileScreen from "../users/profile/UserProfileScreen";
+import RootNavigator from "./RootNavigator";
 
 const Drawer = createDrawerNavigator();
 
@@ -45,15 +45,16 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
     );
 };
 
-const HomeNavigatorDrawer = () => {
+const HomeNavigatorDrawer = ({ navigation }) => {
     return (
         <Drawer.Navigator
             drawerContent={(drawerProps) => (
                 <CustomDrawerContent {...drawerProps} />
             )}
         >
-            <Drawer.Screen name="Places" component={Home} />
-            <Drawer.Screen name="Profile" component={UserProfileScreen} />
+            <Drawer.Screen name="Decentraveller" component={RootNavigator}/>
+            <Drawer.Screen name="Profile" component={UserProfileScreen}/>
+
         </Drawer.Navigator>
     );
 };
