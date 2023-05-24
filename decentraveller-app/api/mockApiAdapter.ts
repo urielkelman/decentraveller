@@ -71,8 +71,8 @@ class MockApiAdapter {
                     reviewCount: 43,
                 },
                 {
-                    id: 1,
-                    name: 'Eretz',
+                    id: 4,
+                    name: 'Eretz 2',
                     address: 'Honduras 4709, Palermo, Buenos Aires, C1414, Argentina',
                     latitude: '-34.590716',
                     longitude: '-58.427125',
@@ -81,8 +81,8 @@ class MockApiAdapter {
                     reviewCount: 25,
                 },
                 {
-                    id: 2,
-                    name: 'Mc Donalds',
+                    id: 5,
+                    name: 'Mc Donalds 2',
                     address: 'Honduras 4709, Villa Insuperable, Buenos Aires Province, B1751, Argentina',
                     latitude: '-34.675893',
                     longitude: '-58.508822',
@@ -91,8 +91,8 @@ class MockApiAdapter {
                     reviewCount: 102,
                 },
                 {
-                    id: 3,
-                    name: 'Hilton',
+                    id: 6,
+                    name: 'Hilton 2',
                     address: 'Honduras 4709, Moreno, Buenos Aires Province, B1743, Argentina',
                     latitude: '-34.621728',
                     longitude: '-58.80039',

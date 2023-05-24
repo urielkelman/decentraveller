@@ -21,7 +21,7 @@ type bottomTabElementProps = {
     size: number;
 };
 
-const DEFAULT_BOTTOM_TAB_ICONS_COLOR = '#FFE1E1';
+const DEFAULT_BOTTOM_TAB_ICONS_COLOR = '#983B46';
 
 const RootNavigator = () => {
     const getTabBarIcon = (

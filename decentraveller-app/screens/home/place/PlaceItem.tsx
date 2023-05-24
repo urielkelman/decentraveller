@@ -1,8 +1,8 @@
-import { Image, Text, View, StyleSheet } from 'react-native';
+import { Image, Text, View, StyleSheet, TouchableOpacity } from 'react-native';
 import CountryFlag from 'react-native-country-flag';
 import { DecentravellerPlaceCategory } from '../../../context/types';
 import React from 'react';
-import { placeItemStyle, rateReviewIcon, starComponentStyle } from '../../../styles/placeItemstyle';
+import { countryFlagSize, placeItemStyle, rateReviewIcon, starComponentStyle } from '../../../styles/placeItemstyle';
 // @ts-ignore
 import eretzMockImage from '../../../assets/mock_images/eretz-restaurant-in-buenos.jpg';
 import { ISOCodeByCountry } from './countriesConfig';
@@ -10,6 +10,7 @@ import { useDeviceDimensions } from '../../../context/AppContext';
 import { Rating } from 'react-native-rating-element';
 import { sc } from 'react-native-country-flag/dist/flags/flagsIndex';
 import { MaterialIcons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 
 export type PlaceItemProps = {
     id: number;
@@ -57,6 +58,7 @@ const PlaceItem: React.FC<PlaceItemProps> = ({
     category,
     reviewCount,
 }) => {
+    const navigation = useNavigation();
     let countryISOCode: string | undefined;
     try {
         const country = address.split(',').slice(-1)[0].substring(1);
@@ -74,42 +76,44 @@ const PlaceItem: React.FC<PlaceItemProps> = ({
 
     console.log(name);
     return (
-        <View style={placeItemStyle.container}>
-            <View style={placeItemStyle.leftContainer}>
-                <Image style={placeItemStyle.image} source={eretzMockImage} />
-            </View>
-            <View style={placeItemStyle.rightSideContainer}>
-                <View style={placeItemStyle.informationContainer}>
-                    <Text style={placeItemStyle.nameText}>{name}</Text>
-                    {countryISOCode ? (
-                        <CountryFlag
-                            isoCode={countryISOCode}
-                            size={placeItemStyle.countryFlag.size}
-                            style={placeItemStyle.countryFlag}
+        <TouchableOpacity onPress={() => navigation.navigate('PlaceDetailScreen')}>
+            <View style={placeItemStyle.container}>
+                <View style={placeItemStyle.leftContainer}>
+                    <Image style={placeItemStyle.image} source={eretzMockImage} />
+                </View>
+                <View style={placeItemStyle.rightSideContainer}>
+                    <View style={placeItemStyle.informationContainer}>
+                        <Text style={placeItemStyle.nameText}>{name}</Text>
+                        {countryISOCode ? (
+                            <CountryFlag
+                                isoCode={countryISOCode}
+                                size={countryFlagSize}
+                                style={placeItemStyle.countryFlag}
+                            />
+                        ) : (
+                            <></>
+                        )}
+                    </View>
+                    <View>
+                        <Text style={placeItemStyle.subtitleText}>{capitalizedCategory}</Text>
+                    </View>
+                    <View style={placeItemStyle.informationContainer}>
+                        <Text style={placeItemStyle.informationText}>Score:</Text>
+                        <StarComponent score={score} />
+                        <MaterialIcons
+                            name="rate-review"
+                            size={rateReviewIcon.size}
+                            color={rateReviewIcon.color}
+                            style={rateReviewIcon.style}
                         />
-                    ) : (
-                        <></>
-                    )}
-                </View>
-                <View>
-                    <Text style={placeItemStyle.subtitleText}>{capitalizedCategory}</Text>
-                </View>
-                <View style={placeItemStyle.informationContainer}>
-                    <Text style={placeItemStyle.informationText}>Score:</Text>
-                    <StarComponent score={score} />
-                    <MaterialIcons
-                        name="rate-review"
-                        size={rateReviewIcon.size}
-                        color={rateReviewIcon.color}
-                        style={rateReviewIcon.style}
-                    />
-                    <Text style={placeItemStyle.informationText}>{reviewCount}</Text>
-                </View>
-                <View style={placeItemStyle.informationContainer}>
-                    <Text style={placeItemStyle.informationText}>{addressToShow}</Text>
+                        <Text style={placeItemStyle.informationText}>{reviewCount}</Text>
+                    </View>
+                    <View style={placeItemStyle.informationContainer}>
+                        <Text style={placeItemStyle.informationText}>{addressToShow}</Text>
+                    </View>
                 </View>
             </View>
-        </View>
+        </TouchableOpacity>
     );
 };
 

@@ -7,6 +7,8 @@ import { apiAdapter } from '../../api/apiAdapter';
 import { mockApiAdapter } from '../../api/mockApiAdapter';
 import { PlaceResponse, PlacesResponse } from '../../api/response/places';
 import PlaceItem from './place/PlaceItem';
+import { addNewPlaceIconSize, homeStyle } from '../../styles/homeStyles';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const adapter = mockApiAdapter;
 
@@ -49,6 +51,11 @@ const HomeScreen = ({ navigation }) => {
 
     const recommendedPlacesItems = () => (
         <View style={{ backgroundColor: '#FFE1E1', flex: 1 }}>
+            <View style={homeStyle.addNewPlaceReference}>
+                <TouchableOpacity onPress={() => navigation.navigate('CreatePlaceNameScreen')}>
+                    <MaterialCommunityIcons name="book-plus-outline" size={addNewPlaceIconSize} color="black" />
+                </TouchableOpacity>
+            </View>
             <FlatList data={recommendedPlaces} renderItem={renderPlaceItem} />
         </View>
     );
@@ -59,22 +66,8 @@ const HomeScreen = ({ navigation }) => {
         </View>
     );
 
-    console.log(recommendedPlaces);
-
     const componentToRender = loadingRecommendedPlaces ? loadingRecommendedPlacesComponent() : recommendedPlacesItems();
 
-    /* return (
-        <View style={{ flex: 1 }}>
-            <Button title={'Disconnect wallet'} onPress={killSession} />
-            <TouchableOpacity
-                style={{ paddingTop: 35, flex: 1, flexDirection: 'row' }}
-                onPress={() => navigation.navigate('CreatePlaceNameScreen', { headerShown: false })}
-            >
-                <Feather name="plus-circle" size={24} color="black" style={{ paddingRight: 10 }} />
-                <Text>Add a place</Text>
-            </TouchableOpacity>
-        </View>
-    ); */
     return <View style={{ flex: 1 }}>{componentToRender}</View>;
 };
 
