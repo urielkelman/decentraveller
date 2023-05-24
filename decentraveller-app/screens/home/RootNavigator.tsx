@@ -61,13 +61,6 @@ const RootNavigator = () => {
             screenOptions={({ route }) => getBottomTabNavigatorScreenOptions(route)}
         >
             <RootTabNavigator.Screen name="Home" component={Home} />
-
-            {/*Add for testing behaviour, drop after code review*/}
-            <RootTabNavigator.Screen
-                name="ConnectWalletScreen"
-                component={CreatePlaceNameScreen}
-                options={{ title: 'Create Place' }}
-            />
         </RootTabNavigator.Navigator>
     );
 };
