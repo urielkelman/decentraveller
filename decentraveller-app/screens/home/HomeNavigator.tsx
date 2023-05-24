@@ -4,12 +4,12 @@ import RootNavigator from './RootNavigator';
 import CreatePlaceNameScreen from "./place/CreatePlaceNameScreen";
 import CreatePlaceLocationScreen from "./place/CreatePlaceLocationScreen";
 import CreatePlaceProvider from './place/CreatePlaceContext';
-import HomeNavigatorDrawer from "./HomeNavigatorDrawer";
+import LeftSideBar from "./LeftSideBar";
 import Home from "./Home";
 import UserProfileEditScreen from "../users/profile/UserProfileEditScreen";
 
 export type HomeStackScreens = {
-    HomeNavigatorDrawer: undefined;
+    LeftSideBar: undefined;
     UserProfileEditScreen: undefined;
     CreatePlaceNameScreen: undefined;
     CreatePlaceLocationScreen: undefined;
@@ -20,8 +20,8 @@ const HomeStackNavigator = createStackNavigator<HomeStackScreens>();
 const HomeNavigator = () => {
     return (
         <CreatePlaceProvider>
-            <HomeStackNavigator.Navigator initialRouteName="HomeNavigatorDrawer" screenOptions={{headerShown: false}}>
-                <HomeStackNavigator.Screen name="HomeNavigatorDrawer"  component={HomeNavigatorDrawer} />
+            <HomeStackNavigator.Navigator initialRouteName="LeftSideBar" screenOptions={{headerShown: false}}>
+                <HomeStackNavigator.Screen name="LeftSideBar"  component={LeftSideBar} />
                 <HomeStackNavigator.Screen
                     name="CreatePlaceNameScreen"
                     component={CreatePlaceNameScreen}

@@ -6,7 +6,6 @@ import LoginNavigator from './login/LoginNavigator';
 import RegistrationNavigator from './users/registration/RegistrationNavigator';
 import { apiAdapter } from '../api/apiAdapter';
 import { mockApiAdapter } from '../api/mockApiAdapter';
-import HomeNavigatorDrawer from "./home/HomeNavigatorDrawer";
 import HomeNavigator from "./home/HomeNavigator";
 
 const DecentravellerInitialScreen = () => {
