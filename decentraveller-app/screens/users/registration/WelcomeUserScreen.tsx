@@ -6,7 +6,7 @@ import {
     WelcomeStyles,
 } from '../../../styles/registrationScreensStyles';
 import DecentravellerButton from '../../../commons/components/DecentravellerButton';
-import {registerUserScreenWordings} from "./wording";
+import { registerUserScreenWordings } from './wording';
 
 const WelcomeUserScreen = ({ navigation }) => {
     const onClickContinue = () => {

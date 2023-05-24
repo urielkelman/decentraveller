@@ -9,8 +9,9 @@ import { apiAdapter } from '../api/apiAdapter';
 import { mockApiAdapter } from '../api/mockApiAdapter';
 
 const DecentravellerInitialScreen = () => {
-    const [stackToRender, setStackToRender] = React.useState<'Login' | 'Home' | 'Registration'>();
+    let [stackToRender, setStackToRender] = React.useState<'Login' | 'Home' | 'Registration'>();
     const appContext = useAppContext();
+    // const stackToRender: JSX.Element = appContext.connectionContext === null ? <LoginNavigator /> : <HomeNavigator />;
 
     const getUser = async () => {
         //const adapter = mockApiAdapter
@@ -20,8 +21,8 @@ const DecentravellerInitialScreen = () => {
         const wallet = appContext.connectionContext.connectedAddress;
         const user = await adapter.getUser(wallet, () => {});
 
-        const render = user ? 'Home' : 'Registration'
-        setStackToRender(render)
+        const render = user ? 'Home' : 'Registration';
+        setStackToRender(render);
     };
 
     useEffect(() => {
