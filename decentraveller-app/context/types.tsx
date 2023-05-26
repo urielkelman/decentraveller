@@ -28,3 +28,5 @@ export type AppContextType = {
     userNickname: UserNickname;
     userWalletAddress: UserWalletAddress;
 };
+
+export type DecentravellerPlaceCategory = 'GASTRONOMY' | 'ENTERTAINMENT' | 'ACCOMMODATION' | 'OTHER';
