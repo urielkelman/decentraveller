@@ -9,4 +9,11 @@ const withTimeout = async (promiseToExecute: () => Promise<any>, timeoutInMillis
     ]);
 };
 
-export { withTimeout };
+const obfuscateAddress = (address) => {
+    const prefix = '0x';
+    const start = address.slice(0, 4);
+    const end = address.slice(-4);
+    return `${prefix}${start}...${end}`;
+};
+
+export { withTimeout, obfuscateAddress };
