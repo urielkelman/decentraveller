@@ -1,27 +1,34 @@
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { useAppContext } from '../context/AppContext';
+import { AppContext, useAppContext } from '../context/AppContext';
 import WrongChainModal from './login/WrongChainModal';
-import HomeNavigator from './home/HomeNavigator';
 import LoginNavigator from './login/LoginNavigator';
 import RegistrationNavigator from './users/registration/RegistrationNavigator';
 import { apiAdapter } from '../api/apiAdapter';
 import { mockApiAdapter } from '../api/mockApiAdapter';
+import HomeNavigator from './home/HomeNavigator';
 
 const DecentravellerInitialScreen = () => {
     let [stackToRender, setStackToRender] = React.useState<'Login' | 'Home' | 'Registration'>();
     const appContext = useAppContext();
+    const { setUserNickname } = appContext.userNickname;
+    const { setUserWalletAddress } = appContext.userWalletAddress;
     // const stackToRender: JSX.Element = appContext.connectionContext === null ? <LoginNavigator /> : <HomeNavigator />;
 
     const getUser = async () => {
-        //const adapter = mockApiAdapter
-        //const wallet = "uri"
+        const adapter = mockApiAdapter;
+        const wallet = '3FZbgi29cpjq2GjdwV8eyHuJJnkLtktZc5';
 
-        const adapter = apiAdapter;
-        const wallet = appContext.connectionContext.connectedAddress;
+        //const adapter = apiAdapter;
+        //const wallet = appContext.connectionContext.connectedAddress;
         const user = await adapter.getUser(wallet, () => {});
 
         const render = user ? 'Home' : 'Registration';
+        if (user) {
+            setUserNickname(user.UserElementResponse.nickname);
+            setUserWalletAddress(wallet);
+        }
+
         setStackToRender(render);
     };
 

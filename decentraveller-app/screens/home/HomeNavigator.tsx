@@ -1,12 +1,15 @@
+import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import CreatePlaceNameScreen from './place/CreatePlaceNameScreen';
-import CreatePlaceProvider from './place/CreatePlaceContext';
 import CreatePlaceLocationScreen from './place/CreatePlaceLocationScreen';
-import RootNavigator from './RootNavigator';
+import CreatePlaceProvider from './place/CreatePlaceContext';
+import LeftSideBar from './LeftSideBar';
+import UserProfileEditScreen from '../users/profile/UserProfileEditScreen';
 import PlaceDetailScreen from './place/PlaceDetailScreen';
 
 export type HomeStackScreens = {
-    'Decentraveller Home': undefined;
+    LeftSideBar: undefined;
+    UserProfileEditScreen: undefined;
     CreatePlaceNameScreen: undefined;
     CreatePlaceLocationScreen: undefined;
     PlaceDetailScreen: undefined;
@@ -17,14 +20,15 @@ const HomeStackNavigator = createStackNavigator<HomeStackScreens>();
 const HomeNavigator = () => {
     return (
         <CreatePlaceProvider>
-            <HomeStackNavigator.Navigator initialRouteName="Decentraveller Home">
-                <HomeStackNavigator.Screen name="Decentraveller Home" component={RootNavigator} />
+            <HomeStackNavigator.Navigator initialRouteName="LeftSideBar" screenOptions={{ headerShown: false }}>
+                <HomeStackNavigator.Screen name="LeftSideBar" component={LeftSideBar} />
                 <HomeStackNavigator.Screen
                     name="CreatePlaceNameScreen"
                     component={CreatePlaceNameScreen}
                     options={{
                         title: 'Add new place',
                         headerMode: 'screen',
+                        headerShown: true,
                     }}
                 />
                 <HomeStackNavigator.Screen
@@ -33,6 +37,16 @@ const HomeNavigator = () => {
                     options={{
                         title: 'Select location',
                         headerMode: 'screen',
+                        headerShown: true,
+                    }}
+                />
+                <HomeStackNavigator.Screen
+                    name="UserProfileEditScreen"
+                    component={UserProfileEditScreen}
+                    options={{
+                        title: 'Edit Profile',
+                        headerMode: 'screen',
+                        headerShown: true,
                     }}
                 />
                 <HomeStackNavigator.Screen
@@ -41,6 +55,7 @@ const HomeNavigator = () => {
                     options={{
                         title: 'Select location',
                         headerMode: 'screen',
+                        headerShown: true,
                     }}
                 />
             </HomeStackNavigator.Navigator>
