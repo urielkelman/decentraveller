@@ -14,7 +14,6 @@ import { registerUserScreenWordings } from './wording';
 const RegisterUserScreen = ({ navigation }) => {
     const { interestPicker, countryPicker, nickname, setNickname } = useCreateUserContext();
     const [showErrorModal, setShowErrorModal] = React.useState<boolean>(false);
-    const [isSubmitted, setIsSubmitted] = React.useState<boolean>(false);
     const connector = useWalletConnect();
 
     const handleSubmit = async () => {
@@ -29,17 +28,11 @@ const RegisterUserScreen = ({ navigation }) => {
             onError
         );
         console.log('Transaction confirmed with hash', transactionHash);
-        setIsSubmitted(true);
+        navigation.navigate('SuccessRegisterUserScreen');
     };
     const onError = () => {
         setShowErrorModal(true);
     };
-
-    useEffect(() => {
-        if (isSubmitted && !showErrorModal) {
-            navigation.navigate('SuccessRegisterUserScreen');
-        }
-    }, [showErrorModal, isSubmitted]);
 
     const backgroundOpacity = showErrorModal ? 0.5 : 1;
 
@@ -86,7 +79,6 @@ const RegisterUserScreen = ({ navigation }) => {
                 closeModalText={'Close'}
                 handleCloseModal={() => {
                     setShowErrorModal(false);
-                    setIsSubmitted(false);
                 }}
             />
         </KeyboardAvoidingView>

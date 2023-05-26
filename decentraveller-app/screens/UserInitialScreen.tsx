@@ -9,10 +9,11 @@ import { mockApiAdapter } from '../api/mockApiAdapter';
 import HomeNavigator from './home/HomeNavigator';
 
 const DecentravellerInitialScreen = () => {
-    const [stackToRender, setStackToRender] = React.useState<'Login' | 'Home' | 'Registration'>();
+    let [stackToRender, setStackToRender] = React.useState<'Login' | 'Home' | 'Registration'>();
     const appContext = useAppContext();
     const { setUserNickname } = appContext.userNickname;
     const { setUserWalletAddress } = appContext.userWalletAddress;
+    // const stackToRender: JSX.Element = appContext.connectionContext === null ? <LoginNavigator /> : <HomeNavigator />;
 
     const getUser = async () => {
         const adapter = mockApiAdapter;

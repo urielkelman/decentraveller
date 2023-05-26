@@ -19,7 +19,6 @@ interface UpdateSessionPayloadParams {
 const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
     const [connectionContext, setConnectionContext] = React.useState<ConnectionContext>(null);
     const [subscriptionsDone, setSubscriptionsDone] = React.useState<boolean>(false);
-    const [wipedStorageDone, setWipedStorageDone] = React.useState<boolean>(false);
 
     const [nickname, setUserNickname] = React.useState<string>('');
     const [walletAddress, setUserWalletAddress] = React.useState<string>('');
@@ -46,7 +45,7 @@ const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
                                 chainId: '0x7a69',
                                 chainName: 'Local Hardhat',
                                 nativeCurrency: {
-                                    name: 'Ethereum',
+                                    nameText: 'Ethereum',
                                     symbol: 'ETH',
                                     decimals: 18,
                                 },
@@ -88,10 +87,7 @@ const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
     React.useEffect(() => {
         /* This effect allow us to clean sessions that the WalletConnect connector stores in the AsyncStorage */
         const wipeAsyncStorage = async () => {
-            console.log('wiping async storage');
             await AsyncStorage.clear();
-            console.log('wiped async storage');
-            setWipedStorageDone(true);
             setConnectionContext(null);
         };
 

@@ -1,18 +1,18 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import RootNavigator from './RootNavigator';
 import CreatePlaceNameScreen from './place/CreatePlaceNameScreen';
 import CreatePlaceLocationScreen from './place/CreatePlaceLocationScreen';
 import CreatePlaceProvider from './place/CreatePlaceContext';
 import LeftSideBar from './LeftSideBar';
-import Home from './Home';
 import UserProfileEditScreen from '../users/profile/UserProfileEditScreen';
+import PlaceDetailScreen from './place/PlaceDetailScreen';
 
 export type HomeStackScreens = {
     LeftSideBar: undefined;
     UserProfileEditScreen: undefined;
     CreatePlaceNameScreen: undefined;
     CreatePlaceLocationScreen: undefined;
+    PlaceDetailScreen: undefined;
 };
 
 const HomeStackNavigator = createStackNavigator<HomeStackScreens>();
@@ -45,6 +45,15 @@ const HomeNavigator = () => {
                     component={UserProfileEditScreen}
                     options={{
                         title: 'Edit Profile',
+                        headerMode: 'screen',
+                        headerShown: true,
+                    }}
+                />
+                <HomeStackNavigator.Screen
+                    name="PlaceDetailScreen"
+                    component={PlaceDetailScreen}
+                    options={{
+                        title: 'Select location',
                         headerMode: 'screen',
                         headerShown: true,
                     }}
