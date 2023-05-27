@@ -6,8 +6,7 @@ import CreatePlaceProvider from './place/CreatePlaceContext';
 import LeftSideBar from './LeftSideBar';
 import UserProfileEditScreen from '../users/profile/UserProfileEditScreen';
 import PlaceDetailScreen from './place/PlaceDetailScreen';
-import RootNavigator from "./RootNavigator";
-import UserProfileScreen from "../users/profile/UserProfileScreen";
+import UserProfileScreen from '../users/profile/UserProfileScreen';
 
 export type HomeStackScreens = {
     LeftSideBar: undefined;
@@ -61,7 +60,11 @@ const HomeNavigator = () => {
                         headerShown: true,
                     }}
                 />
-                <HomeStackNavigator.Screen name="Profile" component={UserProfileScreen} options={{headerShown: true}} />
+                <HomeStackNavigator.Screen
+                    name="Profile"
+                    component={UserProfileScreen}
+                    options={{ headerShown: true }}
+                />
             </HomeStackNavigator.Navigator>
         </CreatePlaceProvider>
     );

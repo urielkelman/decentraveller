@@ -1,15 +1,14 @@
 import React from 'react';
-import { Image, SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { Image, SafeAreaView, Text, View } from 'react-native';
 import {
     createDrawerNavigator,
     DrawerContentComponentProps,
-    DrawerContentScrollView, DrawerItem,
-    DrawerItemList,
+    DrawerContentScrollView,
+    DrawerItem,
 } from '@react-navigation/drawer';
 import { drawerStyles } from '../../styles/drawerStyles';
 import { useAppContext } from '../../context/AppContext';
 import { obfuscateAddress } from '../../commons/utils';
-import UserProfileScreen from '../users/profile/UserProfileScreen';
 import RootNavigator from './RootNavigator';
 
 const Drawer = createDrawerNavigator();
