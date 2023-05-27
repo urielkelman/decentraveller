@@ -8,31 +8,17 @@ from sqlalchemy.orm import Session
 from starlette.status import HTTP_400_BAD_REQUEST, HTTP_404_NOT_FOUND
 
 from src.api_models.profile import ProfileBody
-from src.dependencies import get_db
 from src.dependencies.avatar_generator import AvatarGenerator
 from src.orms.profile import ProfileORM
+from src.dependencies.relational_database import RelationalDatabase
 
 profile_router = InferringRouter()
 
 
 @cbv(profile_router)
 class ProfileCBV:
-    session: Session = Depends(get_db)
+    database: RelationalDatabase = Depends(RelationalDatabase)
     avatar_generator: AvatarGenerator = Depends(AvatarGenerator)
-
-    @staticmethod
-    def query_profile(session: Session,
-                      owner: str) -> Optional[ProfileORM]:
-        """
-        Database querying for a profile
-
-        :param session: the database session
-        :param owner: the owner of the profile
-
-        :return: a ProfileORM or none if missing
-        """
-        profile: Optional[ProfileORM] = session.query(ProfileORM).get(owner)
-        return profile
 
     @profile_router.get("/profile/{owner}")
     def get_profile(self, owner: str) -> ProfileBody:
@@ -43,7 +29,7 @@ class ProfileCBV:
         :return: a profile orm
         """
 
-        profile = self.query_profile(self.session, owner)
+        profile = self.database.query_profile(owner)
 
         if profile is None:
             raise HTTPException(status_code=HTTP_404_NOT_FOUND)
@@ -67,7 +53,7 @@ class ProfileCBV:
         :return: jpg avatar image
         """
 
-        profile = self.query_profile(self.session, owner)
+        profile = self.database.query_profile(owner)
 
         if profile is None:
             raise HTTPException(status_code=HTTP_404_NOT_FOUND)
@@ -86,7 +72,7 @@ class ProfileCBV:
         :param profile: the profile data for creation
         :return: the profile data
         """
-        profile_orm = self.query_profile(self.session, profile.owner)
+        profile_orm = self.database.query_profile(profile.owner)
         if profile_orm:
             update_data = profile.dict(exclude_unset=True)
             for k, v in update_data.items():
@@ -96,9 +82,9 @@ class ProfileCBV:
             profile_orm = ProfileORM(owner=profile.owner, nickname=profile.nickname,
                                      country=profile.country,
                                      interest=profile.interest)
-            self.session.add(profile_orm)
+            self.database.session.add(profile_orm)
         try:
-            self.session.commit()
+            self.database.session.commit()
         except IntegrityError:
             raise HTTPException(status_code=HTTP_400_BAD_REQUEST,
                                 detail="The nickname is already in use.")

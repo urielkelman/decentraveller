@@ -1,21 +1,18 @@
-from typing import Generator
 
 from fastapi.testclient import TestClient
 
 from src.app import app
-from src.dependencies import get_db
+from src.dependencies.relational_database import RelationalDatabase
 
 
-def get_test_db() -> Generator:
-    from tests.utils.session import SessionLocal
+class TestRelationalDatabase(RelationalDatabase):
 
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
+    def __init__(self):
+        from tests.utils.session import SessionLocal
+
+        self._session = SessionLocal()
 
 
-app.dependency_overrides[get_db] = get_test_db
+app.dependency_overrides[RelationalDatabase] = TestRelationalDatabase
 
 client = TestClient(app)
