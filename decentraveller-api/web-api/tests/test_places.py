@@ -61,7 +61,10 @@ def test_create_place(cleanup):
                                "address": "Av. Callao & Av. Santa Fe",
                                "latitude": -34.595983,
                                "longitude": -58.393329,
-                               "category": "GASTRONOMY"}
+                               "category": "GASTRONOMY",
+                               "stars": None,
+                               "reviews": 0}
+
 
 def test_overwrite_place(cleanup):
     response = client.get("/place/0")
@@ -92,7 +95,9 @@ def test_overwrite_place(cleanup):
                                "address": "Av. Callao & Av. Santa Fe",
                                "latitude": -34.595983,
                                "longitude": -58.393329,
-                               "category": "GASTRONOMY"}
+                               "category": "GASTRONOMY",
+                               "stars": None,
+                               "reviews": 0}
 
 
 def test_update_place(cleanup):
@@ -119,4 +124,6 @@ def test_update_place(cleanup):
                                "address": "Av. Callao & Av. Santa Fe",
                                "latitude": -34.595983,
                                "longitude": -58.393329,
-                               "category": "GASTRONOMY"}
+                               "category": "GASTRONOMY",
+                               "stars": None,
+                               "reviews": 0}

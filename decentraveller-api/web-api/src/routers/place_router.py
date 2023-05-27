@@ -4,7 +4,7 @@ from fastapi_utils.inferring_router import InferringRouter
 from sqlalchemy.exc import IntegrityError
 from starlette.status import HTTP_404_NOT_FOUND, HTTP_400_BAD_REQUEST
 
-from src.api_models.place import PlaceID, PlaceUpdate, PlaceInDB, PlaceBody
+from src.api_models.place import PlaceID, PlaceUpdate, PlaceInDB, PlaceBody, PlaceWithStats
 from src.dependencies.vector_database import VectorDatabase
 from src.dependencies.relational_database import RelationalDatabase
 
@@ -17,7 +17,7 @@ class PlaceCBV:
     vector_database: VectorDatabase = Depends(VectorDatabase)
 
     @place_router.post("/place", status_code=201)
-    def create_place(self, place: PlaceInDB) -> PlaceInDB:
+    def create_place(self, place: PlaceInDB) -> PlaceWithStats:
         """
         Creates a new place in the database
 
@@ -32,20 +32,20 @@ class PlaceCBV:
         return place
 
     @place_router.get("/place/{place_id}")
-    def get_place(self, place_id: PlaceID) -> PlaceInDB:
+    def get_place(self, place_id: PlaceID) -> PlaceWithStats:
         """
         Get a place by its id
 
         :param place_id: the place id to query
         :return: the place data
         """
-        place = self.database.query_place(place_id)
+        place = self.database.query_places(place_id)
         if place is None:
             raise HTTPException(status_code=HTTP_404_NOT_FOUND)
         return place
 
     @place_router.put("/place/{place_id}")
-    def overwrite_place(self, place_id: PlaceID, place: PlaceBody) -> PlaceInDB:
+    def overwrite_place(self, place_id: PlaceID, place: PlaceBody) -> PlaceWithStats:
         """
         Overwrites a place in the database
 
@@ -59,7 +59,7 @@ class PlaceCBV:
         return place
 
     @place_router.patch("/place/{place_id}")
-    def update_place(self, place_id: PlaceID, place: PlaceUpdate) -> PlaceInDB:
+    def update_place(self, place_id: PlaceID, place: PlaceUpdate) -> PlaceWithStats:
         """
         Updates a place in the database
 

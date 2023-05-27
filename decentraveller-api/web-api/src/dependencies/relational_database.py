@@ -1,12 +1,12 @@
-from typing import Optional, Dict
+from typing import Optional, Dict, List, Union
 from sqlalchemy.orm import Session
-from src.api_models.place import PlaceID, PlaceInDB
+from src.api_models.place import PlaceID, PlaceInDB, PlaceWithStats
 from src.orms.place import PlaceORM
 from src.orms.profile import ProfileORM
 from src.api_models.review import ReviewId, ReviewInDB, ReviewBody
 from src.orms.review import ReviewORM
 from src.api_models.bulk_results import PaginatedReviews
-
+from sqlalchemy import func
 
 
 class RelationalDatabase:
@@ -28,21 +28,43 @@ class RelationalDatabase:
         """
         return self._session
 
-    def query_place(self, place_id: PlaceID) -> Optional[PlaceInDB]:
+    def _get_places_by_ids(self, place_ids: List[PlaceID]) -> List[PlaceWithStats]:
+        """
+        Get places by id list
+        :param place_ids: place id list
+        :return: the places data
+        """
+        result = self.session.query(PlaceORM, func.avg(ReviewORM.score),
+                           func.count(ReviewORM.id)). \
+            join(ReviewORM, ReviewORM.place_id == PlaceORM.id, isouter=True). \
+            filter(PlaceORM.id.in_(tuple(place_ids))) \
+            .group_by(PlaceORM.id).all()
+        return [PlaceWithStats(**PlaceInDB.from_orm(p[0]).dict(),
+                               stars=p[1], reviews=p[2])
+                for p in result]
+
+    def query_places(self, place_ids: Union[PlaceID, List[PlaceID]]) \
+            -> Union[Optional[PlaceWithStats], List[PlaceWithStats]]:
         """
         Gets a place from the database by its id
 
-        :param place_id: the item id
+        :param place_ids: the item id
         :return: a place ORM or None if the id does not exist
         """
-        place: Optional[PlaceORM] = self.session.query(PlaceORM).get(place_id)
+        if isinstance(place_ids, list):
+            if not place_ids:
+                return []
+            places = self._get_places_by_ids(place_ids)
+            if places:
+                return places
+        if not isinstance(place_ids, list):
+            place = self._get_places_by_ids([place_ids])
+            if place:
+                return place[0]
 
-        if not place:
-            return None
+        return None
 
-        return PlaceInDB.from_orm(place)
-
-    def add_place(self, place: PlaceInDB) -> Optional[PlaceInDB]:
+    def add_place(self, place: PlaceInDB) -> PlaceWithStats:
         """
         Add a place
         :param place: the place to add
@@ -50,9 +72,10 @@ class RelationalDatabase:
         place_orm = PlaceORM(**place.dict())
         self.session.add(place_orm)
         self.session.commit()
-        return PlaceInDB.from_orm(place_orm)
+        return PlaceWithStats(**PlaceInDB.from_orm(place_orm).dict(),
+                              stars=None, reviews=0)
 
-    def update_place(self, place_id: PlaceID, place_data: Dict) -> Optional[PlaceInDB]:
+    def update_place(self, place_id: PlaceID, place_data: Dict) -> Optional[PlaceWithStats]:
         """
         Updates a place
 
@@ -63,14 +86,14 @@ class RelationalDatabase:
         place_orm = self.session.query(PlaceORM).get(place_id)
 
         if place_orm is None:
-            raise None
+            return None
 
         for k, v in place_data.items():
             place_orm.__setattr__(k, v)
 
         self.session.add(place_orm)
         self.session.commit()
-        return PlaceInDB.from_orm(place_orm)
+        return self.query_places(place_id)
 
     def query_review(self, review_id: ReviewId) -> Optional[ReviewInDB]:
         """

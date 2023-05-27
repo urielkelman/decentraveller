@@ -41,3 +41,10 @@ class PlaceInDB(PlaceBody):
     Place API Model
     """
     id: PlaceID
+
+class PlaceWithStats(PlaceInDB):
+    """
+    Place with stats
+    """
+    stars: Optional[float]
+    reviews: int
