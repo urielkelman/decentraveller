@@ -1,7 +1,4 @@
 import { AxiosRequestConfig } from "axios";
-import * as dotenv from "dotenv";
-
-dotenv.config();
 
 export enum HTTPMethod {
     GET = "get",

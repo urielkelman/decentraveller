@@ -10,6 +10,7 @@ from starlette.status import HTTP_404_NOT_FOUND, HTTP_400_BAD_REQUEST
 from src.api_models.place import PlaceID, PlaceUpdate, PlaceInDB, PlaceBody
 from src.dependencies import get_db
 from src.orms.place import PlaceORM
+from src.dependencies.vector_database import VectorDatabase
 
 place_router = InferringRouter()
 
