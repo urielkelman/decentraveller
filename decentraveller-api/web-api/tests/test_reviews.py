@@ -27,6 +27,7 @@ def test_create_review_no_foreign_keys(cleanup):
                            )
     assert response.status_code == 400
 
+
 def test_create_review_no_profile(cleanup):
     response = client.post("/place",
                            json={"id": 0,
@@ -70,6 +71,7 @@ def test_create_review_no_place(cleanup):
                                  "state": "UNCENSORED"},
                            )
     assert response.status_code == 400
+
 
 def test_create_review(cleanup):
     response = client.post("/profile",
@@ -173,28 +175,30 @@ def test_get_reviews_by_place(cleanup):
 
     response = client.get("/place/0/reviews", params={"page": 0, "per_page": 2})
     assert response.status_code == 200
-    assert len(response.json()) == 2
-    assert response.json()[0] == {"id": 1,
-                                  "placeId": 0,
-                                  "score": 5,
-                                  "owner": "of49d9adf9b",
-                                  "text": "Muy bueno el combo de sebastian yatra",
-                                  "images": [],
-                                  "state": "UNCENSORED"}
-    assert response.json()[1] == {"id": 2,
-                                  "placeId": 0,
-                                  "score": 5,
-                                  "owner": "of49d9adf9b",
-                                  "text": "Me pedi un mcflurry oreo",
-                                  "images": [],
-                                  "state": "UNCENSORED"}
+    assert len(response.json()['reviews']) == 2
+    assert response.json()['total'] == 3
+    assert response.json()['reviews'][0] == {"id": 1,
+                                             "placeId": 0,
+                                             "score": 5,
+                                             "owner": "of49d9adf9b",
+                                             "text": "Muy bueno el combo de sebastian yatra",
+                                             "images": [],
+                                             "state": "UNCENSORED"}
+    assert response.json()['reviews'][1] == {"id": 2,
+                                             "placeId": 0,
+                                             "score": 5,
+                                             "owner": "of49d9adf9b",
+                                             "text": "Me pedi un mcflurry oreo",
+                                             "images": [],
+                                             "state": "UNCENSORED"}
     response = client.get("/place/0/reviews", params={"page": 1, "per_page": 2})
     assert response.status_code == 200
-    assert len(response.json()) == 1
-    assert response.json()[0] == {"id": 3,
-                                  "placeId": 0,
-                                  "score": 3,
-                                  "owner": "of49d9adf9b",
-                                  "text": "Me atendieron mal",
-                                  "images": [],
-                                  "state": "UNCENSORED"}
+    assert len(response.json()['reviews']) == 1
+    assert response.json()['total'] == 3
+    assert response.json()['reviews'][0] == {"id": 3,
+                                             "placeId": 0,
+                                             "score": 3,
+                                             "owner": "of49d9adf9b",
+                                             "text": "Me atendieron mal",
+                                             "images": [],
+                                             "state": "UNCENSORED"}
