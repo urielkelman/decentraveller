@@ -1,5 +1,12 @@
 import React from 'react';
-import { AppContextType, ConnectionContext, DeviceDimensions, UserNickname, UserWalletAddress } from './types';
+import {
+    AppContextType,
+    ConnectionContext,
+    DeviceDimensions,
+    UserCreatedAt, UserInterest,
+    UserNickname,
+    UserWalletAddress
+} from './types';
 import { Dimensions } from 'react-native';
 import { useWalletConnect } from '@walletconnect/react-native-dapp';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -22,6 +29,9 @@ const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
 
     const [nickname, setUserNickname] = React.useState<string>('');
     const [walletAddress, setUserWalletAddress] = React.useState<string>('');
+    const [createdAt, setUserCreatedAt] = React.useState<string>('');
+    const [interest, setUserInterest] = React.useState<string>('');
+
 
     const connector = useWalletConnect();
 
@@ -84,6 +94,22 @@ const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
         [walletAddress]
     );
 
+    const userCreatedAt: UserCreatedAt = React.useMemo<UserCreatedAt>(
+        () => ({
+            createdAt: createdAt,
+            setUserCreatedAt: setUserCreatedAt,
+        }),
+        [createdAt]
+    );
+
+    const userInterest: UserInterest = React.useMemo<UserInterest>(
+        () => ({
+            interest: interest,
+            setUserInterest: setUserInterest,
+        }),
+        [interest]
+    );
+
     React.useEffect(() => {
         /* This effect allow us to clean sessions that the WalletConnect connector stores in the AsyncStorage */
         const wipeAsyncStorage = async () => {
@@ -144,6 +170,8 @@ const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
                 cleanConnectionContext,
                 userNickname,
                 userWalletAddress,
+                userCreatedAt,
+                userInterest,
             }}
         >
             {children}
