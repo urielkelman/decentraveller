@@ -18,11 +18,10 @@ export type UserProfileScreens = {
     UserProfileScreen: undefined;
 };
 
-const HomeStackNavigator = createStackNavigator<UserProfileScreens>();
-
 const UserProfileScreen = ({ navigation }) => {
     const onClickContinue = () => {
-        navigation.navigate('UserProfileEditScreen');
+        // navigation.navigate('UserProfileEditScreen');
+        navigation.goBack();
     };
 
     return (
@@ -42,12 +41,4 @@ const UserProfileScreen = ({ navigation }) => {
     );
 };
 
-const UserNavigator = () => {
-    return (
-        <HomeStackNavigator.Navigator initialRouteName="UserProfileScreen" screenOptions={{ headerShown: false }}>
-            <HomeStackNavigator.Screen name="UserProfileScreen" component={UserProfileScreen} />
-        </HomeStackNavigator.Navigator>
-    );
-};
-
-export default UserNavigator;
+export default UserProfileScreen;

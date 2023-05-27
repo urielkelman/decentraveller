@@ -1,21 +1,20 @@
 import React from 'react';
-import { Image, SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { Image, SafeAreaView, Text, View } from 'react-native';
 import {
     createDrawerNavigator,
     DrawerContentComponentProps,
     DrawerContentScrollView,
-    DrawerItemList,
+    DrawerItem,
 } from '@react-navigation/drawer';
 import { drawerStyles } from '../../styles/drawerStyles';
 import { useAppContext } from '../../context/AppContext';
 import { obfuscateAddress } from '../../commons/utils';
-import UserProfileScreen from '../users/profile/UserProfileScreen';
 import RootNavigator from './RootNavigator';
 
 const Drawer = createDrawerNavigator();
 
 const CustomDrawerContent = (props: DrawerContentComponentProps) => {
-    const { userNickname, userWalletAddress } = useAppContext()
+    const { userNickname, userWalletAddress } = useAppContext();
 
     const user = {
         // TODO: Take profileImage from backend when implementation is developed
@@ -38,7 +37,8 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
                 </View>
             </SafeAreaView>
             <View style={drawerStyles.drawerContent}>
-                <DrawerItemList {...props} />
+                <DrawerItem label="Home" onPress={() => props.navigation.navigate('Decentraveller')} />
+                <DrawerItem label="Profile" onPress={() => props.navigation.navigate('Profile')} />
             </View>
         </DrawerContentScrollView>
     );
@@ -48,7 +48,6 @@ const LeftSideBar = () => {
     return (
         <Drawer.Navigator drawerContent={(drawerProps) => <CustomDrawerContent {...drawerProps} />}>
             <Drawer.Screen name="Decentraveller" component={RootNavigator} />
-            <Drawer.Screen name="Profile" component={UserProfileScreen} />
         </Drawer.Navigator>
     );
 };
