@@ -5,14 +5,8 @@ default: build
 all:
 
 docker-image:
-	cd decentraveller-api && docker build -f Dockerfile -t "decentraveller-api:latest" .
-	cd decentraveller-blockchain && docker build -f Dockerfile -t "decentraveller-blockchain:latest" .
-	cd decentraveller-indexer && docker build -f Dockerfile -t "decentraveller-indexer:latest" .
+	docker-compose build
 .PHONY: docker-image
-
-docker-image-indexer:
-	cd decentraveller-indexer && docker build -f Dockerfile -t "decentraveller-indexer:latest" .
-.PHONY: docker-image-indexer
 
 docker-compose-up:
 	docker-compose -f docker-compose.yml up -d --remove-orphans

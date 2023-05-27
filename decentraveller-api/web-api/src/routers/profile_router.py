@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 
 from fastapi import Depends, HTTPException, Query, Response
 from fastapi_utils.cbv import cbv
@@ -103,3 +103,4 @@ class ProfileCBV:
             raise HTTPException(status_code=HTTP_400_BAD_REQUEST,
                                 detail="The nickname is already in use.")
         return ProfileBody.from_orm(profile_orm)
+
