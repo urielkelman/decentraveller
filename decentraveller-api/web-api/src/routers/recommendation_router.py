@@ -6,7 +6,7 @@ from fastapi_utils.inferring_router import InferringRouter
 from sqlalchemy import func, distinct, not_
 from starlette.status import HTTP_404_NOT_FOUND
 
-from src.api_models.place import PlaceID, PlaceInDB
+from src.api_models.place import PlaceID, PlaceInDB, PlaceWithStats
 from src.dependencies.relational_database import RelationalDatabase
 from src.dependencies.vector_database import VectorDatabase
 from src.orms.place import PlaceORM
@@ -32,7 +32,7 @@ class RecommendationCBV:
     def get_good_nearby_places(database: RelationalDatabase,
                                latitude: float, longitude: float,
                                degree_distance: float, excluded_place_ids: List[PlaceID],
-                               limit: int = 5) -> List[PlaceInDB]:
+                               limit: int = 5) -> List[PlaceWithStats]:
         """
         Get good nearby places to a location
 
@@ -56,16 +56,17 @@ class RecommendationCBV:
             having(func.count(distinct(ReviewORM.owner)) >= MINIMUM_REVIEWS_TO_RECOMMEND). \
             order_by((func.avg(ReviewORM.score) * func.log(func.count(distinct(ReviewORM.owner)))).desc()). \
             limit(limit).subquery()
-        distance_similars = database.session.query(PlaceORM). \
+        distance_similars = database.session.query(PlaceORM.id). \
             join(distance_similars, distance_similars.c.place_id == PlaceORM.id).all()
-        similars = [PlaceInDB.from_orm(p) for p in distance_similars]
+        distance_similars = [t[0] for t in distance_similars]
+        similars = database.query_places(distance_similars)
         if similars:
             return similars[:limit]
 
     @staticmethod
     def get_similars_to_place(database: RelationalDatabase,
                               vector_database: VectorDatabase,
-                              place_id: PlaceID, limit: int = 5) -> List[PlaceInDB]:
+                              place_id: PlaceID, limit: int = 5) -> List[PlaceWithStats]:
         """
         Get similars to a place id
 
@@ -78,11 +79,9 @@ class RecommendationCBV:
         similars = []
         vector_similars = vector_database.get_similars_to_place(place_id, limit)
         if vector_similars:
-            vector_similars = database.session.query(PlaceORM).\
-                filter(PlaceORM.id.in_(tuple(vector_similars))).all()
-            similars += [PlaceInDB.from_orm(p) for p in vector_similars]
+            similars += database.query_places(vector_similars)
         if len(similars) < limit:
-            place = database.query_place(place_id)
+            place = database.query_places(place_id)
             if not place:
                 raise HTTPException(status_code=HTTP_404_NOT_FOUND)
             distance_similars = RecommendationCBV.get_good_nearby_places(database, place.latitude,
@@ -97,7 +96,7 @@ class RecommendationCBV:
     @staticmethod
     def get_best_places(database: RelationalDatabase,
                         excluded_place_ids: List[PlaceID],
-                        limit: int = 5) -> List[PlaceInDB]:
+                        limit: int = 5) -> List[PlaceWithStats]:
         """
         Get the best places of the whole site
 
@@ -110,14 +109,14 @@ class RecommendationCBV:
             filter(not_(ReviewORM.place_id.in_(excluded_place_ids))). \
             group_by(ReviewORM.place_id). \
             order_by((func.avg(ReviewORM.score) * func.log(func.count(distinct(ReviewORM.owner)))).desc()). \
-            limit(limit)
-        best_places = [PlaceInDB.from_orm(database.query_place(i))
-                       for i in best_places]
+            limit(limit).all()
+        best_places = [t[0] for t in best_places]
+        best_places = database.query_places(best_places)
         return best_places
 
     @recommendation_router.get("/place/{place_id}/similars")
     def get_place_similars(self, place_id: PlaceID,
-                           limit: int = Query(default=5)) -> List[PlaceInDB]:
+                           limit: int = Query(default=5)) -> List[PlaceWithStats]:
         """
         Get place recommendations by another place id
 
@@ -135,7 +134,7 @@ class RecommendationCBV:
     def get_profile_recommendation(self, owner: str,
                                    limit: int = Query(default=20),
                                    latitude: Optional[float] = Query(default=None),
-                                   longitude: Optional[float] = Query(default=None)) -> List[PlaceInDB]:
+                                   longitude: Optional[float] = Query(default=None)) -> List[PlaceWithStats]:
         """
         Get profile recommendations base on the last places liked
 
@@ -188,7 +187,7 @@ class RecommendationCBV:
     def get_home_recommendation(self,
                                 limit: int = Query(default=20),
                                 latitude: Optional[float] = Query(default=None),
-                                longitude: Optional[float] = Query(default=None)) -> List[PlaceInDB]:
+                                longitude: Optional[float] = Query(default=None)) -> List[PlaceWithStats]:
         """
         Get profile recommendations based on the location
 
