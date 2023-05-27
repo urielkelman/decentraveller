@@ -1,37 +1,21 @@
-from typing import Optional
-
 from fastapi import Depends, HTTPException
 from fastapi_utils.cbv import cbv
 from fastapi_utils.inferring_router import InferringRouter
-from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
 from starlette.status import HTTP_404_NOT_FOUND, HTTP_400_BAD_REQUEST
 
 from src.api_models.place import PlaceID, PlaceUpdate, PlaceInDB, PlaceBody
-from src.dependencies import get_db
 from src.orms.place import PlaceORM
 from src.dependencies.vector_database import VectorDatabase
+from src.dependencies.relational_database import RelationalDatabase
 
 place_router = InferringRouter()
 
 
 @cbv(place_router)
 class PlaceCBV:
-    session: Session = Depends(get_db)
+    database: RelationalDatabase = Depends(RelationalDatabase)
     vector_database: VectorDatabase = Depends(VectorDatabase)
-
-    @staticmethod
-    def query_place(session: Session, place_id: PlaceID) -> Optional[PlaceORM]:
-        """
-        Gets a place from the database by its id
-        
-        :param session: the database session
-        :param place_id: the item id
-        :return: a place ORM or None if the id does not exist
-        """
-        place: Optional[PlaceORM] = session.query(PlaceORM).get(place_id)
-
-        return place
 
     @place_router.post("/place", status_code=201)
     def create_place(self, place: PlaceInDB) -> PlaceInDB:
@@ -45,9 +29,9 @@ class PlaceCBV:
         place_orm = PlaceORM(id=place.id, name=place.name, address=place.address,
                              latitude=place.latitude, longitude=place.longitude,
                              category=place.category)
-        self.session.add(place_orm)
+        self.database.session.add(place_orm)
         try:
-            self.session.commit()
+            self.database.session.commit()
         except IntegrityError:
             raise HTTPException(status_code=HTTP_400_BAD_REQUEST,
                                 detail="The place id is already on the database.")
@@ -61,7 +45,7 @@ class PlaceCBV:
         :param place_id: the place id to query
         :return: the place data
         """
-        place_orm = self.query_place(self.session, place_id)
+        place_orm = self.database.query_place(place_id)
         if place_orm is None:
             raise HTTPException(status_code=HTTP_404_NOT_FOUND)
         return PlaceInDB.from_orm(place_orm)
@@ -75,7 +59,7 @@ class PlaceCBV:
         :param place: the place data to update
         :return: the place data updated
         """
-        place_orm = self.query_place(self.session, place_id)
+        place_orm = self.database.query_place(place_id)
 
         if place_orm is None:
             raise HTTPException(status_code=HTTP_404_NOT_FOUND)
@@ -89,8 +73,8 @@ class PlaceCBV:
         place_orm.longitude = place.longitude
         place_orm.categories = place.category
 
-        self.session.add(place_orm)
-        self.session.commit()
+        self.database.session.add(place_orm)
+        self.database.session.commit()
         return PlaceInDB.from_orm(place_orm)
 
     @place_router.patch("/place/{place_id}")
@@ -102,7 +86,7 @@ class PlaceCBV:
         :param place: the place data to update
         :return: the place data updated
         """
-        place_orm = self.query_place(self.session, place_id)
+        place_orm = self.database.query_place(place_id)
 
         if place_orm is None:
             raise HTTPException(status_code=HTTP_404_NOT_FOUND)
@@ -111,6 +95,6 @@ class PlaceCBV:
         for k, v in update_data.items():
             place_orm.__setattr__(k, v)
 
-        self.session.add(place_orm)
-        self.session.commit()
+        self.database.session.add(place_orm)
+        self.database.session.commit()
         return PlaceInDB.from_orm(place_orm)

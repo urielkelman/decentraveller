@@ -8,7 +8,7 @@ from starlette.status import HTTP_404_NOT_FOUND, HTTP_400_BAD_REQUEST
 
 from src.api_models.place import PlaceID
 from src.api_models.review import ReviewInDB, ReviewId, ReviewBody
-from src.dependencies import get_db
+from src.dependencies.relational_database import RelationalDatabase
 from src.orms.review import ReviewORM
 from sqlalchemy.exc import IntegrityError
 
@@ -17,33 +17,7 @@ review_router = InferringRouter()
 
 @cbv(review_router)
 class ReviewCBV:
-    session: Session = Depends(get_db)
-
-    @staticmethod
-    def query_review(session: Session, review_id: ReviewId) -> Optional[ReviewORM]:
-        """
-        Gets a review from the database by its id
-        
-        :param session: the database session
-        :param review_id: the id
-        :return: a review ORM or None if the id does not exist
-        """
-        review: Optional[ReviewORM] = session.query(ReviewORM).get(review_id)
-
-        return review
-
-    @staticmethod
-    def query_reviews_by_place(session: Session, place_id: PlaceID) -> Query:
-        """
-        Gets all the reviews from a place as a query
-
-        :param session: the database session
-        :param place_id: the id of the place
-        :return: a query with the result
-        """
-        query = session.query(ReviewORM).filter(ReviewORM.place_id == place_id)
-
-        return query
+    database: RelationalDatabase = Depends(RelationalDatabase)
 
     @review_router.post("/review", status_code=201)
     def create_review(self, review: ReviewBody) -> ReviewInDB:
@@ -58,8 +32,8 @@ class ReviewCBV:
                                    score=review.score, owner=review.owner,
                                    text=review.text, images=review.images,
                                    state=review.state)
-            self.session.add(review_orm)
-            self.session.commit()
+            self.database.session.add(review_orm)
+            self.database.session.commit()
             return ReviewInDB.from_orm(review_orm)
         except IntegrityError as e:
             raise HTTPException(status_code=HTTP_400_BAD_REQUEST,
@@ -73,7 +47,7 @@ class ReviewCBV:
         :param review_id: the review id to query
         :return: the review data
         """
-        review_orm = self.query_review(self.session, review_id)
+        review_orm = self.database.query_review(review_id)
         if review_orm is None:
             raise HTTPException(status_code=HTTP_404_NOT_FOUND)
         return ReviewInDB.from_orm(review_orm)
@@ -89,9 +63,8 @@ class ReviewCBV:
         :param page: number of page
         :return: the reviews data
         """
-        query = self.query_reviews_by_place(self.session, place_id)
-        query = query.limit(per_page).offset(page * per_page)
-        reviews = self.session.execute(query).all()
+
+        reviews = self.database.query_reviews_by_place(place_id, page, per_page)
         if not reviews:
             raise HTTPException(status_code=HTTP_404_NOT_FOUND)
-        return [ReviewInDB.from_orm(r[0]) for r in reviews]
+        return [ReviewInDB.from_orm(r) for r in reviews]
