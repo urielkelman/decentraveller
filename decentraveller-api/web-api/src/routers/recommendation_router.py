@@ -159,10 +159,6 @@ class RecommendationCBV:
             filter(ReviewORM.owner == owner).order_by(ReviewORM.id.desc()). \
             limit(LAST_VISITED_PLACES_TO_CONSIDER).all()
         last_places = [l[0] for l in last_places]
-        nearby = None
-        if latitude and longitude:
-            nearby = self.get_good_nearby_places(self.session, latitude, longitude,
-                                                 NEAR_PLACE_DISTANCE, last_places, limit)
         place_similars = []
         for place_id in last_places[:LAST_VISITED_PLACES_TO_QUERY_SIMILARS]:
             place_similars.append(self.get_similars_to_place(self.session, self.vector_database,
@@ -179,9 +175,14 @@ class RecommendationCBV:
                     if sims:
                         result.append(sims.pop(0))
 
-        if len(result) < limit and nearby:
-            result += [p for p in nearby[:limit - len(result)]]
-            places_to_avoid.update([r.id for r in result])
+        if len(result) < limit:
+            nearby = None
+            if latitude and longitude:
+                nearby = self.get_good_nearby_places(self.session, latitude, longitude,
+                                                     NEAR_PLACE_DISTANCE, last_places, limit)
+            if nearby:
+                result += [p for p in nearby[:limit - len(result)]]
+                places_to_avoid.update([r.id for r in result])
 
         if len(result) < limit:
             best_places = self.get_best_places(self.session,
@@ -208,15 +209,14 @@ class RecommendationCBV:
         :return: the places data
         """
         result = []
-        places_to_avoid = set()
         if latitude and longitude:
             nearby = self.get_good_nearby_places(self.session, latitude, longitude,
                                                   NEAR_PLACE_DISTANCE, [], limit)
             if nearby:
                 result += [p for p in nearby[:limit - len(result)]]
-                places_to_avoid.update([r.id for r in result])
 
         if len(result) < limit:
+            places_to_avoid = [r.id for r in result]
             best_places = self.get_best_places(self.session,
                                                list(places_to_avoid),
                                                limit - len(result))

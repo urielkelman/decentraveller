@@ -18,7 +18,6 @@ place_router = InferringRouter()
 @cbv(place_router)
 class PlaceCBV:
     session: Session = Depends(get_db)
-    vector_database: VectorDatabase = Depends(VectorDatabase)
 
     @staticmethod
     def query_place(session: Session, place_id: PlaceID) -> Optional[PlaceORM]:
