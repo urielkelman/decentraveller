@@ -62,7 +62,6 @@ const PlaceItem: React.FC<PlaceItemProps> = ({
 
     const capitalizedCategory = capitalizeCategory(category);
 
-    console.log(name);
     return (
         <TouchableOpacity onPress={() => navigation.navigate('PlaceDetailScreen')}>
             <View style={placeItemStyle.container}>
