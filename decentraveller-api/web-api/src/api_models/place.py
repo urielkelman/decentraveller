@@ -12,6 +12,7 @@ class PlaceCategory(str, enum.Enum):
     GASTRONOMY = "GASTRONOMY"
     ACCOMMODATION = "ACCOMMODATION"
     ENTERTAINMENT = "ENTERTAINMENT"
+    OTHER = "OTHER"
 
 
 class PlaceBody(APIModel):
