@@ -4,17 +4,19 @@ import CreatePlaceNameScreen from './place/CreatePlaceNameScreen';
 import CreatePlaceLocationScreen from './place/CreatePlaceLocationScreen';
 import CreatePlaceProvider from './place/CreatePlaceContext';
 import LeftSideBar from './LeftSideBar';
-import UserProfileEditScreen from '../users/profile/UserProfileEditScreen';
+import UserPlacesScreen from '../users/profile/UserPlacesScreen';
 import PlaceDetailScreen from './place/PlaceDetailScreen';
 import UserProfileScreen from '../users/profile/UserProfileScreen';
+import UserReviewsScreen from "../users/profile/UserReviewsScreen";
 
 export type HomeStackScreens = {
     LeftSideBar: undefined;
-    UserProfileEditScreen: undefined;
     CreatePlaceNameScreen: undefined;
     CreatePlaceLocationScreen: undefined;
     PlaceDetailScreen: undefined;
     Profile: undefined;
+    UserPlacesScreen: undefined;
+    UserReviewsScreen: undefined;
 };
 
 const HomeStackNavigator = createStackNavigator<HomeStackScreens>();
@@ -43,15 +45,6 @@ const HomeNavigator = () => {
                     }}
                 />
                 <HomeStackNavigator.Screen
-                    name="UserProfileEditScreen"
-                    component={UserProfileEditScreen}
-                    options={{
-                        title: 'Edit Profile',
-                        headerMode: 'screen',
-                        headerShown: true,
-                    }}
-                />
-                <HomeStackNavigator.Screen
                     name="PlaceDetailScreen"
                     component={PlaceDetailScreen}
                     options={{
@@ -64,6 +57,23 @@ const HomeNavigator = () => {
                     name="Profile"
                     component={UserProfileScreen}
                     options={{ headerShown: true }}
+                />
+                <HomeStackNavigator.Screen
+                    name="UserPlacesScreen"
+                    component={UserPlacesScreen}
+                    options={{
+                        title: 'My places',
+                        headerMode: 'screen',
+                        headerShown: true,
+                    }}
+                />
+                <HomeStackNavigator.Screen
+                    name="UserReviewsScreen"
+                    component={UserReviewsScreen}
+                    options={{
+                        title: 'My Reviews',
+                        headerShown: true
+                    }}
                 />
             </HomeStackNavigator.Navigator>
         </CreatePlaceProvider>

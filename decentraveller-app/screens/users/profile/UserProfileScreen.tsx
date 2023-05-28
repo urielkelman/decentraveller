@@ -1,9 +1,8 @@
 import React from 'react';
-import {View, Text, Image, StyleSheet} from 'react-native';
+import {View, Text, Image, StyleSheet, TouchableOpacity} from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import {userProfileMainStyles} from "../../../styles/userProfileStyles";
 import {useAppContext} from "../../../context/AppContext";
-import {obfuscateAddress} from "../../../commons/utils";
 
 export type UserProfileScreens = {
     UserProfileScreen: undefined;
@@ -30,7 +29,7 @@ const UserProfileScreen = ({ navigation }) => {
     };
 
     return (
-        <View style={{ flex: 1, backgroundColor: '#FFE1E1' }}>
+        <View style={userProfileMainStyles.background}>
             <View style={userProfileMainStyles.mainContainer}>
                 <View style={userProfileMainStyles.imageContainer}>
                     <View style={userProfileMainStyles.imageCircle}>
@@ -47,7 +46,7 @@ const UserProfileScreen = ({ navigation }) => {
             </View>
 
             <View style={userProfileMainStyles.informationContainer}>
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 10, marginTop: 10 }}>
+                <View style={userProfileMainStyles.spacedBetweenView}>
                     <Text style={userProfileMainStyles.leftText}>Main interest</Text>
                     <Text style={userProfileMainStyles.rightText}>{user.interest}</Text>
                 </View>
@@ -61,20 +60,24 @@ const UserProfileScreen = ({ navigation }) => {
                 </View>
             </View>
 
-            <View style={userProfileMainStyles.informationContainer}>
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 10, marginTop: 40 }}   >
-                    <Text style={userProfileMainStyles.leftText}>My Places(3)</Text>
-                    <Text style={userProfileMainStyles.rightBlueText}>More </Text>
+            <TouchableOpacity onPress={() => navigation.navigate('UserPlacesScreen')}>
+                <View style={userProfileMainStyles.informationContainer}>
+                    <View style={userProfileMainStyles.spacedButtonBetweenView}>
+                        <Text style={userProfileMainStyles.leftText}>My Places</Text>
+                        <Text style={userProfileMainStyles.rightBlueText}>More</Text>
+                    </View>
                 </View>
-            </View>
+            </TouchableOpacity>
 
-
-            <View style={userProfileMainStyles.informationContainer}>
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 10, marginTop: 40 }}   >
-                    <Text style={userProfileMainStyles.leftText}>My Reviews(5)</Text>
-                    <Text style={userProfileMainStyles.rightBlueText}>More </Text>
+            <TouchableOpacity onPress={() => navigation.navigate('UserReviewsScreen')}>
+                <View style={userProfileMainStyles.informationContainer}>
+                    <View style={userProfileMainStyles.spacedButtonBetweenView}>
+                        <Text style={userProfileMainStyles.leftText}>My Reviews</Text>
+                        <Text style={userProfileMainStyles.rightBlueText}>More </Text>
+                    </View>
                 </View>
-            </View>
+            </TouchableOpacity>
+
 
         </View>
     );
