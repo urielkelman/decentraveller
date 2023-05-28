@@ -19,7 +19,7 @@ const renderPlaceItem = ({ item }: { item: PlaceResponse }) => (
     />
 );
 
-const recommendedPlacesItems = ({ recommendedPlaces, shouldRenderAddNewPlace }) => {
+const DecentravellerPlacesItems = ({ places, shouldRenderAddNewPlace }: { places: PlaceResponse[], shouldRenderAddNewPlace: boolean }) => {
     const navigation = useNavigation();
 
     return (
@@ -31,9 +31,9 @@ const recommendedPlacesItems = ({ recommendedPlaces, shouldRenderAddNewPlace }) 
                     </TouchableOpacity>
                 </View>
             )}
-            <FlatList data={recommendedPlaces} renderItem={renderPlaceItem} />
+            <FlatList data={places} renderItem={renderPlaceItem} />
         </View>
     );
 };
 
-export { recommendedPlacesItems };
+export { DecentravellerPlacesItems };
