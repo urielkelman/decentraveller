@@ -84,7 +84,8 @@ def test_missing_recommendation_404_even_for_existing_place(cleanup, setup_datas
 def test_recommendation_near(cleanup, setup_dataset):
     for i in range(20):
         response = client.post("/review",
-                               json={"placeId": 1,
+                               json={"id": i,
+                                   "placeId": 1,
                                      "score": 5,
                                      "owner": f"{i}",
                                      "text": "Muy bueno",
@@ -112,7 +113,8 @@ def test_recommendation_near(cleanup, setup_dataset):
 def test_recommendation_few_reviews_404(cleanup, setup_dataset):
     for i in range(3):
         response = client.post("/review",
-                               json={"placeId": 0,
+                               json={"id": i,
+                                     "placeId": 0,
                                      "score": 5,
                                      "owner": f"{i}",
                                      "text": "Muy bueno",
@@ -128,7 +130,8 @@ def test_recommendation_few_reviews_404(cleanup, setup_dataset):
 def test_recommendation_not_near_404(cleanup, setup_dataset):
     for i in range(20):
         response = client.post("/review",
-                               json={"placeId": 3,
+                               json={"id": i,
+                                     "placeId": 3,
                                      "score": 5,
                                      "owner": f"{i}",
                                      "text": "Muy bueno",
@@ -144,7 +147,8 @@ def test_recommendation_not_near_404(cleanup, setup_dataset):
 def test_recommendation_near_ordered(cleanup, setup_dataset):
     for i in range(20):
         response = client.post("/review",
-                               json={"placeId": 1,
+                               json={"id": i,
+                                     "placeId": 1,
                                      "score": 5,
                                      "owner": f"{i}",
                                      "text": "Muy bueno",
@@ -155,7 +159,8 @@ def test_recommendation_near_ordered(cleanup, setup_dataset):
 
     for i in range(20):
         response = client.post("/review",
-                               json={"placeId": 2,
+                               json={"id": i,
+                                     "placeId": 2,
                                      "score": 4,
                                      "owner": f"{i}",
                                      "text": "Muy bueno",
@@ -188,7 +193,8 @@ def test_recommendation_near_ordered(cleanup, setup_dataset):
 def test_recommendation_not_enough_reviewers(cleanup, setup_dataset):
     for i in range(20):
         response = client.post("/review",
-                               json={"placeId": 1,
+                               json={"id": i,
+                                     "placeId": 1,
                                      "score": 5,
                                      "owner": "1",
                                      "text": "Muy bueno",
@@ -209,7 +215,8 @@ def test_recommendation_profile_nothing_to_recommend_404(cleanup, setup_dataset)
 def test_recommendation_profile_no_reviews(cleanup, setup_dataset):
     for i in range(19):
         response = client.post("/review",
-                               json={"placeId": 1,
+                               json={"id": i,
+                                     "placeId": 1,
                                      "score": 5,
                                      "owner": f"{i}",
                                      "text": "Muy bueno",
@@ -220,7 +227,8 @@ def test_recommendation_profile_no_reviews(cleanup, setup_dataset):
 
     for i in range(19):
         response = client.post("/review",
-                               json={"placeId": 2,
+                               json={"id": i,
+                                     "placeId": 2,
                                      "score": 4,
                                      "owner": f"{i}",
                                      "text": "Muy bueno",
@@ -253,7 +261,8 @@ def test_recommendation_profile_no_reviews(cleanup, setup_dataset):
 def test_recommendation_profile_no_reviews_location_priority(cleanup, setup_dataset):
     for i in range(19):
         response = client.post("/review",
-                               json={"placeId": 1,
+                               json={"id": i,
+                                     "placeId": 1,
                                      "score": 5,
                                      "owner": f"{i}",
                                      "text": "Muy bueno",
@@ -264,7 +273,8 @@ def test_recommendation_profile_no_reviews_location_priority(cleanup, setup_data
 
     for i in range(19):
         response = client.post("/review",
-                               json={"placeId": 2,
+                               json={"id": i,
+                                     "placeId": 2,
                                      "score": 4,
                                      "owner": f"{i}",
                                      "text": "Muy bueno",
@@ -275,7 +285,8 @@ def test_recommendation_profile_no_reviews_location_priority(cleanup, setup_data
 
     for i in range(5):
         response = client.post("/review",
-                               json={"placeId": 3,
+                               json={"id": i,
+                                     "placeId": 3,
                                      "score": 3,
                                      "owner": f"{i}",
                                      "text": "Muy bueno",
@@ -317,7 +328,8 @@ def test_recommendation_profile_no_reviews_location_priority(cleanup, setup_data
 def test_recommendation_profile_wont_repeat_with_reviews(cleanup, setup_dataset):
     for i in range(20):
         response = client.post("/review",
-                               json={"placeId": 1,
+                               json={"id": i,
+                                     "placeId": 1,
                                      "score": 5,
                                      "owner": f"{i}",
                                      "text": "Muy bueno",
@@ -328,7 +340,8 @@ def test_recommendation_profile_wont_repeat_with_reviews(cleanup, setup_dataset)
 
     for i in range(19):
         response = client.post("/review",
-                               json={"placeId": 2,
+                               json={"id": i,
+                                     "placeId": 2,
                                      "score": 4,
                                      "owner": f"{i}",
                                      "text": "Muy bueno",
@@ -339,7 +352,8 @@ def test_recommendation_profile_wont_repeat_with_reviews(cleanup, setup_dataset)
 
     for i in range(5):
         response = client.post("/review",
-                               json={"placeId": 3,
+                               json={"id": i,
+                                     "placeId": 3,
                                      "score": 3,
                                      "owner": f"{i}",
                                      "text": "Muy bueno",
@@ -381,7 +395,8 @@ def test_recommendation_home_404(cleanup, setup_dataset):
 def test_recommendation_home_best_places(cleanup, setup_dataset):
     for i in range(19):
         response = client.post("/review",
-                               json={"placeId": 1,
+                               json={"id": i,
+                                     "placeId": 1,
                                      "score": 5,
                                      "owner": f"{i}",
                                      "text": "Muy bueno",
@@ -392,7 +407,8 @@ def test_recommendation_home_best_places(cleanup, setup_dataset):
 
     for i in range(19):
         response = client.post("/review",
-                               json={"placeId": 2,
+                               json={"id": i,
+                                     "placeId": 2,
                                      "score": 4,
                                      "owner": f"{i}",
                                      "text": "Muy bueno",
@@ -403,7 +419,8 @@ def test_recommendation_home_best_places(cleanup, setup_dataset):
 
     for i in range(5):
         response = client.post("/review",
-                               json={"placeId": 3,
+                               json={"id": i,
+                                     "placeId": 3,
                                      "score": 3,
                                      "owner": f"{i}",
                                      "text": "Muy bueno",
@@ -444,7 +461,8 @@ def test_recommendation_home_best_places(cleanup, setup_dataset):
 def test_recommendation_home_nearby_priority(cleanup, setup_dataset):
     for i in range(19):
         response = client.post("/review",
-                               json={"placeId": 1,
+                               json={"id": i,
+                                     "placeId": 1,
                                      "score": 5,
                                      "owner": f"{i}",
                                      "text": "Muy bueno",
@@ -455,7 +473,8 @@ def test_recommendation_home_nearby_priority(cleanup, setup_dataset):
 
     for i in range(19):
         response = client.post("/review",
-                               json={"placeId": 2,
+                               json={"id": i,
+                                     "placeId": 2,
                                      "score": 4,
                                      "owner": f"{i}",
                                      "text": "Muy bueno",
@@ -466,7 +485,8 @@ def test_recommendation_home_nearby_priority(cleanup, setup_dataset):
 
     for i in range(5):
         response = client.post("/review",
-                               json={"placeId": 3,
+                               json={"id": i,
+                                     "placeId": 3,
                                      "score": 3,
                                      "owner": f"{i}",
                                      "text": "Muy bueno",

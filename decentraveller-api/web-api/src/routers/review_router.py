@@ -4,7 +4,7 @@ from fastapi_utils.inferring_router import InferringRouter
 from starlette.status import HTTP_404_NOT_FOUND, HTTP_400_BAD_REQUEST
 
 from src.api_models.place import PlaceID
-from src.api_models.review import ReviewInDB, ReviewId, ReviewBody
+from src.api_models.review import ReviewInDB, ReviewID
 from src.api_models.bulk_results import PaginatedReviews
 from src.dependencies.relational_database import RelationalDatabase
 from sqlalchemy.exc import IntegrityError
@@ -17,7 +17,7 @@ class ReviewCBV:
     database: RelationalDatabase = Depends(RelationalDatabase)
 
     @review_router.post("/review", status_code=201)
-    def create_review(self, review: ReviewBody) -> ReviewInDB:
+    def create_review(self, review: ReviewInDB) -> ReviewInDB:
         """
         Creates a new review in the database
 
@@ -31,15 +31,16 @@ class ReviewCBV:
             raise HTTPException(status_code=HTTP_400_BAD_REQUEST,
                                 detail="Either the place or the profile does not exist")
 
-    @review_router.get("/review/{review_id}")
-    def get_review(self, review_id: ReviewId) -> ReviewInDB:
+    @review_router.get("/review")
+    def get_review(self, review_id: ReviewID, place_id: PlaceID) -> ReviewInDB:
         """
         Get a review by its id
 
         :param review_id: the review id to query
+        :param place_id: the place id
         :return: the review data
         """
-        review = self.database.query_review(review_id)
+        review = self.database.query_review(review_id, place_id)
         if review is None:
             raise HTTPException(status_code=HTTP_404_NOT_FOUND)
         return review
