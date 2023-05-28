@@ -1,6 +1,10 @@
 import {StyleSheet} from "react-native";
 
 const userProfileMainStyles = StyleSheet.create({
+    background: {
+        flex: 1,
+        backgroundColor: '#FFE1E1'
+    },
     mainContainer: {
         backgroundColor: '#FFFFFF',
         borderRadius: 10,
@@ -67,6 +71,12 @@ const userProfileMainStyles = StyleSheet.create({
         justifyContent: 'space-between',
         paddingHorizontal: 10,
         marginTop: 10
+    },
+    spacedButtonBetweenView: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        paddingHorizontal: 10,
+        marginTop: 40
     },
     leftText: {
         fontFamily: 'Montserrat_700Bold',
