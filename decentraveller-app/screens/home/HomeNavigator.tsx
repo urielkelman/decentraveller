@@ -7,7 +7,7 @@ import LeftSideBar from './LeftSideBar';
 import UserPlacesScreen from '../users/profile/UserPlacesScreen';
 import PlaceDetailScreen from './place/PlaceDetailScreen';
 import UserProfileScreen from '../users/profile/UserProfileScreen';
-import UserReviewsScreen from "../users/profile/UserReviewsScreen";
+import UserReviewsScreen from '../users/profile/UserReviewsScreen';
 
 export type HomeStackScreens = {
     LeftSideBar: undefined;
@@ -72,7 +72,7 @@ const HomeNavigator = () => {
                     component={UserReviewsScreen}
                     options={{
                         title: 'My Reviews',
-                        headerShown: true
+                        headerShown: true,
                     }}
                 />
             </HomeStackNavigator.Navigator>

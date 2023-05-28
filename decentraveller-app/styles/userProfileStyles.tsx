@@ -1,9 +1,9 @@
-import {StyleSheet} from "react-native";
+import { StyleSheet } from 'react-native';
 
 const userProfileMainStyles = StyleSheet.create({
     background: {
         flex: 1,
-        backgroundColor: '#FFE1E1'
+        backgroundColor: '#FFE1E1',
     },
     mainContainer: {
         backgroundColor: '#FFFFFF',
@@ -16,33 +16,33 @@ const userProfileMainStyles = StyleSheet.create({
     imageContainer: {
         alignItems: 'center',
         justifyContent: 'center',
-        marginTop: 24
+        marginTop: 24,
     },
     imageCircle: {
         backgroundColor: 'lightgray',
         borderRadius: 50,
         width: 100,
         height: 100,
-        overflow: 'hidden'
+        overflow: 'hidden',
     },
     circleDimensions: {
         width: 100,
-        height: 100
+        height: 100,
     },
     titleContainer: {
         alignItems: 'center',
         justifyContent: 'center',
-        marginTop: 10
+        marginTop: 10,
     },
     nicknameTitle: {
         fontFamily: 'Montserrat_700Bold',
         fontSize: 18,
-        textAlign: 'center'
+        textAlign: 'center',
     },
     walletSubtitle: {
         fontFamily: 'Montserrat_500Medium',
         fontSize: 11,
-        textAlign: 'center'
+        textAlign: 'center',
     },
     joinedAtContainer: {
         backgroundColor: '#F3F3F3',
@@ -50,13 +50,13 @@ const userProfileMainStyles = StyleSheet.create({
         marginHorizontal: 14,
         marginTop: 15,
         height: 41,
-        justifyContent: 'center'
+        justifyContent: 'center',
     },
     joinedAtText: {
         fontFamily: 'Montserrat_500Medium',
         fontSize: 11,
         color: '#020202',
-        paddingHorizontal: 10
+        paddingHorizontal: 10,
     },
     informationContainer: {
         backgroundColor: '#FFFFFF',
@@ -64,40 +64,39 @@ const userProfileMainStyles = StyleSheet.create({
         marginHorizontal: 13,
         marginTop: 10,
         width: 388,
-        height: 100
+        height: 100,
     },
     spacedBetweenView: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         paddingHorizontal: 10,
-        marginTop: 10
+        marginTop: 10,
     },
     spacedButtonBetweenView: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         paddingHorizontal: 10,
-        marginTop: 40
+        marginTop: 40,
     },
     leftText: {
         fontFamily: 'Montserrat_700Bold',
         fontSize: 15,
         textAlign: 'left',
-        fontWeight: 'bold'
+        fontWeight: 'bold',
     },
     rightText: {
         fontFamily: 'Montserrat_500Medium',
         fontSize: 15,
         textAlign: 'right',
-        fontWeight: '100'
+        fontWeight: '100',
     },
     rightBlueText: {
         fontFamily: 'Montserrat_500Medium',
         fontSize: 15,
         textAlign: 'right',
         fontWeight: 'bold',
-        color: 'blue'
+        color: 'blue',
     },
-
 });
 
-export {userProfileMainStyles}
+export { userProfileMainStyles };

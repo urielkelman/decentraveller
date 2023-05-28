@@ -1,8 +1,8 @@
 import React from 'react';
-import {View, Text, Image, StyleSheet, TouchableOpacity} from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
-import {userProfileMainStyles} from "../../../styles/userProfileStyles";
-import {useAppContext} from "../../../context/AppContext";
+import { userProfileMainStyles } from '../../../styles/userProfileStyles';
+import { useAppContext } from '../../../context/AppContext';
 
 export type UserProfileScreens = {
     UserProfileScreen: undefined;
@@ -11,7 +11,6 @@ export type UserProfileScreens = {
 const HomeStackNavigator = createStackNavigator<UserProfileScreens>();
 
 const UserProfileScreen = ({ navigation }) => {
-
     const { userNickname, userWalletAddress, userCreatedAt, userInterest } = useAppContext();
 
     const user = {
@@ -21,7 +20,7 @@ const UserProfileScreen = ({ navigation }) => {
         createdAt: userCreatedAt.createdAt,
         interest: userInterest.interest,
         tokens: 67,
-        sharedLocation: 'Yes'
+        sharedLocation: 'Yes',
     };
 
     const onClickContinue = () => {
@@ -33,7 +32,10 @@ const UserProfileScreen = ({ navigation }) => {
             <View style={userProfileMainStyles.mainContainer}>
                 <View style={userProfileMainStyles.imageContainer}>
                     <View style={userProfileMainStyles.imageCircle}>
-                        <Image source={require('../../../assets/mock_images/cryptochica.png')} style={userProfileMainStyles.circleDimensions} />
+                        <Image
+                            source={require('../../../assets/mock_images/cryptochica.png')}
+                            style={userProfileMainStyles.circleDimensions}
+                        />
                     </View>
                 </View>
                 <View style={userProfileMainStyles.titleContainer}>
@@ -54,7 +56,7 @@ const UserProfileScreen = ({ navigation }) => {
                     <Text style={userProfileMainStyles.leftText}>Shared Location</Text>
                     <Text style={userProfileMainStyles.rightText}>{user.sharedLocation}</Text>
                 </View>
-                <View style={userProfileMainStyles.spacedBetweenView}   >
+                <View style={userProfileMainStyles.spacedBetweenView}>
                     <Text style={userProfileMainStyles.leftText}>DT Tokens</Text>
                     <Text style={userProfileMainStyles.rightText}>{user.tokens}</Text>
                 </View>
@@ -77,8 +79,6 @@ const UserProfileScreen = ({ navigation }) => {
                     </View>
                 </View>
             </TouchableOpacity>
-
-
         </View>
     );
 };
@@ -92,4 +92,3 @@ const UserNavigator = () => {
 };
 
 export default UserNavigator;
-

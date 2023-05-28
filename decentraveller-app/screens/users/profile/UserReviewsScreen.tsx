@@ -13,7 +13,6 @@ import RootNavigator from '../../home/RootNavigator';
 import CreatePlaceNameScreen from '../../home/place/CreatePlaceNameScreen';
 import CreatePlaceLocationScreen from '../../home/place/CreatePlaceLocationScreen';
 
-
 const UserReviewsScreen = ({}) => {
     return (
         <View style={WelcomeStyles.container}>

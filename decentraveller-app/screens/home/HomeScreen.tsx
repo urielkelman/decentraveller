@@ -9,7 +9,7 @@ import { PlaceResponse, PlacesResponse } from '../../api/response/places';
 import PlaceItem from './place/PlaceItem';
 import { addNewPlaceIconSize, homeStyle } from '../../styles/homeStyles';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import {recommendedPlacesItems} from "../../commons/components/DecentravellerPlacesList";
+import { recommendedPlacesItems } from '../../commons/components/DecentravellerPlacesList';
 
 const adapter = mockApiAdapter;
 
@@ -37,14 +37,15 @@ const HomeScreen = ({ navigation }) => {
         })();
     }, []);
 
-
     const loadingRecommendedPlacesComponent = () => (
         <View>
             <Text>Loading</Text>
         </View>
     );
 
-    const componentToRender = loadingRecommendedPlaces ? loadingRecommendedPlacesComponent() : recommendedPlacesItems({ recommendedPlaces, shouldRenderAddNewPlace: true });
+    const componentToRender = loadingRecommendedPlaces
+        ? loadingRecommendedPlacesComponent()
+        : recommendedPlacesItems({ recommendedPlaces, shouldRenderAddNewPlace: true });
 
     return <View style={{ flex: 1 }}>{componentToRender}</View>;
 };

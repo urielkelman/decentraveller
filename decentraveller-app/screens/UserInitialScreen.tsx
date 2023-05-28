@@ -28,8 +28,8 @@ const DecentravellerInitialScreen = () => {
         const render = user ? 'Home' : 'Registration';
         if (user) {
             setUserNickname(user.UserElementResponse.nickname);
-            setUserCreatedAt(user.UserElementResponse.createdAt)
-            setUserInterest(user.UserElementResponse.interest)
+            setUserCreatedAt(user.UserElementResponse.createdAt);
+            setUserInterest(user.UserElementResponse.interest);
             setUserWalletAddress(wallet);
         }
 
