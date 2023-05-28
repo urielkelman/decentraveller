@@ -5,13 +5,8 @@ library DecentravellerDataTypes {
     enum DecentravellerPlaceCategory {
         GASTRONOMY,
         ACCOMODATION,
-        ENTERTAINMENT
-    }
-
-    enum DecentravellerInterest {
-        GASTRONOMY,
-        ACCOMMODATION,
-        ENTERTAINMENT
+        ENTERTAINMENT,
+        OTHER
     }
 
     struct DecentravellerProfile {
@@ -19,6 +14,6 @@ library DecentravellerDataTypes {
         string nickname;
         string name;
         string country;
-        DecentravellerInterest interest;
+        DecentravellerPlaceCategory interest;
     }
 }
