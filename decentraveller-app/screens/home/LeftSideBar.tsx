@@ -45,7 +45,7 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
 };
 
 const LeftSideBar = () => {
-    console.log('sidebar')
+    console.log('sidebar');
     return (
         <Drawer.Navigator drawerContent={(drawerProps) => <CustomDrawerContent {...drawerProps} />}>
             <Drawer.Screen name="Decentraveller" component={RootNavigator} />
