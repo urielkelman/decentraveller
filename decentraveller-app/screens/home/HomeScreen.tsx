@@ -10,7 +10,7 @@ import PlaceItem from './place/PlaceItem';
 import { addNewPlaceIconSize, homeStyle } from '../../styles/homeStyles';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import * as Location from 'expo-location';
-import {useFocusEffect} from "@react-navigation/native";
+import { useFocusEffect } from '@react-navigation/native';
 
 const adapter = mockApiAdapter;
 
@@ -29,36 +29,30 @@ const HomeScreen = ({ navigation }) => {
         console.log('session killed');
     };
 
-    useFocusEffect(React.useCallback(
-        () => {
-            (async () => {
-                setLoadingRecommendedPlaces(true);
-                const recommendedPlacesResponse: PlacesResponse = await adapter.getRecommendedPlaces(
-                    // appContext.connectionContext.connectedAddress
-                    ''
-                );
-                setLoadingRecommendedPlaces(false);
-                setRecommendedPlaces(recommendedPlacesResponse.results);
-            })();
-            (async () => {
-                console.log('inside');
-                const { status } = await Location.getForegroundPermissionsAsync();
-                if(status !== 'granted') {
-                    const { status } = await Location.requestForegroundPermissionsAsync();
-                    if(status !== 'granted') {
-                        console.log('Permission not granted');
-                        return;
-                    }
+    useEffect(() => {
+        (async () => {
+            setLoadingRecommendedPlaces(true);
+            const recommendedPlacesResponse: PlacesResponse = await adapter.getRecommendedPlaces(
+                // appContext.connectionContext.connectedAddress
+                ''
+            );
+            setLoadingRecommendedPlaces(false);
+            setRecommendedPlaces(recommendedPlacesResponse.results);
+        })();
+        (async () => {
+            const { status } = await Location.getForegroundPermissionsAsync();
+            if (status !== PERMISSION_GRANTED) {
+                const { status } = await Location.requestForegroundPermissionsAsync();
+                if (status !== PERMISSION_GRANTED) {
+                    console.log('Permission not granted');
+                    return;
                 }
-                console.log('granted');
-                const location = await Location.getCurrentPositionAsync();
-                setLocation(location);
-            })
-            ();
-        }, [])
-    )
-
-        ;
+            }
+            console.log('granted');
+            const location = await Location.getCurrentPositionAsync();
+            setLocation(location);
+        })();
+    }, []);
 
     const renderPlaceItem = ({ item }: { item: PlaceResponse }) => (
         <PlaceItem
