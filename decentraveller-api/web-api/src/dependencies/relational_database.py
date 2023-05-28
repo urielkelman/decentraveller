@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from src.api_models.place import PlaceID, PlaceInDB, PlaceWithStats
 from src.orms.place import PlaceORM
 from src.orms.profile import ProfileORM
-from src.api_models.review import ReviewId, ReviewInDB, ReviewBody
+from src.api_models.review import ReviewID, ReviewInDB
 from src.orms.review import ReviewORM
 from src.api_models.bulk_results import PaginatedReviews
 from sqlalchemy import func
@@ -95,25 +95,26 @@ class RelationalDatabase:
         self.session.commit()
         return self.query_places(place_id)
 
-    def query_review(self, review_id: ReviewId) -> Optional[ReviewInDB]:
+    def query_review(self, review_id: ReviewID, place_id: PlaceID) -> Optional[ReviewInDB]:
         """
         Gets a review from the database by its id
 
-        :param review_id: the id
+        :param review_id: the review id
+        :param place_id: the place id
         :return: a review ORM or None if the id does not exist
         """
-        review: Optional[ReviewORM] = self.session.query(ReviewORM).get(review_id)
+        review: Optional[ReviewORM] = self.session.query(ReviewORM).get((review_id, place_id))
         if not review:
             return None
         return ReviewInDB.from_orm(review)
 
-    def add_review(self, review: ReviewBody):
+    def add_review(self, review: ReviewInDB):
         """
         Adds a review to the database
         :param review: the review data to add
         :return:
         """
-        review_orm = ReviewORM(place_id=review.place_id,
+        review_orm = ReviewORM(id=review.id, place_id=review.place_id,
                                score=review.score, owner=review.owner,
                                text=review.text, images=review.images,
                                state=review.state)

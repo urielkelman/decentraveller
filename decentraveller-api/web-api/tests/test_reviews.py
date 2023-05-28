@@ -97,7 +97,8 @@ def test_create_review(cleanup):
     assert response.status_code == 404
 
     response = client.post("/review",
-                           json={"placeId": 0,
+                           json={"id": 1,
+                                 "placeId": 0,
                                  "score": 5,
                                  "owner": "of49d9adf9b",
                                  "text": "Muy bueno el combo de sebastian yatra",
@@ -106,7 +107,7 @@ def test_create_review(cleanup):
                            )
     assert response.status_code == 201
 
-    response = client.get("/review/1")
+    response = client.get("/review", params={'review_id': 1, 'place_id': 0})
     assert response.status_code == 200
     assert response.json() == {"id": 1,
                                "placeId": 0,
@@ -144,7 +145,8 @@ def test_get_reviews_by_place(cleanup):
     assert response.status_code == 404
 
     response = client.post("/review",
-                           json={"placeId": 0,
+                           json={"id": 1,
+                               "placeId": 0,
                                  "score": 5,
                                  "owner": "of49d9adf9b",
                                  "text": "Muy bueno el combo de sebastian yatra",
@@ -154,7 +156,8 @@ def test_get_reviews_by_place(cleanup):
     assert response.status_code == 201
 
     response = client.post("/review",
-                           json={"placeId": 0,
+                           json={"id": 2,
+                               "placeId": 0,
                                  "score": 5,
                                  "owner": "of49d9adf9b",
                                  "text": "Me pedi un mcflurry oreo",
@@ -164,7 +167,8 @@ def test_get_reviews_by_place(cleanup):
     assert response.status_code == 201
 
     response = client.post("/review",
-                           json={"placeId": 0,
+                           json={"id": 3,
+                               "placeId": 0,
                                  "score": 3,
                                  "owner": "of49d9adf9b",
                                  "text": "Me atendieron mal",
