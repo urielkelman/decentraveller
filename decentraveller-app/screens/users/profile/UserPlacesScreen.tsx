@@ -12,7 +12,7 @@ import CreatePlaceProvider from '../../home/place/CreatePlaceContext';
 import RootNavigator from '../../home/RootNavigator';
 import CreatePlaceNameScreen from '../../home/place/CreatePlaceNameScreen';
 import CreatePlaceLocationScreen from '../../home/place/CreatePlaceLocationScreen';
-import { recommendedPlacesItems } from '../../../commons/components/DecentravellerPlacesList';
+import { DecentravellerPlacesItems } from '../../../commons/components/DecentravellerPlacesList';
 import { PlaceResponse, PlacesResponse } from '../../../api/response/places';
 import { mockApiAdapter } from '../../../api/mockApiAdapter';
 import { useAppContext } from '../../../context/AppContext';
@@ -21,19 +21,19 @@ const adapter = mockApiAdapter;
 
 const UserPlacesScreen = ({}) => {
     const appContext = useAppContext();
-    const [recommendedPlaces, setRecommendedPlaces] = React.useState<PlaceResponse[]>([]);
+    const [userPlaces, setUserPlaces] = React.useState<PlaceResponse[]>([]);
 
     useEffect(() => {
         (async () => {
-            const recommendedPlacesResponse: PlacesResponse = await adapter.getMyPlacesPlaces(
+            const placesResponse: PlacesResponse = await adapter.getMyPlacesPlaces(
                 // appContext.connectionContext.connectedAddress
                 ''
             );
-            setRecommendedPlaces(recommendedPlacesResponse.results);
+            setUserPlaces(placesResponse.results);
         })();
     }, []);
 
-    const renderPlaces = recommendedPlacesItems({ recommendedPlaces, shouldRenderAddNewPlace: false });
+    const renderPlaces = DecentravellerPlacesItems({ places: userPlaces, shouldRenderAddNewPlace: false });
 
     return <View style={{ flex: 1 }}>{renderPlaces}</View>;
 };
