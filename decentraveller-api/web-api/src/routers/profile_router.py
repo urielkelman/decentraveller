@@ -4,7 +4,7 @@ from fastapi_utils.inferring_router import InferringRouter
 from sqlalchemy.exc import IntegrityError
 from starlette.status import HTTP_400_BAD_REQUEST, HTTP_404_NOT_FOUND
 
-from src.api_models.profile import ProfileInDB
+from src.api_models.profile import ProfileInDB, ProfileBody
 from src.dependencies.avatar_generator import AvatarGenerator
 from src.orms.profile import ProfileORM
 from src.dependencies.relational_database import RelationalDatabase
@@ -62,7 +62,7 @@ class ProfileCBV:
         return Response(content=b"", media_type="image/jpeg")
 
     @profile_router.post("/profile", status_code=201)
-    def post_profile(self, profile: ProfileInDB) -> ProfileInDB:
+    def post_profile(self, profile: ProfileBody) -> ProfileInDB:
         """
         Creates a new profile in the database
 
