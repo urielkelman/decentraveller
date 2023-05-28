@@ -4,7 +4,7 @@ import {
     FORWARD_GEOCODING_ENDPOINT,
     GET_USER_ENDPOINT,
     OWNED_PLACES_ENDPOINT,
-    RECOMMENDED_PLACES_ENDPOINT
+    RECOMMENDED_PLACES_ENDPOINT,
 } from './config';
 import { UserResponse } from './response/user';
 import { PlacesResponse } from './response/places';

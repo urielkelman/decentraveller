@@ -10,7 +10,7 @@ const UriUserResponse: UserResponse = {
         nickname: 'ElUriK',
         country: 'Argentina',
         interest: 'Entertainment',
-        createdAt: '10/05/2025'
+        createdAt: '10/05/2025',
     },
 };
 
@@ -20,7 +20,7 @@ const GianUserResponse: UserResponse = {
         nickname: 'giano',
         country: 'Israel',
         interest: 'Comunismo',
-        createdAt: '02/04/2023'
+        createdAt: '02/04/2023',
     },
 };
 

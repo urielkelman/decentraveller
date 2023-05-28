@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import {
     registrationScreenTextStyle,
@@ -12,17 +12,16 @@ import CreatePlaceProvider from '../../home/place/CreatePlaceContext';
 import RootNavigator from '../../home/RootNavigator';
 import CreatePlaceNameScreen from '../../home/place/CreatePlaceNameScreen';
 import CreatePlaceLocationScreen from '../../home/place/CreatePlaceLocationScreen';
-import {recommendedPlacesItems} from "../../../commons/components/DecentravellerPlacesList";
-import {PlaceResponse, PlacesResponse} from "../../../api/response/places";
-import {mockApiAdapter} from "../../../api/mockApiAdapter";
-import {useAppContext} from "../../../context/AppContext";
+import { recommendedPlacesItems } from '../../../commons/components/DecentravellerPlacesList';
+import { PlaceResponse, PlacesResponse } from '../../../api/response/places';
+import { mockApiAdapter } from '../../../api/mockApiAdapter';
+import { useAppContext } from '../../../context/AppContext';
 
 const adapter = mockApiAdapter;
 
 const UserPlacesScreen = ({}) => {
     const appContext = useAppContext();
     const [recommendedPlaces, setRecommendedPlaces] = React.useState<PlaceResponse[]>([]);
-
 
     useEffect(() => {
         (async () => {

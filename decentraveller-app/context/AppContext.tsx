@@ -3,9 +3,10 @@ import {
     AppContextType,
     ConnectionContext,
     DeviceDimensions,
-    UserCreatedAt, UserInterest,
+    UserCreatedAt,
+    UserInterest,
     UserNickname,
-    UserWalletAddress
+    UserWalletAddress,
 } from './types';
 import { Dimensions } from 'react-native';
 import { useWalletConnect } from '@walletconnect/react-native-dapp';
@@ -31,7 +32,6 @@ const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
     const [walletAddress, setUserWalletAddress] = React.useState<string>('');
     const [createdAt, setUserCreatedAt] = React.useState<string>('');
     const [interest, setUserInterest] = React.useState<string>('');
-
 
     const connector = useWalletConnect();
 
