@@ -13,19 +13,15 @@ import RootNavigator from '../../home/RootNavigator';
 import CreatePlaceNameScreen from '../../home/place/CreatePlaceNameScreen';
 import CreatePlaceLocationScreen from '../../home/place/CreatePlaceLocationScreen';
 
-export type UserProfileScreens = {
-    UserProfileScreen: undefined;
-};
-
-const UserProfileEditScreen = ({}) => {
+const UserReviewsScreen = ({}) => {
     return (
         <View style={WelcomeStyles.container}>
             <Text style={WelcomeStyles.title}>{'[PLACE HOLDER OF]'}</Text>
             <Text style={subTitleTextStyle} adjustsFontSizeToFit={true} numberOfLines={2}>
-                {'[THIS IS AN EXAMPLE OF STACK SCREEN OF PROFILE EDITING. NOW IN PROGRESS TOO...]'}
+                {'[THIS IS AN EXAMPLE OF STACK SCREEN OF REVIEWS. NOW IN PROGRESS TOO...]'}
             </Text>
         </View>
     );
 };
 
-export default UserProfileEditScreen;
+export default UserReviewsScreen;

@@ -105,6 +105,23 @@ class MockApiAdapter {
             ],
         };
     }
+
+    async getMyPlacesPlaces(walletAddress: string): Promise<PlacesResponse> {
+        return {
+            results: [
+                {
+                    id: 1,
+                    name: 'Eretz',
+                    address: 'Honduras 4709, Palermo, Buenos Aires, C1414, Argentina',
+                    latitude: '-34.590716',
+                    longitude: '-58.427125',
+                    category: 'GASTRONOMY',
+                    score: 4.8,
+                    reviewCount: 25,
+                },
+            ],
+        };
+    }
 }
 
 const mockApiAdapter = new MockApiAdapter();

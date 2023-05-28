@@ -1,6 +1,11 @@
 import { GeocodingResponse } from './response/geocoding';
 import { httpAPIConnector, HttpConnector, HttpGetRequest } from '../connectors/HttpConnector';
-import { FORWARD_GEOCODING_ENDPOINT, GET_USER_ENDPOINT, RECOMMENDED_PLACES_ENDPOINT } from './config';
+import {
+    FORWARD_GEOCODING_ENDPOINT,
+    GET_USER_ENDPOINT,
+    OWNED_PLACES_ENDPOINT,
+    RECOMMENDED_PLACES_ENDPOINT,
+} from './config';
 import { UserResponse } from './response/user';
 import { PlacesResponse } from './response/places';
 
@@ -43,6 +48,16 @@ class ApiAdapter {
             onError: (e) => {
                 onFailed();
             },
+        };
+
+        return await httpAPIConnector.get(httpRequest);
+    }
+
+    async getMyPlaces(walletAddress: string): Promise<PlacesResponse> {
+        const httpRequest: HttpGetRequest = {
+            url: `${OWNED_PLACES_ENDPOINT}/${walletAddress}`,
+            queryParams: {},
+            onError: (e) => console.log('Error'),
         };
 
         return await httpAPIConnector.get(httpRequest);

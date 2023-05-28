@@ -9,6 +9,7 @@ import { PlaceResponse, PlacesResponse } from '../../api/response/places';
 import PlaceItem from './place/PlaceItem';
 import { addNewPlaceIconSize, homeStyle } from '../../styles/homeStyles';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { DecentravellerPlacesItems } from '../../commons/components/DecentravellerPlacesList';
 
 const adapter = mockApiAdapter;
 
@@ -36,37 +37,19 @@ const HomeScreen = ({ navigation }) => {
         })();
     }, []);
 
-    const renderPlaceItem = ({ item }: { item: PlaceResponse }) => (
-        <PlaceItem
-            id={item.id}
-            name={item.name}
-            address={item.address}
-            category={item.category}
-            latitude={item.latitude}
-            longitude={item.longitude}
-            score={item.score}
-            reviewCount={item.reviewCount}
-        />
-    );
-
-    const recommendedPlacesItems = () => (
-        <View style={{ backgroundColor: '#FFE1E1', flex: 1 }}>
-            <View style={homeStyle.addNewPlaceReference}>
-                <TouchableOpacity onPress={() => navigation.navigate('CreatePlaceNameScreen')}>
-                    <MaterialCommunityIcons name="book-plus-outline" size={addNewPlaceIconSize} color="black" />
-                </TouchableOpacity>
-            </View>
-            <FlatList data={recommendedPlaces} renderItem={renderPlaceItem} />
-        </View>
-    );
-
     const loadingRecommendedPlacesComponent = () => (
         <View>
             <Text>Loading</Text>
         </View>
     );
 
-    const componentToRender = loadingRecommendedPlaces ? loadingRecommendedPlacesComponent() : recommendedPlacesItems();
+    const recommendedPlaceItemsComponent = () =>
+        DecentravellerPlacesItems({ places: recommendedPlaces, shouldRenderAddNewPlace: true });
+
+
+    const componentToRender = loadingRecommendedPlaces
+        ? loadingRecommendedPlacesComponent()
+        : recommendedPlaceItemsComponent()
 
     return <View style={{ flex: 1 }}>{componentToRender}</View>;
 };
