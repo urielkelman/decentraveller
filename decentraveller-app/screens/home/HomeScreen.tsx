@@ -9,14 +9,19 @@ import { PlaceResponse, PlacesResponse } from '../../api/response/places';
 import PlaceItem from './place/PlaceItem';
 import { addNewPlaceIconSize, homeStyle } from '../../styles/homeStyles';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import * as Location from 'expo-location';
+import {useFocusEffect} from "@react-navigation/native";
 
 const adapter = mockApiAdapter;
+
+const PERMISSION_GRANTED = 'granted';
 
 const HomeScreen = ({ navigation }) => {
     const connector = useWalletConnect();
     const appContext = useAppContext();
     const [loadingRecommendedPlaces, setLoadingRecommendedPlaces] = React.useState<boolean>(false);
     const [recommendedPlaces, setRecommendedPlaces] = React.useState<PlaceResponse[]>([]);
+    const [location, setLocation] = React.useState(undefined);
 
     const killSession = async () => {
         appContext.cleanConnectionContext();
@@ -24,17 +29,36 @@ const HomeScreen = ({ navigation }) => {
         console.log('session killed');
     };
 
-    useEffect(() => {
-        (async () => {
-            setLoadingRecommendedPlaces(true);
-            const recommendedPlacesResponse: PlacesResponse = await adapter.getRecommendedPlaces(
-                // appContext.connectionContext.connectedAddress
-                ''
-            );
-            setLoadingRecommendedPlaces(false);
-            setRecommendedPlaces(recommendedPlacesResponse.results);
-        })();
-    }, []);
+    useFocusEffect(React.useCallback(
+        () => {
+            (async () => {
+                setLoadingRecommendedPlaces(true);
+                const recommendedPlacesResponse: PlacesResponse = await adapter.getRecommendedPlaces(
+                    // appContext.connectionContext.connectedAddress
+                    ''
+                );
+                setLoadingRecommendedPlaces(false);
+                setRecommendedPlaces(recommendedPlacesResponse.results);
+            })();
+            (async () => {
+                console.log('inside');
+                const { status } = await Location.getForegroundPermissionsAsync();
+                if(status !== 'granted') {
+                    const { status } = await Location.requestForegroundPermissionsAsync();
+                    if(status !== 'granted') {
+                        console.log('Permission not granted');
+                        return;
+                    }
+                }
+                console.log('granted');
+                const location = await Location.getCurrentPositionAsync();
+                setLocation(location);
+            })
+            ();
+        }, [])
+    )
+
+        ;
 
     const renderPlaceItem = ({ item }: { item: PlaceResponse }) => (
         <PlaceItem
@@ -67,6 +91,8 @@ const HomeScreen = ({ navigation }) => {
     );
 
     const componentToRender = loadingRecommendedPlaces ? loadingRecommendedPlacesComponent() : recommendedPlacesItems();
+
+    console.log(location);
 
     return <View style={{ flex: 1 }}>{componentToRender}</View>;
 };

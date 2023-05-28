@@ -120,7 +120,6 @@ const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
                 });
 
                 connector.on('session_update', async (error, payload) => {
-                    console.log('Full payload', payload);
                     const params: UpdateSessionPayloadParams = payload.params[0];
                     console.log(params);
                     console.log('session_update');
