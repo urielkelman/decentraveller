@@ -1,26 +1,13 @@
 import React from 'react';
 import { ISOCodeByCountry } from './countriesConfig';
+import { PickerItem, PickerStateContextType } from '../../../commons/types';
+import { interestsItems } from '../../../commons/global';
 
 export interface GeocodingElement {
     address: string;
     latitude: string;
     longitude: string;
 }
-
-export interface PickerItem {
-    label: string;
-    value: string;
-}
-
-export type PickerStateContextType = {
-    items: PickerItem[];
-    setItems: React.Dispatch<React.SetStateAction<PickerItem[]>>;
-    value: string;
-    setValue: React.Dispatch<React.SetStateAction<string>>;
-    open: boolean;
-    setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-    onOpen: () => void;
-};
 
 export type CreatePlaceContextType = {
     placeTypePicker: PickerStateContextType;
@@ -39,12 +26,7 @@ enum CREATE_PLACE_PICKER {
 const CreatePlaceContext = React.createContext<CreatePlaceContextType | null>(null);
 
 const CreatePlaceProvider: React.FC<React.ReactNode> = ({ children }) => {
-    const [placeTypePickerItems, setPlaceTypePickerItems] = React.useState<PickerItem[]>([
-        { label: 'Gastronomy', value: '0' },
-        { label: 'Accommodation', value: '1' },
-        { label: 'Entertainment', value: '2' },
-        { label: 'Others', value: '3' },
-    ]);
+    const [placeTypePickerItems, setPlaceTypePickerItems] = React.useState<PickerItem[]>(interestsItems);
     const [placeTypePickerValue, setPlaceTypePickerValue] = React.useState<string>(null);
     const [placeTypePickerOpen, setPlaceTypePickerOpen] = React.useState<boolean>(false);
     const [placeName, setPlaceName] = React.useState<string>(null);
