@@ -13,6 +13,8 @@ const DecentravellerInitialScreen = () => {
     const appContext = useAppContext();
     const { setUserNickname } = appContext.userNickname;
     const { setUserWalletAddress } = appContext.userWalletAddress;
+    const { setUserCreatedAt } = appContext.userCreatedAt;
+    const { setUserInterest } = appContext.userInterest;
     // const stackToRender: JSX.Element = appContext.connectionContext === null ? <LoginNavigator /> : <HomeNavigator />;
 
     const getUser = async () => {
@@ -26,6 +28,8 @@ const DecentravellerInitialScreen = () => {
         const render = user ? 'Home' : 'Registration';
         if (user) {
             setUserNickname(user.UserElementResponse.nickname);
+            setUserCreatedAt(user.UserElementResponse.createdAt);
+            setUserInterest(user.UserElementResponse.interest);
             setUserWalletAddress(wallet);
         }
 

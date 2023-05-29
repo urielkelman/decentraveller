@@ -19,6 +19,15 @@ export interface UserWalletAddress {
     setUserWalletAddress: (string) => void;
 }
 
+export interface UserCreatedAt {
+    createdAt: string;
+    setUserCreatedAt: (string) => void;
+}
+export interface UserInterest {
+    interest: string;
+    setUserInterest: (string) => void;
+}
+
 export type AppContextType = {
     connectionContext: ConnectionContext | null;
     setConnectionContext: (newConnectionContext: ConnectionContext) => void;
@@ -27,6 +36,8 @@ export type AppContextType = {
     deviceDimensions: DeviceDimensions;
     userNickname: UserNickname;
     userWalletAddress: UserWalletAddress;
+    userCreatedAt: UserCreatedAt;
+    userInterest: UserInterest;
 };
 
 export type DecentravellerPlaceCategory = 'GASTRONOMY' | 'ENTERTAINMENT' | 'ACCOMMODATION' | 'OTHER';
