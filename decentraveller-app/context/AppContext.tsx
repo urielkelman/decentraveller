@@ -1,5 +1,13 @@
 import React from 'react';
-import { AppContextType, ConnectionContext, DeviceDimensions } from './types';
+import {
+    AppContextType,
+    ConnectionContext,
+    DeviceDimensions,
+    UserCreatedAt,
+    UserInterest,
+    UserNickname,
+    UserWalletAddress,
+} from './types';
 import { Dimensions } from 'react-native';
 import { useWalletConnect } from '@walletconnect/react-native-dapp';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -19,7 +27,11 @@ interface UpdateSessionPayloadParams {
 const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
     const [connectionContext, setConnectionContext] = React.useState<ConnectionContext>(null);
     const [subscriptionsDone, setSubscriptionsDone] = React.useState<boolean>(false);
-    const [wipedStorageDone, setWipedStorageDone] = React.useState<boolean>(false);
+
+    const [nickname, setUserNickname] = React.useState<string>('');
+    const [walletAddress, setUserWalletAddress] = React.useState<string>('');
+    const [createdAt, setUserCreatedAt] = React.useState<string>('');
+    const [interest, setUserInterest] = React.useState<string>('');
 
     const connector = useWalletConnect();
 
@@ -43,11 +55,11 @@ const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
                                 chainId: '0x7a69',
                                 chainName: 'Local Hardhat',
                                 nativeCurrency: {
-                                    name: 'Ethereum',
+                                    nameText: 'Ethereum',
                                     symbol: 'ETH',
                                     decimals: 18,
                                 },
-                                rpcUrls: ['https://10.0.2.2:8545/'],
+                                rpcUrls: ['http://10.0.2.2:8545/'],
                             },
                         ],
                     });
@@ -66,13 +78,42 @@ const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
         []
     );
 
+    const userNickname: UserNickname = React.useMemo<UserNickname>(
+        () => ({
+            nickname: nickname,
+            setUserNickname: setUserNickname,
+        }),
+        [nickname]
+    );
+
+    const userWalletAddress: UserWalletAddress = React.useMemo<UserWalletAddress>(
+        () => ({
+            walletAddress: walletAddress,
+            setUserWalletAddress: setUserWalletAddress,
+        }),
+        [walletAddress]
+    );
+
+    const userCreatedAt: UserCreatedAt = React.useMemo<UserCreatedAt>(
+        () => ({
+            createdAt: createdAt,
+            setUserCreatedAt: setUserCreatedAt,
+        }),
+        [createdAt]
+    );
+
+    const userInterest: UserInterest = React.useMemo<UserInterest>(
+        () => ({
+            interest: interest,
+            setUserInterest: setUserInterest,
+        }),
+        [interest]
+    );
+
     React.useEffect(() => {
         /* This effect allow us to clean sessions that the WalletConnect connector stores in the AsyncStorage */
         const wipeAsyncStorage = async () => {
-            console.log('wiping async storage');
             await AsyncStorage.clear();
-            console.log('wiped async storage');
-            setWipedStorageDone(true);
             setConnectionContext(null);
         };
 
@@ -127,6 +168,10 @@ const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
                 setConnectionContext,
                 pushChangeUpdate,
                 cleanConnectionContext,
+                userNickname,
+                userWalletAddress,
+                userCreatedAt,
+                userInterest,
             }}
         >
             {children}

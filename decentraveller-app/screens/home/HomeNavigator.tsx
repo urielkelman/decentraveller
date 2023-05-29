@@ -1,13 +1,22 @@
+import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import CreatePlaceNameScreen from './place/CreatePlaceNameScreen';
-import CreatePlaceProvider from './place/CreatePlaceContext';
 import CreatePlaceLocationScreen from './place/CreatePlaceLocationScreen';
-import RootNavigator from './RootNavigator';
+import CreatePlaceProvider from './place/CreatePlaceContext';
+import LeftSideBar from './LeftSideBar';
+import UserPlacesScreen from '../users/profile/UserPlacesScreen';
+import PlaceDetailScreen from './place/PlaceDetailScreen';
+import UserProfileScreen from '../users/profile/UserProfileScreen';
+import UserReviewsScreen from '../users/profile/UserReviewsScreen';
 
 export type HomeStackScreens = {
-    RootTabNavigator: undefined;
+    LeftSideBar: undefined;
     CreatePlaceNameScreen: undefined;
     CreatePlaceLocationScreen: undefined;
+    PlaceDetailScreen: undefined;
+    Profile: undefined;
+    UserPlacesScreen: undefined;
+    UserReviewsScreen: undefined;
 };
 
 const HomeStackNavigator = createStackNavigator<HomeStackScreens>();
@@ -15,14 +24,15 @@ const HomeStackNavigator = createStackNavigator<HomeStackScreens>();
 const HomeNavigator = () => {
     return (
         <CreatePlaceProvider>
-            <HomeStackNavigator.Navigator initialRouteName="RootTabNavigator">
-                <HomeStackNavigator.Screen name="RootTabNavigator" component={RootNavigator} />
+            <HomeStackNavigator.Navigator initialRouteName="LeftSideBar" screenOptions={{ headerShown: false }}>
+                <HomeStackNavigator.Screen name="LeftSideBar" component={LeftSideBar} />
                 <HomeStackNavigator.Screen
                     name="CreatePlaceNameScreen"
                     component={CreatePlaceNameScreen}
                     options={{
                         title: 'Add new place',
                         headerMode: 'screen',
+                        headerShown: true,
                     }}
                 />
                 <HomeStackNavigator.Screen
@@ -31,6 +41,38 @@ const HomeNavigator = () => {
                     options={{
                         title: 'Select location',
                         headerMode: 'screen',
+                        headerShown: true,
+                    }}
+                />
+                <HomeStackNavigator.Screen
+                    name="PlaceDetailScreen"
+                    component={PlaceDetailScreen}
+                    options={{
+                        title: 'Select location',
+                        headerMode: 'screen',
+                        headerShown: true,
+                    }}
+                />
+                <HomeStackNavigator.Screen
+                    name="Profile"
+                    component={UserProfileScreen}
+                    options={{ headerShown: true }}
+                />
+                <HomeStackNavigator.Screen
+                    name="UserPlacesScreen"
+                    component={UserPlacesScreen}
+                    options={{
+                        title: 'My places',
+                        headerMode: 'screen',
+                        headerShown: true,
+                    }}
+                />
+                <HomeStackNavigator.Screen
+                    name="UserReviewsScreen"
+                    component={UserReviewsScreen}
+                    options={{
+                        title: 'My Reviews',
+                        headerShown: true,
                     }}
                 />
             </HomeStackNavigator.Navigator>

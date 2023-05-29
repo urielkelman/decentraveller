@@ -80,6 +80,28 @@ class BlockchainAdapter {
             onErrorAddingPlace();
         }
     }
+
+    async createRegisterUserTransaction(
+        connector: WalletConnect,
+        nickname: string,
+        country: string,
+        interest: string,
+        onError: () => void
+    ): Promise<string> {
+        try {
+            return await this.populateAndSend(
+                connector,
+                decentravellerMainContract,
+                'registerUser',
+                nickname,
+                country,
+                interest
+            );
+        } catch (e) {
+            console.log(e);
+            onError();
+        }
+    }
 }
 
 const blockchainAdapter = new BlockchainAdapter();
