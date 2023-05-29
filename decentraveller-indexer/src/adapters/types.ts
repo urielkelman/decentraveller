@@ -14,8 +14,8 @@ export interface NewPlaceRequestBody extends EventRequestBody {
     name: string;
     address: string;
     category: string;
-    latitude: string;
-    longitude: string;
+    latitude: number;
+    longitude: number;
 }
 
 export interface NewReviewRequestBody extends EventRequestBody {

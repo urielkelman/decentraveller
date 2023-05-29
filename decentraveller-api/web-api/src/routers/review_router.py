@@ -6,7 +6,7 @@ from starlette.status import HTTP_404_NOT_FOUND, HTTP_400_BAD_REQUEST
 from src.api_models.place import PlaceID
 from src.api_models.review import ReviewInDB, ReviewID
 from src.api_models.bulk_results import PaginatedReviews
-from src.dependencies.relational_database import RelationalDatabase
+from src.dependencies.relational_database import build_relational_database, RelationalDatabase
 from sqlalchemy.exc import IntegrityError
 
 review_router = InferringRouter()
@@ -14,7 +14,7 @@ review_router = InferringRouter()
 
 @cbv(review_router)
 class ReviewCBV:
-    database: RelationalDatabase = Depends(RelationalDatabase)
+    database: RelationalDatabase = Depends(build_relational_database)
 
     @review_router.post("/review", status_code=201)
     def create_review(self, review: ReviewInDB) -> ReviewInDB:

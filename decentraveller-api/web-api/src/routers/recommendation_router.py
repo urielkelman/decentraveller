@@ -7,7 +7,7 @@ from sqlalchemy import func, distinct, not_
 from starlette.status import HTTP_404_NOT_FOUND
 
 from src.api_models.place import PlaceID, PlaceInDB, PlaceWithStats
-from src.dependencies.relational_database import RelationalDatabase
+from src.dependencies.relational_database import build_relational_database, RelationalDatabase
 from src.dependencies.vector_database import VectorDatabase
 from src.orms.place import PlaceORM
 from src.orms.review import ReviewORM
@@ -25,7 +25,7 @@ class RecommendationCBV:
     """
     Recommendations
     """
-    database: RelationalDatabase = Depends(RelationalDatabase)
+    database: RelationalDatabase = Depends(build_relational_database)
     vector_database: VectorDatabase = Depends(VectorDatabase)
 
     @staticmethod
