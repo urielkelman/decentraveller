@@ -34,7 +34,7 @@ def test_create_profile(cleanup):
                                      "nickname": "test",
                                      "country": "AR",
                                      "interest": "ACCOMMODATION"}
-    assert datetime.fromisoformat(response.json()['createdAt']).date() == datetime.now().date()
+    assert datetime.fromisoformat(response.json()['createdAt']).date() == datetime.utcnow().date()
 
     response = client.get("/profile/of49d9adf9b")
     assert response.status_code == 200
@@ -44,7 +44,7 @@ def test_create_profile(cleanup):
                                      "nickname": "test",
                                      "country": "AR",
                                      "interest": "ACCOMMODATION"}
-    assert datetime.fromisoformat(response.json()['createdAt']).date() == datetime.now().date()
+    assert datetime.fromisoformat(response.json()['createdAt']).date() == datetime.utcnow().date()
 
     response = client.get("/profile/of49d9adf9b/avatar.jpg")
     assert response.status_code == 200
@@ -75,7 +75,7 @@ def test_profile_overwrite(cleanup):
                                      "nickname": "test2",
                                      "country": "AR",
                                      "interest": "ACCOMMODATION"}
-    assert datetime.fromisoformat(response.json()['createdAt']).date() == datetime.now().date()
+    assert datetime.fromisoformat(response.json()['createdAt']).date() == datetime.utcnow().date()
 
 
 def test_profile_create_repeated_nickname_400(cleanup):

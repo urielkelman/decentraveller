@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, JSON, Integer, ForeignKey
+from sqlalchemy import Column, String, JSON, Integer, ForeignKey, func, DateTime
 
 from src.orms import Base
 
@@ -16,3 +16,4 @@ class ReviewORM(Base):
     text = Column(String, nullable=False)
     images = Column(JSON, nullable=False)
     state = Column(String, nullable=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())

@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 
 from src.api_models.bulk_results import PaginatedReviews
 from src.api_models.place import PlaceID, PlaceInDB, PlaceWithStats
-from src.api_models.review import ReviewID, ReviewInDB
+from src.api_models.review import ReviewID, ReviewInDB, ReviewBody
 from src.orms.place import PlaceORM
 from src.orms.profile import ProfileORM
 from src.orms.review import ReviewORM
@@ -128,7 +128,7 @@ class RelationalDatabase:
             return None
         return ReviewInDB.from_orm(review)
 
-    def add_review(self, review: ReviewInDB):
+    def add_review(self, review: ReviewBody):
         """
         Adds a review to the database
         :param review: the review data to add
