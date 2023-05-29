@@ -1,24 +1,44 @@
-from typing import Optional, Dict, List, Union
+from typing import Optional, Dict, List, Union, Callable
+
+from sqlalchemy import func
 from sqlalchemy.orm import Session
+
+from src.api_models.bulk_results import PaginatedReviews
 from src.api_models.place import PlaceID, PlaceInDB, PlaceWithStats
+from src.api_models.review import ReviewID, ReviewInDB
 from src.orms.place import PlaceORM
 from src.orms.profile import ProfileORM
-from src.api_models.review import ReviewID, ReviewInDB
 from src.orms.review import ReviewORM
-from src.api_models.bulk_results import PaginatedReviews
-from sqlalchemy import func
+
+
+def build_relational_database():
+    from src.database.session import SessionLocal
+
+    db = RelationalDatabase(SessionLocal)
+    try:
+        yield db
+    finally:
+        db.close()
 
 
 class RelationalDatabase:
     """
     Relational Database object
     """
-    session: Optional[Session]
+    _session: Optional[Session]
 
-    def __init__(self):
-        from src.database.session import SessionLocal
+    def __init__(self, session_maker: Callable):
+        """
 
-        self._session = SessionLocal()
+        :param session_maker: database session maker
+        """
+        self._session = session_maker()
+
+    def close(self):
+        """
+        Close session
+        """
+        self._session.close()
 
     @property
     def session(self) -> Session:
@@ -35,7 +55,7 @@ class RelationalDatabase:
         :return: the places data
         """
         result = self.session.query(PlaceORM, func.avg(ReviewORM.score),
-                           func.count(ReviewORM.id)). \
+                                    func.count(ReviewORM.id)). \
             join(ReviewORM, ReviewORM.place_id == PlaceORM.id, isouter=True). \
             filter(PlaceORM.id.in_(tuple(place_ids))) \
             .group_by(PlaceORM.id).all()

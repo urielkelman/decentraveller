@@ -6,14 +6,14 @@ from starlette.status import HTTP_404_NOT_FOUND, HTTP_400_BAD_REQUEST
 
 from src.api_models.place import PlaceID, PlaceUpdate, PlaceInDB, PlaceBody, PlaceWithStats
 from src.dependencies.vector_database import VectorDatabase
-from src.dependencies.relational_database import RelationalDatabase
+from src.dependencies.relational_database import build_relational_database, RelationalDatabase
 
 place_router = InferringRouter()
 
 
 @cbv(place_router)
 class PlaceCBV:
-    database: RelationalDatabase = Depends(RelationalDatabase)
+    database: RelationalDatabase = Depends(build_relational_database)
     vector_database: VectorDatabase = Depends(VectorDatabase)
 
     @place_router.post("/place", status_code=201)
