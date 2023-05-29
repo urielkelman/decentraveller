@@ -3,6 +3,7 @@ export type UserElementResponse = {
     nickname: string;
     country: string;
     interest: string;
+    createdAt: string;
 };
 
 export type UserResponse = {
