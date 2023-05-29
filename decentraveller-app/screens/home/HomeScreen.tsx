@@ -66,8 +66,6 @@ const HomeScreen = ({ navigation }) => {
         ? loadingRecommendedPlacesComponent()
         : recommendedPlaceItemsComponent();
 
-    console.log(location);
-
     return <View style={{ flex: 1 }}>{componentToRender}</View>;
 };
 
