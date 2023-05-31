@@ -42,6 +42,7 @@ class PlaceInDB(PlaceBody):
     Place API Model
     """
     id: PlaceID
+    owner: str
 
 class PlaceWithStats(PlaceInDB):
     """

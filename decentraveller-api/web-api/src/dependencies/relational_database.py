@@ -3,7 +3,7 @@ from typing import Optional, Dict, List, Union, Callable
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 
-from src.api_models.bulk_results import PaginatedReviews
+from src.api_models.bulk_results import PaginatedReviews, PaginatedPlaces
 from src.api_models.place import PlaceID, PlaceInDB, PlaceWithStats
 from src.api_models.review import ReviewID, ReviewInDB, ReviewBody
 from src.orms.place import PlaceORM
@@ -142,23 +142,6 @@ class RelationalDatabase:
         self.session.commit()
         return ReviewInDB.from_orm(review_orm)
 
-    def query_reviews_by_place(self, place_id: PlaceID,
-                               page: int, per_page: int) -> PaginatedReviews:
-        """
-        Gets all the reviews from a place as a query
-
-        :param place_id: the id of the place
-        :param page: page of the reviews
-        :param per_page: items per page
-        :return: a query with the result
-        """
-        query = self.session.query(ReviewORM).filter(ReviewORM.place_id == place_id)
-        total_count = query.count()
-        query = query.limit(per_page).offset(page * per_page)
-        reviews = [ReviewInDB.from_orm(r) for r in query.all()]
-        return PaginatedReviews(page=page, per_page=per_page,
-                                total=total_count, reviews=reviews)
-
     def get_profile_orm(self,
                         owner: str) -> Optional[ProfileORM]:
         """
@@ -170,3 +153,54 @@ class RelationalDatabase:
         """
         profile: Optional[ProfileORM] = self.session.query(ProfileORM).get(owner)
         return profile
+
+    def query_reviews_by_place(self, place_id: PlaceID,
+                               page: int, per_page: int) -> PaginatedReviews:
+        """
+        Gets all the reviews from a place as a query
+
+        :param place_id: the id of the place
+        :param page: page of the reviews
+        :param per_page: items per page
+        :return: the paginated reviews
+        """
+        query = self.session.query(ReviewORM).filter(ReviewORM.place_id == place_id)
+        total_count = query.count()
+        query = query.limit(per_page).offset(page * per_page)
+        reviews = [ReviewInDB.from_orm(r) for r in query.all()]
+        return PaginatedReviews(page=page, per_page=per_page,
+                                total=total_count, reviews=reviews)
+
+    def query_reviews_by_profile(self, owner: str,
+                                 page: int, per_page: int) -> PaginatedReviews:
+        """
+        Gets all the reviews from a profile as a query
+
+        :param owner: the author of the review
+        :param page: page of the reviews
+        :param per_page: items per page
+        :return: the paginated reviews
+        """
+        query = self.session.query(ReviewORM).filter(ReviewORM.owner == owner)
+        total_count = query.count()
+        query = query.limit(per_page).offset(page * per_page)
+        reviews = [ReviewInDB.from_orm(r) for r in query.all()]
+        return PaginatedReviews(page=page, per_page=per_page,
+                                total=total_count, reviews=reviews)
+
+    def query_places_by_profile(self, owner: str,
+                                page: int, per_page: int) -> PaginatedPlaces:
+        """
+        Gets all the places from a profile as a query
+
+        :param owner: the creator of the place
+        :param page: page of the reviews
+        :param per_page: items per page
+        :return: the paginated places
+        """
+        query = self.session.query(PlaceORM.id).filter(PlaceORM.owner == owner)
+        total_count = query.count()
+        query = query.limit(per_page).offset(page * per_page)
+        places = self._get_places_by_ids([i[0] for i in query.all()])
+        return PaginatedPlaces(page=page, per_page=per_page,
+                               total=total_count, places=places)
