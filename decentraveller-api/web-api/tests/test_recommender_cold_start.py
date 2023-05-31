@@ -12,9 +12,18 @@ def cleanup():
 
 @pytest.fixture
 def setup_dataset():
+    response = client.post("/profile",
+                           json={"owner": "of49d9adf9b",
+                                 "nickname": "test",
+                                 "country": "AR",
+                                 "interest": "ACCOMMODATION"},
+                           )
+    assert response.status_code == 201
+
     # Negocios cerca
     response = client.post("/place",
                            json={"id": 0,
+                                 "owner": "of49d9adf9b",
                                  "name": "McDonalds",
                                  "address": "Av. Callao & Av. Santa Fe",
                                  "latitude": -34.595983,
@@ -24,6 +33,7 @@ def setup_dataset():
     assert response.status_code == 201
     response = client.post("/place",
                            json={"id": 1,
+                                 "owner": "of49d9adf9b",
                                  "name": "Tienda de cafe",
                                  "address": "Av. Callao & Av. Santa Fe",
                                  "latitude": -34.595939,
@@ -33,6 +43,7 @@ def setup_dataset():
     assert response.status_code == 201
     response = client.post("/place",
                            json={"id": 2,
+                                 "owner": "of49d9adf9b",
                                  "name": "Starbucks Coffee",
                                  "address": "Av. Callao 702, C1023 CABA",
                                  "latitude": -34.600724,
@@ -44,6 +55,7 @@ def setup_dataset():
     # Negocios que no están cerca de los de arriba
     response = client.post("/place",
                            json={"id": 3,
+                                 "owner": "of49d9adf9b",
                                  "name": "Maldini",
                                  "address": "Vedia 3626",
                                  "latitude": -34.546015,
@@ -53,6 +65,7 @@ def setup_dataset():
     assert response.status_code == 201
     response = client.post("/place",
                            json={"id": 4,
+                                 "owner": "of49d9adf9b",
                                  "name": "El Viejo Tucho",
                                  "address": "Av. América 696, Sáenz Peña, Provincia de Buenos Aires",
                                  "latitude": -34.602272,
@@ -85,7 +98,7 @@ def test_recommendation_near(cleanup, setup_dataset):
     for i in range(20):
         response = client.post("/review",
                                json={"id": i,
-                                   "placeId": 1,
+                                     "placeId": 1,
                                      "score": 5,
                                      "owner": f"{i}",
                                      "text": "Muy bueno",
@@ -98,6 +111,7 @@ def test_recommendation_near(cleanup, setup_dataset):
     assert response.status_code == 200
     assert len(response.json()) == 1
     assert response.json()[0] == {"id": 1,
+                                  "owner": "of49d9adf9b",
                                   "name": "Tienda de cafe",
                                   "address": "Av. Callao & Av. Santa Fe",
                                   "latitude": -34.595939,
@@ -173,6 +187,7 @@ def test_recommendation_near_ordered(cleanup, setup_dataset):
     assert response.status_code == 200
     assert len(response.json()) == 2
     assert response.json()[0] == {"id": 1,
+                                  "owner": "of49d9adf9b",
                                   "name": "Tienda de cafe",
                                   "address": "Av. Callao & Av. Santa Fe",
                                   "latitude": -34.595939,
@@ -181,6 +196,7 @@ def test_recommendation_near_ordered(cleanup, setup_dataset):
                                   "stars": 5,
                                   "reviews": 20}
     assert response.json()[1] == {"id": 2,
+                                  "owner": "of49d9adf9b",
                                   "name": "Starbucks Coffee",
                                   "address": "Av. Callao 702, C1023 CABA",
                                   "latitude": -34.600724,
@@ -241,6 +257,7 @@ def test_recommendation_profile_no_reviews(cleanup, setup_dataset):
     assert response.status_code == 200
     assert len(response.json()) == 2
     assert response.json()[0] == {"id": 1,
+                                  "owner": "of49d9adf9b",
                                   "name": "Tienda de cafe",
                                   "address": "Av. Callao & Av. Santa Fe",
                                   "latitude": -34.595939,
@@ -249,6 +266,7 @@ def test_recommendation_profile_no_reviews(cleanup, setup_dataset):
                                   "stars": 5,
                                   "reviews": 19}
     assert response.json()[1] == {"id": 2,
+                                  "owner": "of49d9adf9b",
                                   "name": "Starbucks Coffee",
                                   "address": "Av. Callao 702, C1023 CABA",
                                   "latitude": -34.600724,
@@ -300,6 +318,7 @@ def test_recommendation_profile_no_reviews_location_priority(cleanup, setup_data
     assert response.status_code == 200
     assert len(response.json()) == 3
     assert response.json()[0] == {"id": 3,
+                                  "owner": "of49d9adf9b",
                                   "name": "Maldini",
                                   "address": "Vedia 3626",
                                   "latitude": -34.546015,
@@ -308,6 +327,7 @@ def test_recommendation_profile_no_reviews_location_priority(cleanup, setup_data
                                   "stars": 3,
                                   "reviews": 5}
     assert response.json()[1] == {"id": 1,
+                                  "owner": "of49d9adf9b",
                                   "name": "Tienda de cafe",
                                   "address": "Av. Callao & Av. Santa Fe",
                                   "latitude": -34.595939,
@@ -316,6 +336,7 @@ def test_recommendation_profile_no_reviews_location_priority(cleanup, setup_data
                                   "stars": 5,
                                   "reviews": 19}
     assert response.json()[2] == {"id": 2,
+                                  "owner": "of49d9adf9b",
                                   "name": "Starbucks Coffee",
                                   "address": "Av. Callao 702, C1023 CABA",
                                   "latitude": -34.600724,
@@ -367,6 +388,7 @@ def test_recommendation_profile_wont_repeat_with_reviews(cleanup, setup_dataset)
     assert response.status_code == 200
     assert len(response.json()) == 2
     assert response.json()[0] == {"id": 2,
+                                  "owner": "of49d9adf9b",
                                   "name": "Starbucks Coffee",
                                   "address": "Av. Callao 702, C1023 CABA",
                                   "latitude": -34.600724,
@@ -375,6 +397,7 @@ def test_recommendation_profile_wont_repeat_with_reviews(cleanup, setup_dataset)
                                   "stars": 4,
                                   "reviews": 19}
     assert response.json()[1] == {"id": 3,
+                                  "owner": "of49d9adf9b",
                                   "name": "Maldini",
                                   "address": "Vedia 3626",
                                   "latitude": -34.546015,
@@ -433,6 +456,7 @@ def test_recommendation_home_best_places(cleanup, setup_dataset):
     assert response.status_code == 200
     assert len(response.json()) == 3
     assert response.json()[2] == {"id": 3,
+                                  "owner": "of49d9adf9b",
                                   "name": "Maldini",
                                   "address": "Vedia 3626",
                                   "latitude": -34.546015,
@@ -441,6 +465,7 @@ def test_recommendation_home_best_places(cleanup, setup_dataset):
                                   "stars": 3,
                                   "reviews": 5}
     assert response.json()[0] == {"id": 1,
+                                  "owner": "of49d9adf9b",
                                   "name": "Tienda de cafe",
                                   "address": "Av. Callao & Av. Santa Fe",
                                   "latitude": -34.595939,
@@ -449,6 +474,7 @@ def test_recommendation_home_best_places(cleanup, setup_dataset):
                                   "stars": 5,
                                   "reviews": 19}
     assert response.json()[1] == {"id": 2,
+                                  "owner": "of49d9adf9b",
                                   "name": "Starbucks Coffee",
                                   "address": "Av. Callao 702, C1023 CABA",
                                   "latitude": -34.600724,
@@ -500,6 +526,7 @@ def test_recommendation_home_nearby_priority(cleanup, setup_dataset):
     assert response.status_code == 200
     assert len(response.json()) == 3
     assert response.json()[0] == {"id": 3,
+                                  "owner": "of49d9adf9b",
                                   "name": "Maldini",
                                   "address": "Vedia 3626",
                                   "latitude": -34.546015,
@@ -508,6 +535,7 @@ def test_recommendation_home_nearby_priority(cleanup, setup_dataset):
                                   "stars": 3,
                                   "reviews": 5}
     assert response.json()[1] == {"id": 1,
+                                  "owner": "of49d9adf9b",
                                   "name": "Tienda de cafe",
                                   "address": "Av. Callao & Av. Santa Fe",
                                   "latitude": -34.595939,
@@ -516,6 +544,7 @@ def test_recommendation_home_nearby_priority(cleanup, setup_dataset):
                                   "stars": 5,
                                   "reviews": 19}
     assert response.json()[2] == {"id": 2,
+                                  "owner": "of49d9adf9b",
                                   "name": "Starbucks Coffee",
                                   "address": "Av. Callao 702, C1023 CABA",
                                   "latitude": -34.600724,

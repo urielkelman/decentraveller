@@ -21,6 +21,8 @@ SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db"
 
 if os.path.exists('test.db'):
     os.remove('test.db')
+if os.path.exists('test.db-journal'):
+    os.remove('test.db-journal')
 
 if "SQLALCHEMY_DATABASE_URL" in os.environ:
     SQLALCHEMY_DATABASE_URL = os.getenv("SQLALCHEMY_DATABASE_URL")
