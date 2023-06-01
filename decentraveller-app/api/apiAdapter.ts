@@ -10,6 +10,7 @@ import {
 import { UserResponse } from './response/user';
 import { PlacesResponse } from './response/places';
 import Adapter from './Adapter';
+import { formatString } from '../commons/utils';
 
 class ApiAdapter extends Adapter {
     private httpConnector: HttpConnector;
@@ -18,8 +19,6 @@ class ApiAdapter extends Adapter {
         super();
         this.httpConnector = httpConnector;
     }
-
-    private formatString = (str, vars) => str.replace(/\${(.*?)}/g, (_, name) => vars[name]);
 
     async getGeocoding(physicalAddress: string, country: string): Promise<GeocodingResponse> {
         const httpRequest: HttpGetRequest = {
@@ -55,7 +54,7 @@ class ApiAdapter extends Adapter {
         longitude?: string
     ): Promise<PlacesResponse> {
         const httpRequest: HttpGetRequest = {
-            url: this.formatString(RECOMMENDED_PLACES_BY_PROFILE_ENDPOINT, { owner: walletAddress }),
+            url: formatString(RECOMMENDED_PLACES_BY_PROFILE_ENDPOINT, { owner: walletAddress }),
             queryParams: {
                 latitude: latitude,
                 longitude: longitude,
