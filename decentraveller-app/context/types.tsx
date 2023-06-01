@@ -9,30 +9,6 @@ export interface DeviceDimensions {
     height: number;
 }
 
-export interface UserNickname {
-    nickname: string;
-    setUserNickname: (string) => void;
-}
-
-export interface UserWalletAddress {
-    walletAddress: string;
-    setUserWalletAddress: (string) => void;
-}
-
-export interface UserCreatedAt {
-    createdAt: string;
-    setUserCreatedAt: (string) => void;
-}
-export interface UserInterest {
-    interest: string;
-    setUserInterest: (string) => void;
-}
-
-export interface UserLocation {
-    location: [string, string];
-    setLocation: ([latitude, longitude]) => void;
-}
-
 export interface AppContextStateArg<T> {
     value: T;
     setValue: (newValue: T) => void;
