@@ -1,14 +1,5 @@
 import React from 'react';
-import {
-    AppContextStateArg,
-    AppContextType,
-    ConnectionContext,
-    DeviceDimensions,
-    UserCreatedAt,
-    UserInterest,
-    UserNickname,
-    UserWalletAddress,
-} from './types';
+import { AppContextStateArg, AppContextType, ConnectionContext, DeviceDimensions } from './types';
 import { Dimensions } from 'react-native';
 import { useWalletConnect } from '@walletconnect/react-native-dapp';
 import AsyncStorage from '@react-native-async-storage/async-storage';
