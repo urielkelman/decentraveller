@@ -15,7 +15,6 @@ const DecentravellerInitialScreen = () => {
     const { setUserWalletAddress } = appContext.userWalletAddress;
     const { setUserCreatedAt } = appContext.userCreatedAt;
     const { setUserInterest } = appContext.userInterest;
-    // const stackToRender: JSX.Element = appContext.connectionContext === null ? <LoginNavigator /> : <HomeNavigator />;
 
     const getUser = async () => {
         const adapter = mockApiAdapter;
