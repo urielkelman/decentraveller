@@ -28,10 +28,10 @@ const HomeScreen = ({ navigation }) => {
     useEffect(() => {
         (async () => {
             setLoadingRecommendedPlaces(true);
-            const { status } = await Location.getForegroundPermissionsAsync();
-            if (status !== PERMISSION_GRANTED) {
-                const { status } = await Location.requestForegroundPermissionsAsync();
-                if (status !== PERMISSION_GRANTED) {
+            const statusPermission = (await Location.getForegroundPermissionsAsync()).status;
+            if (statusPermission !== PERMISSION_GRANTED) {
+                const statusRequest = (await Location.requestForegroundPermissionsAsync()).status;
+                if (statusRequest !== PERMISSION_GRANTED) {
                     console.log('Permission not granted');
                     const recommendedPlacesResponse: PlacesResponse = await adapter.getRecommendedPlacesForAddress(
                         appContext.connectionContext.connectedAddress

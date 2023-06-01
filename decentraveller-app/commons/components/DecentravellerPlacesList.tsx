@@ -4,8 +4,8 @@ import { FlatList, TouchableOpacity, View } from 'react-native';
 import { addNewPlaceIconSize, homeStyle } from '../../styles/homeStyles';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React from 'react';
-import {NavigationProp, useNavigation} from '@react-navigation/native';
-import {HomeStackScreens} from "../../screens/home/HomeNavigator";
+import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { HomeStackScreens } from '../../screens/home/HomeNavigator';
 
 const renderPlaceItem = ({ item }: { item: PlaceResponse }) => (
     <PlaceItem
@@ -23,11 +23,11 @@ const renderPlaceItem = ({ item }: { item: PlaceResponse }) => (
 export type PlacesItemsProps = {
     places: PlaceResponse[];
     shouldRenderAddNewPlace: boolean;
-}
+};
 
 type CreatePlaceScreenProp = NavigationProp<HomeStackScreens, 'CreatePlaceNameScreen'>;
 
-const DecentravellerPlacesItems: React.FC<PlacesItemsProps> = ({places, shouldRenderAddNewPlace}) => {
+const DecentravellerPlacesItems: React.FC<PlacesItemsProps> = ({ places, shouldRenderAddNewPlace }) => {
     const navigation = useNavigation<CreatePlaceScreenProp>();
     return (
         <View style={{ backgroundColor: '#FFE1E1', flex: 1 }}>
