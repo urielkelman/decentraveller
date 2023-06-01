@@ -28,16 +28,27 @@ export interface UserInterest {
     setUserInterest: (string) => void;
 }
 
+export interface UserLocation {
+    location: [string, string];
+    setLocation: ([latitude, longitude]) => void;
+}
+
+export interface AppContextStateArg<T> {
+    value: T;
+    setValue: (newValue: T) => void;
+}
+
 export type AppContextType = {
     connectionContext: ConnectionContext | null;
     setConnectionContext: (newConnectionContext: ConnectionContext) => void;
     cleanConnectionContext: () => void;
     pushChangeUpdate: () => void;
     deviceDimensions: DeviceDimensions;
-    userNickname: UserNickname;
-    userWalletAddress: UserWalletAddress;
-    userCreatedAt: UserCreatedAt;
-    userInterest: UserInterest;
+    userNickname: AppContextStateArg<string>;
+    userWalletAddress: AppContextStateArg<string>;
+    userCreatedAt: AppContextStateArg<string>;
+    userInterest: AppContextStateArg<string>;
+    userLocation: AppContextStateArg<[string, string]>;
 };
 
 export type DecentravellerPlaceCategory = 'GASTRONOMY' | 'ENTERTAINMENT' | 'ACCOMMODATION' | 'OTHER';

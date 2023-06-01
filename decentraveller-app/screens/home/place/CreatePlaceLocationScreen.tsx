@@ -1,5 +1,5 @@
 import { KeyboardAvoidingView, Text } from 'react-native';
-import { addPlaceScreenStyles } from '../../../styles/addPlaceScreensStyles';
+import { bottomTabScreenStyles } from '../../../styles/bottomTabScreensStyles';
 import DecentravellerHeadingText from '../../../commons/components/DecentravellerHeadingText';
 import { addPlaceScreenWordings } from './wording';
 import React, { useState } from 'react';
@@ -83,7 +83,7 @@ const CreatePlaceLocationScreen = () => {
 
     return (
         <KeyboardAvoidingView
-            style={{ ...addPlaceScreenStyles.container, opacity: backgroundOpacity }}
+            style={{ ...bottomTabScreenStyles.container, opacity: backgroundOpacity }}
             behavior="padding"
             keyboardVerticalOffset={40}
         >
