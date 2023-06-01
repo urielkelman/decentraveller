@@ -12,8 +12,9 @@ const PlaceDetailScreen = () => {
                     source={require(path)}
                     style={styles.image}
                 >
-                    {/* Aquí puedes agregar otros elementos o contenido dentro de la imagen */}
                 </Image>
+            </View>
+            <View style={styles.shadowContainer}>
             </View>
         </View>
     );
@@ -39,11 +40,25 @@ const styles = StyleSheet.create({
         overflow: 'hidden',
         height:windowHeight * 0.50,
         width:windowWidth,
-        shadowOffset: { width: 1, height: 1 },
-        shadowOpacity: 10,
-        shadowRadius: 0.5,
+        shadowOffset: { width: 1.5, height: 1 },
+        shadowOpacity: 0.8,
+        shadowRadius: 5,
         shadowColor: '#000',
-        elevation: 10,
+        elevation: 9,
+    },
+    shadowContainer: {
+        borderRadius: 50,
+        marginTop: -390,
+        marginLeft: 40,
+        justifyContent: 'flex-end',
+        overflow: 'hidden',
+        height:windowHeight * 0.50,
+        width:windowWidth / 1.3 ,
+        shadowOffset: { width: 1.5, height: 1 },
+        shadowOpacity: 1,
+        shadowRadius: 0.9,
+        shadowColor: '#000',
+        elevation: 15,
     },
 });
 
