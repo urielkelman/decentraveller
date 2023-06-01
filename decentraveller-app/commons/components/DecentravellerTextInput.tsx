@@ -1,6 +1,6 @@
 import React from 'react';
 import { TextInput, View } from 'react-native';
-import { addPlaceIndicationTextStyles } from '../../styles/addPlaceScreensStyles';
+import { addPlaceIndicationTextStyles } from '../../styles/bottomTabScreensStyles';
 
 export type CreatePlaceTextInputProps = {
     text: string | undefined;

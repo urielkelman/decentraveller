@@ -17,7 +17,6 @@ const HomeScreen = ({ navigation }) => {
     const appContext = useAppContext();
     const [loadingRecommendedPlaces, setLoadingRecommendedPlaces] = React.useState<boolean>(false);
     const [recommendedPlaces, setRecommendedPlaces] = React.useState<PlaceResponse[]>([]);
-    const [location, setLocation] = React.useState(undefined);
 
     const killSession = async () => {
         appContext.cleanConnectionContext();
@@ -43,10 +42,12 @@ const HomeScreen = ({ navigation }) => {
             }
             console.log('Permission granted');
             const location = await Location.getCurrentPositionAsync();
-            setLocation(location);
+            const latitude = location.coords.latitude.toString();
+            const longitude = location.coords.longitude.toString();
+            appContext.userLocation.setValue([latitude, longitude]);
             const recommendedPlacesResponse: PlacesResponse = await adapter.getRecommendedPlacesByLocation(
-                location.coords.latitude.toString(),
-                location.coords.longitude.toString()
+                latitude,
+                longitude
             );
             setLoadingRecommendedPlaces(false);
             setRecommendedPlaces(recommendedPlacesResponse.results);

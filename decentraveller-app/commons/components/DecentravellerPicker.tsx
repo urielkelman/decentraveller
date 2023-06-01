@@ -1,7 +1,7 @@
 import DropDownPicker from 'react-native-dropdown-picker';
 import { Text, View } from 'react-native';
 import React from 'react';
-import { addPlaceIndicationTextStyles } from '../../styles/addPlaceScreensStyles';
+import { addPlaceIndicationTextStyles } from '../../styles/bottomTabScreensStyles';
 import { PickerItem } from '../types';
 
 export type PickerCreatePlaceProps = {

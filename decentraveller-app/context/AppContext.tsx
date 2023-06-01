@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+    AppContextStateArg,
     AppContextType,
     ConnectionContext,
     DeviceDimensions,
@@ -15,7 +16,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 export const AppContext = React.createContext<AppContextType | null>(null);
 
 const DEFAULT_CHAIN_ID = 31337;
-const DEFAULT_RPC = 'https://goerli.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161';
 const UNRECOGNIZED_CHAIN_ID_MESSAGE = (chainId) =>
     `Unrecognized chain ID "${chainId}". Try adding the chain using wallet_addEthereumChain first.`;
 
@@ -32,6 +32,7 @@ const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
     const [walletAddress, setUserWalletAddress] = React.useState<string>('');
     const [createdAt, setUserCreatedAt] = React.useState<string>('');
     const [interest, setUserInterest] = React.useState<string>('');
+    const [location, setLocation] = React.useState<[string, string] | undefined>(undefined);
 
     const connector = useWalletConnect();
 
@@ -78,37 +79,25 @@ const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
         []
     );
 
-    const userNickname: UserNickname = React.useMemo<UserNickname>(
-        () => ({
-            nickname: nickname,
-            setUserNickname: setUserNickname,
-        }),
-        [nickname]
-    );
+    const memoFactory = <T extends unknown>(arg: T, setArg: (T) => void): AppContextStateArg<T> => {
+        return React.useMemo(
+            () => ({
+                value: arg,
+                setValue: setArg,
+            }),
+            [arg]
+        );
+    };
 
-    const userWalletAddress: UserWalletAddress = React.useMemo<UserWalletAddress>(
-        () => ({
-            walletAddress: walletAddress,
-            setUserWalletAddress: setUserWalletAddress,
-        }),
-        [walletAddress]
-    );
+    const userNickname: AppContextStateArg<string> = memoFactory(nickname, setUserNickname);
 
-    const userCreatedAt: UserCreatedAt = React.useMemo<UserCreatedAt>(
-        () => ({
-            createdAt: createdAt,
-            setUserCreatedAt: setUserCreatedAt,
-        }),
-        [createdAt]
-    );
+    const userWalletAddress: AppContextStateArg<string> = memoFactory(walletAddress, setUserWalletAddress);
 
-    const userInterest: UserInterest = React.useMemo<UserInterest>(
-        () => ({
-            interest: interest,
-            setUserInterest: setUserInterest,
-        }),
-        [interest]
-    );
+    const userCreatedAt: AppContextStateArg<string> = memoFactory(createdAt, setUserCreatedAt);
+
+    const userInterest: AppContextStateArg<string> = memoFactory(interest, setUserInterest);
+
+    const userLocation: AppContextStateArg<[string, string]> = memoFactory(location, setLocation);
 
     React.useEffect(() => {
         /* This effect allow us to clean sessions that the WalletConnect connector stores in the AsyncStorage */
@@ -171,6 +160,7 @@ const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
                 userWalletAddress,
                 userCreatedAt,
                 userInterest,
+                userLocation,
             }}
         >
             {children}
