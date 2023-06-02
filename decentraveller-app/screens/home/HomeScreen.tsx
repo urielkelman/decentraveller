@@ -1,5 +1,4 @@
 import { Text, View } from 'react-native';
-import { useWalletConnect } from '@walletconnect/react-native-dapp';
 import { useAppContext } from '../../context/AppContext';
 import React, { useEffect } from 'react';
 import { apiAdapter } from '../../api/apiAdapter';
@@ -12,17 +11,10 @@ const adapter = mockApiAdapter;
 
 const PERMISSION_GRANTED = 'granted';
 
-const HomeScreen = ({ navigation }) => {
-    const connector = useWalletConnect();
-    const appContext = useAppContext();
+const HomeScreen = () => {
+    const { userLocation, connectionContext } = useAppContext();
     const [loadingRecommendedPlaces, setLoadingRecommendedPlaces] = React.useState<boolean>(false);
     const [recommendedPlaces, setRecommendedPlaces] = React.useState<PlaceResponse[]>([]);
-
-    const killSession = async () => {
-        appContext.cleanConnectionContext();
-        await connector.killSession();
-        console.log('session killed');
-    };
 
     useEffect(() => {
         (async () => {
@@ -33,7 +25,8 @@ const HomeScreen = ({ navigation }) => {
                 if (statusRequest !== PERMISSION_GRANTED) {
                     console.log('Permission not granted');
                     const recommendedPlacesResponse: PlacesResponse = await adapter.getRecommendedPlacesForAddress(
-                        appContext.connectionContext.connectedAddress
+                        connectionContext.connectedAddress,
+                        []
                     );
                     setRecommendedPlaces(recommendedPlacesResponse.results);
                     setLoadingRecommendedPlaces(false);
@@ -44,10 +37,10 @@ const HomeScreen = ({ navigation }) => {
             const location = await Location.getCurrentPositionAsync();
             const latitude = location.coords.latitude.toString();
             const longitude = location.coords.longitude.toString();
-            appContext.userLocation.setValue([latitude, longitude]);
-            const recommendedPlacesResponse: PlacesResponse = await adapter.getRecommendedPlacesByLocation(
-                latitude,
-                longitude
+            userLocation.setValue([latitude, longitude]);
+            const recommendedPlacesResponse: PlacesResponse = await adapter.getRecommendedPlacesForAddress(
+                connectionContext.connectedAddress,
+                [latitude, longitude]
             );
             setLoadingRecommendedPlaces(false);
             setRecommendedPlaces(recommendedPlacesResponse.results);
@@ -60,12 +53,11 @@ const HomeScreen = ({ navigation }) => {
         </View>
     );
 
-    const recommendedPlaceItemsComponent = () =>
-        DecentravellerPlacesItems({ places: recommendedPlaces, shouldRenderAddNewPlace: true });
-
-    const componentToRender = loadingRecommendedPlaces
-        ? loadingRecommendedPlacesComponent()
-        : recommendedPlaceItemsComponent();
+    const componentToRender = loadingRecommendedPlaces ? (
+        loadingRecommendedPlacesComponent()
+    ) : (
+        <DecentravellerPlacesItems places={recommendedPlaces} shouldRenderAddNewPlace />
+    );
 
     return <View style={{ flex: 1 }}>{componentToRender}</View>;
 };
