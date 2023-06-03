@@ -87,7 +87,7 @@ class PlaceCBV:
         :return: the places data
         """
 
-        reviews = self.database.query_places_by_profile(owner, page, per_page)
-        if not reviews:
+        places = self.database.query_places_by_profile(owner, page, per_page)
+        if not places:
             raise HTTPException(status_code=HTTP_404_NOT_FOUND)
-        return reviews
+        return places
