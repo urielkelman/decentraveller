@@ -9,6 +9,7 @@ import { ISOCodeByCountry } from './countriesConfig';
 import { Rating } from 'react-native-rating-element';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import {PlaceDetailData} from "./types";
 
 export type PlaceItemProps = {
     id: number;
@@ -20,6 +21,9 @@ export type PlaceItemProps = {
     category: DecentravellerPlaceCategory;
     reviewCount: number;
 };
+interface PlaceDetailParams {
+    placeItemData: PlaceDetailData;
+}
 
 const StarComponent = ({ score: number }) => {
     return (
@@ -62,9 +66,20 @@ const PlaceItem: React.FC<PlaceItemProps> = ({
 
     const capitalizedCategory = capitalizeCategory(category);
 
+    const placeDetailData = {
+        name: name,
+        address: address,
+        score: score,
+        reviewCount: reviewCount
+    }
+
     console.log(name);
     return (
-        <TouchableOpacity onPress={() => navigation.navigate('PlaceDetailScreen')}>
+        <TouchableOpacity
+            onPress={() =>
+                navigation.navigate('PlaceDetailScreen', { placeItemData: placeDetailData } as PlaceDetailParams)
+            }
+        >
             <View style={placeItemStyle.container}>
                 <View style={placeItemStyle.leftContainer}>
                     <Image style={placeItemStyle.image} source={eretzMockImage} />
