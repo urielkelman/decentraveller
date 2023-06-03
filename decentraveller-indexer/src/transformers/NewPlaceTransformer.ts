@@ -16,8 +16,8 @@ class NewPlaceTransformer extends EventTransformer<NewPlaceRequestBody> {
                 name: event[2],
                 address: event[3],
                 category: this.categoryNumberToString(event[4]),
-                latitude: event[5],
-                longitude: event[6],
+                latitude: parseFloat(event[5]),
+                longitude: parseFloat(event[6]),
             },
         };
     }
@@ -30,6 +30,8 @@ class NewPlaceTransformer extends EventTransformer<NewPlaceRequestBody> {
                 return "ACCOMODATION";
             case 2:
                 return "ENTERTAINMENT";
+            case 3:
+                return "OTHER";
             default:
                 return "UNKNOWN";
         }

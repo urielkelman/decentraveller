@@ -1,4 +1,5 @@
 import pytest
+from datetime import datetime
 
 from tests.utils.client import client
 from tests.utils.session import restart_database
@@ -26,6 +27,7 @@ def test_create_review_no_foreign_keys(cleanup):
                                  "state": "UNCENSORED"},
                            )
     assert response.status_code == 400
+
 
 def test_create_review_no_profile(cleanup):
     response = client.post("/place",
@@ -71,6 +73,7 @@ def test_create_review_no_place(cleanup):
                            )
     assert response.status_code == 400
 
+
 def test_create_review(cleanup):
     response = client.post("/profile",
                            json={"owner": "of49d9adf9b",
@@ -95,7 +98,8 @@ def test_create_review(cleanup):
     assert response.status_code == 404
 
     response = client.post("/review",
-                           json={"placeId": 0,
+                           json={"id": 1,
+                                 "placeId": 0,
                                  "score": 5,
                                  "owner": "of49d9adf9b",
                                  "text": "Muy bueno el combo de sebastian yatra",
@@ -104,15 +108,18 @@ def test_create_review(cleanup):
                            )
     assert response.status_code == 201
 
-    response = client.get("/review/1")
+    response = client.get("/review", params={'review_id': 1, 'place_id': 0})
     assert response.status_code == 200
-    assert response.json() == {"id": 1,
+    assert {k: v for k, v
+            in response.json().items()
+            if k != "createdAt"} == {"id": 1,
                                "placeId": 0,
                                "score": 5,
                                "owner": "of49d9adf9b",
                                "text": "Muy bueno el combo de sebastian yatra",
                                "images": [],
                                "state": "UNCENSORED"}
+    assert datetime.fromisoformat(response.json()['createdAt']).date() == datetime.utcnow().date()
 
     response = client.get("/review/2")
     assert response.status_code == 404
@@ -142,7 +149,8 @@ def test_get_reviews_by_place(cleanup):
     assert response.status_code == 404
 
     response = client.post("/review",
-                           json={"placeId": 0,
+                           json={"id": 1,
+                               "placeId": 0,
                                  "score": 5,
                                  "owner": "of49d9adf9b",
                                  "text": "Muy bueno el combo de sebastian yatra",
@@ -152,7 +160,8 @@ def test_get_reviews_by_place(cleanup):
     assert response.status_code == 201
 
     response = client.post("/review",
-                           json={"placeId": 0,
+                           json={"id": 2,
+                               "placeId": 0,
                                  "score": 5,
                                  "owner": "of49d9adf9b",
                                  "text": "Me pedi un mcflurry oreo",
@@ -162,7 +171,8 @@ def test_get_reviews_by_place(cleanup):
     assert response.status_code == 201
 
     response = client.post("/review",
-                           json={"placeId": 0,
+                           json={"id": 3,
+                               "placeId": 0,
                                  "score": 3,
                                  "owner": "of49d9adf9b",
                                  "text": "Me atendieron mal",
@@ -173,28 +183,41 @@ def test_get_reviews_by_place(cleanup):
 
     response = client.get("/place/0/reviews", params={"page": 0, "per_page": 2})
     assert response.status_code == 200
-    assert len(response.json()) == 2
-    assert response.json()[0] == {"id": 1,
-                                  "placeId": 0,
-                                  "score": 5,
-                                  "owner": "of49d9adf9b",
-                                  "text": "Muy bueno el combo de sebastian yatra",
-                                  "images": [],
-                                  "state": "UNCENSORED"}
-    assert response.json()[1] == {"id": 2,
-                                  "placeId": 0,
-                                  "score": 5,
-                                  "owner": "of49d9adf9b",
-                                  "text": "Me pedi un mcflurry oreo",
-                                  "images": [],
-                                  "state": "UNCENSORED"}
+    assert len(response.json()['reviews']) == 2
+    assert response.json()['total'] == 3
+    assert {k: v for k, v
+            in response.json()['reviews'][0].items()
+            if k != "createdAt"} == {"id": 1,
+                                             "placeId": 0,
+                                             "score": 5,
+                                             "owner": "of49d9adf9b",
+                                             "text": "Muy bueno el combo de sebastian yatra",
+                                             "images": [],
+                                             "state": "UNCENSORED"}
+    assert datetime.fromisoformat(response.json()['reviews'][0]['createdAt']).date() == datetime.utcnow().date()
+    assert {k: v for k, v
+            in response.json()['reviews'][1].items()
+            if k != "createdAt"} == {"id": 2,
+                                             "placeId": 0,
+                                             "score": 5,
+                                             "owner": "of49d9adf9b",
+                                             "text": "Me pedi un mcflurry oreo",
+                                             "images": [],
+                                             "state": "UNCENSORED"}
+    assert datetime.fromisoformat(response.json()['reviews'][1]['createdAt']).date() == datetime.utcnow().date()
+
     response = client.get("/place/0/reviews", params={"page": 1, "per_page": 2})
     assert response.status_code == 200
-    assert len(response.json()) == 1
-    assert response.json()[0] == {"id": 3,
-                                  "placeId": 0,
-                                  "score": 3,
-                                  "owner": "of49d9adf9b",
-                                  "text": "Me atendieron mal",
-                                  "images": [],
-                                  "state": "UNCENSORED"}
+    assert len(response.json()['reviews']) == 1
+    assert response.json()['total'] == 3
+    assert {k: v for k, v
+            in response.json()['reviews'][0].items()
+            if k != "createdAt"} == {"id": 3,
+                                             "placeId": 0,
+                                             "score": 3,
+                                             "owner": "of49d9adf9b",
+                                             "text": "Me atendieron mal",
+                                             "images": [],
+                                             "state": "UNCENSORED"}
+    assert datetime.fromisoformat(response.json()['reviews'][0]['createdAt']).date() == datetime.utcnow().date()
+
