@@ -7,6 +7,7 @@ from starlette.status import HTTP_404_NOT_FOUND, HTTP_400_BAD_REQUEST
 from src.api_models.place import PlaceID, PlaceUpdate, PlaceInDB, PlaceBody, PlaceWithStats
 from src.dependencies.vector_database import VectorDatabase
 from src.dependencies.relational_database import build_relational_database, RelationalDatabase
+from src.api_models.bulk_results import PaginatedPlaces
 
 place_router = InferringRouter()
 
@@ -28,7 +29,7 @@ class PlaceCBV:
             place = self.database.add_place(place)
         except IntegrityError:
             raise HTTPException(status_code=HTTP_400_BAD_REQUEST,
-                                detail="The place id is already on the database.")
+                                detail="The place id is already on the database or the profile does not exist.")
         return place
 
     @place_router.get("/place/{place_id}")
@@ -73,3 +74,20 @@ class PlaceCBV:
         if not place:
             raise HTTPException(status_code=HTTP_404_NOT_FOUND)
         return place
+
+    @place_router.get("/profile/{owner}/places")
+    def get_places_by_profile(self, owner: str,
+                              per_page: int, page: int) -> PaginatedPlaces:
+        """
+        Gets a user places paginated
+
+        :param owner: the profile
+        :param per_page: items per page
+        :param page: number of page
+        :return: the places data
+        """
+
+        places = self.database.query_places_by_profile(owner, page, per_page)
+        if not places:
+            raise HTTPException(status_code=HTTP_404_NOT_FOUND)
+        return places

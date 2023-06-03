@@ -61,3 +61,20 @@ class ReviewCBV:
         if not reviews:
             raise HTTPException(status_code=HTTP_404_NOT_FOUND)
         return reviews
+
+    @review_router.get("/profile/{owner}/reviews")
+    def get_review_by_profile(self, owner: str,
+                              per_page: int, page: int) -> PaginatedReviews:
+        """
+        Gets a user reviews paginated
+
+        :param owner: the profile
+        :param per_page: items per page
+        :param page: number of page
+        :return: the reviews data
+        """
+
+        reviews = self.database.query_reviews_by_profile(owner, page, per_page)
+        if not reviews:
+            raise HTTPException(status_code=HTTP_404_NOT_FOUND)
+        return reviews
