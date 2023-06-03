@@ -1,5 +1,5 @@
 import React from 'react';
-import { createStackNavigator } from '@react-navigation/stack';
+import { createStackNavigator, StackScreenProps } from '@react-navigation/stack';
 import CreatePlaceNameScreen from './place/CreatePlaceNameScreen';
 import CreatePlaceLocationScreen from './place/CreatePlaceLocationScreen';
 import CreatePlaceProvider from './place/CreatePlaceContext';
