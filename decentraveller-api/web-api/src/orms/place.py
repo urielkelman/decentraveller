@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Float, Integer, Enum
+from sqlalchemy import Column, String, Float, Integer, Enum, ForeignKey
 from src.orms import Base
 from src.api_models.place import PlaceCategory
 
@@ -10,6 +10,7 @@ class PlaceORM(Base):
     __tablename__ = "places"
 
     id = Column(Integer, primary_key=True)
+    owner = Column(ForeignKey("profiles.owner"), nullable=False)
     name = Column(String, nullable=False)
     address = Column(String, nullable=False)
     latitude = Column(Float, nullable=False)
