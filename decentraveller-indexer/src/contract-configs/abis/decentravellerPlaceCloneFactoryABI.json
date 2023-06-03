@@ -44,7 +44,7 @@
       },
       {
         "indexed": false,
-        "internalType": "enum DecentravellerPlaceCategory",
+        "internalType": "enum DecentravellerDataTypes.DecentravellerPlaceCategory",
         "name": "category",
         "type": "uint8"
       },
@@ -92,7 +92,7 @@
         "type": "string"
       },
       {
-        "internalType": "enum DecentravellerPlaceCategory",
+        "internalType": "enum DecentravellerDataTypes.DecentravellerPlaceCategory",
         "name": "_category",
         "type": "uint8"
       },

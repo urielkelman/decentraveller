@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import pytest
 
 from tests.utils.client import client
@@ -14,6 +16,7 @@ def test_missing_profile_404(cleanup):
     response = client.get("/profile/0")
     assert response.status_code == 404
 
+
 def test_create_profile(cleanup):
     response = client.post("/profile",
                            json={"owner": "of49d9adf9b",
@@ -25,20 +28,27 @@ def test_create_profile(cleanup):
 
     response = client.get("/profile/of49d9adf9b")
     assert response.status_code == 200
-    assert response.json() == {"owner": "of49d9adf9b",
-                                 "nickname": "test",
-                                 "country": "AR",
-                                 "interest": "ACCOMMODATION"}
+    assert {k: v for k, v
+            in response.json().items()
+            if k != "createdAt"} == {"owner": "of49d9adf9b",
+                                     "nickname": "test",
+                                     "country": "AR",
+                                     "interest": "ACCOMMODATION"}
+    assert datetime.fromisoformat(response.json()['createdAt']).date() == datetime.utcnow().date()
 
     response = client.get("/profile/of49d9adf9b")
     assert response.status_code == 200
-    assert response.json() == {"owner": "of49d9adf9b",
-                                 "nickname": "test",
-                                 "country": "AR",
-                                 "interest": "ACCOMMODATION"}
+    assert {k: v for k, v
+            in response.json().items()
+            if k != "createdAt"} == {"owner": "of49d9adf9b",
+                                     "nickname": "test",
+                                     "country": "AR",
+                                     "interest": "ACCOMMODATION"}
+    assert datetime.fromisoformat(response.json()['createdAt']).date() == datetime.utcnow().date()
 
     response = client.get("/profile/of49d9adf9b/avatar.jpg")
     assert response.status_code == 200
+
 
 def test_profile_overwrite(cleanup):
     response = client.post("/profile",
@@ -59,10 +69,14 @@ def test_profile_overwrite(cleanup):
 
     response = client.get("/profile/of49d9adf9b")
     assert response.status_code == 200
-    assert response.json() == {"owner": "of49d9adf9b",
-                               "nickname": "test2",
-                               "country": "AR",
-                               "interest": "ACCOMMODATION"}
+    assert {k: v for k, v
+            in response.json().items()
+            if k != "createdAt"} == {"owner": "of49d9adf9b",
+                                     "nickname": "test2",
+                                     "country": "AR",
+                                     "interest": "ACCOMMODATION"}
+    assert datetime.fromisoformat(response.json()['createdAt']).date() == datetime.utcnow().date()
+
 
 def test_profile_create_repeated_nickname_400(cleanup):
     response = client.post("/profile",
