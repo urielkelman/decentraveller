@@ -4,6 +4,7 @@ from datetime import datetime
 from fastapi_utils.api_model import APIModel
 
 from src.api_models.place import PlaceID
+from src.api_models.profile import ProfileInDB
 
 ReviewID = NewType("ReviewId", int)
 
@@ -24,3 +25,9 @@ class ReviewInDB(ReviewBody):
     Review API Model
     """
     created_at: datetime
+
+class ReviewWithProfile(ReviewInDB):
+    """
+    Review with profile
+    """
+    owner: ProfileInDB
