@@ -1,44 +1,93 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {View, Text, Image, TouchableOpacity, StyleSheet} from 'react-native';
 import {placeReviewsBoxStyles} from "../../../styles/placeDetailStyles";
+import {ReviewResponse, ReviewsResponse} from "../../../api/response/reviews";
+import {mockApiAdapter} from "../../../api/mockApiAdapter";
 
-const PlaceReviewsBox = () => {
+const adapter = mockApiAdapter
+
+const PlaceReviewsBox = ({placeId}) => {
+    const [firstReview, setFirstReview] = React.useState<ReviewResponse>(null);
+    const [secondReview, setSecondReview] = React.useState<ReviewResponse>(null);
+
+    useEffect(() => {
+        (async () => {
+            const reviewsResponse: ReviewsResponse = await adapter.getPlaceReviews(
+                // appContext.connectionContext.connectedAddress
+                placeId
+            );
+            setReviews(reviewsResponse.results)
+        })();
+    }, [placeId]);
+
+    const hasOneReview = () => {
+        return firstReview !== null
+    };
+
+    const hasTwoReviews = () => {
+        return secondReview !== null;
+    };
+
+    const setReviews = (reviews: ReviewResponse[]) => {
+        if (reviews.length === 0) {
+            return;
+        }
+
+        setFirstReview(reviews[0]);
+        if (reviews.length >= 2) {
+            setSecondReview(reviews[1]);
+        }
+    };
+
     return (
         <TouchableOpacity style={placeReviewsBoxStyles.container} onPress={() => {}}>
             <View style={placeReviewsBoxStyles.titleContainer}>
                 <Text style={placeReviewsBoxStyles.titleText}>Reviews</Text>
                 <Text style={placeReviewsBoxStyles.moreText}>More</Text>
             </View>
-            <View style={placeReviewsBoxStyles.reviewItem}>
-                <View style={placeReviewsBoxStyles.commentContainer}>
-                    <Text style={placeReviewsBoxStyles.commentText}>
-                        {'Excelente la comida!! Me dieron ganas de viajar a medio Oriente!.'} - {' '}
-                        <Text style={placeReviewsBoxStyles.dateText}>{"10/02/2023"}</Text>
-                    </Text>
-                    <View style={placeReviewsBoxStyles.userContainer}>
-                        <Image
-                            source={require('../../../assets/mock_images/cryptochica.png')}
-                            style={placeReviewsBoxStyles.avatarImage}
-                        />
-                        <Text style={placeReviewsBoxStyles.userNameText}>Ana Cruz</Text>
+            <View style={placeReviewsBoxStyles.reviewItem}></View>
+
+            {hasOneReview() ? (
+                <View style={placeReviewsBoxStyles.reviewItem}>
+                    <View style={placeReviewsBoxStyles.commentContainer}>
+                        <Text style={placeReviewsBoxStyles.commentText}>
+                            {firstReview.text} - {' '}
+                            <Text style={placeReviewsBoxStyles.dateText}>{"10/02/2023"}</Text>
+                        </Text>
+                        <View style={placeReviewsBoxStyles.userContainer}>
+                            <Image
+                                source={require('../../../assets/mock_images/cryptochica.png')}
+                                style={placeReviewsBoxStyles.avatarImage}
+                            />
+                            <Text style={placeReviewsBoxStyles.userNameText}>{firstReview.owner}</Text>
+                        </View>
                     </View>
                 </View>
-            </View>
-            <View style={placeReviewsBoxStyles.reviewItem}>
-                <View style={placeReviewsBoxStyles.commentContainer}>
-                    <Text style={placeReviewsBoxStyles.commentText}>
-                        {'Rica comida israelí'} - {' '}
-                        <Text style={placeReviewsBoxStyles.dateText}>{"03/01/2023"}</Text>
-                    </Text>
-                    <View style={placeReviewsBoxStyles.userContainer}>
-                        <Image
-                            source={require('../../../assets/mock_images/cryptochica2.png')}
-                            style={placeReviewsBoxStyles.avatarImage}
-                        />
-                        <Text style={placeReviewsBoxStyles.userNameText}>HamikimiGirl</Text>
+            ) : null}
+            {hasTwoReviews() ? (
+                <View style={placeReviewsBoxStyles.reviewItem}>
+                    <View style={placeReviewsBoxStyles.commentContainer}>
+                        <Text style={placeReviewsBoxStyles.commentText}>
+                            {secondReview.text} - {' '}
+                            <Text style={placeReviewsBoxStyles.dateText}>{"03/01/2023"}</Text>
+                        </Text>
+                        <View style={placeReviewsBoxStyles.userContainer}>
+                            <Image
+                                source={require('../../../assets/mock_images/cryptochica2.png')}
+                                style={placeReviewsBoxStyles.avatarImage}
+                            />
+                            <Text style={placeReviewsBoxStyles.userNameText}>{secondReview.owner}</Text>
+                        </View>
                     </View>
                 </View>
-            </View>
+            ) : null}
+            {!hasOneReview() && !hasTwoReviews() ? (
+                <View style={placeReviewsBoxStyles.reviewItem}>
+                    <View style={placeReviewsBoxStyles.commentContainer}>
+                        <Text style={placeReviewsBoxStyles.commentText}>Be the first to comment</Text>
+                    </View>
+                </View>
+            ) : null}
 
             <TouchableOpacity style={placeReviewsBoxStyles.button} onPress={() => {}}>
                 <View style={placeReviewsBoxStyles.buttonTextView}>
