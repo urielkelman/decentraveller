@@ -3,6 +3,7 @@ import { Honduras4709GeocodingResponse, HondurasGeocodingResponse } from './mock
 import { UserResponse } from './response/user';
 import { GianUserResponse, MatiUserResponse, UriUserResponse } from './mocks/user';
 import { PlacesResponse } from './response/places';
+import {ReviewsResponse} from "./response/reviews";
 
 const searchTextHondurasResponse = ['Honduras', 'Honduras ', 'Honduras 4', 'Honduras 47', 'Honduras 470'];
 
@@ -118,6 +119,37 @@ class MockApiAdapter {
                     category: 'GASTRONOMY',
                     score: 4.8,
                     reviewCount: 25,
+                },
+            ],
+        };
+    }
+
+    async getPlaceReviews(walletAddress: string): Promise<ReviewsResponse> {
+        return {
+            results: [
+                {
+                    placeId: 1,
+                    score: 4.8,
+                    owner: 'Ana Cruz',
+                    text: 'Excelente la comida!! Me dieron ganas de viajar a medio Oriente!.',
+                    images: [],
+                    state: '10/02/2023'
+                },
+                {
+                    placeId: 1,
+                    score: 2.8,
+                    owner: 'HakimiGirl',
+                    text: 'Rica comida israelí',
+                    images: [],
+                    state: ''
+                },
+                {
+                    placeId: 1,
+                    score: 4.8,
+                    owner: 'Ana Cruz de nuevo',
+                    text: 'essselente de nuevo como as always',
+                    images: [],
+                    state: ''
                 },
             ],
         };
