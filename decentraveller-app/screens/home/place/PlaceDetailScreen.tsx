@@ -2,6 +2,10 @@ import {View, Image, Text, StyleSheet, Dimensions} from 'react-native';
 import PlaceReviewsBox from "./PlaceReviewsBox";
 import {placeDetailStyles} from "../../../styles/placeDetailStyles";
 import {PlaceDetailData} from "./types";
+import React, {useEffect} from "react";
+import {ReviewResponse, ReviewsResponse} from "../../../api/response/reviews";
+import {mockApiAdapter} from "../../../api/mockApiAdapter";
+import {PickerItem} from "../../../commons/types";
 
 
 const path = '../../../assets/mock_images/eretz-inside.jpeg';
@@ -17,7 +21,6 @@ const PlaceDetailScreen: React.FC<PlaceDetailScreenProps> = ({ route }) => {
     const { placeItemData } = route.params;
     const { id, name, address, score, reviewCount } = placeItemData;
 
-    console.log(id, name, address, score)
     return (
         <View style={placeDetailStyles.container}>
             <View style={placeDetailStyles.imageContainer}>
@@ -49,7 +52,7 @@ const PlaceDetailScreen: React.FC<PlaceDetailScreenProps> = ({ route }) => {
             </View>
 
             <View style={placeDetailStyles.placeReviewsContainer}>
-                <PlaceReviewsBox />
+                <PlaceReviewsBox placeId={id}/>
             </View>
         </View>
     );
