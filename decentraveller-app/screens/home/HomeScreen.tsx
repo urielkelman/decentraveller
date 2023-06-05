@@ -1,4 +1,4 @@
-import { Text, View } from 'react-native';
+import {Text, TouchableOpacity, View} from 'react-native';
 import { useAppContext } from '../../context/AppContext';
 import React, { useEffect } from 'react';
 import { apiAdapter } from '../../api/apiAdapter';
@@ -6,12 +6,14 @@ import { mockApiAdapter } from '../../api/mockApiAdapter';
 import { PlaceResponse, PlacesResponse } from '../../api/response/places';
 import * as Location from 'expo-location';
 import { DecentravellerPlacesItems } from '../../commons/components/DecentravellerPlacesList';
+import {addNewPlaceIconSize, homeStyle} from "../../styles/homeStyles";
+import {MaterialCommunityIcons} from "@expo/vector-icons";
 
 const adapter = mockApiAdapter;
 
 const PERMISSION_GRANTED = 'granted';
 
-const HomeScreen = () => {
+const HomeScreen = ({navigation}) => {
     const { userLocation, connectionContext } = useAppContext();
     const [loadingRecommendedPlaces, setLoadingRecommendedPlaces] = React.useState<boolean>(false);
     const [recommendedPlaces, setRecommendedPlaces] = React.useState<PlaceResponse[]>([]);
@@ -59,7 +61,16 @@ const HomeScreen = () => {
         <DecentravellerPlacesItems places={recommendedPlaces} shouldRenderAddNewPlace />
     );
 
-    return <View style={{ flex: 1 }}>{componentToRender}</View>;
+    return <View style={{ flex: 1 }}>
+        {componentToRender}
+        {!loadingRecommendedPlaces &&
+            <View style={homeStyle.addNewPlaceReference}>
+                <TouchableOpacity onPress={() => navigation.navigate('CreatePlaceNameScreen')}>
+                    <MaterialCommunityIcons name="book-plus-outline" size={addNewPlaceIconSize} color="black" />
+                </TouchableOpacity>
+            </View>
+        }
+    </View>;
 };
 
 export default HomeScreen;

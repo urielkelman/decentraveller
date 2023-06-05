@@ -2,9 +2,9 @@ import { KeyboardAvoidingView, Text } from 'react-native';
 import { bottomTabScreenStyles } from '../../../styles/bottomTabScreensStyles';
 import DecentravellerHeadingText from '../../../commons/components/DecentravellerHeadingText';
 import { addPlaceScreenWordings } from './wording';
-import React, { useState } from 'react';
+import React from 'react';
 import { GeocodingElement, useCreatePlaceContext } from './CreatePlaceContext';
-import CreatePlacePicker from '../../../commons/components/DecentravellerPicker';
+import DecentravellerPicker from '../../../commons/components/DecentravellerPicker';
 import { GeocodingElementResponse, GeocodingResponse } from '../../../api/response/geocoding';
 import { apiAdapter } from '../../../api/apiAdapter';
 import DecentravellerButton from '../../../commons/components/DecentravellerButton';
@@ -27,6 +27,7 @@ const CreatePlaceLocationScreen = () => {
         try {
             // const geocodingResponse: GeocodingResponse = await apiAdapter.getGeocoding(addressText, country);
             const geocodingResponse: GeocodingResponse = await mockApiAdapter.getGeocoding(addressText, country);
+            console.log(geocodingResponse)
             addressPicker.setItems(
                 geocodingResponse.results.map((element: GeocodingElementResponse) => ({
                     label: element.fullAddress,
@@ -88,7 +89,7 @@ const CreatePlaceLocationScreen = () => {
             keyboardVerticalOffset={40}
         >
             <DecentravellerHeadingText text={addPlaceScreenWordings.CREATE_PLACE_LOCATION_HEADING(placeName)} />
-            <CreatePlacePicker
+            <DecentravellerPicker
                 titleText={addPlaceScreenWordings.CREATE_PLACE_PLACEHOLDER_COUNTRY}
                 dropdownPlaceholder={addPlaceScreenWordings.CREATE_PLACE_COUNTRY_PLACEHOLDER}
                 items={countryPicker.items}
@@ -102,7 +103,7 @@ const CreatePlaceLocationScreen = () => {
                 zIndex={3000}
                 zIndexInverse={1000}
             />
-            <CreatePlacePicker
+            <DecentravellerPicker
                 titleText={addPlaceScreenWordings.CREATE_PLACE_ADDRESS_PLACEHOLDER}
                 dropdownPlaceholder={addPlaceScreenWordings.CREATE_PLACE_ADDRESS_PLACEHOLDER}
                 items={addressPicker.items}
