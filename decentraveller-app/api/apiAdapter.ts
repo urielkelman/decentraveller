@@ -4,10 +4,11 @@ import {
     FORWARD_GEOCODING_ENDPOINT,
     GET_USER_ENDPOINT,
     OWNED_PLACES_ENDPOINT,
-    RECOMMENDED_PLACES_ENDPOINT,
+    RECOMMENDED_PLACES_ENDPOINT, REVIEWS_PLACES_ENDPOINT,
 } from './config';
 import { UserResponse } from './response/user';
 import { PlacesResponse } from './response/places';
+import {ReviewsResponse} from "./response/reviews";
 
 class ApiAdapter {
     private httpConnector: HttpConnector;
@@ -56,6 +57,16 @@ class ApiAdapter {
     async getMyPlaces(walletAddress: string): Promise<PlacesResponse> {
         const httpRequest: HttpGetRequest = {
             url: `${OWNED_PLACES_ENDPOINT}/${walletAddress}`,
+            queryParams: {},
+            onError: (e) => console.log('Error'),
+        };
+
+        return await httpAPIConnector.get(httpRequest);
+    }
+
+    async getPlaceReviews(placeId: string): Promise<ReviewsResponse> {
+        const httpRequest: HttpGetRequest = {
+            url: REVIEWS_PLACES_ENDPOINT.replace('{placeId}', placeId),
             queryParams: {},
             onError: (e) => console.log('Error'),
         };
