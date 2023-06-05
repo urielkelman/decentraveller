@@ -67,13 +67,14 @@ const PlaceItem: React.FC<PlaceItemProps> = ({
     const capitalizedCategory = capitalizeCategory(category);
 
     const placeDetailData = {
+        id: id,
         name: name,
         address: address,
         score: score,
         reviewCount: reviewCount
     }
 
-    console.log(name);
+    console.log(placeDetailData);
     return (
         <TouchableOpacity
             onPress={() =>
