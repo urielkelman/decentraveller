@@ -15,7 +15,9 @@ interface PlaceDetailScreenProps {
 
 const PlaceDetailScreen: React.FC<PlaceDetailScreenProps> = ({ route }) => {
     const { placeItemData } = route.params;
-    const { name, address, score, reviewCount } = placeItemData;
+    const { id, name, address, score, reviewCount } = placeItemData;
+
+    console.log(id, name, address, score)
     return (
         <View style={placeDetailStyles.container}>
             <View style={placeDetailStyles.imageContainer}>
