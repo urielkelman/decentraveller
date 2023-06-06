@@ -41,7 +41,7 @@ const bottomTabScreenStyles = StyleSheet.create({
     },
 });
 
-const addPlaceIndicationTextStyles = StyleSheet.create({
+const bottomTabIndicationTextStyles = StyleSheet.create({
     container: {
         flexDirection: 'column',
         marginLeft: width * 0.1,
@@ -108,6 +108,6 @@ export {
     addPlaceHeadingTextStyles,
     addPlaceDescriptionTextStyles,
     bottomTabScreenStyles,
-    addPlaceIndicationTextStyles,
+    bottomTabIndicationTextStyles,
     bottomTabButtonStyle,
 };

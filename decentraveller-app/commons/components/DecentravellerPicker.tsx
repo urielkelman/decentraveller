@@ -1,7 +1,7 @@
 import DropDownPicker from 'react-native-dropdown-picker';
 import { Text, View } from 'react-native';
 import React from 'react';
-import { addPlaceIndicationTextStyles } from '../../styles/bottomTabScreensStyles';
+import { bottomTabIndicationTextStyles } from '../../styles/bottomTabScreensStyles';
 import { PickerItem } from '../types';
 
 export type PickerCreatePlaceProps = {
@@ -21,6 +21,7 @@ export type PickerCreatePlaceProps = {
     onChangeSearchText?: (text: string) => void | undefined;
     loading?: boolean;
     disableLocalSearch?: boolean;
+    marginBottom?: boolean;
 };
 
 const DecentravellerPicker: React.FC<PickerCreatePlaceProps> = ({
@@ -39,10 +40,16 @@ const DecentravellerPicker: React.FC<PickerCreatePlaceProps> = ({
     onChangeSearchText = undefined,
     loading = false,
     disableLocalSearch = false,
+    marginBottom = true,
 }) => {
     return (
-        <View style={addPlaceIndicationTextStyles.container}>
-            <Text style={addPlaceIndicationTextStyles.text}>{titleText}</Text>
+        <View
+            style={{
+                ...bottomTabIndicationTextStyles.container,
+                marginBottom: marginBottom ? bottomTabIndicationTextStyles.container.marginBottom : 0,
+            }}
+        >
+            <Text style={bottomTabIndicationTextStyles.text}>{titleText}</Text>
             <DropDownPicker
                 open={open}
                 setOpen={setOpen}
@@ -51,9 +58,9 @@ const DecentravellerPicker: React.FC<PickerCreatePlaceProps> = ({
                 setItems={setItems}
                 value={value}
                 setValue={setValue}
-                style={addPlaceIndicationTextStyles.inputField}
+                style={bottomTabIndicationTextStyles.inputField}
                 placeholder={dropdownPlaceholder}
-                textStyle={addPlaceIndicationTextStyles.pickerInputField}
+                textStyle={bottomTabIndicationTextStyles.pickerInputField}
                 dropDownDirection="BOTTOM"
                 max={5}
                 itemSeparator={true}

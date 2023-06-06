@@ -50,6 +50,7 @@ const DecentravellerInitialScreen = () => {
     };
 
     const navigatorToRender = () => {
+        return <HomeNavigator />;
         switch (stackToRender) {
             case 'Home':
                 return <HomeNavigator />;
