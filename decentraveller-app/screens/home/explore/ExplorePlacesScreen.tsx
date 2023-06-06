@@ -1,4 +1,4 @@
-import {KeyboardAvoidingView, View} from 'react-native';
+import { KeyboardAvoidingView, View } from 'react-native';
 import { useAppContext } from '../../../context/AppContext';
 import React from 'react';
 import { bottomTabScreenStyles } from '../../../styles/bottomTabScreensStyles';
@@ -10,9 +10,14 @@ import { PlaceResponse } from '../../../api/response/places';
 import { mockApiAdapter } from '../../../api/mockApiAdapter';
 import { apiAdapter } from '../../../api/apiAdapter';
 import { DecentravellerPlacesItems } from '../../../commons/components/DecentravellerPlacesList';
-import {addPlaceScreenWordings} from "../place/wording";
-import DecentravellerPicker from "../../../commons/components/DecentravellerPicker";
-import {PickerItem} from "../../../commons/types";
+import { addPlaceScreenWordings } from '../place/wording';
+import DecentravellerPicker from '../../../commons/components/DecentravellerPicker';
+import { PickerItem } from '../../../commons/types';
+import {
+    DECENTRAVELLER_DEFAULT_BACKGROUND_COLOR,
+    MINIMUM_ADDRESS_LENGTH_TO_SHOW_PICKER,
+} from '../../../commons/global';
+import { getAndParseGeocoding } from '../../../commons/functions/geocoding';
 
 const adapter = mockApiAdapter;
 
@@ -21,6 +26,8 @@ const ExplorePlacesScreen = ({ navigation }) => {
     const [currentSearchingLocation, setCurrentSearchingLocation] = React.useState<[string, string]>(undefined);
     const [places, setPlaces] = React.useState<PlaceResponse[]>([]);
     const [loadingPlaces, setLoadingPlaces] = React.useState<boolean>(false);
+    const [lastSearchTextLength, setLastSearchTextLength] = React.useState<number>(0);
+    const [loadingGeocodingResponse, setLoadingGeocodingResponse] = React.useState<boolean>(false);
 
     const [locationPickerValue, setLocationPickerValue] = React.useState<string>(null);
     const [locationPickerOpen, setLocationPickerOpen] = React.useState<boolean>(false);
@@ -41,24 +48,39 @@ const ExplorePlacesScreen = ({ navigation }) => {
 
     console.log('Explore');
 
+    const onOpenPicker = () => {
+        setLocationPickerItems(locationPickerItems.filter((item) => item.value === locationPickerValue));
+    };
+
+    const onChangeSearchAddressText = async (text: string) => {
+        setLocationPickerValue(text);
+        if (text.length > MINIMUM_ADDRESS_LENGTH_TO_SHOW_PICKER && text.length > lastSearchTextLength) {
+            await getAndParseGeocoding(text, setLocationPickerItems, setLoadingGeocodingResponse);
+        } else if (text.length <= MINIMUM_ADDRESS_LENGTH_TO_SHOW_PICKER) {
+            setLocationPickerItems([]);
+        }
+        setLastSearchTextLength(text.length);
+    };
+
     return (
-        <View style={{flex: 1}}>
+        <View style={{ flex: 1, backgroundColor: DECENTRAVELLER_DEFAULT_BACKGROUND_COLOR }}>
             <DecentravellerPicker
-                titleText={addPlaceScreenWordings.CREATE_PLACE_ADDRESS_PLACEHOLDER}
-                dropdownPlaceholder={addPlaceScreenWordings.CREATE_PLACE_ADDRESS_PLACEHOLDER}
-                items={addressPicker.items}
-                setItems={addressPicker.setItems}
-                value={addressPicker.value}
-                setValue={addressPicker.setValue}
-                open={addressPicker.open}
-                setOpen={addressPicker.setOpen}
-                onOpen={addressPicker.onOpen}
+                titleText={explorePlacesScreenWording.EXPLORE_PLACE_LOCATION_TITLE}
+                dropdownPlaceholder={explorePlacesScreenWording.EXPLORE_PLACE_LOCATION_CURRENT_LOCATION}
+                items={locationPickerItems}
+                setItems={setLocationPickerItems}
+                value={locationPickerValue}
+                setValue={setLocationPickerValue}
+                open={locationPickerOpen}
+                setOpen={setLocationPickerOpen}
+                onOpen={onOpenPicker}
                 searchable={true}
                 onChangeSearchText={onChangeSearchAddressText}
                 zIndex={1000}
                 zIndexInverse={3000}
                 loading={loadingGeocodingResponse}
                 disableLocalSearch={true}
+                marginBottom={false}
             />
             <DecentravellerPlacesItems places={places} />
         </View>

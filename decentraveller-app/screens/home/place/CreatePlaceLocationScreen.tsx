@@ -5,15 +5,14 @@ import { addPlaceScreenWordings } from './wording';
 import React from 'react';
 import { GeocodingElement, useCreatePlaceContext } from './CreatePlaceContext';
 import DecentravellerPicker from '../../../commons/components/DecentravellerPicker';
-import { GeocodingElementResponse, GeocodingResponse } from '../../../api/response/geocoding';
 import { apiAdapter } from '../../../api/apiAdapter';
 import DecentravellerButton from '../../../commons/components/DecentravellerButton';
 import { mockApiAdapter } from '../../../api/mockApiAdapter';
 import { blockchainAdapter } from '../../../blockchain/blockhainAdapter';
 import { useWalletConnect } from '@walletconnect/react-native-dapp';
 import DecentravellerInformativeModal from '../../../commons/components/DecentravellerInformativeModal';
-
-const MINIMUM_ADDRESS_LENGTH_TO_SHOW_PICKER = 3;
+import { getAndParseGeocoding } from '../../../commons/functions/geocoding';
+import { MINIMUM_ADDRESS_LENGTH_TO_SHOW_PICKER } from '../../../commons/global';
 
 const CreatePlaceLocationScreen = () => {
     const { placeName, placeTypePicker, countryPicker, addressPicker } = useCreatePlaceContext();
@@ -23,27 +22,6 @@ const CreatePlaceLocationScreen = () => {
     const [showErrorModal, setShowErrorModal] = React.useState<boolean>(false);
     const connector = useWalletConnect();
 
-    const getAndParseGeocoding = async (addressText: string, country: string) => {
-        try {
-            // const geocodingResponse: GeocodingResponse = await apiAdapter.getGeocoding(addressText, country);
-            const geocodingResponse: GeocodingResponse = await mockApiAdapter.getGeocoding(addressText, country);
-            console.log(geocodingResponse)
-            addressPicker.setItems(
-                geocodingResponse.results.map((element: GeocodingElementResponse) => ({
-                    label: element.fullAddress,
-                    /* We stringify the object since and object type can't be the value type of a picker item. */
-                    value: JSON.stringify({
-                        address: element.fullAddress,
-                        latitude: element.latitude,
-                        longitude: element.longitude,
-                    }),
-                }))
-            );
-        } catch (e) {
-            setLoadingGeocodingResponse(false);
-        }
-    };
-
     const onChangeSearchAddressText = async (text: string) => {
         addressPicker.setValue(text);
         if (
@@ -51,9 +29,7 @@ const CreatePlaceLocationScreen = () => {
             countryPicker.value &&
             text.length > lastSearchTextLength
         ) {
-            setLoadingGeocodingResponse(true);
-            await getAndParseGeocoding(text, countryPicker.value);
-            setLoadingGeocodingResponse(false);
+            await getAndParseGeocoding(text, addressPicker.setItems, setLoadingGeocodingResponse, countryPicker.value);
         } else if (text.length <= MINIMUM_ADDRESS_LENGTH_TO_SHOW_PICKER) {
             addressPicker.setItems([]);
         }

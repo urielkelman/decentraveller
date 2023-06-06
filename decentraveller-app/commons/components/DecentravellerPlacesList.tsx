@@ -24,12 +24,8 @@ export type PlacesItemsProps = {
     places: PlaceResponse[];
 };
 
-const DecentravellerPlacesItems: React.FC<PlacesItemsProps> = ({ places }) => {
-    return (
-        <View style={{ backgroundColor: '#FFE1E1', flex: 1 }}>
-            <FlatList data={places} renderItem={renderPlaceItem} />
-        </View>
-    );
-};
+const DecentravellerPlacesItems: React.FC<PlacesItemsProps> = ({ places }) => (
+    <FlatList data={places} renderItem={renderPlaceItem} />
+);
 
 export { DecentravellerPlacesItems };

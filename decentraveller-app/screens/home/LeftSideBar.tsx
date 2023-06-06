@@ -8,7 +8,7 @@ import {
 } from '@react-navigation/drawer';
 import { drawerStyles } from '../../styles/drawerStyles';
 import { useAppContext } from '../../context/AppContext';
-import { obfuscateAddress } from '../../commons/utils';
+import { obfuscateAddress } from '../../commons/functions/utils';
 import RootNavigator from './RootNavigator';
 
 const Drawer = createDrawerNavigator();

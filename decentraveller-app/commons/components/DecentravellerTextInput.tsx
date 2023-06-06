@@ -1,6 +1,6 @@
 import React from 'react';
 import { TextInput, View } from 'react-native';
-import { addPlaceIndicationTextStyles } from '../../styles/bottomTabScreensStyles';
+import { bottomTabIndicationTextStyles } from '../../styles/bottomTabScreensStyles';
 
 export type CreatePlaceTextInputProps = {
     text: string | undefined;
@@ -9,9 +9,9 @@ export type CreatePlaceTextInputProps = {
 };
 
 const DecentravellerTextInput: React.FC<CreatePlaceTextInputProps> = ({ text, setTextValue, placeholder }) => (
-    <View style={addPlaceIndicationTextStyles.textInputContainer}>
+    <View style={bottomTabIndicationTextStyles.textInputContainer}>
         <TextInput
-            style={addPlaceIndicationTextStyles.textInputField}
+            style={bottomTabIndicationTextStyles.textInputField}
             placeholder={placeholder}
             value={text}
             onChangeText={setTextValue}
