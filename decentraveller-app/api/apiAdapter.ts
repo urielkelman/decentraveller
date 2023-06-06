@@ -3,17 +3,22 @@ import { httpAPIConnector, HttpConnector, HttpGetRequest } from '../connectors/H
 import {
     FORWARD_GEOCODING_ENDPOINT,
     GET_USER_ENDPOINT,
+    RECOMMENDED_PLACES_BY_LOCATION_ENDPOINT,
     OWNED_PLACES_ENDPOINT,
-    RECOMMENDED_PLACES_ENDPOINT, REVIEWS_PLACES_ENDPOINT,
+    RECOMMENDED_PLACES_ENDPOINT,
+    REVIEWS_PLACES_ENDPOINT,
 } from './config';
 import { UserResponse } from './response/user';
 import { PlacesResponse } from './response/places';
+import Adapter from './Adapter';
+import { formatString } from '../commons/utils';
 import {ReviewsResponse} from "./response/reviews";
 
-class ApiAdapter {
+class ApiAdapter extends Adapter {
     private httpConnector: HttpConnector;
 
     constructor(httpConnector: HttpConnector) {
+        super();
         this.httpConnector = httpConnector;
     }
 
@@ -32,10 +37,30 @@ class ApiAdapter {
         return await httpAPIConnector.get(httpRequest);
     }
 
-    async getRecommendedPlaces(walletAddress: string): Promise<PlacesResponse> {
+    async getRecommendedPlacesByLocation(latitude: string, longitude: string): Promise<PlacesResponse> {
         const httpRequest: HttpGetRequest = {
-            url: `${RECOMMENDED_PLACES_ENDPOINT}/${walletAddress}`,
-            queryParams: {},
+            url: RECOMMENDED_PLACES_BY_LOCATION_ENDPOINT,
+            queryParams: {
+                latitude: latitude,
+                longitude: longitude,
+            },
+            onError: (e) => console.log('Error'),
+        };
+
+        return await httpAPIConnector.get(httpRequest);
+    }
+
+    async getRecommendedPlacesForAddress(
+        walletAddress: string,
+        latitude?: string,
+        longitude?: string
+    ): Promise<PlacesResponse> {
+        const httpRequest: HttpGetRequest = {
+            url: formatString(RECOMMENDED_PLACES_BY_PROFILE_ENDPOINT, { owner: walletAddress }),
+            queryParams: {
+                latitude: latitude,
+                longitude: longitude,
+            },
             onError: (e) => console.log('Error'),
         };
 

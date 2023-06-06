@@ -25,6 +25,8 @@ class UpdatedProfileTransformer extends EventTransformer<NewProfileRequestBody> 
                 return "ACCOMMODATION";
             case 2:
                 return "ENTERTAINMENT";
+            case 3:
+                return "OTHER"
             default:
                 return "UNKNOWN";
         }

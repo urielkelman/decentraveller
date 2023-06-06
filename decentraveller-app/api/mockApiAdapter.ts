@@ -3,11 +3,13 @@ import { Honduras4709GeocodingResponse, HondurasGeocodingResponse } from './mock
 import { UserResponse } from './response/user';
 import { GianUserResponse, MatiUserResponse, UriUserResponse } from './mocks/user';
 import { PlacesResponse } from './response/places';
+import Adapter from './Adapter';
+import { defaultPlacesMock } from './mocks/places';
 import {ReviewsResponse} from "./response/reviews";
 
 const searchTextHondurasResponse = ['Honduras', 'Honduras ', 'Honduras 4', 'Honduras 47', 'Honduras 470'];
 
-class MockApiAdapter {
+class MockApiAdapter extends Adapter {
     async getGeocoding(physicalAddress: string, _: string): Promise<GeocodingResponse> {
         switch (true) {
             case searchTextHondurasResponse.includes(physicalAddress): {
@@ -40,73 +42,6 @@ class MockApiAdapter {
         }
     }
 
-    async getRecommendedPlaces(walletAddress: string): Promise<PlacesResponse> {
-        return {
-            results: [
-                {
-                    id: 1,
-                    name: 'Eretz',
-                    address: 'Honduras 4709, Palermo, Buenos Aires, C1414, Argentina',
-                    latitude: '-34.590716',
-                    longitude: '-58.427125',
-                    category: 'GASTRONOMY',
-                    score: 4.8,
-                    reviewCount: 25,
-                },
-                {
-                    id: 2,
-                    name: 'Mc Donalds',
-                    address: 'Honduras 4709, Villa Insuperable, Buenos Aires Province, B1751, Argentina',
-                    latitude: '-34.675893',
-                    longitude: '-58.508822',
-                    category: 'GASTRONOMY',
-                    score: 3.7,
-                    reviewCount: 102,
-                },
-                {
-                    id: 3,
-                    name: 'Hilton',
-                    address: 'Honduras 4709, Moreno, Buenos Aires Province, B1743, Argentina',
-                    latitude: '-34.621728',
-                    longitude: '-58.80039',
-                    category: 'ACCOMMODATION',
-                    score: 4.2,
-                    reviewCount: 43,
-                },
-                {
-                    id: 4,
-                    name: 'Eretz 2',
-                    address: 'Honduras 4709, Palermo, Buenos Aires, C1414, Argentina',
-                    latitude: '-34.590716',
-                    longitude: '-58.427125',
-                    category: 'GASTRONOMY',
-                    score: 4.8,
-                    reviewCount: 25,
-                },
-                {
-                    id: 5,
-                    name: 'Mc Donalds 2',
-                    address: 'Honduras 4709, Villa Insuperable, Buenos Aires Province, B1751, Argentina',
-                    latitude: '-34.675893',
-                    longitude: '-58.508822',
-                    category: 'GASTRONOMY',
-                    score: 3.7,
-                    reviewCount: 102,
-                },
-                {
-                    id: 6,
-                    name: 'Hilton 2',
-                    address: 'Honduras 4709, Moreno, Buenos Aires Province, B1743, Argentina',
-                    latitude: '-34.621728',
-                    longitude: '-58.80039',
-                    category: 'ACCOMMODATION',
-                    score: 4.2,
-                    reviewCount: 43,
-                },
-            ],
-        };
-    }
-
     async getMyPlacesPlaces(walletAddress: string): Promise<PlacesResponse> {
         return {
             results: [
@@ -122,6 +57,18 @@ class MockApiAdapter {
                 },
             ],
         };
+    }
+
+    async getRecommendedPlacesForAddress(
+        walletAddress: string,
+        latitude?: string,
+        longitude?: string
+    ): Promise<PlacesResponse> {
+        return defaultPlacesMock;
+    }
+
+    async getRecommendedPlacesByLocation(latitude: string, longitude: string): Promise<PlacesResponse> {
+        return defaultPlacesMock;
     }
 
     async getPlaceReviews(placeId: number): Promise<ReviewsResponse> {

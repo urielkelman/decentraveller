@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Enum
+from sqlalchemy import Column, String, Enum, DateTime, func
 from src.api_models.place import PlaceCategory
 from src.orms import Base
 
@@ -12,4 +12,5 @@ class ProfileORM(Base):
     nickname = Column(String, nullable=False, unique=True)
     country = Column(String, nullable=False)
     interest = Column(Enum(PlaceCategory), nullable=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
     avatar_ipfs_uri = Column(String, default=None)
