@@ -8,8 +8,7 @@ const adapter = mockApiAdapter
 
 const PlaceReviewsBox = ({placeId}) => {
     const [loadingReviews, setLoadingReviews] = React.useState<boolean>(false);
-    const [firstReview, setFirstReview] = React.useState<ReviewResponse>(null);
-    const [secondReview, setSecondReview] = React.useState<ReviewResponse>(null);
+    const [reviews, setReviews ] = React.useState<ReviewResponse[]>(null);
 
     useEffect(() => {
         (async () => {
@@ -24,22 +23,11 @@ const PlaceReviewsBox = ({placeId}) => {
     }, [placeId]);
 
     const hasOneReview = () => {
-        return firstReview !== null
+        return reviews !== null && reviews.length >= 1
     };
 
     const hasTwoReviews = () => {
-        return secondReview !== null;
-    };
-
-    const setReviews = (reviews: ReviewResponse[]) => {
-        if (reviews.length === 0) {
-            return;
-        }
-
-        setFirstReview(reviews[0]);
-        if (reviews.length >= 2) {
-            setSecondReview(reviews[1]);
-        }
+        return reviews !== null && reviews.length >= 2
     };
 
     const loadingReviewsComponent = () => (
@@ -60,7 +48,7 @@ const PlaceReviewsBox = ({placeId}) => {
                 <View style={placeReviewsBoxStyles.reviewItem}>
                     <View style={placeReviewsBoxStyles.commentContainer}>
                         <Text style={placeReviewsBoxStyles.commentText}>
-                            {firstReview.text} - {' '}
+                            {reviews[0].text} - {' '}
                             <Text style={placeReviewsBoxStyles.dateText}>{"10/02/2023"}</Text>
                         </Text>
                         <View style={placeReviewsBoxStyles.userContainer}>
@@ -68,7 +56,7 @@ const PlaceReviewsBox = ({placeId}) => {
                                 source={require('../../../assets/mock_images/cryptochica.png')}
                                 style={placeReviewsBoxStyles.avatarImage}
                             />
-                            <Text style={placeReviewsBoxStyles.userNameText}>{firstReview.owner}</Text>
+                            <Text style={placeReviewsBoxStyles.userNameText}>{reviews[0].owner}</Text>
                         </View>
                     </View>
                 </View>
@@ -77,7 +65,7 @@ const PlaceReviewsBox = ({placeId}) => {
                 <View style={placeReviewsBoxStyles.reviewItem}>
                     <View style={placeReviewsBoxStyles.commentContainer}>
                         <Text style={placeReviewsBoxStyles.commentText}>
-                            {secondReview.text} - {' '}
+                            {reviews[1].text} - {' '}
                             <Text style={placeReviewsBoxStyles.dateText}>{"03/01/2023"}</Text>
                         </Text>
                         <View style={placeReviewsBoxStyles.userContainer}>
@@ -85,7 +73,7 @@ const PlaceReviewsBox = ({placeId}) => {
                                 source={require('../../../assets/mock_images/cryptochica2.png')}
                                 style={placeReviewsBoxStyles.avatarImage}
                             />
-                            <Text style={placeReviewsBoxStyles.userNameText}>{secondReview.owner}</Text>
+                            <Text style={placeReviewsBoxStyles.userNameText}>{reviews[1].owner}</Text>
                         </View>
                     </View>
                 </View>
