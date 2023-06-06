@@ -16,4 +16,6 @@ const obfuscateAddress = (address) => {
     return `${prefix}${start}...${end}`;
 };
 
-export { withTimeout, obfuscateAddress };
+const formatString = (str, vars) => str.replace(/\${(.*?)}/g, (_, name) => vars[name]);
+
+export { withTimeout, obfuscateAddress, formatString };

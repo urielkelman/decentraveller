@@ -49,19 +49,20 @@
         "react-native-dropdown-picker": "^5.4.6",
         "react-native-gesture-handler": "~2.2.1",
         "react-native-get-random-values": "~1.8.0",
-        "react-native-maps": "^1.5.0",
+        "react-native-maps": "0.30.2",
         "react-native-rating-element": "^5.4.0",
         "react-native-reanimated": "~2.8.0",
         "react-native-safe-area-context": "4.2.4",
         "react-native-screens": "~3.11.1",
-        "react-native-svg": "^9.6.4",
+        "react-native-svg": "12.3.0",
         "react-native-tcp": "^4.0.0",
         "react-native-web": "0.17.7",
         "readable-stream": "^3.6.0",
         "stream-http": "^3.2.0",
         "vm-browserify": "^1.1.2",
         "web3": "^1.8.0",
-        "xml2js": "^0.4.23"
+        "xml2js": "^0.4.23",
+        "expo-location": "~14.2.2"
     },
     "devDependencies": {
         "@babel/core": "^7.12.9",
