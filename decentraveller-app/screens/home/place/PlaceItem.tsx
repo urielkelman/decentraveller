@@ -8,7 +8,6 @@ import eretzMockImage from '../../../assets/mock_images/eretz-restaurant-in-buen
 import { ISOCodeByCountry } from './countriesConfig';
 import { Rating } from 'react-native-rating-element';
 import { MaterialIcons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
 import {PlaceDetailData} from "./types";
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { HomeStackScreens } from '../HomeNavigator';
@@ -27,7 +26,7 @@ interface PlaceDetailParams {
     placeItemData: PlaceDetailData;
 }
 
-type PlaceDetailScreenProp = NavigationProp<HomeStackScreens, 'PlaceDetailScreen'>;
+// type PlaceDetailScreenProp = NavigationProp<HomeStackScreens, 'PlaceDetailScreen', PlaceDetailParams>;
 
 const StarComponent = ({ score: number }) => {
     return (
@@ -54,7 +53,7 @@ const PlaceItem: React.FC<PlaceItemProps> = ({
     category,
     reviewCount,
 }) => {
-    const navigation = useNavigation<PlaceDetailScreenProp>();
+    const navigation = useNavigation();
     let countryISOCode: string | undefined;
     try {
         const country = address.split(',').slice(-1)[0].substring(1);
