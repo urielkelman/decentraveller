@@ -69,7 +69,7 @@ const PlaceItem: React.FC<PlaceItemProps> = ({
 
     const capitalizedCategory = capitalizeCategory(category);
 
-    const placeDetailData = {
+    const placeDetailData: PlaceDetailData = {
         id: id,
         name: name,
         address: address,
@@ -80,7 +80,7 @@ const PlaceItem: React.FC<PlaceItemProps> = ({
     return (
         <TouchableOpacity
             onPress={() =>
-                navigation.navigate('PlaceDetailScreen', { placeItemData: placeDetailData } as PlaceDetailParams)
+                navigation.navigate('PlaceDetailScreen', { placeItemData: placeDetailData })
             }
         >
             <View style={placeItemStyle.container}>

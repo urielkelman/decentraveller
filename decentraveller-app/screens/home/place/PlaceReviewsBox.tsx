@@ -7,15 +7,18 @@ import {mockApiAdapter} from "../../../api/mockApiAdapter";
 const adapter = mockApiAdapter
 
 const PlaceReviewsBox = ({placeId}) => {
+    const [loadingReviews, setLoadingReviews] = React.useState<boolean>(false);
     const [firstReview, setFirstReview] = React.useState<ReviewResponse>(null);
     const [secondReview, setSecondReview] = React.useState<ReviewResponse>(null);
 
     useEffect(() => {
         (async () => {
+            setLoadingReviews(true);
             const reviewsResponse: ReviewsResponse = await adapter.getPlaceReviews(
                 // appContext.connectionContext.connectedAddress
                 placeId
             );
+            setLoadingReviews(false);
             setReviews(reviewsResponse.results)
         })();
     }, [placeId]);
@@ -39,8 +42,14 @@ const PlaceReviewsBox = ({placeId}) => {
         }
     };
 
-    return (
-        <TouchableOpacity style={placeReviewsBoxStyles.container} onPress={() => {}}>
+    const loadingReviewsComponent = () => (
+        <View>
+            <Text>Loading</Text>
+        </View>
+    );
+
+    const reviewsBoxComponent = () => {
+        return <TouchableOpacity style={placeReviewsBoxStyles.container} onPress={() => {}}>
             <View style={placeReviewsBoxStyles.titleContainer}>
                 <Text style={placeReviewsBoxStyles.titleText}>Reviews</Text>
                 <Text style={placeReviewsBoxStyles.moreText}>More</Text>
@@ -95,6 +104,13 @@ const PlaceReviewsBox = ({placeId}) => {
                 </View>
             </TouchableOpacity>
         </TouchableOpacity>
-    );
+    }
+
+    const componentToRender = loadingReviews
+        ? loadingReviewsComponent()
+        : reviewsBoxComponent();
+
+    return componentToRender;
+
 };
 export default PlaceReviewsBox;

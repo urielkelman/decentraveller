@@ -3,18 +3,31 @@ import PlaceReviewsBox from "./PlaceReviewsBox";
 import {placeDetailStyles} from "../../../styles/placeDetailStyles";
 import {PlaceDetailData} from "./types";
 import React, {useEffect} from "react";
-import {ReviewResponse, ReviewsResponse} from "../../../api/response/reviews";
-import {mockApiAdapter} from "../../../api/mockApiAdapter";
-import {PickerItem} from "../../../commons/types";
-
 
 const path = '../../../assets/mock_images/eretz-inside.jpeg';
 const locationIconPath = '../../../assets/images/location.png'
-const rankingIconPath = '../../../assets/images/estrellita.png'
-const distanceIconPath = '../../../assets/images/caminito.png'
+const rankingIconPath = require('../../../assets/images/estrellita.png')
+const distanceIconPath = require('../../../assets/images/caminito.png')
 
 interface PlaceDetailScreenProps {
     route: PlaceDetailData;
+}
+
+type BulletItemProps = {
+    iconPath: any,
+    title: string,
+    value: string,
+    marginTop: number
+}
+
+const bulletItemComponent: React.FC<BulletItemProps> = ({iconPath, title, value, marginTop}) => {
+    return <View style={[placeDetailStyles.bulletItem, { marginTop: marginTop }]}>
+    <Image source={iconPath} style={placeDetailStyles.bulletImage} />
+        <View style={placeDetailStyles.bulletTextContainer}>
+            <Text style={placeDetailStyles.bulletText}>{title}</Text>
+            <Text style={placeDetailStyles.bulletSubText}>{value}</Text>
+        </View>
+    </View>
 }
 
 const PlaceDetailScreen: React.FC<PlaceDetailScreenProps> = ({ route }) => {
@@ -35,22 +48,19 @@ const PlaceDetailScreen: React.FC<PlaceDetailScreenProps> = ({ route }) => {
                 </View>
             </View>
             <View style={placeDetailStyles.bulletsContainer}>
-                <View style={placeDetailStyles.bulletItem}>
-                    <Image source={require(rankingIconPath)} style={placeDetailStyles.bulletImage} />
-                    <View style={placeDetailStyles.bulletTextContainer}>
-                        <Text style={placeDetailStyles.bulletText}>Raiting</Text>
-                        <Text style={placeDetailStyles.bulletSubText}>{score}</Text>
-                    </View>
-                </View>
-                <View style={[placeDetailStyles.bulletItem, { marginTop: -15 }]}>
-                    <Image source={require(distanceIconPath)} style={placeDetailStyles.bulletImage} />
-                    <View style={placeDetailStyles.bulletTextContainer}>
-                        <Text style={placeDetailStyles.bulletText}>Distance</Text>
-                        <Text style={placeDetailStyles.bulletSubText}>0.4 km</Text>
-                    </View>
-                </View>
+                {bulletItemComponent({
+                    iconPath: rankingIconPath,
+                    title: 'Rating',
+                    value: score,
+                    marginTop: 0,
+                })}
+                {bulletItemComponent({
+                    iconPath: distanceIconPath,
+                    title: 'Distance',
+                    value: '0.4 km',
+                    marginTop: -15,
+                })}
             </View>
-
             <View style={placeDetailStyles.placeReviewsContainer}>
                 <PlaceReviewsBox placeId={id}/>
             </View>
