@@ -91,7 +91,7 @@ class ApiAdapter extends Adapter {
 
     async getPlaceReviews(placeId: string): Promise<ReviewsResponse> {
         const httpRequest: HttpGetRequest = {
-            url: REVIEWS_PLACES_ENDPOINT.replace('{placeId}', placeId),
+            url: formatString(REVIEWS_PLACES_ENDPOINT, { placeId: placeId }),
             queryParams: {},
             onError: (e) => console.log('Error'),
         };

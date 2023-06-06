@@ -6,6 +6,7 @@ import { PlacesResponse } from './response/places';
 import Adapter from './Adapter';
 import { defaultPlacesMock } from './mocks/places';
 import {ReviewsResponse} from "./response/reviews";
+import {emptyReviewsResponse, manyReviewsResponse, oneReviewsResponse} from "./mocks/reviews";
 
 const searchTextHondurasResponse = ['Honduras', 'Honduras ', 'Honduras 4', 'Honduras 47', 'Honduras 470'];
 
@@ -74,58 +75,14 @@ class MockApiAdapter extends Adapter {
     async getPlaceReviews(placeId: number): Promise<ReviewsResponse> {
         switch (placeId) {
             case 1:
-                return {
-                    results: [
-                        {
-                            placeId: 1,
-                            score: 4.8,
-                            owner: 'Ana Cruz',
-                            text: 'Excelente la comida!! Me dieron ganas de viajar a medio Oriente!.',
-                            images: [],
-                            state: '10/02/2023',
-                        },
-                        {
-                            placeId: 1,
-                            score: 2.8,
-                            owner: 'HakimiGirl',
-                            text: 'Rica comida israelí',
-                            images: [],
-                            state: '',
-                        },
-                        {
-                            placeId: 1,
-                            score: 4.8,
-                            owner: 'Ana Cruz de nuevo',
-                            text: 'essselente de nuevo como as always',
-                            images: [],
-                            state: '',
-                        },
-                    ],
-                };
+                return manyReviewsResponse;
 
             case 2:
-                return {
-                    results: [],
-                };
-
-            case 3:
-                return {
-                    results: [
-                        {
-                            placeId: 3,
-                            score: 3.5,
-                            owner: 'Ana Cruz',
-                            text: 'Muy piola',
-                            images: [],
-                            state: '15/03/2023',
-                        },
-                    ],
-                };
+                return oneReviewsResponse;
 
             default:
-                return {
-                    results: [],
-                };
+                return emptyReviewsResponse;
+
         }
     }
 
