@@ -8,7 +8,7 @@ import eretzMockImage from '../../../assets/mock_images/eretz-restaurant-in-buen
 import { ISOCodeByCountry } from './countriesConfig';
 import { Rating } from 'react-native-rating-element';
 import { MaterialIcons } from '@expo/vector-icons';
-import {PlaceDetailData} from "./types";
+import { PlaceDetailData } from './types';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { HomeStackScreens } from '../HomeNavigator';
 
@@ -74,15 +74,11 @@ const PlaceItem: React.FC<PlaceItemProps> = ({
         name: name,
         address: address,
         score: score,
-        reviewCount: reviewCount
-    }
+        reviewCount: reviewCount,
+    };
 
     return (
-        <TouchableOpacity
-            onPress={() =>
-                navigation.navigate('PlaceDetailScreen', { placeItemData: placeDetailData })
-            }
-        >
+        <TouchableOpacity onPress={() => navigation.navigate('PlaceDetailScreen', { placeItemData: placeDetailData })}>
             <View style={placeItemStyle.container}>
                 <View style={placeItemStyle.leftContainer}>
                     <Image style={placeItemStyle.image} source={eretzMockImage} />

@@ -12,7 +12,7 @@ import { UserResponse } from './response/user';
 import { PlacesResponse } from './response/places';
 import Adapter from './Adapter';
 import { formatString } from '../commons/utils';
-import {ReviewsResponse} from "./response/reviews";
+import { ReviewsResponse } from './response/reviews';
 
 class ApiAdapter extends Adapter {
     private httpConnector: HttpConnector;
