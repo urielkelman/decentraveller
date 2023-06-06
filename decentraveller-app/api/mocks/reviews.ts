@@ -1,4 +1,4 @@
-import {ReviewsResponse} from "../response/reviews";
+import { ReviewsResponse } from '../response/reviews';
 
 export const manyReviewsResponse: ReviewsResponse = {
     results: [
@@ -29,7 +29,6 @@ export const manyReviewsResponse: ReviewsResponse = {
     ],
 };
 
-
 export const oneReviewsResponse: ReviewsResponse = {
     results: [
         {
@@ -39,7 +38,7 @@ export const oneReviewsResponse: ReviewsResponse = {
             text: 'Muy piola',
             images: [],
             state: '10/02/2023',
-        }
+        },
     ],
 };
 

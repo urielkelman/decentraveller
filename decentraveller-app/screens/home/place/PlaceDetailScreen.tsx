@@ -1,34 +1,36 @@
-import {View, Image, Text, StyleSheet, Dimensions} from 'react-native';
-import PlaceReviewsBox from "./PlaceReviewsBox";
-import {placeDetailStyles} from "../../../styles/placeDetailStyles";
-import {PlaceDetailData} from "./types";
-import React, {useEffect} from "react";
+import { View, Image, Text, StyleSheet, Dimensions } from 'react-native';
+import PlaceReviewsBox from './PlaceReviewsBox';
+import { placeDetailStyles } from '../../../styles/placeDetailStyles';
+import { PlaceDetailData } from './types';
+import React, { useEffect } from 'react';
 
 const path = '../../../assets/mock_images/eretz-inside.jpeg';
-const locationIconPath = '../../../assets/images/location.png'
-const rankingIconPath = require('../../../assets/images/estrellita.png')
-const distanceIconPath = require('../../../assets/images/caminito.png')
+const locationIconPath = '../../../assets/images/location.png';
+const rankingIconPath = require('../../../assets/images/estrellita.png');
+const distanceIconPath = require('../../../assets/images/caminito.png');
 
 interface PlaceDetailScreenProps {
     route: PlaceDetailData;
 }
 
 type BulletItemProps = {
-    iconPath: any,
-    title: string,
-    value: string,
-    marginTop: number
-}
+    iconPath: any;
+    title: string;
+    value: string;
+    marginTop: number;
+};
 
-const bulletItemComponent: React.FC<BulletItemProps> = ({iconPath, title, value, marginTop}) => {
-    return <View style={[placeDetailStyles.bulletItem, { marginTop: marginTop }]}>
-    <Image source={iconPath} style={placeDetailStyles.bulletImage} />
-        <View style={placeDetailStyles.bulletTextContainer}>
-            <Text style={placeDetailStyles.bulletText}>{title}</Text>
-            <Text style={placeDetailStyles.bulletSubText}>{value}</Text>
+const bulletItemComponent: React.FC<BulletItemProps> = ({ iconPath, title, value, marginTop }) => {
+    return (
+        <View style={[placeDetailStyles.bulletItem, { marginTop: marginTop }]}>
+            <Image source={iconPath} style={placeDetailStyles.bulletImage} />
+            <View style={placeDetailStyles.bulletTextContainer}>
+                <Text style={placeDetailStyles.bulletText}>{title}</Text>
+                <Text style={placeDetailStyles.bulletSubText}>{value}</Text>
+            </View>
         </View>
-    </View>
-}
+    );
+};
 
 const PlaceDetailScreen: React.FC<PlaceDetailScreenProps> = ({ route }) => {
     const { placeItemData } = route.params;
@@ -62,7 +64,7 @@ const PlaceDetailScreen: React.FC<PlaceDetailScreenProps> = ({ route }) => {
                 })}
             </View>
             <View style={placeDetailStyles.placeReviewsContainer}>
-                <PlaceReviewsBox placeId={id}/>
+                <PlaceReviewsBox placeId={id} />
             </View>
         </View>
     );

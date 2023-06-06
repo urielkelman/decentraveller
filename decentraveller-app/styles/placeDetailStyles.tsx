@@ -1,4 +1,4 @@
-import {Dimensions, StyleSheet} from "react-native";
+import { Dimensions, StyleSheet } from 'react-native';
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
@@ -37,7 +37,7 @@ const placeDetailStyles = StyleSheet.create({
     titleText: {
         fontSize: 35,
         fontWeight: 'bold',
-        marginTop: 1
+        marginTop: 1,
     },
     locationText: {
         fontSize: 18,
@@ -45,14 +45,13 @@ const placeDetailStyles = StyleSheet.create({
         fontFamily: 'Montserrat_400Regular',
         width: 250,
         height: 50,
-
     },
     bulletsContainer: {
         position: 'absolute',
         top: windowHeight * 0.45,
         right: 30,
         alignItems: 'flex-start',
-        marginTop: 10
+        marginTop: 10,
     },
     bulletItem: {
         flexDirection: 'row',
@@ -73,13 +72,13 @@ const placeDetailStyles = StyleSheet.create({
         fontSize: 12,
         fontWeight: 'bold',
         marginLeft: -10,
-        marginTop: -20
+        marginTop: -20,
     },
     bulletSubText: {
         fontSize: 12,
         fontWeight: 'normal',
         marginLeft: -5,
-        marginTop: 3
+        marginTop: 3,
     },
     bulletTextContainer: {
         flexDirection: 'column',
@@ -101,10 +100,8 @@ const placeDetailStyles = StyleSheet.create({
     placeReviewsContainer: {
         marginTop: 100,
         marginHorizontal: 16,
-
     },
 });
-
 
 const placeReviewsBoxStyles = StyleSheet.create({
     container: {
@@ -139,7 +136,7 @@ const placeReviewsBoxStyles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        height: 53
+        height: 53,
     },
     commentText: {
         fontSize: 15,
@@ -155,13 +152,12 @@ const placeReviewsBoxStyles = StyleSheet.create({
         height: 30,
         borderRadius: 15,
         marginBottom: 2,
-        marginRight: 10
+        marginRight: 10,
     },
     userNameText: {
         fontSize: 12,
         color: 'red',
         fontWeight: 'bold',
-
     },
     dateText: {
         opacity: 0.6,
@@ -181,7 +177,7 @@ const placeReviewsBoxStyles = StyleSheet.create({
         alignItems: 'center',
         borderRadius: 10,
         padding: 4,
-        height: 30
+        height: 30,
     },
     buttonTextView: {
         flexDirection: 'row',
@@ -196,5 +192,4 @@ const placeReviewsBoxStyles = StyleSheet.create({
     },
 });
 
-
-export {placeDetailStyles, placeReviewsBoxStyles}
+export { placeDetailStyles, placeReviewsBoxStyles };

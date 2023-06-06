@@ -1,9 +1,7 @@
 export interface PlaceDetailData {
-    id: number
+    id: number;
     name: string;
     address: string;
     score: number;
     reviewCount: number;
 }
-
-
