@@ -15,9 +15,11 @@ import DecentravellerPicker from '../../../commons/components/DecentravellerPick
 import { PickerItem } from '../../../commons/types';
 import {
     DECENTRAVELLER_DEFAULT_BACKGROUND_COLOR,
+    DECENTRAVELLER_DEFAULT_CONTRAST_COLOR,
     MINIMUM_ADDRESS_LENGTH_TO_SHOW_PICKER,
 } from '../../../commons/global';
 import { getAndParseGeocoding } from '../../../commons/functions/geocoding';
+import { Entypo, FontAwesome, Ionicons } from '@expo/vector-icons';
 
 const adapter = mockApiAdapter;
 
@@ -63,26 +65,48 @@ const ExplorePlacesScreen = ({ navigation }) => {
     };
 
     return (
-        <View style={{ flex: 1, backgroundColor: DECENTRAVELLER_DEFAULT_BACKGROUND_COLOR }}>
-            <DecentravellerPicker
-                titleText={explorePlacesScreenWording.EXPLORE_PLACE_LOCATION_TITLE}
-                dropdownPlaceholder={explorePlacesScreenWording.EXPLORE_PLACE_LOCATION_CURRENT_LOCATION}
-                items={locationPickerItems}
-                setItems={setLocationPickerItems}
-                value={locationPickerValue}
-                setValue={setLocationPickerValue}
-                open={locationPickerOpen}
-                setOpen={setLocationPickerOpen}
-                onOpen={onOpenPicker}
-                searchable={true}
-                onChangeSearchText={onChangeSearchAddressText}
-                zIndex={1000}
-                zIndexInverse={3000}
-                loading={loadingGeocodingResponse}
-                disableLocalSearch={true}
-                marginBottom={false}
-            />
-            <DecentravellerPlacesItems places={places} />
+        <View
+            style={{
+                flex: 1,
+                flexDirection: 'column',
+                backgroundColor: DECENTRAVELLER_DEFAULT_BACKGROUND_COLOR,
+                alignContent: 'flex-start',
+            }}
+        >
+            <View style={{ flex: 0.1, flexDirection: 'row', marginTop: 10 }}>
+                <View style={{ flex: 0.1, alignItems: 'center', justifyContent: 'center' }}>
+                    <Entypo name="location-pin" size={25} color={DECENTRAVELLER_DEFAULT_CONTRAST_COLOR} />
+                </View>
+                <View style={{ flex: 0.85 }}>
+                    <DecentravellerPicker
+                        dropdownPlaceholder={explorePlacesScreenWording.EXPLORE_PLACE_LOCATION_CURRENT_LOCATION}
+                        items={locationPickerItems}
+                        setItems={setLocationPickerItems}
+                        value={locationPickerValue}
+                        setValue={setLocationPickerValue}
+                        open={locationPickerOpen}
+                        setOpen={setLocationPickerOpen}
+                        onOpen={onOpenPicker}
+                        searchable={true}
+                        onChangeSearchText={onChangeSearchAddressText}
+                        zIndex={1000}
+                        zIndexInverse={3000}
+                        loading={loadingGeocodingResponse}
+                        disableLocalSearch={true}
+                        marginBottom={0}
+                        marginLeft={0}
+                        marginRight={0}
+                        showTitle={false}
+                    />
+                </View>
+                <View style={{ flex: 0.1, alignItems: 'center', justifyContent: 'center' }}>
+                    <Ionicons name="funnel" size={25} color={DECENTRAVELLER_DEFAULT_CONTRAST_COLOR} />
+                </View>
+            </View>
+            <View style={{ backgroundColor: 'black', height: 2, borderRadius: 2 }} />
+            <View style={{ flex: 0.9 }}>
+                <DecentravellerPlacesItems places={places} />
+            </View>
         </View>
     );
 };
