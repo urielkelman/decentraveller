@@ -5,7 +5,7 @@ import { bottomTabIndicationTextStyles } from '../../styles/bottomTabScreensStyl
 import { PickerItem } from '../types';
 
 export type PickerCreatePlaceProps = {
-    titleText: string;
+    titleText?: string;
     dropdownPlaceholder: string;
     items: PickerItem[];
     setItems: React.Dispatch<React.SetStateAction<PickerItem[]>>;
@@ -21,11 +21,14 @@ export type PickerCreatePlaceProps = {
     onChangeSearchText?: (text: string) => void | undefined;
     loading?: boolean;
     disableLocalSearch?: boolean;
-    marginBottom?: boolean;
+    marginBottom?: number;
+    showTitle?: boolean;
+    marginLeft?: number;
+    marginRight?: number;
 };
 
 const DecentravellerPicker: React.FC<PickerCreatePlaceProps> = ({
-    titleText,
+    titleText = 'Title',
     dropdownPlaceholder,
     items,
     setItems,
@@ -40,16 +43,21 @@ const DecentravellerPicker: React.FC<PickerCreatePlaceProps> = ({
     onChangeSearchText = undefined,
     loading = false,
     disableLocalSearch = false,
-    marginBottom = true,
+    marginBottom = bottomTabIndicationTextStyles.container.marginBottom,
+    marginLeft = bottomTabIndicationTextStyles.container.marginLeft,
+    marginRight = bottomTabIndicationTextStyles.container.marginRight,
+    showTitle = true,
 }) => {
     return (
         <View
             style={{
                 ...bottomTabIndicationTextStyles.container,
-                marginBottom: marginBottom ? bottomTabIndicationTextStyles.container.marginBottom : 0,
+                marginBottom: marginBottom,
+                marginRight: marginRight,
+                marginLeft: marginLeft,
             }}
         >
-            <Text style={bottomTabIndicationTextStyles.text}>{titleText}</Text>
+            {showTitle && <Text style={bottomTabIndicationTextStyles.text}>{titleText}</Text>}
             <DropDownPicker
                 open={open}
                 setOpen={setOpen}
