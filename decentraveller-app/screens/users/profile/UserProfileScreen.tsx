@@ -11,10 +11,10 @@ export type UserProfileScreens = {
 const HomeStackNavigator = createStackNavigator<UserProfileScreens>();
 
 const UserProfileScreen = ({ navigation }) => {
-    const { userNickname, userWalletAddress, userCreatedAt, userInterest } = useAppContext();
+    const { userNickname, userWalletAddress, userCreatedAt, userInterest, userProfileImage } = useAppContext();
 
     const user = {
-        profileImage: require('../../../assets/mock_images/cryptochica.png'),
+        profileImage: userProfileImage.profileImage,
         name: userNickname.nickname,
         walletAddress: '0x' + userWalletAddress.walletAddress,
         createdAt: userCreatedAt.createdAt,
@@ -33,7 +33,9 @@ const UserProfileScreen = ({ navigation }) => {
                 <View style={userProfileMainStyles.imageContainer}>
                     <View style={userProfileMainStyles.imageCircle}>
                         <Image
-                            source={require('../../../assets/mock_images/cryptochica.png')}
+                            source={{
+                                uri: `data:image/jpeg;base64,${user.profileImage}`
+                                }}
                             style={userProfileMainStyles.circleDimensions}
                         />
                     </View>

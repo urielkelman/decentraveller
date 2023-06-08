@@ -6,6 +6,7 @@ import {
     UserCreatedAt,
     UserInterest,
     UserNickname,
+    UserProfileImage,
     UserWalletAddress,
 } from './types';
 import { Dimensions } from 'react-native';
@@ -28,6 +29,7 @@ const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
     const [connectionContext, setConnectionContext] = React.useState<ConnectionContext>(null);
     const [subscriptionsDone, setSubscriptionsDone] = React.useState<boolean>(false);
 
+    const [profileImage, setProfileImage] = React.useState<string>('');
     const [nickname, setUserNickname] = React.useState<string>('');
     const [walletAddress, setUserWalletAddress] = React.useState<string>('');
     const [createdAt, setUserCreatedAt] = React.useState<string>('');
@@ -85,6 +87,14 @@ const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
         }),
         [nickname]
     );
+
+    const userProfileImage: UserProfileImage = React.useMemo<UserProfileImage>(
+            () => ({
+                profileImage: profileImage,
+                setProfileImage: setProfileImage,
+            }),
+            [nickname]
+        );
 
     const userWalletAddress: UserWalletAddress = React.useMemo<UserWalletAddress>(
         () => ({
@@ -168,6 +178,7 @@ const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
                 pushChangeUpdate,
                 cleanConnectionContext,
                 userNickname,
+                userProfileImage,
                 userWalletAddress,
                 userCreatedAt,
                 userInterest,

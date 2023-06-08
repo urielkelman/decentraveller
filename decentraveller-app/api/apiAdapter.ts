@@ -3,6 +3,7 @@ import { httpAPIConnector, HttpConnector, HttpGetRequest } from '../connectors/H
 import {
     FORWARD_GEOCODING_ENDPOINT,
     GET_USER_ENDPOINT,
+    GET_PROFILE_IMAGE,
     RECOMMENDED_PLACES_BY_LOCATION_ENDPOINT,
     OWNED_PLACES_ENDPOINT,
     RECOMMENDED_PLACES_BY_PROFILE_ENDPOINT,
@@ -75,6 +76,18 @@ class ApiAdapter extends Adapter {
         };
 
         return await httpAPIConnector.get(httpRequest);
+    }
+
+    async getUserProfileImage(walletAddress: string, onFailed: () => void): Promise<string> {
+        const httpRequest: HttpGetRequest = {
+            url: formatString(GET_PROFILE_IMAGE, { owner: walletAddress }),
+            queryParams: {},
+            onError: (e) => {
+                onFailed();
+            },
+        };
+
+        return await httpAPIConnector.getBase64Bytes(httpRequest);
     }
 
     async getMyPlaces(walletAddress: string): Promise<PlacesResponse> {

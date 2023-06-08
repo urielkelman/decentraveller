@@ -14,6 +14,11 @@ export interface UserNickname {
     setUserNickname: (string) => void;
 }
 
+export interface UserProfileImage {
+    profileImage: string;
+    setUserProfileImage: (ArrayBuffer) => void;
+}
+
 export interface UserWalletAddress {
     walletAddress: string;
     setUserWalletAddress: (string) => void;
@@ -35,6 +40,7 @@ export type AppContextType = {
     pushChangeUpdate: () => void;
     deviceDimensions: DeviceDimensions;
     userNickname: UserNickname;
+    userProfileImage: UserProfileImage;
     userWalletAddress: UserWalletAddress;
     userCreatedAt: UserCreatedAt;
     userInterest: UserInterest;
