@@ -21,7 +21,7 @@ def test_create_place_no_profile_400(cleanup):
 
     response = client.post("/place",
                            json={"id": 0,
-                                 "owner": "of49d9adf9b",
+                                 "owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                  "name": "McDonalds",
                                  "address": "Av. Callao & Av. Santa Fe",
                                  "latitude": -34.595983,
@@ -36,7 +36,7 @@ def test_create_place_no_profile_400(cleanup):
 
 def test_create_place_same_key(cleanup):
     response = client.post("/profile",
-                           json={"owner": "of49d9adf9b",
+                           json={"owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                  "nickname": "test",
                                  "country": "AR",
                                  "interest": "ACCOMMODATION"},
@@ -48,7 +48,7 @@ def test_create_place_same_key(cleanup):
 
     response = client.post("/place",
                            json={"id": 0,
-                                 "owner": "of49d9adf9b",
+                                 "owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                  "name": "McDonalds",
                                  "address": "Av. Callao & Av. Santa Fe",
                                  "latitude": -34.595983,
@@ -59,7 +59,7 @@ def test_create_place_same_key(cleanup):
 
     response = client.post("/place",
                            json={"id": 0,
-                                 "owner": "of49d9adf9b",
+                                 "owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                  "name": "La Bisteca",
                                  "address": "Puerto Madero",
                                  "latitude": -34.595983,
@@ -71,7 +71,7 @@ def test_create_place_same_key(cleanup):
 
 def test_create_place(cleanup):
     response = client.post("/profile",
-                           json={"owner": "of49d9adf9b",
+                           json={"owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                  "nickname": "test",
                                  "country": "AR",
                                  "interest": "ACCOMMODATION"},
@@ -83,7 +83,7 @@ def test_create_place(cleanup):
 
     response = client.post("/place",
                            json={"id": 0,
-                                 "owner": "of49d9adf9b",
+                                 "owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                  "name": "McDonalds",
                                  "address": "Av. Callao & Av. Santa Fe",
                                  "latitude": -34.595983,
@@ -95,7 +95,7 @@ def test_create_place(cleanup):
     response = client.get("/place/0")
     assert response.status_code == 200
     assert response.json() == {"id": 0,
-                               "owner": "of49d9adf9b",
+                               "owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                "name": "McDonalds",
                                "address": "Av. Callao & Av. Santa Fe",
                                "latitude": -34.595983,
@@ -107,7 +107,7 @@ def test_create_place(cleanup):
 
 def test_overwrite_place(cleanup):
     response = client.post("/profile",
-                           json={"owner": "of49d9adf9b",
+                           json={"owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                  "nickname": "test",
                                  "country": "AR",
                                  "interest": "ACCOMMODATION"},
@@ -119,7 +119,7 @@ def test_overwrite_place(cleanup):
 
     response = client.post("/place",
                            json={"id": 0,
-                                 "owner": "of49d9adf9b",
+                                 "owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                  "name": "McDonalds",
                                  "address": "Av. Callao & Av. Santa Fe",
                                  "latitude": -34.595983,
@@ -139,7 +139,7 @@ def test_overwrite_place(cleanup):
     response = client.get("/place/0")
     assert response.status_code == 200
     assert response.json() == {"id": 0,
-                               "owner": "of49d9adf9b",
+                               "owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                "name": "McDonalds",
                                "address": "Av. Callao & Av. Santa Fe",
                                "latitude": -34.595983,
@@ -151,7 +151,7 @@ def test_overwrite_place(cleanup):
 
 def test_update_place(cleanup):
     response = client.post("/profile",
-                           json={"owner": "of49d9adf9b",
+                           json={"owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                  "nickname": "test",
                                  "country": "AR",
                                  "interest": "ACCOMMODATION"},
@@ -163,7 +163,7 @@ def test_update_place(cleanup):
 
     response = client.post("/place",
                            json={"id": 0,
-                                 "owner": "of49d9adf9b",
+                                 "owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                  "name": "McDonalds",
                                  "address": "Av. Callao & Av. Santa Fe",
                                  "latitude": -34.595983,
@@ -178,7 +178,7 @@ def test_update_place(cleanup):
     response = client.get("/place/0")
     assert response.status_code == 200
     assert response.json() == {"id": 0,
-                               "owner": "of49d9adf9b",
+                               "owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                "name": "McDonalds",
                                "address": "Av. Callao & Av. Santa Fe",
                                "latitude": -34.595983,
@@ -190,7 +190,7 @@ def test_update_place(cleanup):
 
 def test_get_paginated_places(cleanup):
     response = client.post("/profile",
-                           json={"owner": "of49d9adf9b",
+                           json={"owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                  "nickname": "test",
                                  "country": "AR",
                                  "interest": "ACCOMMODATION"},
@@ -202,7 +202,7 @@ def test_get_paginated_places(cleanup):
 
     response = client.post("/place",
                            json={"id": 0,
-                                 "owner": "of49d9adf9b",
+                                 "owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                  "name": "McDonalds",
                                  "address": "Av. Callao & Av. Santa Fe",
                                  "latitude": -34.595983,
@@ -212,7 +212,7 @@ def test_get_paginated_places(cleanup):
     assert response.status_code == 201
     response = client.post("/place",
                            json={"id": 1,
-                                 "owner": "of49d9adf9b",
+                                 "owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                  "name": "Tienda de cafe",
                                  "address": "Av. Callao & Av. Santa Fe",
                                  "latitude": -34.595939,
@@ -222,7 +222,7 @@ def test_get_paginated_places(cleanup):
     assert response.status_code == 201
     response = client.post("/place",
                            json={"id": 2,
-                                 "owner": "of49d9adf9b",
+                                 "owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                  "name": "Starbucks Coffee",
                                  "address": "Av. Callao 702, C1023 CABA",
                                  "latitude": -34.600724,
@@ -232,7 +232,7 @@ def test_get_paginated_places(cleanup):
     assert response.status_code == 201
     response = client.post("/place",
                            json={"id": 3,
-                                 "owner": "of49d9adf9b",
+                                 "owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                  "name": "Maldini",
                                  "address": "Vedia 3626",
                                  "latitude": -34.546015,
@@ -242,7 +242,7 @@ def test_get_paginated_places(cleanup):
     assert response.status_code == 201
     response = client.post("/place",
                            json={"id": 4,
-                                 "owner": "of49d9adf9b",
+                                 "owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                  "name": "El Viejo Tucho",
                                  "address": "Av. América 696, Sáenz Peña, Provincia de Buenos Aires",
                                  "latitude": -34.602272,
@@ -251,12 +251,12 @@ def test_get_paginated_places(cleanup):
                            )
     assert response.status_code == 201
 
-    response = client.get("/profile/of49d9adf9b/places", params={"page": 0, "per_page": 3})
+    response = client.get("/profile/0xeB7C917821796eb627C0719A23a139ce51226CD2/places", params={"page": 0, "per_page": 3})
     assert response.status_code == 200
     assert len(response.json()['places']) == 3
     assert response.json()['total'] == 5
     assert response.json()['places'][0] == {"id": 0,
-                                            "owner": "of49d9adf9b",
+                                            "owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                             "name": "McDonalds",
                                             "address": "Av. Callao & Av. Santa Fe",
                                             "latitude": -34.595983,
@@ -265,7 +265,7 @@ def test_get_paginated_places(cleanup):
                                             "stars": None,
                                             "reviews": 0}
     assert response.json()['places'][1] == {"id": 1,
-                                            "owner": "of49d9adf9b",
+                                            "owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                             "name": "Tienda de cafe",
                                             "address": "Av. Callao & Av. Santa Fe",
                                             "latitude": -34.595939,
@@ -274,7 +274,7 @@ def test_get_paginated_places(cleanup):
                                             "stars": None,
                                             "reviews": 0}
     assert response.json()['places'][2] == {"id": 2,
-                                            "owner": "of49d9adf9b",
+                                            "owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                             "name": "Starbucks Coffee",
                                             "address": "Av. Callao 702, C1023 CABA",
                                             "latitude": -34.600724,
@@ -283,12 +283,12 @@ def test_get_paginated_places(cleanup):
                                             "stars": None,
                                             "reviews": 0}
 
-    response = client.get("/profile/of49d9adf9b/places", params={"page": 1, "per_page": 3})
+    response = client.get("/profile/0xeB7C917821796eb627C0719A23a139ce51226CD2/places", params={"page": 1, "per_page": 3})
     assert response.status_code == 200
     assert len(response.json()['places']) == 2
     assert response.json()['total'] == 5
     assert response.json()['places'][0] == {"id": 3,
-                                            "owner": "of49d9adf9b",
+                                            "owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                             "name": "Maldini",
                                             "address": "Vedia 3626",
                                             "latitude": -34.546015,
@@ -297,7 +297,7 @@ def test_get_paginated_places(cleanup):
                                             "stars": None,
                                             "reviews": 0}
     assert response.json()['places'][1] == {"id": 4,
-                                            "owner": "of49d9adf9b",
+                                            "owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                             "name": "El Viejo Tucho",
                                             "address": "Av. América 696, Sáenz Peña, Provincia de Buenos Aires",
                                             "latitude": -34.602272,

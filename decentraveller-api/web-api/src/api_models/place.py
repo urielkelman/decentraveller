@@ -1,18 +1,11 @@
 from typing import NewType, Union, Optional
-import enum
 from fastapi_utils.api_model import APIModel
+from src.api_models.profile import WalletID, wallet_id_validator
+from src.api_models.place_category import PlaceCategory
+from pydantic import validator
+
 
 PlaceID = NewType("PlaceId", int)
-
-
-class PlaceCategory(str, enum.Enum):
-    """
-    Categories for places
-    """
-    GASTRONOMY = "GASTRONOMY"
-    ACCOMMODATION = "ACCOMMODATION"
-    ENTERTAINMENT = "ENTERTAINMENT"
-    OTHER = "OTHER"
 
 
 class PlaceBody(APIModel):
@@ -42,7 +35,12 @@ class PlaceInDB(PlaceBody):
     Place API Model
     """
     id: PlaceID
-    owner: str
+    owner: WalletID
+
+    @validator('owner')
+    def wallet_id_validator(cls, v):
+        return wallet_id_validator(v)
+
 
 class PlaceWithStats(PlaceInDB):
     """

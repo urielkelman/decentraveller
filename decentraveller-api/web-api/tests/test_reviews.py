@@ -21,7 +21,7 @@ def test_create_review_no_foreign_keys(cleanup):
                            json={"id": 0,
                                  "placeId": 0,
                                  "score": 5,
-                                 "owner": "of49d9adf9b",
+                                 "owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                  "text": "Muy bueno el combo de sebastian yatra",
                                  "images": [],
                                  "state": "UNCENSORED"},
@@ -31,7 +31,7 @@ def test_create_review_no_foreign_keys(cleanup):
 
 def test_create_review_no_profile(cleanup):
     response = client.post("/profile",
-                           json={"owner": "of49d9adf9b",
+                           json={"owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                  "nickname": "test",
                                  "country": "AR",
                                  "interest": "ACCOMMODATION"},
@@ -40,7 +40,7 @@ def test_create_review_no_profile(cleanup):
 
     response = client.post("/place",
                            json={"id": 0,
-                                 "owner": "of49d9adf9b",
+                                 "owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                  "name": "McDonalds",
                                  "address": "Av. Callao & Av. Santa Fe",
                                  "latitude": -34.595983,
@@ -64,7 +64,7 @@ def test_create_review_no_profile(cleanup):
 
 def test_create_review_no_place(cleanup):
     response = client.post("/profile",
-                           json={"owner": "of49d9adf9b",
+                           json={"owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                  "nickname": "test",
                                  "country": "AR",
                                  "interest": "ACCOMMODATION"},
@@ -75,7 +75,7 @@ def test_create_review_no_place(cleanup):
                            json={"id": 0,
                                  "placeId": 0,
                                  "score": 5,
-                                 "owner": "of49d9adf9b",
+                                 "owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                  "text": "Muy bueno el combo de sebastian yatra",
                                  "images": [],
                                  "state": "UNCENSORED"},
@@ -85,7 +85,7 @@ def test_create_review_no_place(cleanup):
 
 def test_create_review(cleanup):
     response = client.post("/profile",
-                           json={"owner": "of49d9adf9b",
+                           json={"owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                  "nickname": "test",
                                  "country": "AR",
                                  "interest": "ACCOMMODATION"},
@@ -94,7 +94,7 @@ def test_create_review(cleanup):
 
     response = client.post("/place",
                            json={"id": 0,
-                                 "owner": "of49d9adf9b",
+                                 "owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                  "name": "McDonalds",
                                  "address": "Av. Callao & Av. Santa Fe",
                                  "latitude": -34.595983,
@@ -111,7 +111,7 @@ def test_create_review(cleanup):
                            json={"id": 1,
                                  "placeId": 0,
                                  "score": 5,
-                                 "owner": "of49d9adf9b",
+                                 "owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                  "text": "Muy bueno el combo de sebastian yatra",
                                  "images": [],
                                  "state": "UNCENSORED"},
@@ -125,7 +125,7 @@ def test_create_review(cleanup):
             if k != "createdAt"} == {"id": 1,
                                "placeId": 0,
                                "score": 5,
-                               "owner": "of49d9adf9b",
+                               "owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                "text": "Muy bueno el combo de sebastian yatra",
                                "images": [],
                                "state": "UNCENSORED"}
@@ -137,7 +137,7 @@ def test_create_review(cleanup):
 
 def test_get_reviews_by_place(cleanup):
     response = client.post("/profile",
-                           json={"owner": "of49d9adf9b",
+                           json={"owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                  "nickname": "test",
                                  "country": "AR",
                                  "interest": "ACCOMMODATION"},
@@ -146,7 +146,7 @@ def test_get_reviews_by_place(cleanup):
 
     response = client.post("/place",
                            json={"id": 0,
-                                 "owner": "of49d9adf9b",
+                                 "owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                  "name": "McDonalds",
                                  "address": "Av. Callao & Av. Santa Fe",
                                  "latitude": -34.595983,
@@ -163,7 +163,7 @@ def test_get_reviews_by_place(cleanup):
                            json={"id": 1,
                                "placeId": 0,
                                  "score": 5,
-                                 "owner": "of49d9adf9b",
+                                 "owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                  "text": "Muy bueno el combo de sebastian yatra",
                                  "images": [],
                                  "state": "UNCENSORED"},
@@ -174,7 +174,7 @@ def test_get_reviews_by_place(cleanup):
                            json={"id": 2,
                                "placeId": 0,
                                  "score": 5,
-                                 "owner": "of49d9adf9b",
+                                 "owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                  "text": "Me pedi un mcflurry oreo",
                                  "images": [],
                                  "state": "UNCENSORED"},
@@ -185,7 +185,7 @@ def test_get_reviews_by_place(cleanup):
                            json={"id": 3,
                                "placeId": 0,
                                  "score": 3,
-                                 "owner": "of49d9adf9b",
+                                 "owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                  "text": "Me atendieron mal",
                                  "images": [],
                                  "state": "UNCENSORED"},
@@ -201,7 +201,7 @@ def test_get_reviews_by_place(cleanup):
             if k != "createdAt"} == {"id": 1,
                                              "placeId": 0,
                                              "score": 5,
-                                             "owner": "of49d9adf9b",
+                                             "owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                              "text": "Muy bueno el combo de sebastian yatra",
                                              "images": [],
                                              "state": "UNCENSORED"}
@@ -211,7 +211,7 @@ def test_get_reviews_by_place(cleanup):
             if k != "createdAt"} == {"id": 2,
                                              "placeId": 0,
                                              "score": 5,
-                                             "owner": "of49d9adf9b",
+                                             "owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                              "text": "Me pedi un mcflurry oreo",
                                              "images": [],
                                              "state": "UNCENSORED"}
@@ -226,7 +226,7 @@ def test_get_reviews_by_place(cleanup):
             if k != "createdAt"} == {"id": 3,
                                              "placeId": 0,
                                              "score": 3,
-                                             "owner": "of49d9adf9b",
+                                             "owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                              "text": "Me atendieron mal",
                                              "images": [],
                                              "state": "UNCENSORED"}
@@ -236,7 +236,7 @@ def test_get_reviews_by_place(cleanup):
 
 def test_get_reviews_by_owner(cleanup):
     response = client.post("/profile",
-                           json={"owner": "of49d9adf9b",
+                           json={"owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                  "nickname": "test",
                                  "country": "AR",
                                  "interest": "ACCOMMODATION"},
@@ -245,7 +245,7 @@ def test_get_reviews_by_owner(cleanup):
 
     response = client.post("/place",
                            json={"id": 0,
-                                 "owner": "of49d9adf9b",
+                                 "owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                  "name": "McDonalds",
                                  "address": "Av. Callao & Av. Santa Fe",
                                  "latitude": -34.595983,
@@ -262,7 +262,7 @@ def test_get_reviews_by_owner(cleanup):
                            json={"id": 1,
                                "placeId": 0,
                                  "score": 5,
-                                 "owner": "of49d9adf9b",
+                                 "owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                  "text": "Muy bueno el combo de sebastian yatra",
                                  "images": [],
                                  "state": "UNCENSORED"},
@@ -273,7 +273,7 @@ def test_get_reviews_by_owner(cleanup):
                            json={"id": 2,
                                "placeId": 0,
                                  "score": 5,
-                                 "owner": "of49d9adf9b",
+                                 "owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                  "text": "Me pedi un mcflurry oreo",
                                  "images": [],
                                  "state": "UNCENSORED"},
@@ -284,14 +284,14 @@ def test_get_reviews_by_owner(cleanup):
                            json={"id": 3,
                                "placeId": 0,
                                  "score": 3,
-                                 "owner": "of49d9adf9b",
+                                 "owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                  "text": "Me atendieron mal",
                                  "images": [],
                                  "state": "UNCENSORED"},
                            )
     assert response.status_code == 201
 
-    response = client.get("/profile/of49d9adf9b/reviews", params={"page": 0, "per_page": 2})
+    response = client.get("/profile/0xeB7C917821796eb627C0719A23a139ce51226CD2/reviews", params={"page": 0, "per_page": 2})
     assert response.status_code == 200
     assert len(response.json()['reviews']) == 2
     assert response.json()['total'] == 3
@@ -300,7 +300,7 @@ def test_get_reviews_by_owner(cleanup):
             if k != "createdAt"} == {"id": 1,
                                              "placeId": 0,
                                              "score": 5,
-                                             "owner": "of49d9adf9b",
+                                             "owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                              "text": "Muy bueno el combo de sebastian yatra",
                                              "images": [],
                                              "state": "UNCENSORED"}
@@ -310,13 +310,13 @@ def test_get_reviews_by_owner(cleanup):
             if k != "createdAt"} == {"id": 2,
                                              "placeId": 0,
                                              "score": 5,
-                                             "owner": "of49d9adf9b",
+                                             "owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                              "text": "Me pedi un mcflurry oreo",
                                              "images": [],
                                              "state": "UNCENSORED"}
     assert datetime.fromisoformat(response.json()['reviews'][1]['createdAt']).date() == datetime.utcnow().date()
 
-    response = client.get("/profile/of49d9adf9b/reviews", params={"page": 1, "per_page": 2})
+    response = client.get("/profile/0xeB7C917821796eb627C0719A23a139ce51226CD2/reviews", params={"page": 1, "per_page": 2})
     assert response.status_code == 200
     assert len(response.json()['reviews']) == 1
     assert response.json()['total'] == 3
@@ -325,7 +325,7 @@ def test_get_reviews_by_owner(cleanup):
             if k != "createdAt"} == {"id": 3,
                                              "placeId": 0,
                                              "score": 3,
-                                             "owner": "of49d9adf9b",
+                                             "owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                              "text": "Me atendieron mal",
                                              "images": [],
                                              "state": "UNCENSORED"}

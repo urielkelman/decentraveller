@@ -4,10 +4,11 @@ from fastapi_utils.inferring_router import InferringRouter
 from sqlalchemy.exc import IntegrityError
 from starlette.status import HTTP_400_BAD_REQUEST, HTTP_404_NOT_FOUND
 
-from src.api_models.profile import ProfileInDB, ProfileBody
+from src.api_models.profile import ProfileInDB, ProfileBody, WalletID, wallet_id_validator
 from src.dependencies.avatar_generator import AvatarGenerator
 from src.orms.profile import ProfileORM
 from src.dependencies.relational_database import build_relational_database, RelationalDatabase
+
 
 profile_router = InferringRouter()
 
@@ -18,7 +19,7 @@ class ProfileCBV:
     avatar_generator: AvatarGenerator = Depends(AvatarGenerator)
 
     @profile_router.get("/profile/{owner}")
-    def get_profile(self, owner: str) -> ProfileInDB:
+    def get_profile(self, owner: WalletID = Depends(wallet_id_validator)) -> ProfileInDB:
         """
         Gets a profile given either the owner or the nickname
 
@@ -40,7 +41,7 @@ class ProfileCBV:
                             }
                         },
                         response_class=Response)
-    def get_avatar(self, owner: str,
+    def get_avatar(self, owner: WalletID = Depends(wallet_id_validator),
                    res: int = Query(512)):
         """
         Gets a profile avatar
