@@ -8,6 +8,7 @@ from src.api_models.place import PlaceID, PlaceUpdate, PlaceInDB, PlaceBody, Pla
 from src.dependencies.vector_database import VectorDatabase
 from src.dependencies.relational_database import build_relational_database, RelationalDatabase
 from src.api_models.bulk_results import PaginatedPlaces
+from src.api_models.profile import WalletID, wallet_id_validator
 
 place_router = InferringRouter()
 
@@ -76,8 +77,8 @@ class PlaceCBV:
         return place
 
     @place_router.get("/profile/{owner}/places")
-    def get_places_by_profile(self, owner: str,
-                              per_page: int, page: int) -> PaginatedPlaces:
+    def get_places_by_profile(self, per_page: int, page: int,
+                              owner: WalletID = Depends(wallet_id_validator)) -> PaginatedPlaces:
         """
         Gets a user places paginated
 

@@ -4,6 +4,7 @@ from fastapi_utils.inferring_router import InferringRouter
 from starlette.status import HTTP_404_NOT_FOUND, HTTP_400_BAD_REQUEST
 
 from src.api_models.place import PlaceID
+from src.api_models.profile import WalletID, wallet_id_validator
 from src.api_models.review import ReviewInDB, ReviewID, ReviewBody
 from src.api_models.bulk_results import PaginatedReviews
 from src.dependencies.relational_database import build_relational_database, RelationalDatabase
@@ -63,8 +64,8 @@ class ReviewCBV:
         return reviews
 
     @review_router.get("/profile/{owner}/reviews")
-    def get_review_by_profile(self, owner: str,
-                              per_page: int, page: int) -> PaginatedReviews:
+    def get_review_by_profile(self, per_page: int, page: int,
+                              owner: WalletID = Depends(wallet_id_validator)) -> PaginatedReviews:
         """
         Gets a user reviews paginated
 

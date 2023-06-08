@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 from src.api_models.bulk_results import PaginatedReviews, PaginatedPlaces
 from src.api_models.place import PlaceID, PlaceInDB, PlaceWithStats
 from src.api_models.review import ReviewID, ReviewInDB, ReviewBody
+from src.api_models.profile import WalletID
 from src.orms.place import PlaceORM
 from src.orms.profile import ProfileORM
 from src.orms.review import ReviewORM
@@ -143,7 +144,7 @@ class RelationalDatabase:
         return ReviewInDB.from_orm(review_orm)
 
     def get_profile_orm(self,
-                        owner: str) -> Optional[ProfileORM]:
+                        owner: WalletID) -> Optional[ProfileORM]:
         """
         Database querying for a profile
 
@@ -171,7 +172,7 @@ class RelationalDatabase:
         return PaginatedReviews(page=page, per_page=per_page,
                                 total=total_count, reviews=reviews)
 
-    def query_reviews_by_profile(self, owner: str,
+    def query_reviews_by_profile(self, owner: WalletID,
                                  page: int, per_page: int) -> PaginatedReviews:
         """
         Gets all the reviews from a profile as a query
@@ -188,7 +189,7 @@ class RelationalDatabase:
         return PaginatedReviews(page=page, per_page=per_page,
                                 total=total_count, reviews=reviews)
 
-    def query_places_by_profile(self, owner: str,
+    def query_places_by_profile(self, owner: WalletID,
                                 page: int, per_page: int) -> PaginatedPlaces:
         """
         Gets all the places from a profile as a query
