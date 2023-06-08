@@ -1,16 +1,11 @@
-import { KeyboardAvoidingView, View } from 'react-native';
+import { View } from 'react-native';
 import { useAppContext } from '../../../context/AppContext';
 import React from 'react';
-import { bottomTabScreenStyles } from '../../../styles/bottomTabScreensStyles';
-import DecentravellerHeadingText from '../../../commons/components/DecentravellerHeadingText';
 import { explorePlacesScreenWording } from './wording';
-import DecentravellerButton from '../../../commons/components/DecentravellerButton';
-import DecentravellerDescriptionText from '../../../commons/components/DecentravellerDescriptionText';
 import { PlaceResponse } from '../../../api/response/places';
 import { mockApiAdapter } from '../../../api/mockApiAdapter';
 import { apiAdapter } from '../../../api/apiAdapter';
-import { DecentravellerPlacesItems } from '../../../commons/components/DecentravellerPlacesList';
-import { addPlaceScreenWordings } from '../place/wording';
+import  DecentravellerPlacesItems  from '../../../commons/components/DecentravellerPlacesList';
 import DecentravellerPicker from '../../../commons/components/DecentravellerPicker';
 import { PickerItem } from '../../../commons/types';
 import {
@@ -19,26 +14,35 @@ import {
     MINIMUM_ADDRESS_LENGTH_TO_SHOW_PICKER,
 } from '../../../commons/global';
 import { getAndParseGeocoding } from '../../../commons/functions/geocoding';
-import { Entypo, FontAwesome, Ionicons } from '@expo/vector-icons';
+import { Entypo, Ionicons } from '@expo/vector-icons';
+import {AppContextStateArg} from "../../../context/types";
 
 const adapter = mockApiAdapter;
 
 const ExplorePlacesScreen = ({ navigation }) => {
-    const { userLocation } = useAppContext();
+    // const { userLocation } = useAppContext();
+    const userLocation: AppContextStateArg<[string, string]> = undefined;
+
     const [currentSearchingLocation, setCurrentSearchingLocation] = React.useState<[string, string]>(undefined);
     const [places, setPlaces] = React.useState<PlaceResponse[]>([]);
     const [loadingPlaces, setLoadingPlaces] = React.useState<boolean>(false);
     const [lastSearchTextLength, setLastSearchTextLength] = React.useState<number>(0);
     const [loadingGeocodingResponse, setLoadingGeocodingResponse] = React.useState<boolean>(false);
+    const [locationPickerPlaceholder, setLocationPickerPlaceholder] = React.useState<string>(explorePlacesScreenWording.EXPLORE_PLACE_LOCATION_PICKER_SEARCH_LOCATION)
 
     const [locationPickerValue, setLocationPickerValue] = React.useState<string>(null);
     const [locationPickerOpen, setLocationPickerOpen] = React.useState<boolean>(false);
     const [locationPickerItems, setLocationPickerItems] = React.useState<PickerItem[]>([]);
 
+
     React.useEffect(() => {
+        if(userLocation) {
+            setLocationPickerPlaceholder(explorePlacesScreenWording.EXPLORE_PLACE_LOCATION_PICKER_CURRENT_LOCATION);
+        }
+
         (async () => {
-            const [latitude, longitude] = userLocation.value;
-            if (latitude && longitude) {
+            if (userLocation) {
+                const [latitude, longitude] = userLocation.value;
                 setLoadingPlaces(true);
                 const places = await adapter.getRecommendedPlaces([latitude, longitude]);
                 setPlaces(places.results);
@@ -79,7 +83,7 @@ const ExplorePlacesScreen = ({ navigation }) => {
                 </View>
                 <View style={{ flex: 0.85 }}>
                     <DecentravellerPicker
-                        dropdownPlaceholder={explorePlacesScreenWording.EXPLORE_PLACE_LOCATION_CURRENT_LOCATION}
+                        dropdownPlaceholder={locationPickerPlaceholder}
                         items={locationPickerItems}
                         setItems={setLocationPickerItems}
                         value={locationPickerValue}

@@ -28,4 +28,4 @@ const DecentravellerPlacesItems: React.FC<PlacesItemsProps> = ({ places }) => (
     <FlatList data={places} renderItem={renderPlaceItem} />
 );
 
-export { DecentravellerPlacesItems };
+export default DecentravellerPlacesItems ;
