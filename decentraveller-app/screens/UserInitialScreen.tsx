@@ -17,22 +17,19 @@ const DecentravellerInitialScreen = () => {
     const { setUserInterest } = appContext.userInterest;
 
     const getUser = async () => {
-        const adapter = mockApiAdapter;
-        const wallet = '3FZbgi29cpjq2GjdwV8eyHuJJnkLtktZc5';
+        const adapter = apiAdapter;
+        const wallet = appContext.connectionContext.connectedAddress;
+        const user = await adapter.getUser(wallet, () => {
+            setStackToRender('Registration');
+        });
 
-        //const adapter = apiAdapter;
-        //const wallet = appContext.connectionContext.connectedAddress;
-        const user = await adapter.getUser(wallet, () => {});
+        if (!user) return;
 
-        const render = user ? 'Home' : 'Registration';
-        if (user) {
-            setUserNickname(user.UserElementResponse.nickname);
-            setUserCreatedAt(user.UserElementResponse.createdAt);
-            setUserInterest(user.UserElementResponse.interest);
-            setUserWalletAddress(wallet);
-        }
-
-        setStackToRender(render);
+        setUserNickname(user.UserElementResponse.nickname);
+        setUserCreatedAt(user.UserElementResponse.createdAt);
+        setUserInterest(user.UserElementResponse.interest);
+        setUserWalletAddress(wallet);
+        setStackToRender('Home');
     };
 
     useEffect(() => {

@@ -8,13 +8,15 @@ interface AddressesByBlockchain {
 
 export interface ContractFunction {
     functionName: string;
-    functionABI: string;
+    fullContractABI: string;
 }
 
 export interface DecentravellerContract {
     addressesByBlockchain: { [key in Blockchain]: string };
     functions: { [key in string]: ContractFunction };
 }
+
+const mainContractStringfiedABI = JSON.stringify(mainContractABI);
 
 const decentravellerMainContract: DecentravellerContract = {
     addressesByBlockchain: {
@@ -24,11 +26,11 @@ const decentravellerMainContract: DecentravellerContract = {
     functions: {
         addPlace: {
             functionName: 'addPlace',
-            functionABI: JSON.stringify(mainContractABI),
+            fullContractABI: mainContractStringfiedABI,
         },
         registerUser: {
-            functionName: 'registerUser',
-            functionABI: JSON.stringify(mainContractABI),
+            functionName: 'registerProfile',
+            fullContractABI: mainContractStringfiedABI,
         },
     },
 };
