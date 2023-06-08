@@ -92,7 +92,7 @@ class BlockchainAdapter {
             return await this.populateAndSend(
                 connector,
                 decentravellerMainContract,
-                'registerUser',
+                'registerProfile',
                 nickname,
                 country,
                 interest
