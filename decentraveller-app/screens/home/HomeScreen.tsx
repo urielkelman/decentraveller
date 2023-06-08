@@ -5,7 +5,7 @@ import { apiAdapter } from '../../api/apiAdapter';
 import { mockApiAdapter } from '../../api/mockApiAdapter';
 import { PlaceResponse, PlacesResponse } from '../../api/response/places';
 import * as Location from 'expo-location';
-import { DecentravellerPlacesItems } from '../../commons/components/DecentravellerPlacesList';
+import DecentravellerPlacesItems  from '../../commons/components/DecentravellerPlacesList';
 import { addNewPlaceIconSize, homeStyle } from '../../styles/homeStyles';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { DECENTRAVELLER_DEFAULT_BACKGROUND_COLOR } from '../../commons/global';
