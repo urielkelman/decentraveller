@@ -27,6 +27,9 @@ const RegisterUserScreen = ({ navigation }) => {
             interestPicker.value,
             onError
         );
+
+        if (!transactionHash) return;
+
         console.log('Transaction confirmed with hash', transactionHash);
         navigation.navigate('SuccessRegisterUserScreen');
     };
@@ -37,13 +40,8 @@ const RegisterUserScreen = ({ navigation }) => {
     const backgroundOpacity = showErrorModal ? 0.5 : 1;
 
     return (
-        <KeyboardAvoidingView
-            style={{ ...registrationScreenStyles.container, opacity: backgroundOpacity }}
-            behavior="padding"
-            keyboardVerticalOffset={40}
-        >
+        <View style={{ ...registrationScreenStyles.container, opacity: backgroundOpacity }}>
             <Text style={registrationScreenStyles.title}>Tell us about you!</Text>
-            <DecentravellerTextInput text={nickname} placeholder="Nickname" setTextValue={setNickname} />
             <DecentravellerPicker
                 titleText={registerUserScreenWordings.REGISTER_USER_TITLE_COUNTRY}
                 dropdownPlaceholder={registerUserScreenWordings.REGISTER_USER_COUNTRY_PLACEHOLDER}
@@ -69,9 +67,10 @@ const RegisterUserScreen = ({ navigation }) => {
                 setOpen={interestPicker.setOpen}
                 onOpen={interestPicker.onOpen}
                 searchable={true}
-                zIndex={3000}
-                zIndexInverse={1000}
+                zIndex={1000}
+                zIndexInverse={3000}
             />
+            <DecentravellerTextInput text={nickname} placeholder="Nickname" setTextValue={setNickname} />
             <DecentravellerButton loading={false} text="Finish" onPress={handleSubmit} />
             <DecentravellerInformativeModal
                 informativeText={registerUserScreenWordings.REGISTER_USER_ERROR_INFORMATIVE_TEXT}
@@ -81,7 +80,7 @@ const RegisterUserScreen = ({ navigation }) => {
                     setShowErrorModal(false);
                 }}
             />
-        </KeyboardAvoidingView>
+        </View>
     );
 };
 
