@@ -1,15 +1,12 @@
-from typing import Optional, List
-
 from fastapi import Depends, HTTPException
 from fastapi_utils.cbv import cbv
 from fastapi_utils.inferring_router import InferringRouter
-from sqlalchemy.orm import Session, Query
 from starlette.status import HTTP_404_NOT_FOUND, HTTP_400_BAD_REQUEST
 
 from src.api_models.place import PlaceID
-from src.api_models.review import ReviewInDB, ReviewId, ReviewBody
-from src.dependencies import get_db
-from src.orms.review import ReviewORM
+from src.api_models.review import ReviewInDB, ReviewID, ReviewBody
+from src.api_models.bulk_results import PaginatedReviews
+from src.dependencies.relational_database import build_relational_database, RelationalDatabase
 from sqlalchemy.exc import IntegrityError
 
 review_router = InferringRouter()
@@ -17,33 +14,7 @@ review_router = InferringRouter()
 
 @cbv(review_router)
 class ReviewCBV:
-    session: Session = Depends(get_db)
-
-    @staticmethod
-    def query_review(session: Session, review_id: ReviewId) -> Optional[ReviewORM]:
-        """
-        Gets a review from the database by its id
-        
-        :param session: the database session
-        :param review_id: the id
-        :return: a review ORM or None if the id does not exist
-        """
-        review: Optional[ReviewORM] = session.query(ReviewORM).get(review_id)
-
-        return review
-
-    @staticmethod
-    def query_reviews_by_place(session: Session, place_id: PlaceID) -> Query:
-        """
-        Gets all the reviews from a place as a query
-
-        :param session: the database session
-        :param place_id: the id of the place
-        :return: a query with the result
-        """
-        query = session.query(ReviewORM).filter(ReviewORM.place_id == place_id)
-
-        return query
+    database: RelationalDatabase = Depends(build_relational_database)
 
     @review_router.post("/review", status_code=201)
     def create_review(self, review: ReviewBody) -> ReviewInDB:
@@ -54,33 +25,29 @@ class ReviewCBV:
         :return: the review data
         """
         try:
-            review_orm = ReviewORM(place_id=review.place_id,
-                                   score=review.score, owner=review.owner,
-                                   text=review.text, images=review.images,
-                                   state=review.state)
-            self.session.add(review_orm)
-            self.session.commit()
-            return ReviewInDB.from_orm(review_orm)
+
+            return self.database.add_review(review)
         except IntegrityError as e:
             raise HTTPException(status_code=HTTP_400_BAD_REQUEST,
                                 detail="Either the place or the profile does not exist")
 
-    @review_router.get("/review/{review_id}")
-    def get_review(self, review_id: ReviewId) -> ReviewInDB:
+    @review_router.get("/review")
+    def get_review(self, review_id: ReviewID, place_id: PlaceID) -> ReviewInDB:
         """
         Get a review by its id
 
         :param review_id: the review id to query
+        :param place_id: the place id
         :return: the review data
         """
-        review_orm = self.query_review(self.session, review_id)
-        if review_orm is None:
+        review = self.database.query_review(review_id, place_id)
+        if review is None:
             raise HTTPException(status_code=HTTP_404_NOT_FOUND)
-        return ReviewInDB.from_orm(review_orm)
+        return review
 
     @review_router.get("/place/{place_id}/reviews")
     def get_review_by_place(self, place_id: PlaceID,
-                            per_page: int, page: int) -> List[ReviewInDB]:
+                            per_page: int, page: int) -> PaginatedReviews:
         """
         Get a place reviews paginated
 
@@ -89,9 +56,25 @@ class ReviewCBV:
         :param page: number of page
         :return: the reviews data
         """
-        query = self.query_reviews_by_place(self.session, place_id)
-        query = query.limit(per_page).offset(page * per_page)
-        reviews = self.session.execute(query).all()
+
+        reviews = self.database.query_reviews_by_place(place_id, page, per_page)
         if not reviews:
             raise HTTPException(status_code=HTTP_404_NOT_FOUND)
-        return [ReviewInDB.from_orm(r[0]) for r in reviews]
+        return reviews
+
+    @review_router.get("/profile/{owner}/reviews")
+    def get_review_by_profile(self, owner: str,
+                              per_page: int, page: int) -> PaginatedReviews:
+        """
+        Gets a user reviews paginated
+
+        :param owner: the profile
+        :param per_page: items per page
+        :param page: number of page
+        :return: the reviews data
+        """
+
+        reviews = self.database.query_reviews_by_profile(owner, page, per_page)
+        if not reviews:
+            raise HTTPException(status_code=HTTP_404_NOT_FOUND)
+        return reviews

@@ -29,7 +29,7 @@ class BlockchainAdapter {
         const contractFunction: ContractFunction = contract.functions[functionName];
         const ethersContract: ethers.Contract = new ethers.Contract(
             contractAddress,
-            contractFunction.functionABI,
+            contractFunction.fullContractABI,
             provider
         );
         const populatedTransaction: ethers.PopulatedTransaction = await ethersContract.populateTransaction[
@@ -92,7 +92,7 @@ class BlockchainAdapter {
             return await this.populateAndSend(
                 connector,
                 decentravellerMainContract,
-                'registerUser',
+                'registerProfile',
                 nickname,
                 country,
                 interest
