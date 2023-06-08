@@ -103,7 +103,6 @@ const ExplorePlacesScreen = ({ navigation }) => {
             if (lastLocationLabelSearched !== item.label) {
                 setLoadingPlaces(true);
                 const geocodingElement: GeocodingElement = JSON.parse(item.value);
-                console.log(geocodingElement.latitude, geocodingElement.longitude);
                 const places = await adapter.getRecommendedPlaces([
                     geocodingElement.latitude,
                     geocodingElement.longitude,
