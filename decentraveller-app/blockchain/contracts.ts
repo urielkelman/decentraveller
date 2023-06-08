@@ -28,7 +28,7 @@ const decentravellerMainContract: DecentravellerContract = {
             functionName: 'addPlace',
             fullContractABI: mainContractStringfiedABI,
         },
-        registerUser: {
+        registerProfile: {
             functionName: 'registerProfile',
             fullContractABI: mainContractStringfiedABI,
         },
