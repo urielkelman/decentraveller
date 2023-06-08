@@ -1,5 +1,5 @@
 from sqlalchemy import Column, String, Enum, DateTime, func
-from src.api_models.place import PlaceCategory
+from src.api_models.place_category import PlaceCategory
 from src.orms import Base
 
 
