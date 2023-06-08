@@ -15,6 +15,7 @@ export type PickerCreatePlaceProps = {
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
     onOpen: () => void;
     onClose?: () => void;
+    onSelection?: (PickerItem) => void;
     searchable: boolean;
     zIndex?: number;
     zIndexInverse?: number;
@@ -36,6 +37,7 @@ const DecentravellerPicker: React.FC<PickerCreatePlaceProps> = ({
     setValue,
     open,
     onOpen,
+    onSelection,
     setOpen,
     zIndex = 1000,
     zIndexInverse = 1000,
@@ -62,6 +64,7 @@ const DecentravellerPicker: React.FC<PickerCreatePlaceProps> = ({
                 open={open}
                 setOpen={setOpen}
                 onOpen={onOpen}
+                onSelectItem={onSelection}
                 items={items}
                 setItems={setItems}
                 value={value}

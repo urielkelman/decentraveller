@@ -4,7 +4,7 @@ import { UserResponse } from './response/user';
 import { GianUserResponse, MatiUserResponse, UriUserResponse } from './mocks/user';
 import { PlacesResponse } from './response/places';
 import Adapter from './Adapter';
-import { defaultPlacesMock } from './mocks/places';
+import { alternativePlacesMock, defaultPlacesMock } from './mocks/places';
 
 const searchTextHondurasResponse = ['Honduras', 'Honduras ', 'Honduras 4', 'Honduras 47', 'Honduras 470'];
 
@@ -65,7 +65,10 @@ class MockApiAdapter extends Adapter {
         return defaultPlacesMock;
     }
 
-    async getRecommendedPlaces(_): Promise<PlacesResponse> {
+    async getRecommendedPlaces([latitude, longitude]: [string, string]): Promise<PlacesResponse> {
+        if (latitude === '-34.584472' && longitude === '-58.435681') {
+            return alternativePlacesMock;
+        }
         return defaultPlacesMock;
     }
 }

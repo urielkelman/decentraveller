@@ -5,7 +5,7 @@ import { explorePlacesScreenWording } from './wording';
 import { PlaceResponse } from '../../../api/response/places';
 import { mockApiAdapter } from '../../../api/mockApiAdapter';
 import { apiAdapter } from '../../../api/apiAdapter';
-import  DecentravellerPlacesItems  from '../../../commons/components/DecentravellerPlacesList';
+import DecentravellerPlacesItems from '../../../commons/components/DecentravellerPlacesList';
 import DecentravellerPicker from '../../../commons/components/DecentravellerPicker';
 import { PickerItem } from '../../../commons/types';
 import {
@@ -15,28 +15,57 @@ import {
 } from '../../../commons/global';
 import { getAndParseGeocoding } from '../../../commons/functions/geocoding';
 import { Entypo, Ionicons } from '@expo/vector-icons';
-import {AppContextStateArg} from "../../../context/types";
+import { GeocodingElement } from '../place/CreatePlaceContext';
+import LoadingComponent from '../../../commons/components/DecentravellerLoading';
 
 const adapter = mockApiAdapter;
 
 const ExplorePlacesScreen = ({ navigation }) => {
-    // const { userLocation } = useAppContext();
-    const userLocation: AppContextStateArg<[string, string]> = undefined;
+    const { userLocation } = useAppContext();
 
-    const [currentSearchingLocation, setCurrentSearchingLocation] = React.useState<[string, string]>(undefined);
     const [places, setPlaces] = React.useState<PlaceResponse[]>([]);
     const [loadingPlaces, setLoadingPlaces] = React.useState<boolean>(false);
     const [lastSearchTextLength, setLastSearchTextLength] = React.useState<number>(0);
     const [loadingGeocodingResponse, setLoadingGeocodingResponse] = React.useState<boolean>(false);
-    const [locationPickerPlaceholder, setLocationPickerPlaceholder] = React.useState<string>(explorePlacesScreenWording.EXPLORE_PLACE_LOCATION_PICKER_SEARCH_LOCATION)
+    const [locationPickerPlaceholder, setLocationPickerPlaceholder] = React.useState<string>(
+        explorePlacesScreenWording.EXPLORE_PLACE_LOCATION_PICKER_SEARCH_LOCATION
+    );
 
     const [locationPickerValue, setLocationPickerValue] = React.useState<string>(null);
     const [locationPickerOpen, setLocationPickerOpen] = React.useState<boolean>(false);
     const [locationPickerItems, setLocationPickerItems] = React.useState<PickerItem[]>([]);
+    const [lastLocationLabelSearched, setLastLocationLabelSearched] = React.useState<string>();
 
+    const ownLocationPickerValue = userLocation
+        ? JSON.stringify({
+              address: explorePlacesScreenWording.EXPLORE_PLACE_LOCATION_PICKER_CURRENT_LOCATION,
+              latitude: userLocation.value[0],
+              longitude: userLocation.value[1],
+          })
+        : undefined;
+
+    const ownLocationPickerItem: PickerItem = ownLocationPickerValue
+        ? {
+              label: explorePlacesScreenWording.EXPLORE_PLACE_LOCATION_PICKER_CURRENT_LOCATION,
+              value: ownLocationPickerValue,
+          }
+        : undefined;
+
+    const setLocationPickerItemsWrappedWithOwnLocation = (locationPickerItems: PickerItem[]) => {
+        if (
+            userLocation &&
+            !locationPickerItems.some(
+                (item) => item.label === explorePlacesScreenWording.EXPLORE_PLACE_LOCATION_PICKER_CURRENT_LOCATION
+            )
+        ) {
+            setLocationPickerItems([ownLocationPickerItem].concat(locationPickerItems));
+        } else {
+            setLocationPickerItems(locationPickerItems);
+        }
+    };
 
     React.useEffect(() => {
-        if(userLocation) {
+        if (userLocation) {
             setLocationPickerPlaceholder(explorePlacesScreenWording.EXPLORE_PLACE_LOCATION_PICKER_CURRENT_LOCATION);
         }
 
@@ -47,26 +76,46 @@ const ExplorePlacesScreen = ({ navigation }) => {
                 const places = await adapter.getRecommendedPlaces([latitude, longitude]);
                 setPlaces(places.results);
                 setLoadingPlaces(false);
-                setCurrentSearchingLocation([latitude, longitude]);
+                setLocationPickerValue(ownLocationPickerValue);
+                setLastLocationLabelSearched(explorePlacesScreenWording.EXPLORE_PLACE_LOCATION_PICKER_CURRENT_LOCATION);
             }
         })();
     }, []);
 
-    console.log('Explore');
-
     const onOpenPicker = () => {
-        setLocationPickerItems(locationPickerItems.filter((item) => item.value === locationPickerValue));
+        setLocationPickerItemsWrappedWithOwnLocation(
+            locationPickerItems.filter((item) => item.value === locationPickerValue)
+        );
     };
 
     const onChangeSearchAddressText = async (text: string) => {
         setLocationPickerValue(text);
         if (text.length > MINIMUM_ADDRESS_LENGTH_TO_SHOW_PICKER && text.length > lastSearchTextLength) {
-            await getAndParseGeocoding(text, setLocationPickerItems, setLoadingGeocodingResponse);
+            await getAndParseGeocoding(text, setLocationPickerItemsWrappedWithOwnLocation, setLoadingGeocodingResponse);
         } else if (text.length <= MINIMUM_ADDRESS_LENGTH_TO_SHOW_PICKER) {
-            setLocationPickerItems([]);
+            setLocationPickerItemsWrappedWithOwnLocation([]);
         }
         setLastSearchTextLength(text.length);
     };
+
+    const onSelection = (item: PickerItem) => {
+        (async () => {
+            if (lastLocationLabelSearched !== item.label) {
+                setLoadingPlaces(true);
+                const geocodingElement: GeocodingElement = JSON.parse(item.value);
+                console.log(geocodingElement.latitude, geocodingElement.longitude);
+                const places = await adapter.getRecommendedPlaces([
+                    geocodingElement.latitude,
+                    geocodingElement.longitude,
+                ]);
+                setPlaces(places.results);
+                setLoadingPlaces(false);
+                setLastLocationLabelSearched(item.label);
+            }
+        })();
+    };
+
+    const componentToRender = loadingPlaces ? <LoadingComponent /> : <DecentravellerPlacesItems places={places} />;
 
     return (
         <View
@@ -91,6 +140,7 @@ const ExplorePlacesScreen = ({ navigation }) => {
                         open={locationPickerOpen}
                         setOpen={setLocationPickerOpen}
                         onOpen={onOpenPicker}
+                        onSelection={onSelection}
                         searchable={true}
                         onChangeSearchText={onChangeSearchAddressText}
                         zIndex={1000}
@@ -108,9 +158,7 @@ const ExplorePlacesScreen = ({ navigation }) => {
                 </View>
             </View>
             <View style={{ backgroundColor: 'black', height: 2, borderRadius: 2 }} />
-            <View style={{ flex: 0.9 }}>
-                <DecentravellerPlacesItems places={places} />
-            </View>
+            <View style={{ flex: 0.9 }}>{componentToRender}</View>
         </View>
     );
 };
