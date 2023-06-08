@@ -9,7 +9,7 @@ import DecentravellerPlacesItems from '../../commons/components/DecentravellerPl
 import { addNewPlaceIconSize, homeStyle } from '../../styles/homeStyles';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { DECENTRAVELLER_DEFAULT_BACKGROUND_COLOR } from '../../commons/global';
-import LoadingComponent from '../../commons/components/DecentravellerLoading';
+import LoadingComponent from "../../commons/components/DecentravellerLoading";
 
 const adapter = mockApiAdapter;
 
@@ -29,8 +29,7 @@ const HomeScreen = ({ navigation }) => {
                 if (statusRequest !== PERMISSION_GRANTED) {
                     console.log('Permission not granted');
                     const recommendedPlacesResponse: PlacesResponse = await adapter.getRecommendedPlacesForAddress(
-                        //connectionContext.connectedAddress,
-                        '',
+                        connectionContext.connectedAddress,
                         []
                     );
                     setRecommendedPlaces(recommendedPlacesResponse.results);
@@ -44,8 +43,7 @@ const HomeScreen = ({ navigation }) => {
             const longitude = location.coords.longitude.toString();
             userLocation.setValue([latitude, longitude]);
             const recommendedPlacesResponse: PlacesResponse = await adapter.getRecommendedPlacesForAddress(
-                //connectionContext.connectedAddress,
-                '',
+                connectionContext.connectedAddress,
                 [latitude, longitude]
             );
             setLoadingRecommendedPlaces(false);
