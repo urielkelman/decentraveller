@@ -16,7 +16,7 @@ contract Decentraveller {
         address owner,
         string nickname,
         string country,
-        DecentravellerDataTypes.DecentravellerInterest interest
+        DecentravellerDataTypes.DecentravellerPlaceCategory interest
     );
 
     uint256 private currentPlaceId;
@@ -29,7 +29,7 @@ contract Decentraveller {
     function registerProfile(
         string calldata _nickname,
         string calldata _country,
-        DecentravellerDataTypes.DecentravellerInterest _interest
+        DecentravellerDataTypes.DecentravellerPlaceCategory _interest
     ) public returns (address owner) {
         address nicknameOwner = ownersByNicknames[_nickname];
         if (nicknameOwner != address(0) && nicknameOwner != msg.sender) {

@@ -5,6 +5,8 @@ import { GianUserResponse, MatiUserResponse, UriUserResponse } from './mocks/use
 import { PlacesResponse } from './response/places';
 import Adapter from './Adapter';
 import { alternativePlacesMock, defaultPlacesMock } from './mocks/places';
+import { ReviewsResponse } from './response/reviews';
+import { emptyReviewsResponse, manyReviewsResponse, oneReviewsResponse } from './mocks/reviews';
 
 const searchTextHondurasResponse = ['Honduras', 'Honduras ', 'Honduras 4', 'Honduras 47', 'Honduras 470'];
 
@@ -70,6 +72,19 @@ class MockApiAdapter extends Adapter {
             return alternativePlacesMock;
         }
         return defaultPlacesMock;
+    }
+
+    async getPlaceReviews(placeId: number): Promise<ReviewsResponse> {
+        switch (placeId) {
+            case 1:
+                return manyReviewsResponse;
+
+            case 2:
+                return oneReviewsResponse;
+
+            default:
+                return emptyReviewsResponse;
+        }
     }
 }
 

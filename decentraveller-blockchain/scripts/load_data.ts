@@ -45,7 +45,7 @@ const main = async () => {
             businessData["latitude"].toString(),
             businessData["longitude"].toString(),
             businessData["address"],
-            0
+            3
         );
 
         if (await result.wait(1)) {
