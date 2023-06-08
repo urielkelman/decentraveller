@@ -26,16 +26,13 @@ const DecentravellerInitialScreen = () => {
         const user = await adapter.getUser(wallet, () => {});
         const userProfileImage = await adapter.getUserProfileImage(wallet,  () => {})
 
-        const render = user ? 'Home' : 'Registration';
-        if (user) {
-            setUserNickname(user.UserElementResponse.nickname);
-            setUserProfileImage(userProfileImage);
-            setUserCreatedAt(user.UserElementResponse.createdAt);
-            setUserInterest(user.UserElementResponse.interest);
-            setUserWalletAddress(wallet);
-        }
+        setUserNickname(user.UserElementResponse.nickname);
+        setUserProfileImage(userProfileImage);
+        setUserCreatedAt(user.UserElementResponse.createdAt);
+        setUserInterest(user.UserElementResponse.interest);
+        setUserWalletAddress(wallet);
 
-        setStackToRender(render);
+        setStackToRender('Home');
     };
 
     useEffect(() => {

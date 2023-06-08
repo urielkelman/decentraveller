@@ -7,11 +7,13 @@ import {
     RECOMMENDED_PLACES_BY_LOCATION_ENDPOINT,
     OWNED_PLACES_ENDPOINT,
     RECOMMENDED_PLACES_BY_PROFILE_ENDPOINT,
+    REVIEWS_PLACES_ENDPOINT,
 } from './config';
 import { UserResponse } from './response/user';
 import { PlacesResponse } from './response/places';
 import Adapter from './Adapter';
 import { formatString } from '../commons/utils';
+import { ReviewsResponse } from './response/reviews';
 
 class ApiAdapter extends Adapter {
     private httpConnector: HttpConnector;
@@ -93,6 +95,16 @@ class ApiAdapter extends Adapter {
     async getMyPlaces(walletAddress: string): Promise<PlacesResponse> {
         const httpRequest: HttpGetRequest = {
             url: `${OWNED_PLACES_ENDPOINT}/${walletAddress}`,
+            queryParams: {},
+            onError: (e) => console.log('Error'),
+        };
+
+        return await httpAPIConnector.get(httpRequest);
+    }
+
+    async getPlaceReviews(placeId: string): Promise<ReviewsResponse> {
+        const httpRequest: HttpGetRequest = {
+            url: formatString(REVIEWS_PLACES_ENDPOINT, { placeId: placeId }),
             queryParams: {},
             onError: (e) => console.log('Error'),
         };
