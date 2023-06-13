@@ -17,8 +17,8 @@ const DecentravellerInitialScreen = () => {
     const { setUserInterest } = appContext.userInterest;
 
     const getUser = async () => {
-        const adapter = apiAdapter;
-        const wallet = appContext.connectionContext.connectedAddress;
+        const adapter = mockApiAdapter;
+        const wallet = 'uri';
         const user = await adapter.getUser(wallet, () => {
             setStackToRender('Registration');
         });
