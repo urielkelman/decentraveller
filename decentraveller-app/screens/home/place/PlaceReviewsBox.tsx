@@ -3,10 +3,12 @@ import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import { placeReviewsBoxStyles } from '../../../styles/placeDetailStyles';
 import { ReviewResponse, ReviewsResponse } from '../../../api/response/reviews';
 import { mockApiAdapter } from '../../../api/mockApiAdapter';
+import {useNavigation} from "@react-navigation/native";
 
 const adapter = mockApiAdapter;
 
 const PlaceReviewsBox = ({ placeId }) => {
+    const navigation = useNavigation()
     const [loadingReviews, setLoadingReviews] = React.useState<boolean>(false);
     const [reviews, setReviews] = React.useState<ReviewResponse[]>(null);
 
@@ -28,6 +30,10 @@ const PlaceReviewsBox = ({ placeId }) => {
 
     const hasTwoReviews = () => {
         return reviews !== null && reviews.length >= 2;
+    };
+
+    const onPress = () => {
+        navigation.navigate('AddReviewImages')
     };
 
     const loadingReviewsComponent = () => (
@@ -85,7 +91,7 @@ const PlaceReviewsBox = ({ placeId }) => {
                     </View>
                 ) : null}
 
-                <TouchableOpacity style={placeReviewsBoxStyles.button} onPress={() => {}}>
+                <TouchableOpacity style={placeReviewsBoxStyles.button} onPress={onPress}>
                     <View style={placeReviewsBoxStyles.buttonTextView}>
                         {<Text style={placeReviewsBoxStyles.text}>{'Add review'}</Text>}
                     </View>

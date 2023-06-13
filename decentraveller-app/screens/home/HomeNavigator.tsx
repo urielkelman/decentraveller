@@ -8,6 +8,8 @@ import UserPlacesScreen from '../users/profile/UserPlacesScreen';
 import PlaceDetailScreen from './place/PlaceDetailScreen';
 import UserProfileScreen from '../users/profile/UserProfileScreen';
 import UserReviewsScreen from '../users/profile/UserReviewsScreen';
+import AddReviewImages from "../reviews/AddReviewImages";
+import AddReviewComment from "../reviews/AddReviewComment";
 
 export type HomeStackScreens = {
     LeftSideBar: undefined;
@@ -17,6 +19,8 @@ export type HomeStackScreens = {
     Profile: undefined;
     UserPlacesScreen: undefined;
     UserReviewsScreen: undefined;
+    AddReviewImages: undefined;
+    AddReviewComment: undefined;
 };
 
 const HomeStackNavigator = createStackNavigator<HomeStackScreens>();
@@ -72,6 +76,22 @@ const HomeNavigator = () => {
                     component={UserReviewsScreen}
                     options={{
                         title: 'My Reviews',
+                        headerShown: true,
+                    }}
+                />
+                <HomeStackNavigator.Screen
+                    name="AddReviewImages"
+                    component={AddReviewImages}
+                    options={{
+                        title: 'Add Review',
+                        headerShown: true,
+                    }}
+                />
+                <HomeStackNavigator.Screen
+                    name="AddReviewComment"
+                    component={AddReviewComment}
+                    options={{
+                        title: 'Add Review',
                         headerShown: true,
                     }}
                 />
