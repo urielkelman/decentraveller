@@ -1,8 +1,10 @@
-import React from 'react';
-import { View, StyleSheet, Image, Text, TouchableOpacity } from 'react-native';
+import React, {useState} from 'react';
+import { View, StyleSheet, Image, Text, TouchableOpacity, Alert } from 'react-native';
 import { addReviewsScreenWordings } from './wording';
 import DecentravellerButton from '../../commons/components/DecentravellerButton';
 import { addReviewImagesStyles } from '../../styles/addReviewStyles';
+import * as ImagePicker from 'expo-image-picker';
+
 
 const imagePath1 = '../../assets/images/ar4.jpeg';
 const imagePath2 = '../../assets/images/ar2.jpeg';
@@ -23,6 +25,26 @@ const circleImage: React.FC<CircleImageItemProps> = ({ imagePath }) => {
 };
 
 const AddReviewImages = ({ navigation }) => {
+    const [selectedImage, setSelectedImage] = useState(null);
+
+    const handleImageUpload = async () => {
+        try {
+            const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+            if (status !== 'granted') {
+                throw new Error('Permission to access the media library was denied');
+            }
+
+            const result = await ImagePicker.launchImageLibraryAsync();
+
+            if (!result.cancelled) {
+                setSelectedImage(result.uri);
+            }
+        } catch (error) {
+            Alert.alert('Error', error.message);
+        }
+    };
+
     return (
         <View style={addReviewImagesStyles.container}>
             <View style={addReviewImagesStyles.commentExampleContainer}>
@@ -36,11 +58,18 @@ const AddReviewImages = ({ navigation }) => {
             <Text style={addReviewImagesStyles.title}>{addReviewsScreenWordings.ADD_IMAGE_TITLE}</Text>
             <View style={addReviewImagesStyles.uploadContainer}>
                 <View style={addReviewImagesStyles.circleImage}>
-                    <Image
-                        source={require('../../assets/images/imageUpload.jpeg')}
-                        style={addReviewImagesStyles.imageUpload}
-                    />
-                    <TouchableOpacity style={addReviewImagesStyles.smallCircleButton}>
+                    {selectedImage ? (
+                        <Image source={{ uri: selectedImage }} style={addReviewImagesStyles.imageUpload} />
+                    ) : (
+                        <Image
+                            source={require('../../assets/images/imageUpload.jpeg')}
+                            style={addReviewImagesStyles.imageUpload}
+                        />
+                    )}
+                    <TouchableOpacity
+                        style={addReviewImagesStyles.smallCircleButton}
+                        onPress={handleImageUpload}
+                    >
                         <Image
                             source={require('../../assets/images/pencil.png')}
                             style={addReviewImagesStyles.smallCircleImage}
