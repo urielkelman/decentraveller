@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import {View, StyleSheet, Image, Text, TouchableOpacity, TextInput} from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import {addReviewsScreenWordings} from "./wording";
 import DecentravellerButton from "../../commons/components/DecentravellerButton";
 
@@ -7,6 +8,33 @@ const imagePath1 = '../../assets/images/ar4.jpeg'
 
 const AddReviewComment = () => {
     const [comment, setComment] = useState('');
+    const [rating, setRating] = useState(0);
+
+    const handleRating = (selectedRating) => {
+        setRating(selectedRating);
+    };
+
+    const renderStars = () => {
+        const stars = [];
+        for (let i = 1; i <= 5; i++) {
+            stars.push(
+                <TouchableOpacity
+                    key={i}
+                    activeOpacity={0.7}
+                    onPress={() => handleRating(i)}
+                >
+                    <Text>
+                        <Ionicons
+                            name={i <= rating ? 'star' : 'star-outline'}
+                            size={30}
+                            color={i <= rating ? '#FFD700' : '#cc6060'}
+                        />
+                    </Text>
+                </TouchableOpacity>
+            );
+        }
+        return stars;
+    };
 
     return (
         <View style={styles.container}>
@@ -18,20 +46,26 @@ const AddReviewComment = () => {
                     <Text style={styles.dialogText}>{addReviewsScreenWordings.EXAMPLE_COMMENT_REVIEW}</Text>
                 </View>
             </View>
+
+            <Text style={styles.commentSubtitle}>{addReviewsScreenWordings.ADD_RATE}</Text>
+            <View style={styles.starContainer}>{renderStars()}</View>
             <Text style={styles.commentSubtitle}>{addReviewsScreenWordings.ADD_COMMENT_SUBTITLE}</Text>
             <View style={styles.inputContainer}>
                 <TextInput
                     style={styles.textInput}
                     multiline
+                    placeholder="Insert comment here"
                     placeholderTextColor="gray"
                     value={comment}
                     onChangeText={setComment}
                 />
-                {comment === '' && <Text style={styles.placeholderText}>Insert comment here</Text>}
             </View>
 
 
-            <DecentravellerButton text={'Next'} loading={false} onPress={()=>{}} />
+            <DecentravellerButton text={'Finish'} loading={false} onPress={()=>{
+                console.log("raiting=",rating)
+                console.log("text=", comment)
+            }} />
         </View>
     );
 };
@@ -68,7 +102,7 @@ const styles = StyleSheet.create({
         fontSize: 15,
         fontFamily: 'Montserrat_700Bold',
         textAlign: 'left',
-        marginTop: 70,
+        marginTop: 10,
         marginRight: 10,
         marginLeft: 10,
     },
@@ -108,6 +142,11 @@ const styles = StyleSheet.create({
         left: 10,
         fontSize: 16,
         color: 'gray',
+    },
+    starContainer: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        marginTop: 5,
     },
 });
 
