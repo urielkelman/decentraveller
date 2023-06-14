@@ -1,11 +1,11 @@
-import React, {useState} from 'react';
-import {View, StyleSheet, Image, Text, TouchableOpacity, TextInput} from 'react-native';
+import React, { useState } from 'react';
+import { View, StyleSheet, Image, Text, TouchableOpacity, TextInput } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import {addReviewsScreenWordings} from "./wording";
-import DecentravellerButton from "../../commons/components/DecentravellerButton";
-import {addReviewCommentStyles} from "../../styles/addReviewStyles";
+import { addReviewsScreenWordings } from './wording';
+import DecentravellerButton from '../../commons/components/DecentravellerButton';
+import { addReviewCommentStyles } from '../../styles/addReviewStyles';
 
-const imagePath1 = '../../assets/images/ar4.jpeg'
+const imagePath1 = '../../assets/images/ar4.jpeg';
 
 const AddReviewComment = () => {
     const [comment, setComment] = useState('');
@@ -19,11 +19,7 @@ const AddReviewComment = () => {
         const stars = [];
         for (let i = 1; i <= 5; i++) {
             stars.push(
-                <TouchableOpacity
-                    key={i}
-                    activeOpacity={0.7}
-                    onPress={() => handleRating(i)}
-                >
+                <TouchableOpacity key={i} activeOpacity={0.7} onPress={() => handleRating(i)}>
                     <Text>
                         <Ionicons
                             name={i <= rating ? 'star' : 'star-outline'}
@@ -41,10 +37,15 @@ const AddReviewComment = () => {
         <View style={addReviewCommentStyles.container}>
             <Text style={addReviewCommentStyles.commentTitle}>{addReviewsScreenWordings.ADD_COMMENT_TITLE}</Text>
             <View style={addReviewCommentStyles.commentExampleContainer}>
-                <Image source={require('../../assets/images/example-girl.jpeg')} style={addReviewCommentStyles.imageUserExample} />
+                <Image
+                    source={require('../../assets/images/example-girl.jpeg')}
+                    style={addReviewCommentStyles.imageUserExample}
+                />
                 <View style={addReviewCommentStyles.dialogContainer}>
-                    <Image source={require('../../assets/images/dialog.png')}/>
-                    <Text style={addReviewCommentStyles.dialogText}>{addReviewsScreenWordings.EXAMPLE_COMMENT_REVIEW}</Text>
+                    <Image source={require('../../assets/images/dialog.png')} />
+                    <Text style={addReviewCommentStyles.dialogText}>
+                        {addReviewsScreenWordings.EXAMPLE_COMMENT_REVIEW}
+                    </Text>
                 </View>
             </View>
 
@@ -62,11 +63,14 @@ const AddReviewComment = () => {
                 />
             </View>
 
-
-            <DecentravellerButton text={'Finish'} loading={false} onPress={()=>{
-                console.log("raiting=",rating)
-                console.log("text=", comment)
-            }} />
+            <DecentravellerButton
+                text={'Finish'}
+                loading={false}
+                onPress={() => {
+                    console.log('raiting=', rating);
+                    console.log('text=', comment);
+                }}
+            />
         </View>
     );
 };

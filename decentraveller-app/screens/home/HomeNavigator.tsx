@@ -8,8 +8,8 @@ import UserPlacesScreen from '../users/profile/UserPlacesScreen';
 import PlaceDetailScreen from './place/PlaceDetailScreen';
 import UserProfileScreen from '../users/profile/UserProfileScreen';
 import UserReviewsScreen from '../users/profile/UserReviewsScreen';
-import AddReviewImages from "../reviews/AddReviewImages";
-import AddReviewComment from "../reviews/AddReviewComment";
+import AddReviewImages from '../reviews/AddReviewImages';
+import AddReviewComment from '../reviews/AddReviewComment';
 
 export type HomeStackScreens = {
     LeftSideBar: undefined;

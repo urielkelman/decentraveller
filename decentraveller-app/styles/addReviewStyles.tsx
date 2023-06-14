@@ -1,4 +1,4 @@
-import {StyleSheet} from "react-native";
+import { StyleSheet } from 'react-native';
 
 const addReviewCommentStyles = StyleSheet.create({
     container: {
@@ -11,7 +11,7 @@ const addReviewCommentStyles = StyleSheet.create({
         justifyContent: 'space-between',
         marginTop: 20,
         marginHorizontal: 30,
-        marginLeft: -10
+        marginLeft: -10,
     },
 
     imageUserExample: {
@@ -46,7 +46,7 @@ const addReviewCommentStyles = StyleSheet.create({
     },
     dialogContainer: {
         alignItems: 'center',
-        marginLeft: -10
+        marginLeft: -10,
     },
     inputContainer: {
         paddingHorizontal: 10,
@@ -79,7 +79,6 @@ const addReviewCommentStyles = StyleSheet.create({
         marginTop: 5,
     },
 });
-
 
 const addReviewImagesStyles = StyleSheet.create({
     container: {
@@ -147,8 +146,4 @@ const addReviewImagesStyles = StyleSheet.create({
     },
 });
 
-export {
-    addReviewCommentStyles,
-    addReviewImagesStyles,
-
-}
+export { addReviewCommentStyles, addReviewImagesStyles };
