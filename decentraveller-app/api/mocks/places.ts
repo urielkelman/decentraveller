@@ -64,3 +64,38 @@ export const defaultPlacesMock: PlacesResponse = {
         },
     ],
 };
+
+export const alternativePlacesMock: PlacesResponse = {
+    results: [
+        {
+            id: 10,
+            name: 'Burguer King',
+            address: 'Santa Fe 2501, Palermo, Buenos Aires, C1414, Argentina',
+            latitude: '-34.590716',
+            longitude: '-58.427125',
+            category: 'GASTRONOMY',
+            score: 4.1,
+            reviewCount: 22,
+        },
+        {
+            id: 11,
+            name: 'La Barrera',
+            address: 'Soler 4401, Palermo, Buenos Aires, C1420, Argentina',
+            latitude: '-34.675893',
+            longitude: '-58.508822',
+            category: 'OTHER',
+            score: 4.6,
+            reviewCount: 12,
+        },
+        {
+            id: 12,
+            name: 'Hotel Sheraton',
+            address: 'San Martín 1225, Retiro, Buenos Aires, C1104, Argentina',
+            latitude: '-34.621728',
+            longitude: '-58.80039',
+            category: 'ACCOMMODATION',
+            score: 3.7,
+            reviewCount: 1012,
+        },
+    ],
+};

@@ -31,7 +31,7 @@ const addPlaceDescriptionTextStyles = StyleSheet.create({
     },
 });
 
-const addPlaceScreenStyles = StyleSheet.create({
+const bottomTabScreenStyles = StyleSheet.create({
     container: {
         flexDirection: 'column',
         justifyContent: 'center',
@@ -41,7 +41,7 @@ const addPlaceScreenStyles = StyleSheet.create({
     },
 });
 
-const addPlaceIndicationTextStyles = StyleSheet.create({
+const bottomTabIndicationTextStyles = StyleSheet.create({
     container: {
         flexDirection: 'column',
         marginLeft: width * 0.1,
@@ -77,7 +77,7 @@ const addPlaceIndicationTextStyles = StyleSheet.create({
     },
 });
 
-const addPlaceButtonStyle = StyleSheet.create({
+const bottomTabButtonStyle = StyleSheet.create({
     buttonTextView: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -107,7 +107,7 @@ const addPlaceButtonStyle = StyleSheet.create({
 export {
     addPlaceHeadingTextStyles,
     addPlaceDescriptionTextStyles,
-    addPlaceScreenStyles,
-    addPlaceIndicationTextStyles,
-    addPlaceButtonStyle,
+    bottomTabScreenStyles,
+    bottomTabIndicationTextStyles,
+    bottomTabButtonStyle,
 };

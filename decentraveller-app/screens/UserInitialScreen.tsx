@@ -11,10 +11,10 @@ import HomeNavigator from './home/HomeNavigator';
 const DecentravellerInitialScreen = () => {
     let [stackToRender, setStackToRender] = React.useState<'Login' | 'Home' | 'Registration'>('Login');
     const appContext = useAppContext();
-    const { setUserNickname } = appContext.userNickname;
-    const { setUserWalletAddress } = appContext.userWalletAddress;
-    const { setUserCreatedAt } = appContext.userCreatedAt;
-    const { setUserInterest } = appContext.userInterest;
+    const setUserNickname = appContext.userNickname.setValue;
+    const setUserWalletAddress = appContext.userWalletAddress.setValue;
+    const setUserCreatedAt = appContext.userCreatedAt.setValue;
+    const setUserInterest = appContext.userInterest.setValue;
 
     const getUser = async () => {
         const adapter = apiAdapter;

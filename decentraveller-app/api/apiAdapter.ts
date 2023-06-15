@@ -11,7 +11,7 @@ import {
 import { UserResponse } from './response/user';
 import { PlacesResponse } from './response/places';
 import Adapter from './Adapter';
-import { formatString } from '../commons/utils';
+import { formatString } from '../commons/functions/utils';
 import { ReviewsResponse } from './response/reviews';
 
 class ApiAdapter extends Adapter {
@@ -37,7 +37,7 @@ class ApiAdapter extends Adapter {
         return await httpAPIConnector.get(httpRequest);
     }
 
-    async getRecommendedPlacesByLocation(latitude: string, longitude: string): Promise<PlacesResponse> {
+    async getRecommendedPlaces([latitude, longitude]: [string, string]): Promise<PlacesResponse> {
         const httpRequest: HttpGetRequest = {
             url: RECOMMENDED_PLACES_BY_LOCATION_ENDPOINT,
             queryParams: {
@@ -52,15 +52,18 @@ class ApiAdapter extends Adapter {
 
     async getRecommendedPlacesForAddress(
         walletAddress: string,
-        latitude?: string,
-        longitude?: string
+        [latitude, longitude]: [string?, string?]
     ): Promise<PlacesResponse> {
+        const queryParams =
+            latitude && longitude
+                ? {
+                      latitude: latitude,
+                      longitude: longitude,
+                  }
+                : undefined;
         const httpRequest: HttpGetRequest = {
             url: formatString(RECOMMENDED_PLACES_BY_PROFILE_ENDPOINT, { owner: walletAddress }),
-            queryParams: {
-                latitude: latitude,
-                longitude: longitude,
-            },
+            queryParams: queryParams,
             onError: (e) => console.log('Error'),
         };
 
