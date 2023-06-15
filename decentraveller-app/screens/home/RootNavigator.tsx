@@ -4,7 +4,7 @@ import { sizesConfig } from '../../config/sizesConfig';
 import React from 'react';
 import { useDeviceDimensions } from '../../context/AppContext';
 import HomeScreen from './HomeScreen';
-import ExplorePlacesScreen from './ExplorePlacesScreen';
+import ExplorePlacesScreen from './explore/ExplorePlacesScreen';
 import CommunityScreen from './CommunityScreen';
 
 type RootStackScreens = {

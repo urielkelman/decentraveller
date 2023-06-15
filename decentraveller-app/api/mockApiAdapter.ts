@@ -4,7 +4,7 @@ import { UserResponse } from './response/user';
 import { GianUserResponse, MatiUserResponse, UriUserResponse } from './mocks/user';
 import { PlacesResponse } from './response/places';
 import Adapter from './Adapter';
-import { defaultPlacesMock } from './mocks/places';
+import { alternativePlacesMock, defaultPlacesMock } from './mocks/places';
 import { ReviewsResponse } from './response/reviews';
 import { emptyReviewsResponse, manyReviewsResponse, oneReviewsResponse } from './mocks/reviews';
 
@@ -62,13 +62,15 @@ class MockApiAdapter extends Adapter {
 
     async getRecommendedPlacesForAddress(
         walletAddress: string,
-        latitude?: string,
-        longitude?: string
+        [latitude, longitude]: [string?, string?]
     ): Promise<PlacesResponse> {
         return defaultPlacesMock;
     }
 
-    async getRecommendedPlacesByLocation(latitude: string, longitude: string): Promise<PlacesResponse> {
+    async getRecommendedPlaces([latitude, longitude]: [string, string]): Promise<PlacesResponse> {
+        if (latitude === '-34.584472' && longitude === '-58.435681') {
+            return alternativePlacesMock;
+        }
         return defaultPlacesMock;
     }
 

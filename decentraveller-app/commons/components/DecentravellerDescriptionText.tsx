@@ -1,10 +1,15 @@
 import { Text, View } from 'react-native';
-import { addPlaceDescriptionTextStyles } from '../../styles/addPlaceScreensStyles';
+import { addPlaceDescriptionTextStyles } from '../../styles/bottomTabScreensStyles';
 import { addPlaceScreenWordings } from '../../screens/home/place/wording';
+import React from 'react';
 
-const DecentravellerDescriptionText = () => (
+export type DescriptionTextProps = {
+    text: string;
+};
+
+const DecentravellerDescriptionText: React.FC<DescriptionTextProps> = ({ text }) => (
     <View>
-        <Text style={addPlaceDescriptionTextStyles.text}>{addPlaceScreenWordings.CREATE_PLACE_DESC}</Text>
+        <Text style={addPlaceDescriptionTextStyles.text}>{text}</Text>
     </View>
 );
 
