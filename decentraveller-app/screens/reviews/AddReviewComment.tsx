@@ -13,7 +13,7 @@ type AddReviewCommentParams = {
     selectedImage: string;
 };
 
-const AddReviewComment = () => {
+const AddReviewComment = ({ navigation }) => {
     const route = useRoute<RouteProp<Record<string, AddReviewCommentParams>, string>>();
     const { selectedImage } = route.params;
     const [comment, setComment] = useState('');
@@ -48,8 +48,8 @@ const AddReviewComment = () => {
         console.log('text=', comment);
         console.log('selectedImage=', selectedImage);
 
-        const adapter = blockchainAdapter;
-        //const adapter = mockBlockchainAdapter
+        //const adapter = blockchainAdapter;
+        const adapter = mockBlockchainAdapter
 
         const transactionHash = await adapter.addPlaceReviewTransaction(
             connector,
@@ -61,6 +61,7 @@ const AddReviewComment = () => {
         if (!transactionHash) return;
 
         console.log('Transaction confirmed with hash', transactionHash);
+        navigation.navigate("SuccessAddReviewScreen")
     };
 
     return (

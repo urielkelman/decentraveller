@@ -10,6 +10,7 @@ import UserProfileScreen from '../users/profile/UserProfileScreen';
 import UserReviewsScreen from '../users/profile/UserReviewsScreen';
 import AddReviewImages from '../reviews/AddReviewImages';
 import AddReviewComment from '../reviews/AddReviewComment';
+import SuccessAddReviewScreen from "../reviews/SuccessAddReviewScreen";
 
 export type HomeStackScreens = {
     LeftSideBar: undefined;
@@ -21,6 +22,7 @@ export type HomeStackScreens = {
     UserReviewsScreen: undefined;
     AddReviewImages: undefined;
     AddReviewComment: undefined;
+    SuccessAddReviewScreen: undefined;
 };
 
 const HomeStackNavigator = createStackNavigator<HomeStackScreens>();
@@ -92,6 +94,14 @@ const HomeNavigator = () => {
                     component={AddReviewComment}
                     options={{
                         title: 'Add Review',
+                        headerShown: true,
+                    }}
+                />
+                <HomeStackNavigator.Screen
+                    name="SuccessAddReviewScreen"
+                    component={SuccessAddReviewScreen}
+                    options={{
+                        title: 'Thank you!',
                         headerShown: true,
                     }}
                 />
