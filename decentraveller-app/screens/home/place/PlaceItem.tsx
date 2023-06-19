@@ -73,7 +73,7 @@ const PlaceItem: React.FC<PlaceItemProps> = ({
         id: id,
         name: name,
         address: address,
-        score: score,
+        stars: score,
         reviewCount: reviewCount,
     };
 

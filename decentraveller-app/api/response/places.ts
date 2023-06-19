@@ -10,7 +10,3 @@ export type PlaceResponse = {
     score: number;
     reviewCount: number;
 };
-
-export type PlacesResponse = {
-    results: PlaceResponse[];
-};
