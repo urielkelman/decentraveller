@@ -4,10 +4,15 @@ import { Ionicons } from '@expo/vector-icons';
 import { addReviewsScreenWordings } from './wording';
 import DecentravellerButton from '../../commons/components/DecentravellerButton';
 import { addReviewCommentStyles } from '../../styles/addReviewStyles';
+import {RouteProp, useRoute} from "@react-navigation/native";
 
-const imagePath1 = '../../assets/images/ar4.jpeg';
+type AddReviewCommentParams = {
+    selectedImage: string;
+};
 
 const AddReviewComment = () => {
+    const route = useRoute<RouteProp<Record<string, AddReviewCommentParams>, string>>();
+    const { selectedImage } = route.params;
     const [comment, setComment] = useState('');
     const [rating, setRating] = useState(0);
 
@@ -31,6 +36,12 @@ const AddReviewComment = () => {
             );
         }
         return stars;
+    };
+
+    const onClickFinish = () => {
+        console.log('rating=', rating);
+        console.log('text=', comment);
+        console.log('selectedImage=', selectedImage);
     };
 
     return (
@@ -66,10 +77,7 @@ const AddReviewComment = () => {
             <DecentravellerButton
                 text={'Finish'}
                 loading={false}
-                onPress={() => {
-                    console.log('raiting=', rating);
-                    console.log('text=', comment);
-                }}
+                onPress={onClickFinish}
             />
         </View>
     );
