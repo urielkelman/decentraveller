@@ -68,3 +68,16 @@ services:
     depends_on:
       - database
       - weaviate
+  
+  ipfs_host:
+    image: ipfs/kubo:master-2023-06-15-9298e31
+    container_name: ipfs_host
+    ports:
+      - 4001:4001
+      - 4001:4001/udp
+      - 127.0.0.1:8080:8080
+      - 127.0.0.1:5001:5001
+    volumes:
+      - ./volumes/ipfs_staging:/export
+      - ./volumes/ipfs_data:/data/ipfs
+

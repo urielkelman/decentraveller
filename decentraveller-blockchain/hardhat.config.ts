@@ -8,6 +8,7 @@ import "./tasks/block_number";
 import "hardhat-gas-reporter";
 import "solidity-coverage";
 import "hardhat-deploy";
+import "http-ipfs-client";
 
 dotenv.config();
 

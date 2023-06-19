@@ -7,6 +7,8 @@ decentraveller-indexer/build
 
 decentraveller-app/.idea/
 
+volumes/
+
 *node_modules/*
 *.idea*
 __pycache__*
