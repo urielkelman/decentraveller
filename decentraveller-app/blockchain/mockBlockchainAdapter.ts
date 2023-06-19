@@ -11,6 +11,15 @@ class BlockchainAdapter {
     ): Promise<string> {
         return 'transactionHashConfirmed';
     }
+
+    async addPlaceReviewTransaction(
+        connector: WalletConnect,
+        comment: string,
+        rating: number,
+        images: string[],
+    ): Promise<string> {
+        return 'transactionHashConfirmed';
+    }
 }
 
 const mockBlockchainAdapter = new BlockchainAdapter();

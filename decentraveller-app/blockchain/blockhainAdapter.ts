@@ -102,6 +102,26 @@ class BlockchainAdapter {
             onError();
         }
     }
+
+    async addPlaceReviewTransaction(
+        connector: WalletConnect,
+        comment: string,
+        rating: number,
+        images: string[],
+    ): Promise<string> {
+        try {
+            return await this.populateAndSend(
+                connector,
+                decentravellerMainContract,
+                'addReview',
+                comment,
+                rating,
+                images
+            );
+        } catch (e) {
+            console.log(e);
+        }
+    }
 }
 
 const blockchainAdapter = new BlockchainAdapter();
