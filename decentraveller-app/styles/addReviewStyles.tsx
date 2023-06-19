@@ -1,4 +1,7 @@
-import { StyleSheet } from 'react-native';
+import {Dimensions, StyleSheet, TextStyle} from 'react-native';
+
+
+const { height, width } = Dimensions.get('window');
 
 const addReviewCommentStyles = StyleSheet.create({
     container: {
@@ -146,4 +149,30 @@ const addReviewImagesStyles = StyleSheet.create({
     },
 });
 
-export { addReviewCommentStyles, addReviewImagesStyles };
+const successAddRegisterStyles = StyleSheet.create({
+    container: {
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#FFE1E1',
+        height: '100%',
+    },
+    title: {
+        fontSize: 30,
+        fontWeight: 'bold',
+        marginBottom: 0,
+        marginRight: 10,
+        marginLeft: 10,
+        marginTop: 100,
+    },
+});
+
+const subTitleTextStyle: TextStyle = {
+    fontSize: height * 0.025,
+    marginTop: height * 0.055,
+    paddingBottom: height * 0.027,
+    textAlign: 'center',
+    fontWeight: '200',
+};
+
+export { addReviewCommentStyles, addReviewImagesStyles, successAddRegisterStyles, subTitleTextStyle };

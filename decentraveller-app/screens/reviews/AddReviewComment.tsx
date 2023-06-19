@@ -5,6 +5,9 @@ import { addReviewsScreenWordings } from './wording';
 import DecentravellerButton from '../../commons/components/DecentravellerButton';
 import { addReviewCommentStyles } from '../../styles/addReviewStyles';
 import {RouteProp, useRoute} from "@react-navigation/native";
+import {blockchainAdapter} from "../../blockchain/blockhainAdapter";
+import {useWalletConnect} from "@walletconnect/react-native-dapp";
+import {mockBlockchainAdapter} from "../../blockchain/mockBlockchainAdapter";
 
 type AddReviewCommentParams = {
     selectedImage: string;
@@ -15,6 +18,8 @@ const AddReviewComment = () => {
     const { selectedImage } = route.params;
     const [comment, setComment] = useState('');
     const [rating, setRating] = useState(0);
+    const connector = useWalletConnect();
+
 
     const handleRating = (selectedRating) => {
         setRating(selectedRating);
@@ -38,10 +43,24 @@ const AddReviewComment = () => {
         return stars;
     };
 
-    const onClickFinish = () => {
+    const onClickFinish = async () => {
         console.log('rating=', rating);
         console.log('text=', comment);
         console.log('selectedImage=', selectedImage);
+
+        const adapter = blockchainAdapter;
+        //const adapter = mockBlockchainAdapter
+
+        const transactionHash = await adapter.addPlaceReviewTransaction(
+            connector,
+            comment,
+            rating,
+            [selectedImage],
+        );
+
+        if (!transactionHash) return;
+
+        console.log('Transaction confirmed with hash', transactionHash);
     };
 
     return (
