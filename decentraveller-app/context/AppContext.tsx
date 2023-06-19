@@ -20,7 +20,6 @@ const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
     const [subscriptionsDone, setSubscriptionsDone] = React.useState<boolean>(false);
 
     const [nickname, setUserNickname] = React.useState<string>('');
-    const [walletAddress, setUserWalletAddress] = React.useState<string>('');
     const [createdAt, setUserCreatedAt] = React.useState<string>('');
     const [interest, setUserInterest] = React.useState<string>('');
     const [location, setLocation] = React.useState<[string, string] | undefined>(undefined);
@@ -81,8 +80,6 @@ const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
     };
 
     const userNickname: AppContextStateArg<string> = memoFactory(nickname, setUserNickname);
-
-    const userWalletAddress: AppContextStateArg<string> = memoFactory(walletAddress, setUserWalletAddress);
 
     const userCreatedAt: AppContextStateArg<string> = memoFactory(createdAt, setUserCreatedAt);
 
@@ -148,7 +145,6 @@ const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
                 pushChangeUpdate,
                 cleanConnectionContext,
                 userNickname,
-                userWalletAddress,
                 userCreatedAt,
                 userInterest,
                 userLocation,
