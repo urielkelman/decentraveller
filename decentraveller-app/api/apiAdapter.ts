@@ -9,10 +9,10 @@ import {
     REVIEWS_PLACES_ENDPOINT,
 } from './config';
 import { UserResponse } from './response/user';
-import { PlacesResponse } from './response/places';
 import Adapter from './Adapter';
 import { formatString } from '../commons/functions/utils';
 import { ReviewsResponse } from './response/reviews';
+import { PlaceResponse } from './response/places';
 
 class ApiAdapter extends Adapter {
     private httpConnector: HttpConnector;
@@ -37,12 +37,13 @@ class ApiAdapter extends Adapter {
         return await httpAPIConnector.get(httpRequest);
     }
 
-    async getRecommendedPlaces([latitude, longitude]: [string, string]): Promise<PlacesResponse> {
+    async getRecommendedPlaces([latitude, longitude]: [string, string]): Promise<PlaceResponse[]> {
+        const [lat, long] = ['39.95', '-75.175'];
         const httpRequest: HttpGetRequest = {
             url: RECOMMENDED_PLACES_BY_LOCATION_ENDPOINT,
             queryParams: {
-                latitude: latitude,
-                longitude: longitude,
+                latitude: lat,
+                longitude: long,
             },
             onError: (e) => console.log('Error'),
         };
@@ -53,14 +54,16 @@ class ApiAdapter extends Adapter {
     async getRecommendedPlacesForAddress(
         walletAddress: string,
         [latitude, longitude]: [string?, string?]
-    ): Promise<PlacesResponse> {
+    ): Promise<PlaceResponse[]> {
+        const [lat, long] = ['39.95', '-75.175'];
         const queryParams =
             latitude && longitude
                 ? {
-                      latitude: latitude,
-                      longitude: longitude,
+                      latitude: lat,
+                      longitude: long,
                   }
                 : undefined;
+        console.log(formatString(RECOMMENDED_PLACES_BY_PROFILE_ENDPOINT, { owner: walletAddress }));
         const httpRequest: HttpGetRequest = {
             url: formatString(RECOMMENDED_PLACES_BY_PROFILE_ENDPOINT, { owner: walletAddress }),
             queryParams: queryParams,
@@ -82,7 +85,7 @@ class ApiAdapter extends Adapter {
         return await httpAPIConnector.get(httpRequest);
     }
 
-    async getMyPlaces(walletAddress: string): Promise<PlacesResponse> {
+    async getMyPlaces(walletAddress: string): Promise<PlaceResponse[]> {
         const httpRequest: HttpGetRequest = {
             url: `${OWNED_PLACES_ENDPOINT}/${walletAddress}`,
             queryParams: {},

@@ -12,8 +12,8 @@ import CreatePlaceProvider from '../../home/place/CreatePlaceContext';
 import RootNavigator from '../../home/RootNavigator';
 import CreatePlaceNameScreen from '../../home/place/CreatePlaceNameScreen';
 import CreatePlaceLocationScreen from '../../home/place/CreatePlaceLocationScreen';
-import { DecentravellerPlacesItems } from '../../../commons/components/DecentravellerPlacesList';
-import { PlaceResponse, PlacesResponse } from '../../../api/response/places';
+import DecentravellerPlacesItems from '../../../commons/components/DecentravellerPlacesList';
+import { PlaceResponse } from '../../../api/response/places';
 import { mockApiAdapter } from '../../../api/mockApiAdapter';
 import { useAppContext } from '../../../context/AppContext';
 import { DECENTRAVELLER_DEFAULT_BACKGROUND_COLOR } from '../../../commons/global';
@@ -26,11 +26,11 @@ const UserPlacesScreen = ({}) => {
 
     useEffect(() => {
         (async () => {
-            const placesResponse: PlacesResponse = await adapter.getMyPlacesPlaces(
+            const placesResponse: PlaceResponse[] = await adapter.getMyPlacesPlaces(
                 // appContext.connectionContext.connectedAddress
                 ''
             );
-            setUserPlaces(placesResponse.results);
+            setUserPlaces(placesResponse);
         })();
     }, []);
 
