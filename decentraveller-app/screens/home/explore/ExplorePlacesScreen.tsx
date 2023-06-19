@@ -18,7 +18,7 @@ import { Entypo, Ionicons } from '@expo/vector-icons';
 import { GeocodingElement } from '../place/CreatePlaceContext';
 import LoadingComponent from '../../../commons/components/DecentravellerLoading';
 
-const adapter = mockApiAdapter;
+const adapter = apiAdapter;
 
 const ExplorePlacesScreen = ({ navigation }) => {
     const { userLocation } = useAppContext();

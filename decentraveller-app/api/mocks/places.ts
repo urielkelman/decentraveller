@@ -9,7 +9,7 @@ export const defaultPlacesMock: PlaceResponse[] = [
         longitude: '-58.427125',
         category: 'GASTRONOMY',
         score: 4.8,
-        reviewCount: 25,
+        reviews: 25,
     },
     {
         id: 2,
@@ -19,7 +19,7 @@ export const defaultPlacesMock: PlaceResponse[] = [
         longitude: '-58.508822',
         category: 'GASTRONOMY',
         score: 3.7,
-        reviewCount: 102,
+        reviews: 102,
     },
     {
         id: 3,
@@ -29,7 +29,7 @@ export const defaultPlacesMock: PlaceResponse[] = [
         longitude: '-58.80039',
         category: 'ACCOMMODATION',
         score: 4.2,
-        reviewCount: 43,
+        reviews: 43,
     },
     {
         id: 4,
@@ -39,7 +39,7 @@ export const defaultPlacesMock: PlaceResponse[] = [
         longitude: '-58.427125',
         category: 'GASTRONOMY',
         score: 4.8,
-        reviewCount: 25,
+        reviews: 25,
     },
     {
         id: 5,
@@ -49,7 +49,7 @@ export const defaultPlacesMock: PlaceResponse[] = [
         longitude: '-58.508822',
         category: 'GASTRONOMY',
         score: 3.7,
-        reviewCount: 102,
+        reviews: 102,
     },
     {
         id: 6,
@@ -59,7 +59,7 @@ export const defaultPlacesMock: PlaceResponse[] = [
         longitude: '-58.80039',
         category: 'ACCOMMODATION',
         score: 4.2,
-        reviewCount: 43,
+        reviews: 43,
     },
 ];
 
@@ -72,7 +72,7 @@ export const alternativePlacesMock: PlaceResponse[] = [
         longitude: '-58.427125',
         category: 'GASTRONOMY',
         score: 4.1,
-        reviewCount: 22,
+        reviews: 22,
     },
     {
         id: 11,
@@ -82,7 +82,7 @@ export const alternativePlacesMock: PlaceResponse[] = [
         longitude: '-58.508822',
         category: 'OTHER',
         score: 4.6,
-        reviewCount: 12,
+        reviews: 12,
     },
     {
         id: 12,
@@ -92,6 +92,6 @@ export const alternativePlacesMock: PlaceResponse[] = [
         longitude: '-58.80039',
         category: 'ACCOMMODATION',
         score: 3.7,
-        reviewCount: 1012,
+        reviews: 1012,
     },
 ];

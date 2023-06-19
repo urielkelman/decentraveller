@@ -8,5 +8,5 @@ export type PlaceResponse = {
     longitude: string;
     category: DecentravellerPlaceCategory;
     score: number;
-    reviewCount: number;
+    reviews: number;
 };

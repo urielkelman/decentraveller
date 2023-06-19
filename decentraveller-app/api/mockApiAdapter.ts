@@ -53,7 +53,7 @@ class MockApiAdapter extends Adapter {
                 longitude: '-58.427125',
                 category: 'GASTRONOMY',
                 score: 4.8,
-                reviewCount: 25,
+                reviews: 25,
             },
         ];
     }
