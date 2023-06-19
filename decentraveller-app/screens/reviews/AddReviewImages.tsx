@@ -81,7 +81,7 @@ const AddReviewImages = ({ navigation }) => {
                 text={'Next'}
                 loading={false}
                 onPress={() => {
-                    navigation.navigate('AddReviewComment');
+                    navigation.navigate('AddReviewComment', { selectedImage });
                 }}
             />
         </View>
