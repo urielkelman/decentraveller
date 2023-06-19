@@ -117,7 +117,7 @@ def test_recommendation_near(cleanup, setup_dataset):
                                   "latitude": -34.595939,
                                   "longitude": -58.393499,
                                   "category": "GASTRONOMY",
-                                  "stars": 5,
+                                  "score": 5,
                                   "reviews": 20}
 
     response = client.get("/place/4/similars")
@@ -193,7 +193,7 @@ def test_recommendation_near_ordered(cleanup, setup_dataset):
                                   "latitude": -34.595939,
                                   "longitude": -58.393499,
                                   "category": "GASTRONOMY",
-                                  "stars": 5,
+                                  "score": 5,
                                   "reviews": 20}
     assert response.json()[1] == {"id": 2,
                                   "owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
@@ -202,7 +202,7 @@ def test_recommendation_near_ordered(cleanup, setup_dataset):
                                   "latitude": -34.600724,
                                   "longitude": -58.392924,
                                   "category": "GASTRONOMY",
-                                  "stars": 4,
+                                  "score": 4,
                                   "reviews": 20}
 
 
@@ -263,7 +263,7 @@ def test_recommendation_profile_no_reviews(cleanup, setup_dataset):
                                   "latitude": -34.595939,
                                   "longitude": -58.393499,
                                   "category": "GASTRONOMY",
-                                  "stars": 5,
+                                  "score": 5,
                                   "reviews": 19}
     assert response.json()[1] == {"id": 2,
                                   "owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
@@ -272,7 +272,7 @@ def test_recommendation_profile_no_reviews(cleanup, setup_dataset):
                                   "latitude": -34.600724,
                                   "longitude": -58.392924,
                                   "category": "GASTRONOMY",
-                                  "stars": 4,
+                                  "score": 4,
                                   "reviews": 19}
 
 
@@ -324,7 +324,7 @@ def test_recommendation_profile_no_reviews_location_priority(cleanup, setup_data
                                   "latitude": -34.546015,
                                   "longitude": -58.489325,
                                   "category": "GASTRONOMY",
-                                  "stars": 3,
+                                  "score": 3,
                                   "reviews": 5}
     assert response.json()[1] == {"id": 1,
                                   "owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
@@ -333,7 +333,7 @@ def test_recommendation_profile_no_reviews_location_priority(cleanup, setup_data
                                   "latitude": -34.595939,
                                   "longitude": -58.393499,
                                   "category": "GASTRONOMY",
-                                  "stars": 5,
+                                  "score": 5,
                                   "reviews": 19}
     assert response.json()[2] == {"id": 2,
                                   "owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
@@ -342,7 +342,7 @@ def test_recommendation_profile_no_reviews_location_priority(cleanup, setup_data
                                   "latitude": -34.600724,
                                   "longitude": -58.392924,
                                   "category": "GASTRONOMY",
-                                  "stars": 4,
+                                  "score": 4,
                                   "reviews": 19}
 
 
@@ -394,7 +394,7 @@ def test_recommendation_profile_wont_repeat_with_reviews(cleanup, setup_dataset)
                                   "latitude": -34.600724,
                                   "longitude": -58.392924,
                                   "category": "GASTRONOMY",
-                                  "stars": 4,
+                                  "score": 4,
                                   "reviews": 19}
     assert response.json()[1] == {"id": 3,
                                   "owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
@@ -403,7 +403,7 @@ def test_recommendation_profile_wont_repeat_with_reviews(cleanup, setup_dataset)
                                   "latitude": -34.546015,
                                   "longitude": -58.489325,
                                   "category": "GASTRONOMY",
-                                  "stars": 3,
+                                  "score": 3,
                                   "reviews": 5}
 
 
@@ -462,7 +462,7 @@ def test_recommendation_home_best_places(cleanup, setup_dataset):
                                   "latitude": -34.546015,
                                   "longitude": -58.489325,
                                   "category": "GASTRONOMY",
-                                  "stars": 3,
+                                  "score": 3,
                                   "reviews": 5}
     assert response.json()[0] == {"id": 1,
                                   "owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
@@ -471,7 +471,7 @@ def test_recommendation_home_best_places(cleanup, setup_dataset):
                                   "latitude": -34.595939,
                                   "longitude": -58.393499,
                                   "category": "GASTRONOMY",
-                                  "stars": 5,
+                                  "score": 5,
                                   "reviews": 19}
     assert response.json()[1] == {"id": 2,
                                   "owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
@@ -480,7 +480,7 @@ def test_recommendation_home_best_places(cleanup, setup_dataset):
                                   "latitude": -34.600724,
                                   "longitude": -58.392924,
                                   "category": "GASTRONOMY",
-                                  "stars": 4,
+                                  "score": 4,
                                   "reviews": 19}
 
 
@@ -532,7 +532,7 @@ def test_recommendation_home_nearby_priority(cleanup, setup_dataset):
                                   "latitude": -34.546015,
                                   "longitude": -58.489325,
                                   "category": "GASTRONOMY",
-                                  "stars": 3,
+                                  "score": 3,
                                   "reviews": 5}
     assert response.json()[1] == {"id": 1,
                                   "owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
@@ -541,7 +541,7 @@ def test_recommendation_home_nearby_priority(cleanup, setup_dataset):
                                   "latitude": -34.595939,
                                   "longitude": -58.393499,
                                   "category": "GASTRONOMY",
-                                  "stars": 5,
+                                  "score": 5,
                                   "reviews": 19}
     assert response.json()[2] == {"id": 2,
                                   "owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
@@ -550,5 +550,5 @@ def test_recommendation_home_nearby_priority(cleanup, setup_dataset):
                                   "latitude": -34.600724,
                                   "longitude": -58.392924,
                                   "category": "GASTRONOMY",
-                                  "stars": 4,
+                                  "score": 4,
                                   "reviews": 19}
