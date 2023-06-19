@@ -160,10 +160,11 @@ const successAddRegisterStyles = StyleSheet.create({
     title: {
         fontSize: 30,
         fontWeight: 'bold',
+        textAlign: 'center',
         marginBottom: 0,
         marginRight: 10,
         marginLeft: 10,
-        marginTop: 100,
+        marginTop: 10,
     },
 });
 
