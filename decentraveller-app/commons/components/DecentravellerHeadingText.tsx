@@ -1,12 +1,12 @@
 import { Text, View } from 'react-native';
-import { addPlaceHeadingTextStyles } from '../../styles/addPlaceScreensStyles';
+import { addPlaceHeadingTextStyles } from '../../styles/bottomTabScreensStyles';
 import React from 'react';
 
-export type HeadingTextCreatePlaceProps = {
+export type HeadingTextProps = {
     text: string;
 };
 
-const DecentravellerHeadingText: React.FC<HeadingTextCreatePlaceProps> = ({ text }) => (
+const DecentravellerHeadingText: React.FC<HeadingTextProps> = ({ text }) => (
     <View>
         <Text style={addPlaceHeadingTextStyles.text}>{text}</Text>
     </View>

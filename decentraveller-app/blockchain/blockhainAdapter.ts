@@ -3,11 +3,11 @@ import { ethers } from 'ethers';
 import WalletConnect from '@walletconnect/client';
 import { decentravellerMainContract } from './contracts/decentravellerMainContract';
 import { Blockchain, BlockchainByConnectorChainId, LOCAL_DEVELOPMENT_CHAIN_ID } from './config';
-import { withTimeout } from '../commons/utils';
 import { ContractFunction, DecentravellerContract } from './contracts/common';
 import { decentravellerPlaceContract } from './contracts/decentravellerPlaceContract';
+import { withTimeout } from '../commons/functions/utils';
 
-const BLOCKCHAIN_TIMEOUT_IN_MILLIS = 5000;
+const BLOCKCHAIN_TIMEOUT_IN_MILLIS = 30000;
 const BLOCKCHAIN_TRANSACTION_TASK_NAME = 'Blockchain transaction';
 
 class BlockchainAdapter {

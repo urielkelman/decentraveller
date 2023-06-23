@@ -15,10 +15,10 @@ const UserProfileScreen = ({ navigation }) => {
 
     const user = {
         profileImage: require('../../../assets/mock_images/cryptochica.png'),
-        name: userNickname.nickname,
-        walletAddress: '0x' + userWalletAddress.walletAddress,
-        createdAt: userCreatedAt.createdAt,
-        interest: userInterest.interest,
+        name: userNickname.value,
+        walletAddress: '0x' + userWalletAddress.value,
+        createdAt: userCreatedAt.value,
+        interest: userInterest.value,
         tokens: 67,
         sharedLocation: 'Yes',
     };

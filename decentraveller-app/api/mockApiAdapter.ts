@@ -2,11 +2,11 @@ import { GeocodingResponse } from './response/geocoding';
 import { Honduras4709GeocodingResponse, HondurasGeocodingResponse } from './mocks/geocoding';
 import { UserResponse } from './response/user';
 import { GianUserResponse, MatiUserResponse, UriUserResponse } from './mocks/user';
-import { PlacesResponse } from './response/places';
 import Adapter from './Adapter';
-import { defaultPlacesMock } from './mocks/places';
+import { alternativePlacesMock, defaultPlacesMock } from './mocks/places';
 import { ReviewsResponse } from './response/reviews';
 import { emptyReviewsResponse, manyReviewsResponse, oneReviewsResponse } from './mocks/reviews';
+import { PlaceResponse } from './response/places';
 
 const searchTextHondurasResponse = ['Honduras', 'Honduras ', 'Honduras 4', 'Honduras 47', 'Honduras 470'];
 
@@ -43,32 +43,32 @@ class MockApiAdapter extends Adapter {
         }
     }
 
-    async getMyPlacesPlaces(walletAddress: string): Promise<PlacesResponse> {
-        return {
-            results: [
-                {
-                    id: 1,
-                    name: 'Eretz',
-                    address: 'Honduras 4709, Palermo, Buenos Aires, C1414, Argentina',
-                    latitude: '-34.590716',
-                    longitude: '-58.427125',
-                    category: 'GASTRONOMY',
-                    score: 4.8,
-                    reviewCount: 25,
-                },
-            ],
-        };
+    async getMyPlacesPlaces(walletAddress: string): Promise<PlaceResponse[]> {
+        return [
+            {
+                id: 1,
+                name: 'Eretz',
+                address: 'Honduras 4709, Palermo, Buenos Aires, C1414, Argentina',
+                latitude: '-34.590716',
+                longitude: '-58.427125',
+                category: 'GASTRONOMY',
+                score: 4.8,
+                reviews: 25,
+            },
+        ];
     }
 
     async getRecommendedPlacesForAddress(
         walletAddress: string,
-        latitude?: string,
-        longitude?: string
-    ): Promise<PlacesResponse> {
+        [latitude, longitude]: [string?, string?]
+    ): Promise<PlaceResponse[]> {
         return defaultPlacesMock;
     }
 
-    async getRecommendedPlacesByLocation(latitude: string, longitude: string): Promise<PlacesResponse> {
+    async getRecommendedPlaces([latitude, longitude]: [string, string]): Promise<PlaceResponse[]> {
+        if (latitude === '-34.584472' && longitude === '-58.435681') {
+            return alternativePlacesMock;
+        }
         return defaultPlacesMock;
     }
 

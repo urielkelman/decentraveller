@@ -9,23 +9,9 @@ export interface DeviceDimensions {
     height: number;
 }
 
-export interface UserNickname {
-    nickname: string;
-    setUserNickname: (string) => void;
-}
-
-export interface UserWalletAddress {
-    walletAddress: string;
-    setUserWalletAddress: (string) => void;
-}
-
-export interface UserCreatedAt {
-    createdAt: string;
-    setUserCreatedAt: (string) => void;
-}
-export interface UserInterest {
-    interest: string;
-    setUserInterest: (string) => void;
+export interface AppContextStateArg<T> {
+    value: T;
+    setValue: (newValue: T) => void;
 }
 
 export type AppContextType = {
@@ -34,10 +20,10 @@ export type AppContextType = {
     cleanConnectionContext: () => void;
     pushChangeUpdate: () => void;
     deviceDimensions: DeviceDimensions;
-    userNickname: UserNickname;
-    userWalletAddress: UserWalletAddress;
-    userCreatedAt: UserCreatedAt;
-    userInterest: UserInterest;
+    userNickname: AppContextStateArg<string>;
+    userCreatedAt: AppContextStateArg<string>;
+    userInterest: AppContextStateArg<string>;
+    userLocation: AppContextStateArg<[string, string]>;
 };
 
 export type DecentravellerPlaceCategory = 'GASTRONOMY' | 'ENTERTAINMENT' | 'ACCOMMODATION' | 'OTHER';
