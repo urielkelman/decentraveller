@@ -39,6 +39,7 @@ class BlockchainAdapter {
         const connectedAccount: string = connector.accounts[0];
         return await withTimeout(
             async () => {
+                console.log('ca', contractAddress);
                 const transactionHash: string = await connector.sendTransaction({
                     from: connectedAccount,
                     to: contractAddress,
@@ -127,8 +128,8 @@ class BlockchainAdapter {
         const contractFunction: ContractFunction = decentravellerMainContract.functions['getPlaceAddress'];
         const mainContractAddress: string = decentravellerMainContract.addressesByBlockchain[blockchain];
         const decentravellerMain = new ethers.Contract(mainContractAddress, contractFunction.fullContractABI, provider);
-        const placeAddress = decentravellerMain.getPlaceAddress(placeId);
-
+        const placeAddress = await decentravellerMain.getPlaceAddress(placeId);
+        console.log('add', placeAddress);
         try {
             return await this.populateAndSendWithAddress(
                 connector,
@@ -136,8 +137,8 @@ class BlockchainAdapter {
                 'addReview',
                 placeAddress,
                 comment,
-                rating,
-                images
+                images,
+                rating
             );
         } catch (e) {
             console.log(e);
