@@ -8,7 +8,7 @@ import { useCreatePlaceContext } from './CreatePlaceContext';
 import CreatePlacePicker from '../../../commons/components/DecentravellerPicker';
 import DecentravellerTextInput from '../../../commons/components/DecentravellerTextInput';
 import DecentravellerButton from '../../../commons/components/DecentravellerButton';
-import {useNavigation} from "@react-navigation/native";
+import { useNavigation } from '@react-navigation/native';
 
 const CreatePlaceNameScreen = () => {
     const { placeTypePicker, placeName, setPlaceName } = useCreatePlaceContext();
@@ -16,7 +16,7 @@ const CreatePlaceNameScreen = () => {
 
     const onClickContinue = () => {
         if (placeTypePicker.value && placeName) {
-            navigation.goBack()
+            navigation.goBack();
         }
     };
 

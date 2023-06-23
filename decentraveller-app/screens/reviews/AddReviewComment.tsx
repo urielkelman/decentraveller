@@ -4,10 +4,10 @@ import { Ionicons } from '@expo/vector-icons';
 import { addReviewsScreenWordings } from './wording';
 import DecentravellerButton from '../../commons/components/DecentravellerButton';
 import { addReviewCommentStyles } from '../../styles/addReviewStyles';
-import {RouteProp, useRoute} from "@react-navigation/native";
-import {blockchainAdapter} from "../../blockchain/blockhainAdapter";
-import {useWalletConnect} from "@walletconnect/react-native-dapp";
-import {mockBlockchainAdapter} from "../../blockchain/mockBlockchainAdapter";
+import { RouteProp, useRoute } from '@react-navigation/native';
+import { blockchainAdapter } from '../../blockchain/blockhainAdapter';
+import { useWalletConnect } from '@walletconnect/react-native-dapp';
+import { mockBlockchainAdapter } from '../../blockchain/mockBlockchainAdapter';
 
 type AddReviewCommentParams = {
     selectedImage: string;
@@ -16,10 +16,9 @@ type AddReviewCommentParams = {
 const AddReviewComment = ({ navigation }) => {
     const route = useRoute<RouteProp<Record<string, AddReviewCommentParams>, string>>();
     const { selectedImage } = route.params;
-    const [comment, setComment] = useState('');
-    const [rating, setRating] = useState(0);
+    const [comment, setComment] = useState<string>('');
+    const [rating, setRating] = useState<number>(0);
     const connector = useWalletConnect();
-
 
     const handleRating = (selectedRating) => {
         setRating(selectedRating);
@@ -48,20 +47,19 @@ const AddReviewComment = ({ navigation }) => {
         console.log('text=', comment);
         console.log('selectedImage=', selectedImage);
 
-        //const adapter = blockchainAdapter;
-        const adapter = mockBlockchainAdapter
+        const adapter = blockchainAdapter;
+        //const adapter = mockBlockchainAdapter
 
-        const transactionHash = await adapter.addPlaceReviewTransaction(
-            connector,
-            comment,
-            rating,
-            [selectedImage],
-        );
+        const placeId = 1;
+
+        const transactionHash = await adapter.addPlaceReviewTransaction(connector, placeId, comment, rating, [
+            selectedImage,
+        ]);
 
         if (!transactionHash) return;
 
         console.log('Transaction confirmed with hash', transactionHash);
-        navigation.navigate("SuccessAddReviewScreen")
+        navigation.navigate('SuccessAddReviewScreen');
     };
 
     return (
@@ -94,11 +92,7 @@ const AddReviewComment = ({ navigation }) => {
                 />
             </View>
 
-            <DecentravellerButton
-                text={'Finish'}
-                loading={false}
-                onPress={onClickFinish}
-            />
+            <DecentravellerButton text={'Finish'} loading={false} onPress={onClickFinish} />
         </View>
     );
 };

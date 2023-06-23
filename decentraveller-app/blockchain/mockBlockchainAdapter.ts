@@ -1,5 +1,5 @@
 import WalletConnect from '@walletconnect/client';
-import { decentravellerMainContract } from './contracts';
+import { decentravellerMainContract } from './contracts/decentravellerMainContract';
 
 class BlockchainAdapter {
     async createRegisterUserTransaction(
@@ -16,7 +16,7 @@ class BlockchainAdapter {
         connector: WalletConnect,
         comment: string,
         rating: number,
-        images: string[],
+        images: string[]
     ): Promise<string> {
         return 'transactionHashConfirmed';
     }

@@ -10,7 +10,7 @@ import UserProfileScreen from '../users/profile/UserProfileScreen';
 import UserReviewsScreen from '../users/profile/UserReviewsScreen';
 import AddReviewImages from '../reviews/AddReviewImages';
 import AddReviewComment from '../reviews/AddReviewComment';
-import SuccessAddReviewScreen from "../reviews/SuccessAddReviewScreen";
+import SuccessAddReviewScreen from '../reviews/SuccessAddReviewScreen';
 
 export type HomeStackScreens = {
     LeftSideBar: undefined;
