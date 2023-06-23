@@ -1,9 +1,11 @@
 import '@ethersproject/shims';
 import { ethers } from 'ethers';
 import WalletConnect from '@walletconnect/client';
-import { ContractFunction, DecentravellerContract, decentravellerMainContract } from './contracts';
+import { decentravellerMainContract } from './contracts/decentravellerMainContract';
 import { Blockchain, BlockchainByConnectorChainId, LOCAL_DEVELOPMENT_CHAIN_ID } from './config';
 import { withTimeout } from '../commons/utils';
+import { ContractFunction, DecentravellerContract } from './contracts/common';
+import { decentravellerPlaceContract } from './contracts/decentravellerPlaceContract';
 
 const BLOCKCHAIN_TIMEOUT_IN_MILLIS = 5000;
 const BLOCKCHAIN_TRANSACTION_TASK_NAME = 'Blockchain transaction';
@@ -17,15 +19,14 @@ class BlockchainAdapter {
         }
     }
 
-    private async populateAndSend(
+    private async populateAndSendWithAddress(
         connector: WalletConnect,
         contract: DecentravellerContract,
         functionName: string,
+        contractAddress: string,
         ...args: unknown[]
     ): Promise<string> {
         const provider: ethers.providers.Provider = this.getProvider(connector.chainId);
-        const blockchain: Blockchain = BlockchainByConnectorChainId[connector.chainId];
-        const contractAddress: string = contract.addressesByBlockchain[blockchain];
         const contractFunction: ContractFunction = contract.functions[functionName];
         const ethersContract: ethers.Contract = new ethers.Contract(
             contractAddress,
@@ -53,6 +54,17 @@ class BlockchainAdapter {
             BLOCKCHAIN_TIMEOUT_IN_MILLIS,
             BLOCKCHAIN_TRANSACTION_TASK_NAME
         );
+    }
+
+    private async populateAndSend(
+        connector: WalletConnect,
+        contract: DecentravellerContract,
+        functionName: string,
+        ...args: unknown[]
+    ): Promise<string> {
+        const blockchain: Blockchain = BlockchainByConnectorChainId[connector.chainId];
+        const contractAddress: string = contract.addressesByBlockchain[blockchain];
+        return this.populateAndSendWithAddress(connector, contract, functionName, contractAddress, args);
     }
 
     async createAddNewPlaceTransaction(
@@ -105,15 +117,24 @@ class BlockchainAdapter {
 
     async addPlaceReviewTransaction(
         connector: WalletConnect,
+        placeId: number,
         comment: string,
         rating: number,
-        images: string[],
+        images: string[]
     ): Promise<string> {
+        const provider = this.getProvider(connector.chainId);
+        const blockchain: Blockchain = BlockchainByConnectorChainId[connector.chainId];
+        const contractFunction: ContractFunction = decentravellerMainContract.functions['getPlaceAddress'];
+        const mainContractAddress: string = decentravellerMainContract.addressesByBlockchain[blockchain];
+        const decentravellerMain = new ethers.Contract(mainContractAddress, contractFunction.fullContractABI, provider);
+        const placeAddress = decentravellerMain.getPlaceAddress(placeId);
+
         try {
-            return await this.populateAndSend(
+            return await this.populateAndSendWithAddress(
                 connector,
-                decentravellerMainContract,
+                decentravellerPlaceContract,
                 'addReview',
+                placeAddress,
                 comment,
                 rating,
                 images

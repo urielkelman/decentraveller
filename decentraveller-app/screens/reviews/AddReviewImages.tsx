@@ -1,10 +1,9 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import { View, StyleSheet, Image, Text, TouchableOpacity, Alert } from 'react-native';
 import { addReviewsScreenWordings } from './wording';
 import DecentravellerButton from '../../commons/components/DecentravellerButton';
 import { addReviewImagesStyles } from '../../styles/addReviewStyles';
 import * as ImagePicker from 'expo-image-picker';
-
 
 const imagePath1 = '../../assets/images/ar4.jpeg';
 const imagePath2 = '../../assets/images/ar2.jpeg';
@@ -66,10 +65,7 @@ const AddReviewImages = ({ navigation }) => {
                             style={addReviewImagesStyles.imageUpload}
                         />
                     )}
-                    <TouchableOpacity
-                        style={addReviewImagesStyles.smallCircleButton}
-                        onPress={handleImageUpload}
-                    >
+                    <TouchableOpacity style={addReviewImagesStyles.smallCircleButton} onPress={handleImageUpload}>
                         <Image
                             source={require('../../assets/images/pencil.png')}
                             style={addReviewImagesStyles.smallCircleImage}

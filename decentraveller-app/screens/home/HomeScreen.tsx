@@ -8,7 +8,7 @@ import { PlaceResponse, PlacesResponse } from '../../api/response/places';
 import * as Location from 'expo-location';
 import { DecentravellerPlacesItems } from '../../commons/components/DecentravellerPlacesList';
 
-const adapter = mockApiAdapter;
+const adapter = apiAdapter;
 
 const PERMISSION_GRANTED = 'granted';
 
