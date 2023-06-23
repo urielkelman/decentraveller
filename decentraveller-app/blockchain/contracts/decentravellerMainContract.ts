@@ -17,6 +17,10 @@ const decentravellerMainContract: DecentravellerContract = {
             functionName: 'registerProfile',
             fullContractABI: mainContractStringfiedABI,
         },
+        getPlaceAddress: {
+            functionName: 'getPlaceAddress',
+            fullContractABI: mainContractStringfiedABI,
+        },
     },
 };
 
