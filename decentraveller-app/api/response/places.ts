@@ -8,9 +8,5 @@ export type PlaceResponse = {
     longitude: string;
     category: DecentravellerPlaceCategory;
     score: number;
-    reviewCount: number;
-};
-
-export type PlacesResponse = {
-    results: PlaceResponse[];
+    reviews: number;
 };

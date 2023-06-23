@@ -8,19 +8,19 @@ import {
 } from '@react-navigation/drawer';
 import { drawerStyles } from '../../styles/drawerStyles';
 import { useAppContext } from '../../context/AppContext';
-import { obfuscateAddress } from '../../commons/utils';
+import { obfuscateAddress } from '../../commons/functions/utils';
 import RootNavigator from './RootNavigator';
 
 const Drawer = createDrawerNavigator();
 
 const CustomDrawerContent = (props: DrawerContentComponentProps) => {
-    const { userNickname, userWalletAddress } = useAppContext();
-
+    const { userNickname, connectionContext } = useAppContext();
+    console.log(connectionContext);
     const user = {
         // TODO: Take profileImage from backend when implementation is developed
         profileImage: require('../../assets/mock_images/cryptochica.png'),
-        name: userNickname.nickname,
-        walletAddress: obfuscateAddress(userWalletAddress.walletAddress),
+        name: userNickname.value,
+        walletAddress: connectionContext?.connectedAddress ? obfuscateAddress(connectionContext.connectedAddress) : '',
     };
 
     return (
