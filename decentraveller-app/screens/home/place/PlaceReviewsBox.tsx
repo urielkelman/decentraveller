@@ -33,7 +33,7 @@ const PlaceReviewsBox = ({ placeId }) => {
     };
 
     const onPress = () => {
-        navigation.navigate('AddReviewImages');
+        navigation.navigate('AddReviewImages', { placeId });
     };
 
     const loadingReviewsComponent = () => (

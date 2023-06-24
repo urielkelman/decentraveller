@@ -1,21 +1,23 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Image, Text, TouchableOpacity, TextInput } from 'react-native';
+import { View, KeyboardAvoidingView, Image, Text, TouchableOpacity, TextInput, Platform} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { addReviewsScreenWordings } from './wording';
 import DecentravellerButton from '../../commons/components/DecentravellerButton';
 import { addReviewCommentStyles } from '../../styles/addReviewStyles';
-import { RouteProp, useRoute } from '@react-navigation/native';
-import { blockchainAdapter } from '../../blockchain/blockhainAdapter';
-import { useWalletConnect } from '@walletconnect/react-native-dapp';
-import { mockBlockchainAdapter } from '../../blockchain/mockBlockchainAdapter';
+import {RouteProp, useRoute} from "@react-navigation/native";
+import {blockchainAdapter} from "../../blockchain/blockhainAdapter";
+import {useWalletConnect} from "@walletconnect/react-native-dapp";
+
+const adapter = blockchainAdapter;
 
 type AddReviewCommentParams = {
     selectedImage: string;
+    placeId: number;
 };
 
 const AddReviewComment = ({ navigation }) => {
     const route = useRoute<RouteProp<Record<string, AddReviewCommentParams>, string>>();
-    const { selectedImage } = route.params;
+    const { selectedImage, placeId } = route.params;
     const [comment, setComment] = useState<string>('');
     const [rating, setRating] = useState<number>(0);
     const connector = useWalletConnect();
@@ -43,15 +45,6 @@ const AddReviewComment = ({ navigation }) => {
     };
 
     const onClickFinish = async () => {
-        console.log('rating=', rating);
-        console.log('text=', comment);
-        console.log('selectedImage=', selectedImage);
-
-        const adapter = blockchainAdapter;
-        //const adapter = mockBlockchainAdapter
-
-        const placeId = 1;
-
         const transactionHash = await adapter.addPlaceReviewTransaction(connector, placeId, comment, rating, [
             selectedImage,
         ]);
@@ -62,8 +55,10 @@ const AddReviewComment = ({ navigation }) => {
         navigation.navigate('SuccessAddReviewScreen');
     };
 
+    const handleKeyboardAvoidingViewBehavior = Platform.OS === 'android' ? 'position' : null;
+
     return (
-        <View style={addReviewCommentStyles.container}>
+        <KeyboardAvoidingView behavior={handleKeyboardAvoidingViewBehavior} style={addReviewCommentStyles.container}>
             <Text style={addReviewCommentStyles.commentTitle}>{addReviewsScreenWordings.ADD_COMMENT_TITLE}</Text>
             <View style={addReviewCommentStyles.commentExampleContainer}>
                 <Image
@@ -72,9 +67,7 @@ const AddReviewComment = ({ navigation }) => {
                 />
                 <View style={addReviewCommentStyles.dialogContainer}>
                     <Image source={require('../../assets/images/dialog.png')} />
-                    <Text style={addReviewCommentStyles.dialogText}>
-                        {addReviewsScreenWordings.EXAMPLE_COMMENT_REVIEW}
-                    </Text>
+                    <Text style={addReviewCommentStyles.dialogText}>{addReviewsScreenWordings.EXAMPLE_COMMENT_REVIEW}</Text>
                 </View>
             </View>
 
@@ -93,7 +86,7 @@ const AddReviewComment = ({ navigation }) => {
             </View>
 
             <DecentravellerButton text={'Finish'} loading={false} onPress={onClickFinish} />
-        </View>
+        </KeyboardAvoidingView>
     );
 };
 
