@@ -4,7 +4,7 @@ from fastapi_utils.inferring_router import InferringRouter
 from sqlalchemy.exc import IntegrityError
 from starlette.status import HTTP_400_BAD_REQUEST, HTTP_404_NOT_FOUND
 
-from src.api_models.profile import ProfileInDB, ProfileBody, WalletID, wallet_id_validator
+from src.api_models.profile import ProfileInDB, ProfileBody, WalletID, wallet_id_validator, ProfilePushTokenBody
 from src.dependencies.avatar_generator import AvatarGenerator
 from src.orms.profile import ProfileORM
 from src.dependencies.relational_database import build_relational_database, RelationalDatabase
@@ -87,4 +87,24 @@ class ProfileCBV:
             raise HTTPException(status_code=HTTP_400_BAD_REQUEST,
                                 detail="The nickname is already in use.")
         return ProfileInDB.from_orm(profile_orm)
+
+    @profile_router.post("/profile/push-address", status_code=201)
+    def post_profile_push_address(self, profile_push_token: ProfilePushTokenBody):
+        """
+            Saves a push token for an existing profile.
+
+            :param profile_push_token: the push token associated to an owner
+        """
+        profile_orm = self.database.get_profile_orm(profile_push_token.owner)
+        if not profile_orm:
+            raise HTTPException(status_code=HTTP_400_BAD_REQUEST,
+                                detail="Non existent profile")
+
+        profile_orm.push_token = profile_push_token.push_token
+        self.database.session.add(profile_orm)
+        self.database.session.commit()
+
+        return Response(status_code=201)
+
+
 
