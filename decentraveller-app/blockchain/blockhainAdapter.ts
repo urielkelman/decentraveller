@@ -5,7 +5,7 @@ import { ContractFunction, DecentravellerContract, decentravellerMainContract } 
 import { Blockchain, BlockchainByConnectorChainId, LOCAL_DEVELOPMENT_CHAIN_ID } from './config';
 import { withTimeout } from '../commons/functions/utils';
 
-const BLOCKCHAIN_TIMEOUT_IN_MILLIS = 5000;
+const BLOCKCHAIN_TIMEOUT_IN_MILLIS = 30000;
 const BLOCKCHAIN_TRANSACTION_TASK_NAME = 'Blockchain transaction';
 
 class BlockchainAdapter {
