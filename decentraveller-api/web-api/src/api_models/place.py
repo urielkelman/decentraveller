@@ -46,5 +46,5 @@ class PlaceWithStats(PlaceInDB):
     """
     Place with stats
     """
-    stars: Optional[float]
+    score: Optional[float]
     reviews: int
