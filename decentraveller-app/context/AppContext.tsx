@@ -87,15 +87,15 @@ const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
 
     const userLocation: AppContextStateArg<[string, string]> = memoFactory(location, setLocation);
 
-    React.useEffect(() => {
-        /* This effect allow us to clean sessions that the WalletConnect connector stores in the AsyncStorage */
+    /*React.useEffect(() => {
+         This effect allow us to clean sessions that the WalletConnect connector stores in the AsyncStorage
         const wipeAsyncStorage = async () => {
             await AsyncStorage.clear();
             setConnectionContext(null);
         };
 
         wipeAsyncStorage().catch((e) => console.log('There was a problem wiping async storage', e));
-    }, []);
+    }, []);*/
 
     const updateConnectionContext = (address, chainId) => {
         const isWrongChain = chainId !== DEFAULT_CHAIN_ID;

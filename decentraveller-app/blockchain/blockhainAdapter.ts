@@ -10,9 +10,11 @@ const BLOCKCHAIN_TRANSACTION_TASK_NAME = 'Blockchain transaction';
 
 class BlockchainAdapter {
     private getProvider(chainId: number): ethers.providers.Provider {
-        if (chainId === LOCAL_DEVELOPMENT_CHAIN_ID) {
-            return new ethers.providers.JsonRpcProvider('http://10.0.2.2:8545');
+        console.log(chainId)
+        if (chainId === LOCAL_DEVELOPMENT_CHAIN_ID || chainId === 0)  {
+            return new ethers.providers.JsonRpcProvider('https://053c-2800-40-28-198a-cc34-77b9-b3af-51f.sa.ngrok.io');
         } else {
+            console.log('asd')
             return ethers.getDefaultProvider(chainId);
         }
     }
