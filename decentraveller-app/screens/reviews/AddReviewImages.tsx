@@ -4,7 +4,7 @@ import { addReviewsScreenWordings } from './wording';
 import DecentravellerButton from '../../commons/components/DecentravellerButton';
 import { addReviewImagesStyles } from '../../styles/addReviewStyles';
 import * as ImagePicker from 'expo-image-picker';
-import {RouteProp, useNavigation} from "@react-navigation/native";
+import { RouteProp, useNavigation } from '@react-navigation/native';
 
 const imagePath1 = '../../assets/images/ar4.jpeg';
 const imagePath2 = '../../assets/images/ar2.jpeg';
@@ -34,8 +34,8 @@ type AddReviewImagesProps = {
 
 const AddReviewImages = ({ route }: AddReviewImagesProps) => {
     const [selectedImage, setSelectedImage] = useState(null);
-    const navigation = useNavigation()
-    const {placeId} = route.params
+    const navigation = useNavigation();
+    const { placeId } = route.params;
 
     const handleImageUpload = async () => {
         try {

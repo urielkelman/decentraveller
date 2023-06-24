@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { View, KeyboardAvoidingView, Image, Text, TouchableOpacity, TextInput, Platform} from 'react-native';
+import { View, KeyboardAvoidingView, Image, Text, TouchableOpacity, TextInput, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { addReviewsScreenWordings } from './wording';
 import DecentravellerButton from '../../commons/components/DecentravellerButton';
 import { addReviewCommentStyles } from '../../styles/addReviewStyles';
-import {RouteProp, useRoute} from "@react-navigation/native";
-import {blockchainAdapter} from "../../blockchain/blockhainAdapter";
-import {useWalletConnect} from "@walletconnect/react-native-dapp";
+import { RouteProp, useRoute } from '@react-navigation/native';
+import { blockchainAdapter } from '../../blockchain/blockhainAdapter';
+import { useWalletConnect } from '@walletconnect/react-native-dapp';
 
 const adapter = blockchainAdapter;
 
@@ -67,7 +67,9 @@ const AddReviewComment = ({ navigation }) => {
                 />
                 <View style={addReviewCommentStyles.dialogContainer}>
                     <Image source={require('../../assets/images/dialog.png')} />
-                    <Text style={addReviewCommentStyles.dialogText}>{addReviewsScreenWordings.EXAMPLE_COMMENT_REVIEW}</Text>
+                    <Text style={addReviewCommentStyles.dialogText}>
+                        {addReviewsScreenWordings.EXAMPLE_COMMENT_REVIEW}
+                    </Text>
                 </View>
             </View>
 
