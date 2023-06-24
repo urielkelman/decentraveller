@@ -15,3 +15,6 @@ __pycache__*
 *package-lock.json
 *yarn.lock
 *.env
+decentraveller-blockchain/data/ba_places.json
+decentraveller-blockchain/data/ba_reviews.json
+decentraveller-blockchain/data/ba_users.json
