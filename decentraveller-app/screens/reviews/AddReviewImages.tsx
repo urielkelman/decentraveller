@@ -4,6 +4,7 @@ import { addReviewsScreenWordings } from './wording';
 import DecentravellerButton from '../../commons/components/DecentravellerButton';
 import { addReviewImagesStyles } from '../../styles/addReviewStyles';
 import * as ImagePicker from 'expo-image-picker';
+import {RouteProp, useNavigation} from "@react-navigation/native";
 
 const imagePath1 = '../../assets/images/ar4.jpeg';
 const imagePath2 = '../../assets/images/ar2.jpeg';
@@ -23,8 +24,18 @@ const circleImage: React.FC<CircleImageItemProps> = ({ imagePath }) => {
     );
 };
 
-const AddReviewImages = ({ navigation }) => {
+type AddReviewImagesParams = {
+    placeId: number;
+};
+
+type AddReviewImagesProps = {
+    route: RouteProp<Record<string, AddReviewImagesParams>, string>;
+};
+
+const AddReviewImages = ({ route }: AddReviewImagesProps) => {
     const [selectedImage, setSelectedImage] = useState(null);
+    const navigation = useNavigation()
+    const {placeId} = route.params
 
     const handleImageUpload = async () => {
         try {
@@ -77,7 +88,7 @@ const AddReviewImages = ({ navigation }) => {
                 text={'Next'}
                 loading={false}
                 onPress={() => {
-                    navigation.navigate('AddReviewComment', { selectedImage });
+                    navigation.navigate('AddReviewComment', { selectedImage, placeId });
                 }}
             />
         </View>
