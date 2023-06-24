@@ -48,7 +48,8 @@ const styles = StyleSheet.create({
 
 const WrongChainModal = () => {
     const appContext = useAppContext();
-
+    console.log(appContext.connectionContext, 'cn');
+    // console.log(appContext.connectionContext && appContext.connectionContext.isWrongChain)
     return (
         <Modal
             visible={appContext.connectionContext && appContext.connectionContext.isWrongChain}

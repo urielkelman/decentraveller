@@ -20,7 +20,7 @@ const RegistrationStackNavigator = createStackNavigator<RegistrationStackParamLi
 const RegistrationNavigator: React.FC<RegistrationProps> = ({ onSuccess }) => {
     return (
         <CreateUserProvider>
-            <RegistrationStackNavigator.Navigator screenOptions={{ headerShown: false }}>
+            <RegistrationStackNavigator.Navigator screenOptions={{ headerShown: true }}>
                 <RegistrationStackNavigator.Screen name="WelcomeUserScreen" component={WelcomeUserScreen} />
                 <RegistrationStackNavigator.Screen name="RegisterUserScreen" component={RegisterUserScreen} />
                 <RegistrationStackNavigator.Screen name="SuccessRegisterUserScreen">

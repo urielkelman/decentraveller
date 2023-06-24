@@ -1,4 +1,14 @@
-export const API_ENDPOINT = 'http://192.168.1.2:8000';
+import Constants from 'expo-constants';
+
+console.log(Constants.deviceName);
+
+if (Constants.deviceName === 'Simulator' || Constants.deviceName.includes('Emulator')) {
+    console.log('App is running on an emulator');
+} else {
+    console.log('App is running on a real device');
+}
+
+export const API_ENDPOINT = 'http://192.168.1.3:8000';
 
 export const FORWARD_GEOCODING_ENDPOINT = '/geocoding/forward';
 export const GET_USER_ENDPOINT = '/profile';

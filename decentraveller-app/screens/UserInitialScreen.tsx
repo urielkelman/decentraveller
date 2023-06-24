@@ -7,6 +7,7 @@ import RegistrationNavigator from './users/registration/RegistrationNavigator';
 import { apiAdapter } from '../api/apiAdapter';
 import { mockApiAdapter } from '../api/mockApiAdapter';
 import HomeNavigator from './home/HomeNavigator';
+import DecentravellerInformativeModal from '../commons/components/DecentravellerInformativeModal';
 
 const adapter = apiAdapter;
 
@@ -29,8 +30,6 @@ const DecentravellerInitialScreen = () => {
         setUserInterest(user.interest);
         setStackToRender('Home');
     };
-
-    console.log(appContext.connectionContext);
 
     useEffect(() => {
         (async () => {
