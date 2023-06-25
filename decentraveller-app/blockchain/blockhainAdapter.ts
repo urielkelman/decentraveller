@@ -129,7 +129,6 @@ class BlockchainAdapter {
         const mainContractAddress: string = decentravellerMainContract.addressesByBlockchain[blockchain];
         const decentravellerMain = new ethers.Contract(mainContractAddress, contractFunction.fullContractABI, provider);
         const placeAddress = await decentravellerMain.getPlaceAddress(placeId);
-        console.log('add', placeAddress);
         try {
             return await this.populateAndSendWithAddress(
                 connector,
