@@ -6,8 +6,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const AppContext = React.createContext<AppContextType | null>(null);
 
-const DEFAULT_CHAIN_ID = 5;
-const DEFAULT_CHAIN_ID_HEX = '0x5';
+const DEFAULT_CHAIN_ID = 31337;
+const DEFAULT_CHAIN_ID_HEX = '0x7a69';
 
 const UNRECOGNIZED_CHAIN_ID_MESSAGE = (chainId) =>
     `Unrecognized chain ID "${chainId}". Try adding the chain using wallet_addEthereumChain first.`;
@@ -93,6 +93,7 @@ const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
 
     React.useEffect(() => {
         // This effect allow us to clean sessions that the WalletConnect connector stores in the AsyncStorage
+        console.log(connector.connected, 'con con');
         const wipeAsyncStorage = async () => {
             if (!connector.connected) {
                 await AsyncStorage.clear();
@@ -156,8 +157,6 @@ const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
             }
         }
     }, [connector.connected]);
-
-    console.log('cn context', connectionContext);
 
     return (
         <AppContext.Provider

@@ -2,13 +2,16 @@ import Constants from 'expo-constants';
 
 console.log(Constants.deviceName);
 
-if (Constants.deviceName === 'Simulator' || Constants.deviceName.includes('Emulator')) {
-    console.log('App is running on an emulator');
-} else {
-    console.log('App is running on a real device');
-}
+export let API_ENDPOINT;
+export let JSON_RPC_URL;
 
-export const API_ENDPOINT = 'http://192.168.1.3:8000';
+if (Constants.deviceName === 'Simulator' || Constants.deviceName.includes('Emulator')) {
+    API_ENDPOINT = 'http://10.0.2.2:8000';
+    JSON_RPC_URL = 'http://10.0.2.2:8545';
+} else {
+    API_ENDPOINT = 'http://192.168.1.3:8000';
+    JSON_RPC_URL = 'https://dtblockchain.loca.lt/';
+}
 
 export const FORWARD_GEOCODING_ENDPOINT = '/geocoding/forward';
 export const GET_USER_ENDPOINT = '/profile';

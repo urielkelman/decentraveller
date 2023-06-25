@@ -1,6 +1,7 @@
 import 'react-native-gesture-handler';
 import { useEffect } from 'react';
 import * as SplashScreen from 'expo-splash-screen';
+import * as Notifications from 'expo-notifications';
 import DecentravellerInitialScreen from './screens/UserInitialScreen';
 import AppContextProvider from './context/AppContext';
 import { Dosis_600SemiBold } from '@expo-google-fonts/dosis';
@@ -29,6 +30,17 @@ export default function App() {
         };
         hideSplashScreen();
     }, [fontsLoaded]);
+
+    useEffect(() => {
+        const subscription = Notifications.addNotificationReceivedListener((notification) => {
+            console.log(notification);
+        });
+
+        return () => {
+            // Be sure to unsubscribe when the component unmounts
+            subscription.remove();
+        };
+    }, []);
 
     if (!fontsLoaded) {
         return null;

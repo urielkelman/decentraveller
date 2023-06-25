@@ -9,12 +9,16 @@ from src.api_models.profile import InvalidWalletAddressException
 from fastapi.responses import JSONResponse
 from starlette.status import HTTP_400_BAD_REQUEST
 
+import logging
+
 app = FastAPI()
 app.include_router(place_router)
 app.include_router(review_router)
 app.include_router(geocoding_router)
 app.include_router(profile_router)
 app.include_router(recommendation_router)
+
+logging.config.fileConfig('logging.conf', disable_existing_loggers=False)
 
 
 @app.exception_handler(InvalidWalletAddressException)

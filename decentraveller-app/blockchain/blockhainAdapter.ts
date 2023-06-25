@@ -4,15 +4,15 @@ import WalletConnect from '@walletconnect/client';
 import { ContractFunction, DecentravellerContract, decentravellerMainContract } from './contracts';
 import { Blockchain, BlockchainByConnectorChainId, LOCAL_DEVELOPMENT_CHAIN_ID } from './config';
 import { withTimeout } from '../commons/functions/utils';
+import { JSON_RPC_URL } from '../api/config';
 
 const BLOCKCHAIN_TIMEOUT_IN_MILLIS = 30000;
 const BLOCKCHAIN_TRANSACTION_TASK_NAME = 'Blockchain transaction';
 
 class BlockchainAdapter {
     private getProvider(chainId: number): ethers.providers.Provider {
-        console.log(chainId);
         if (chainId === LOCAL_DEVELOPMENT_CHAIN_ID || chainId === 0) {
-            return new ethers.providers.JsonRpcProvider('https://053c-2800-40-28-198a-cc34-77b9-b3af-51f.sa.ngrok.io');
+            return new ethers.providers.JsonRpcProvider(JSON_RPC_URL);
         } else {
             console.log('asd');
             return ethers.getDefaultProvider(chainId);
@@ -40,11 +40,13 @@ class BlockchainAdapter {
         const connectedAccount: string = connector.accounts[0];
         return await withTimeout(
             async () => {
+                console.log('send transaction');
                 const transactionHash: string = await connector.sendTransaction({
                     from: connectedAccount,
                     to: contractAddress,
                     data: populatedTransaction.data,
                 });
+                console.log(transactionHash);
                 const txReceipt = await provider.waitForTransaction(transactionHash);
                 if (txReceipt.status === 0) {
                     console.log(txReceipt);

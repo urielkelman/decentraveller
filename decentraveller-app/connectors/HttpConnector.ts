@@ -4,7 +4,8 @@ import { API_ENDPOINT } from '../api/config';
 export type HttpGetRequest = {
     url: string;
     queryParams: { [key: string]: string };
-    onError: (e) => void;
+    onUnexpectedError: (e) => void;
+    onStatusCodeError?: { [key: number]: () => void };
 };
 
 class HttpConnector {
@@ -23,12 +24,16 @@ class HttpConnector {
             return data;
         } catch (error) {
             if (axios.isAxiosError(error)) {
-                console.log(error.status);
+                console.log('Status', error.response.status);
                 console.log(error.message);
+                console.log('a', httpRequest.onStatusCodeError[error.response.status]);
+                httpRequest.onStatusCodeError &&
+                    httpRequest.onStatusCodeError[error.response.status] &&
+                    httpRequest.onStatusCodeError[error.response.status]();
             } else {
                 console.log(error);
             }
-            httpRequest.onError(error);
+            httpRequest.onUnexpectedError(error);
         }
     }
 }

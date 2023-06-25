@@ -88,7 +88,7 @@ class ProfileCBV:
                                 detail="The nickname is already in use.")
         return ProfileInDB.from_orm(profile_orm)
 
-    @profile_router.post("/profile/push-address", status_code=201)
+    @profile_router.post("/profile/push-token", status_code=201)
     def post_profile_push_address(self, profile_push_token: ProfilePushTokenBody):
         """
             Saves a push token for an existing profile.
@@ -97,7 +97,7 @@ class ProfileCBV:
         """
         profile_orm = self.database.get_profile_orm(profile_push_token.owner)
         if not profile_orm:
-            raise HTTPException(status_code=HTTP_400_BAD_REQUEST,
+            raise HTTPException(status_code=HTTP_404_NOT_FOUND,
                                 detail="Non existent profile")
 
         profile_orm.push_token = profile_push_token.push_token
