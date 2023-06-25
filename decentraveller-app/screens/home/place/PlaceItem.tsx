@@ -9,7 +9,7 @@ import { ISOCodeByCountry } from './countriesConfig';
 import { Rating } from 'react-native-rating-element';
 import { MaterialIcons } from '@expo/vector-icons';
 import { PlaceDetailData } from './types';
-import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import { HomeStackScreens } from '../HomeNavigator';
 
 export type PlaceItemProps = {

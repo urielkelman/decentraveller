@@ -40,11 +40,6 @@ const AddReviewImages = ({ route }: AddReviewImagesProps) => {
     const handleImageUpload = async () => {
         try {
             const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-
-            if (status !== 'granted') {
-                throw new Error('Permission to access the media library was denied');
-            }
-
             const result = await ImagePicker.launchImageLibraryAsync();
 
             if (!result.cancelled) {

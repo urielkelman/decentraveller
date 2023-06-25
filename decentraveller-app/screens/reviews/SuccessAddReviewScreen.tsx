@@ -4,9 +4,11 @@ import DecentravellerButton from '../../commons/components/DecentravellerButton'
 import { addReviewsScreenWordings } from './wording';
 import { successAddRegisterStyles, subTitleTextStyle } from '../../styles/addReviewStyles';
 
+const SCREENS_TO_TOP = 3
+
 const SuccessAddReviewScreen = ({ navigation }) => {
     const onClickContinue = () => {
-        navigation.pop(3);
+        navigation.pop(SCREENS_TO_TOP);
     };
 
     return (

@@ -8,9 +8,9 @@ import UserPlacesScreen from '../users/profile/UserPlacesScreen';
 import PlaceDetailScreen from './place/PlaceDetailScreen';
 import UserProfileScreen from '../users/profile/UserProfileScreen';
 import UserReviewsScreen from '../users/profile/UserReviewsScreen';
-import AddReviewImages from '../reviews/AddReviewImages';
 import AddReviewComment from '../reviews/AddReviewComment';
 import SuccessAddReviewScreen from '../reviews/SuccessAddReviewScreen';
+import AddReviewImages from "../reviews/AddReviewImages";
 
 export type HomeStackScreens = {
     LeftSideBar: undefined;
@@ -20,8 +20,8 @@ export type HomeStackScreens = {
     Profile: undefined;
     UserPlacesScreen: undefined;
     UserReviewsScreen: undefined;
-    AddReviewImages: undefined;
-    AddReviewComment: undefined;
+    AddReviewImages: { placeId: number };
+    AddReviewComment: { selectedImage: any, placeId: number };
     SuccessAddReviewScreen: undefined;
 };
 
