@@ -1,5 +1,5 @@
 import { GeocodingResponse } from './response/geocoding';
-import { httpAPIConnector, HttpConnector, HttpGetRequest } from '../connectors/HttpConnector';
+import { httpAPIConnector, HttpConnector, HttpGetRequest, HttpPostRequest } from '../connectors/HttpConnector';
 import {
     FORWARD_GEOCODING_ENDPOINT,
     GET_USER_ENDPOINT,
@@ -7,13 +7,18 @@ import {
     OWNED_PLACES_ENDPOINT,
     RECOMMENDED_PLACES_BY_PROFILE_ENDPOINT,
     REVIEWS_PLACES_ENDPOINT,
+    PUSH_NOTIFICATION_TOKEN_ENDPOINT,
 } from './config';
 import { UserResponse } from './response/user';
 import Adapter from './Adapter';
 import { formatString } from '../commons/functions/utils';
 import { ReviewsResponse } from './response/reviews';
 import { PlaceResponse } from './response/places';
-import { HTTPStatusCode } from './types';
+
+enum HTTPStatusCode {
+    BAD_REQUEST = 400,
+    NOT_FOUND = 404,
+}
 
 class ApiAdapter extends Adapter {
     private httpConnector: HttpConnector;
@@ -108,6 +113,19 @@ class ApiAdapter extends Adapter {
         };
 
         return await httpAPIConnector.get(httpRequest);
+    }
+
+    async sendPushNotificationToken(walletAddress: string, pushToken: string): Promise<void> {
+        const httpPostRequest: HttpPostRequest = {
+            url: PUSH_NOTIFICATION_TOKEN_ENDPOINT,
+            body: {
+                owner: walletAddress,
+                pushToken: pushToken,
+            },
+            onUnexpectedError: (e) => console.log('Error'),
+        };
+
+        return await httpAPIConnector.post(httpPostRequest);
     }
 }
 

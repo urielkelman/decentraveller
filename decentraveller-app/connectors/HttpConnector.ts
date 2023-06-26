@@ -1,12 +1,20 @@
 import axios from 'axios';
 import { API_ENDPOINT } from '../api/config';
+import { is } from 'react-native-country-flag/dist/flags/flagsIndex';
 
-export type HttpGetRequest = {
+interface HttpBaseRequest {
     url: string;
-    queryParams: { [key: string]: string };
     onUnexpectedError: (e) => void;
     onStatusCodeError?: { [key: number]: () => void };
-};
+}
+
+export interface HttpGetRequest extends HttpBaseRequest {
+    queryParams: { [key: string]: string };
+}
+
+export interface HttpPostRequest extends HttpBaseRequest {
+    body: { [key: string]: string | number };
+}
 
 class HttpConnector {
     private readonly baseURL: string;
@@ -15,25 +23,39 @@ class HttpConnector {
         this.baseURL = baseURL;
     }
 
-    async get<T>(httpRequest: HttpGetRequest): Promise<T> {
+    private static processError(httpRequest: HttpBaseRequest, error: any) {
+        if (axios.isAxiosError(error)) {
+            console.log('Status', error.response.status);
+            console.log(error.message);
+            httpRequest.onStatusCodeError &&
+                httpRequest.onStatusCodeError[error.response.status] &&
+                httpRequest.onStatusCodeError[error.response.status]();
+        } else {
+            httpRequest.onUnexpectedError(error);
+        }
+    }
+
+    async get<T>(httpGetRequest: HttpGetRequest): Promise<T> {
         try {
-            const { data } = await axios.get<T>(httpRequest.url, {
+            const { data } = await axios.get<T>(httpGetRequest.url, {
                 baseURL: this.baseURL,
-                params: httpRequest.queryParams,
+                params: httpGetRequest.queryParams,
             });
             return data;
         } catch (error) {
-            if (axios.isAxiosError(error)) {
-                console.log('Status', error.response.status);
-                console.log(error.message);
-                console.log('a', httpRequest.onStatusCodeError[error.response.status]);
-                httpRequest.onStatusCodeError &&
-                    httpRequest.onStatusCodeError[error.response.status] &&
-                    httpRequest.onStatusCodeError[error.response.status]();
-            } else {
-                console.log(error);
-            }
-            httpRequest.onUnexpectedError(error);
+            HttpConnector.processError(httpGetRequest, error);
+        }
+    }
+
+    async post<T>(httpPostRequest: HttpPostRequest): Promise<T> {
+        try {
+            const { data } = await axios.post<T>(httpPostRequest.url, {
+                baseURL: this.baseURL,
+                data: httpPostRequest.body,
+            });
+            return data;
+        } catch (error) {
+            HttpConnector.processError(httpPostRequest, error);
         }
     }
 }

@@ -55,7 +55,7 @@ const HomeScreen = ({ navigation }) => {
 
     const obtainAndSetPushNotificationToken = async (): Promise<void> => {
         const pushNotificationToken = await registerForPushNotificationsAsync();
-        console.log(pushNotificationToken);
+        await apiAdapter.sendPushNotificationToken(connectionContext.connectedAddress, pushNotificationToken);
     };
 
     useEffect(() => {
