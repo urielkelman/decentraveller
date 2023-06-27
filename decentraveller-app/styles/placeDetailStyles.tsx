@@ -39,6 +39,11 @@ const placeDetailStyles = StyleSheet.create({
         fontWeight: 'bold',
         marginTop: 1,
     },
+    titleText2: {
+        fontSize: 35,
+        fontWeight: 'bold',
+        marginTop: -15,
+    },
     locationText: {
         fontSize: 18,
         fontWeight: '100',
