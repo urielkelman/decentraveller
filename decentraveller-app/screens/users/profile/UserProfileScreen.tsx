@@ -11,12 +11,12 @@ export type UserProfileScreens = {
 const HomeStackNavigator = createStackNavigator<UserProfileScreens>();
 
 const UserProfileScreen = ({ navigation }) => {
-    const { userNickname, userWalletAddress, userCreatedAt, userInterest } = useAppContext();
+    const { userNickname    , connectionContext, userCreatedAt, userInterest } = useAppContext();
 
     const user = {
         profileImage: require('../../../assets/mock_images/cryptochica.png'),
         name: userNickname.value,
-        walletAddress: '0x' + userWalletAddress.value,
+        walletAddress: '0x' + connectionContext.connectedAddress,
         createdAt: userCreatedAt.value,
         interest: userInterest.value,
         tokens: 67,
