@@ -11,12 +11,13 @@ import UserReviewsScreen from '../users/profile/UserReviewsScreen';
 import AddReviewComment from '../reviews/AddReviewComment';
 import SuccessAddReviewScreen from '../reviews/SuccessAddReviewScreen';
 import AddReviewImages from "../reviews/AddReviewImages";
+import {PlaceDetailData} from "./place/types";
 
 export type HomeStackScreens = {
     LeftSideBar: undefined;
     CreatePlaceNameScreen: undefined;
     CreatePlaceLocationScreen: undefined;
-    PlaceDetailScreen: undefined;
+    PlaceDetailScreen: { placeItemData: PlaceDetailData };
     Profile: undefined;
     UserPlacesScreen: undefined;
     UserReviewsScreen: undefined;

@@ -3,12 +3,14 @@ import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import { placeReviewsBoxStyles } from '../../../styles/placeDetailStyles';
 import { ReviewResponse, ReviewsResponse } from '../../../api/response/reviews';
 import { mockApiAdapter } from '../../../api/mockApiAdapter';
-import { useNavigation } from '@react-navigation/native';
+import {NavigationProp, RouteProp, useNavigation} from '@react-navigation/native';
+import {HomeStackScreens} from "../HomeNavigator";
+import {AddReviewImagesScreenProp} from "./types";
 
 const adapter = mockApiAdapter;
 
 const PlaceReviewsBox = ({ placeId }) => {
-    const navigation = useNavigation();
+    const navigation = useNavigation<AddReviewImagesScreenProp>();
     const [loadingReviews, setLoadingReviews] = React.useState<boolean>(false);
     const [reviews, setReviews] = React.useState<ReviewResponse[]>(null);
 

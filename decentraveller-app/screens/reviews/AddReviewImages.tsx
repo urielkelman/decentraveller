@@ -4,7 +4,10 @@ import { addReviewsScreenWordings } from './wording';
 import DecentravellerButton from '../../commons/components/DecentravellerButton';
 import { addReviewImagesStyles } from '../../styles/addReviewStyles';
 import * as ImagePicker from 'expo-image-picker';
-import { RouteProp, useNavigation } from '@react-navigation/native';
+import {NavigationProp, RouteProp, useNavigation} from '@react-navigation/native';
+import {HomeStackScreens} from "../home/HomeNavigator";
+import {AddReviewCommentScreenProp, AddReviewImagesProps} from "./types";
+import {PlaceDetailScreenProps} from "../home/place/types";
 
 const imagePath1 = '../../assets/images/ar4.jpeg';
 const imagePath2 = '../../assets/images/ar2.jpeg';
@@ -24,17 +27,9 @@ const circleImage: React.FC<CircleImageItemProps> = ({ imagePath }) => {
     );
 };
 
-type AddReviewImagesParams = {
-    placeId: number;
-};
-
-type AddReviewImagesProps = {
-    route: RouteProp<Record<string, AddReviewImagesParams>, string>;
-};
-
-const AddReviewImages = ({ route }: AddReviewImagesProps) => {
+const AddReviewImages: React.FC<AddReviewImagesProps> = ({ route }) => {
     const [selectedImage, setSelectedImage] = useState(null);
-    const navigation = useNavigation();
+    const navigation = useNavigation<AddReviewCommentScreenProp>();
     const { placeId } = route.params;
 
     const handleImageUpload = async () => {
