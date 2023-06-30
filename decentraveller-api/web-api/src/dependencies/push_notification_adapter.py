@@ -1,3 +1,4 @@
+from abc import ABC, abstractmethod
 from exponent_server_sdk import (
     DeviceNotRegisteredError,
     PushClient,
@@ -11,11 +12,23 @@ from requests.exceptions import ConnectionError, HTTPError
 logger = logging.getLogger(__name__)
 
 
+class NotificationAdapter(ABC):
+    @abstractmethod
+    def send_push_message(self, token, message, extra):
+        pass
+
+
 def build_notification_adapter():
     return PushNotificationAdapter()
 
 
-class PushNotificationAdapter:
+class MockNotificationAdapter(NotificationAdapter):
+
+    def send_push_message(self, token, message, extra):
+        print('Invoked mocked method')
+
+
+class PushNotificationAdapter(NotificationAdapter):
     def __init__(self):
         self.session = requests.Session()
         self.session.headers.update(
