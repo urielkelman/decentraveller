@@ -30,9 +30,9 @@ class ReviewCBV:
         try:
             inserted_review = self.database.add_review(review)
             review_owner = self.database.get_profile_orm(review.owner)
-            self.push_notification_adapter.send_push_message(review_owner.push_token, "", "")
+            self.push_notification_adapter.send_push_message(review_owner.push_token, "message notif", "extra de la notif")
             return inserted_review
-        except IntegrityError as e:
+        except IntegrityError:
             raise HTTPException(status_code=HTTP_400_BAD_REQUEST,
                                 detail="Either the place or the profile does not exist")
 
