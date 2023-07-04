@@ -1,9 +1,9 @@
 import { View, Image, Text, StyleSheet, Dimensions } from 'react-native';
 import PlaceReviewsBox from './PlaceReviewsBox';
 import { placeDetailStyles } from '../../../styles/placeDetailStyles';
-import {PlaceDetailData, PlaceDetailScreenProps} from './types';
+import { PlaceDetailData, PlaceDetailScreenProps } from './types';
 import React, { useEffect } from 'react';
-import {RouteProp} from "@react-navigation/native";
+import { RouteProp } from '@react-navigation/native';
 
 const path = '../../../assets/mock_images/eretz-inside.jpeg';
 const locationIconPath = '../../../assets/images/location.png';
@@ -47,7 +47,6 @@ function renderNameText(name: string): JSX.Element {
     }
 }
 
-
 const bulletItemComponent: React.FC<BulletItemProps> = ({ iconPath, title, value, marginTop }) => {
     return (
         <View style={[placeDetailStyles.bulletItem, { marginTop: marginTop }]}>
@@ -63,7 +62,7 @@ const bulletItemComponent: React.FC<BulletItemProps> = ({ iconPath, title, value
 const PlaceDetailScreen: React.FC<PlaceDetailScreenProps> = ({ route }) => {
     const { placeItemData } = route.params;
     const { id, name, address, score, reviewCount } = placeItemData;
-    const shouldShowInTwoLines = needsMultipleLines(name)
+    const shouldShowInTwoLines = needsMultipleLines(name);
 
     return (
         <View style={placeDetailStyles.container}>
