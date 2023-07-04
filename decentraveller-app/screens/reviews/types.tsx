@@ -1,6 +1,5 @@
-import {NavigationProp, RouteProp} from "@react-navigation/native";
-import {HomeStackScreens} from "../home/HomeNavigator";
-
+import { NavigationProp, RouteProp } from '@react-navigation/native';
+import { HomeStackScreens } from '../home/HomeNavigator';
 
 type AddReviewImagesParams = {
     placeId: number;

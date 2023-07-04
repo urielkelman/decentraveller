@@ -10,7 +10,7 @@ import DecentravellerTextInput from '../../../commons/components/DecentravellerT
 import DecentravellerButton from '../../../commons/components/DecentravellerButton';
 import { useNavigation } from '@react-navigation/native';
 import DecentravellerInformativeModal from '../../../commons/components/DecentravellerInformativeModal';
-import {AddReviewImagesScreenProp, CreatePlaceLocationScreenProp} from "./types";
+import { AddReviewImagesScreenProp, CreatePlaceLocationScreenProp } from './types';
 
 const CreatePlaceNameScreen = () => {
     const { placeTypePicker, placeName, setPlaceName } = useCreatePlaceContext();

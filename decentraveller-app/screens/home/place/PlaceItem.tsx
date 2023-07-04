@@ -8,7 +8,7 @@ import eretzMockImage from '../../../assets/mock_images/eretz-restaurant-in-buen
 import { ISOCodeByCountry } from './countriesConfig';
 import { Rating } from 'react-native-rating-element';
 import { MaterialIcons } from '@expo/vector-icons';
-import {PlaceDetailData, PlaceDetailScreenProp} from './types';
+import { PlaceDetailData, PlaceDetailScreenProp } from './types';
 import { useNavigation } from '@react-navigation/native';
 import { HomeStackScreens } from '../HomeNavigator';
 
