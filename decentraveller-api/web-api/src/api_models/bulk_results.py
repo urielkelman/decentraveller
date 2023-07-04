@@ -1,6 +1,6 @@
 from typing import List
 from fastapi_utils.api_model import APIModel
-from src.api_models.review import ReviewInDB
+from src.api_models.review import ReviewWithProfile
 from src.api_models.place import PlaceWithStats
 
 
@@ -17,7 +17,7 @@ class PaginatedReviews(PaginatedResultBase):
     """
     Paginated reviews model
     """
-    reviews: List[ReviewInDB]
+    reviews: List[ReviewWithProfile]
 
 
 class PaginatedPlaces(PaginatedResultBase):
