@@ -11,7 +11,7 @@ export type UserProfileScreens = {
 const HomeStackNavigator = createStackNavigator<UserProfileScreens>();
 
 const UserProfileScreen = ({ navigation }) => {
-    const { userNickname    , connectionContext, userCreatedAt, userInterest } = useAppContext();
+    const { userNickname, connectionContext, userCreatedAt, userInterest } = useAppContext();
 
     const user = {
         profileImage: require('../../../assets/mock_images/cryptochica.png'),
