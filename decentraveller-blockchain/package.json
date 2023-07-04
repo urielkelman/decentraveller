@@ -14,7 +14,7 @@
     "@nomicfoundation/hardhat-chai-matchers": "^1.0.0",
     "@nomicfoundation/hardhat-network-helpers": "^1.0.0",
     "@nomicfoundation/hardhat-toolbox": "^2.0.0",
-    "@nomiclabs/hardhat-ethers": "npm:hardhat-deploy-ethers",
+    "@nomiclabs/hardhat-ethers": "npm:hardhat-deploy-ethers@3.0.3",
     "@nomiclabs/hardhat-etherscan": "^3.1.1",
     "@typechain/ethers-v5": "^10.1.0",
     "@typechain/hardhat": "^6.1.2",
@@ -35,7 +35,6 @@
     "typescript": ">=4.5.0"
   },
   "dependencies": {
-    "@nomicfoundation/hardhat-ethers": "^3.0.3",
     "@openzeppelin/contracts-upgradeable": "^4.8.0"
   }
 }
