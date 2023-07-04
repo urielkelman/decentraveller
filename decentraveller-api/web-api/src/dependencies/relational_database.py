@@ -61,7 +61,7 @@ class RelationalDatabase:
             filter(PlaceORM.id.in_(tuple(place_ids))) \
             .group_by(PlaceORM.id).all()
         return [PlaceWithStats(**PlaceInDB.from_orm(p[0]).dict(),
-                               stars=p[1], reviews=p[2])
+                               score=p[1], reviews=p[2])
                 for p in result]
 
     def _get_reviews_by_ids(self, ids: List[Tuple[ReviewID, PlaceID]]) \
@@ -112,7 +112,7 @@ class RelationalDatabase:
         self.session.add(place_orm)
         self.session.commit()
         return PlaceWithStats(**PlaceInDB.from_orm(place_orm).dict(),
-                              stars=None, reviews=0)
+                              score=None, reviews=0)
 
     def update_place(self, place_id: PlaceID, place_data: Dict) -> Optional[PlaceWithStats]:
         """

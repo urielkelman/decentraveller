@@ -25,20 +25,12 @@ jobs:
 
   blockchain_tests:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [14.x]
     steps:
-      - uses: actions/checkout@v3
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version }}
-      - run: |
-          cd decentraveller-blockchain
-          yarn install
-          yarn hardhat compile
-          yarn hardhat test
+      - uses: actions/checkout@v2
+      - name: Build images
+        run: docker-compose build blockchain
+      - name: Test blockchain
+        run: docker-compose run --entrypoint "yarn hardhat test" blockchain
 
 
 

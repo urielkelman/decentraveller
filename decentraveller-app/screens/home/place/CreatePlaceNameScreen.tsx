@@ -8,10 +8,13 @@ import { useCreatePlaceContext } from './CreatePlaceContext';
 import CreatePlacePicker from '../../../commons/components/DecentravellerPicker';
 import DecentravellerTextInput from '../../../commons/components/DecentravellerTextInput';
 import DecentravellerButton from '../../../commons/components/DecentravellerButton';
+import { useNavigation } from '@react-navigation/native';
 import DecentravellerInformativeModal from '../../../commons/components/DecentravellerInformativeModal';
+import {AddReviewImagesScreenProp, CreatePlaceLocationScreenProp} from "./types";
 
-const CreatePlaceNameScreen = ({ navigation }) => {
+const CreatePlaceNameScreen = () => {
     const { placeTypePicker, placeName, setPlaceName } = useCreatePlaceContext();
+    const navigation = useNavigation<CreatePlaceLocationScreenProp>();
     const [showInformativeModal, setShowInformativeModal] = React.useState<boolean>(false);
 
     const onClickContinue = () => {

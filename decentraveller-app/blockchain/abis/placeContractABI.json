@@ -1,0 +1,231 @@
+[
+    {
+        "inputs": [
+            {
+                "internalType": "uint8",
+                "name": "score",
+                "type": "uint8"
+            }
+        ],
+        "name": "Review__InvalidScore",
+        "type": "error"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "reviewId",
+                "type": "uint256"
+            }
+        ],
+        "name": "Review__NonExistent",
+        "type": "error"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "internalType": "uint8",
+                "name": "version",
+                "type": "uint8"
+            }
+        ],
+        "name": "Initialized",
+        "type": "event"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "string",
+                "name": "_reviewText",
+                "type": "string"
+            },
+            {
+                "internalType": "string[]",
+                "name": "_imagesHashes",
+                "type": "string[]"
+            },
+            {
+                "internalType": "uint8",
+                "name": "_score",
+                "type": "uint8"
+            }
+        ],
+        "name": "addReview",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "category",
+        "outputs": [
+            {
+                "internalType": "enum DecentravellerDataTypes.DecentravellerPlaceCategory",
+                "name": "",
+                "type": "uint8"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "getCurrentReviewId",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "_reviewId",
+                "type": "uint256"
+            }
+        ],
+        "name": "getReviewAddress",
+        "outputs": [
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "_placeId",
+                "type": "uint256"
+            },
+            {
+                "internalType": "string",
+                "name": "_name",
+                "type": "string"
+            },
+            {
+                "internalType": "string",
+                "name": "_latitude",
+                "type": "string"
+            },
+            {
+                "internalType": "string",
+                "name": "_longitude",
+                "type": "string"
+            },
+            {
+                "internalType": "string",
+                "name": "_physicalAddress",
+                "type": "string"
+            },
+            {
+                "internalType": "enum DecentravellerDataTypes.DecentravellerPlaceCategory",
+                "name": "_category",
+                "type": "uint8"
+            },
+            {
+                "internalType": "address",
+                "name": "_placeCreator",
+                "type": "address"
+            },
+            {
+                "internalType": "address",
+                "name": "_reviewFactory",
+                "type": "address"
+            }
+        ],
+        "name": "initialize",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "latitude",
+        "outputs": [
+            {
+                "internalType": "string",
+                "name": "",
+                "type": "string"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "longitude",
+        "outputs": [
+            {
+                "internalType": "string",
+                "name": "",
+                "type": "string"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "name",
+        "outputs": [
+            {
+                "internalType": "string",
+                "name": "",
+                "type": "string"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "physicalAddress",
+        "outputs": [
+            {
+                "internalType": "string",
+                "name": "",
+                "type": "string"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "placeCreator",
+        "outputs": [
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "placeId",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    }
+]

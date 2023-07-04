@@ -8,29 +8,29 @@ import { apiAdapter } from '../api/apiAdapter';
 import { mockApiAdapter } from '../api/mockApiAdapter';
 import HomeNavigator from './home/HomeNavigator';
 
+const adapter = apiAdapter;
+
 const DecentravellerInitialScreen = () => {
     let [stackToRender, setStackToRender] = React.useState<'Login' | 'Home' | 'Registration'>('Login');
     const appContext = useAppContext();
     const setUserNickname = appContext.userNickname.setValue;
-    const setUserWalletAddress = appContext.userWalletAddress.setValue;
     const setUserCreatedAt = appContext.userCreatedAt.setValue;
     const setUserInterest = appContext.userInterest.setValue;
 
     const getUser = async () => {
-        const adapter = apiAdapter;
-        const wallet = appContext.connectionContext.connectedAddress;
-        const user = await adapter.getUser(wallet, () => {
+        const user = await adapter.getUser(appContext.connectionContext.connectedAddress, () => {
             setStackToRender('Registration');
         });
 
         if (!user) return;
 
-        setUserNickname(user.UserElementResponse.nickname);
-        setUserCreatedAt(user.UserElementResponse.createdAt);
-        setUserInterest(user.UserElementResponse.interest);
-        setUserWalletAddress(wallet);
+        setUserNickname(user.nickname);
+        setUserCreatedAt(user.createdAt);
+        setUserInterest(user.interest);
         setStackToRender('Home');
     };
+
+    console.log(appContext.connectionContext);
 
     useEffect(() => {
         (async () => {
