@@ -5,3 +5,4 @@ test
 *.log
 package-lock.json
 deployments
+data
