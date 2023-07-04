@@ -1,7 +1,6 @@
 artifacts
 cache
 node_modules
-test
 *.log
 package-lock.json
 deployments
