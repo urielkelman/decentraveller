@@ -3,7 +3,7 @@ import { ethers } from 'ethers';
 import WalletConnect from '@walletconnect/client';
 import { ContractFunction, DecentravellerContract, decentravellerMainContract } from './contracts';
 import { Blockchain, BlockchainByConnectorChainId, LOCAL_DEVELOPMENT_CHAIN_ID } from './config';
-import { withTimeout } from '../commons/utils';
+import { withTimeout } from '../commons/functions/utils';
 
 const BLOCKCHAIN_TIMEOUT_IN_MILLIS = 5000;
 const BLOCKCHAIN_TRANSACTION_TASK_NAME = 'Blockchain transaction';
@@ -29,7 +29,7 @@ class BlockchainAdapter {
         const contractFunction: ContractFunction = contract.functions[functionName];
         const ethersContract: ethers.Contract = new ethers.Contract(
             contractAddress,
-            contractFunction.functionABI,
+            contractFunction.fullContractABI,
             provider
         );
         const populatedTransaction: ethers.PopulatedTransaction = await ethersContract.populateTransaction[
@@ -92,7 +92,7 @@ class BlockchainAdapter {
             return await this.populateAndSend(
                 connector,
                 decentravellerMainContract,
-                'registerUser',
+                'registerProfile',
                 nickname,
                 country,
                 interest

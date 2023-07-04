@@ -6,11 +6,13 @@ import {
     RECOMMENDED_PLACES_BY_LOCATION_ENDPOINT,
     OWNED_PLACES_ENDPOINT,
     RECOMMENDED_PLACES_BY_PROFILE_ENDPOINT,
+    REVIEWS_PLACES_ENDPOINT,
 } from './config';
 import { UserResponse } from './response/user';
 import { PlacesResponse } from './response/places';
 import Adapter from './Adapter';
-import { formatString } from '../commons/utils';
+import { formatString } from '../commons/functions/utils';
+import { ReviewsResponse } from './response/reviews';
 
 class ApiAdapter extends Adapter {
     private httpConnector: HttpConnector;
@@ -35,7 +37,7 @@ class ApiAdapter extends Adapter {
         return await httpAPIConnector.get(httpRequest);
     }
 
-    async getRecommendedPlacesByLocation(latitude: string, longitude: string): Promise<PlacesResponse> {
+    async getRecommendedPlaces([latitude, longitude]: [string, string]): Promise<PlacesResponse> {
         const httpRequest: HttpGetRequest = {
             url: RECOMMENDED_PLACES_BY_LOCATION_ENDPOINT,
             queryParams: {
@@ -50,15 +52,18 @@ class ApiAdapter extends Adapter {
 
     async getRecommendedPlacesForAddress(
         walletAddress: string,
-        latitude?: string,
-        longitude?: string
+        [latitude, longitude]: [string?, string?]
     ): Promise<PlacesResponse> {
+        const queryParams =
+            latitude && longitude
+                ? {
+                      latitude: latitude,
+                      longitude: longitude,
+                  }
+                : undefined;
         const httpRequest: HttpGetRequest = {
             url: formatString(RECOMMENDED_PLACES_BY_PROFILE_ENDPOINT, { owner: walletAddress }),
-            queryParams: {
-                latitude: latitude,
-                longitude: longitude,
-            },
+            queryParams: queryParams,
             onError: (e) => console.log('Error'),
         };
 
@@ -80,6 +85,16 @@ class ApiAdapter extends Adapter {
     async getMyPlaces(walletAddress: string): Promise<PlacesResponse> {
         const httpRequest: HttpGetRequest = {
             url: `${OWNED_PLACES_ENDPOINT}/${walletAddress}`,
+            queryParams: {},
+            onError: (e) => console.log('Error'),
+        };
+
+        return await httpAPIConnector.get(httpRequest);
+    }
+
+    async getPlaceReviews(placeId: string): Promise<ReviewsResponse> {
+        const httpRequest: HttpGetRequest = {
+            url: formatString(REVIEWS_PLACES_ENDPOINT, { placeId: placeId }),
             queryParams: {},
             onError: (e) => console.log('Error'),
         };

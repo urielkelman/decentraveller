@@ -48,7 +48,7 @@ const HomeNavigator = () => {
                     name="PlaceDetailScreen"
                     component={PlaceDetailScreen}
                     options={{
-                        title: 'Select location',
+                        title: 'Place',
                         headerMode: 'screen',
                         headerShown: true,
                     }}

@@ -8,6 +8,7 @@ import eretzMockImage from '../../../assets/mock_images/eretz-restaurant-in-buen
 import { ISOCodeByCountry } from './countriesConfig';
 import { Rating } from 'react-native-rating-element';
 import { MaterialIcons } from '@expo/vector-icons';
+import { PlaceDetailData } from './types';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { HomeStackScreens } from '../HomeNavigator';
 
@@ -21,8 +22,11 @@ export type PlaceItemProps = {
     category: DecentravellerPlaceCategory;
     reviewCount: number;
 };
+interface PlaceDetailParams {
+    placeItemData: PlaceDetailData;
+}
 
-type PlaceDetailScreenProp = NavigationProp<HomeStackScreens, 'PlaceDetailScreen'>;
+// type PlaceDetailScreenProp = NavigationProp<HomeStackScreens, 'PlaceDetailScreen', PlaceDetailParams>;
 
 const StarComponent = ({ score: number }) => {
     return (
@@ -49,7 +53,7 @@ const PlaceItem: React.FC<PlaceItemProps> = ({
     category,
     reviewCount,
 }) => {
-    const navigation = useNavigation<PlaceDetailScreenProp>();
+    const navigation = useNavigation();
     let countryISOCode: string | undefined;
     try {
         const country = address.split(',').slice(-1)[0].substring(1);
@@ -65,8 +69,16 @@ const PlaceItem: React.FC<PlaceItemProps> = ({
 
     const capitalizedCategory = capitalizeCategory(category);
 
+    const placeDetailData: PlaceDetailData = {
+        id: id,
+        name: name,
+        address: address,
+        score: score,
+        reviewCount: reviewCount,
+    };
+
     return (
-        <TouchableOpacity onPress={() => navigation.navigate('PlaceDetailScreen')}>
+        <TouchableOpacity onPress={() => navigation.navigate('PlaceDetailScreen', { placeItemData: placeDetailData })}>
             <View style={placeItemStyle.container}>
                 <View style={placeItemStyle.leftContainer}>
                     <Image style={placeItemStyle.image} source={eretzMockImage} />
