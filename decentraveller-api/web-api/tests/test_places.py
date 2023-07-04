@@ -101,7 +101,7 @@ def test_create_place(cleanup):
                                "latitude": -34.595983,
                                "longitude": -58.393329,
                                "category": "GASTRONOMY",
-                               "stars": None,
+                               "score": None,
                                "reviews": 0}
 
 
@@ -145,7 +145,7 @@ def test_overwrite_place(cleanup):
                                "latitude": -34.595983,
                                "longitude": -58.393329,
                                "category": "GASTRONOMY",
-                               "stars": None,
+                               "score": None,
                                "reviews": 0}
 
 
@@ -184,7 +184,7 @@ def test_update_place(cleanup):
                                "latitude": -34.595983,
                                "longitude": -58.393329,
                                "category": "GASTRONOMY",
-                               "stars": None,
+                               "score": None,
                                "reviews": 0}
 
 
@@ -262,7 +262,7 @@ def test_get_paginated_places(cleanup):
                                             "latitude": -34.595983,
                                             "longitude": -58.393329,
                                             "category": "GASTRONOMY",
-                                            "stars": None,
+                                            "score": None,
                                             "reviews": 0}
     assert response.json()['places'][1] == {"id": 1,
                                             "owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
@@ -271,7 +271,7 @@ def test_get_paginated_places(cleanup):
                                             "latitude": -34.595939,
                                             "longitude": -58.393499,
                                             "category": "GASTRONOMY",
-                                            "stars": None,
+                                            "score": None,
                                             "reviews": 0}
     assert response.json()['places'][2] == {"id": 2,
                                             "owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
@@ -280,7 +280,7 @@ def test_get_paginated_places(cleanup):
                                             "latitude": -34.600724,
                                             "longitude": -58.392924,
                                             "category": "GASTRONOMY",
-                                            "stars": None,
+                                            "score": None,
                                             "reviews": 0}
 
     response = client.get("/profile/0xeB7C917821796eb627C0719A23a139ce51226CD2/places", params={"page": 1, "per_page": 3})
@@ -294,7 +294,7 @@ def test_get_paginated_places(cleanup):
                                             "latitude": -34.546015,
                                             "longitude": -58.489325,
                                             "category": "GASTRONOMY",
-                                            "stars": None,
+                                            "score": None,
                                             "reviews": 0}
     assert response.json()['places'][1] == {"id": 4,
                                             "owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
@@ -303,5 +303,5 @@ def test_get_paginated_places(cleanup):
                                             "latitude": -34.602272,
                                             "longitude": -58.528238,
                                             "category": "GASTRONOMY",
-                                            "stars": None,
+                                            "score": None,
                                             "reviews": 0}

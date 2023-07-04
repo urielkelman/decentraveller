@@ -8,15 +8,22 @@ import UserPlacesScreen from '../users/profile/UserPlacesScreen';
 import PlaceDetailScreen from './place/PlaceDetailScreen';
 import UserProfileScreen from '../users/profile/UserProfileScreen';
 import UserReviewsScreen from '../users/profile/UserReviewsScreen';
+import AddReviewComment from '../reviews/AddReviewComment';
+import SuccessAddReviewScreen from '../reviews/SuccessAddReviewScreen';
+import AddReviewImages from "../reviews/AddReviewImages";
+import {PlaceDetailData} from "./place/types";
 
 export type HomeStackScreens = {
     LeftSideBar: undefined;
     CreatePlaceNameScreen: undefined;
     CreatePlaceLocationScreen: undefined;
-    PlaceDetailScreen: undefined;
+    PlaceDetailScreen: { placeItemData: PlaceDetailData };
     Profile: undefined;
     UserPlacesScreen: undefined;
     UserReviewsScreen: undefined;
+    AddReviewImages: { placeId: number };
+    AddReviewComment: { selectedImage: any, placeId: number };
+    SuccessAddReviewScreen: undefined;
 };
 
 const HomeStackNavigator = createStackNavigator<HomeStackScreens>();
@@ -72,6 +79,30 @@ const HomeNavigator = () => {
                     component={UserReviewsScreen}
                     options={{
                         title: 'My Reviews',
+                        headerShown: true,
+                    }}
+                />
+                <HomeStackNavigator.Screen
+                    name="AddReviewImages"
+                    component={AddReviewImages}
+                    options={{
+                        title: 'Add Review',
+                        headerShown: true,
+                    }}
+                />
+                <HomeStackNavigator.Screen
+                    name="AddReviewComment"
+                    component={AddReviewComment}
+                    options={{
+                        title: 'Add Review',
+                        headerShown: true,
+                    }}
+                />
+                <HomeStackNavigator.Screen
+                    name="SuccessAddReviewScreen"
+                    component={SuccessAddReviewScreen}
+                    options={{
+                        title: 'Thank you!',
                         headerShown: true,
                     }}
                 />

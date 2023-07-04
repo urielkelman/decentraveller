@@ -1,17 +1,14 @@
 import { View, Image, Text, StyleSheet, Dimensions } from 'react-native';
 import PlaceReviewsBox from './PlaceReviewsBox';
 import { placeDetailStyles } from '../../../styles/placeDetailStyles';
-import { PlaceDetailData } from './types';
+import {PlaceDetailData, PlaceDetailScreenProps} from './types';
 import React, { useEffect } from 'react';
+import {RouteProp} from "@react-navigation/native";
 
 const path = '../../../assets/mock_images/eretz-inside.jpeg';
 const locationIconPath = '../../../assets/images/location.png';
 const rankingIconPath = require('../../../assets/images/estrellita.png');
 const distanceIconPath = require('../../../assets/images/caminito.png');
-
-interface PlaceDetailScreenProps {
-    route: PlaceDetailData;
-}
 
 type BulletItemProps = {
     iconPath: any;
@@ -53,7 +50,7 @@ const PlaceDetailScreen: React.FC<PlaceDetailScreenProps> = ({ route }) => {
                 {bulletItemComponent({
                     iconPath: rankingIconPath,
                     title: 'Rating',
-                    value: score,
+                    value: score.toString(),
                     marginTop: 0,
                 })}
                 {bulletItemComponent({

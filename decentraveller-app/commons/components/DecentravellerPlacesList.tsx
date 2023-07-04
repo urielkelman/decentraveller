@@ -16,7 +16,7 @@ const renderPlaceItem = ({ item }: { item: PlaceResponse }) => (
         latitude={item.latitude}
         longitude={item.longitude}
         score={item.score}
-        reviewCount={item.reviewCount}
+        reviewCount={item.reviews}
     />
 );
 

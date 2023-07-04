@@ -18,7 +18,7 @@ import { Entypo, Ionicons } from '@expo/vector-icons';
 import { GeocodingElement } from '../place/CreatePlaceContext';
 import LoadingComponent from '../../../commons/components/DecentravellerLoading';
 
-const adapter = mockApiAdapter;
+const adapter = apiAdapter;
 
 const ExplorePlacesScreen = ({ navigation }) => {
     const { userLocation } = useAppContext();
@@ -74,7 +74,7 @@ const ExplorePlacesScreen = ({ navigation }) => {
                 const [latitude, longitude] = userLocation.value;
                 setLoadingPlaces(true);
                 const places = await adapter.getRecommendedPlaces([latitude, longitude]);
-                setPlaces(places.results);
+                setPlaces(places);
                 setLoadingPlaces(false);
                 setLocationPickerValue(ownLocationPickerValue);
                 setLastLocationLabelSearched(explorePlacesScreenWording.EXPLORE_PLACE_LOCATION_PICKER_CURRENT_LOCATION);
@@ -107,7 +107,7 @@ const ExplorePlacesScreen = ({ navigation }) => {
                     geocodingElement.latitude,
                     geocodingElement.longitude,
                 ]);
-                setPlaces(places.results);
+                setPlaces(places);
                 setLoadingPlaces(false);
                 setLastLocationLabelSearched(item.label);
             }
