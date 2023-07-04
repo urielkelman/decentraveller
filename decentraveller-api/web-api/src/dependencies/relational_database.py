@@ -5,8 +5,8 @@ from sqlalchemy.orm import Session
 
 from src.api_models.bulk_results import PaginatedReviews, PaginatedPlaces
 from src.api_models.place import PlaceID, PlaceInDB, PlaceWithStats
+from src.api_models.profile import ProfileInDB, WalletID
 from src.api_models.review import ReviewID, ReviewInDB, ReviewBody, ReviewWithProfile
-from src.api_models.profile import ProfileInDB
 from src.orms.place import PlaceORM
 from src.orms.profile import ProfileORM
 from src.orms.review import ReviewORM
@@ -162,7 +162,7 @@ class RelationalDatabase:
         return ReviewInDB.from_orm(review_orm)
 
     def get_profile_orm(self,
-                        owner: str) -> Optional[ProfileORM]:
+                        owner: WalletID) -> Optional[ProfileORM]:
         """
         Database querying for a profile
 
@@ -183,7 +183,7 @@ class RelationalDatabase:
         :param per_page: items per page
         :return: the paginated reviews
         """
-        query = self.session.query(ReviewORM.id, ReviewORM.place_id).\
+        query = self.session.query(ReviewORM.id, ReviewORM.place_id). \
             filter(ReviewORM.place_id == place_id)
         total_count = query.count()
         query = query.limit(per_page).offset(page * per_page)
@@ -192,7 +192,7 @@ class RelationalDatabase:
         return PaginatedReviews(page=page, per_page=per_page,
                                 total=total_count, reviews=reviews)
 
-    def query_reviews_by_profile(self, owner: str,
+    def query_reviews_by_profile(self, owner: WalletID,
                                  page: int, per_page: int) -> PaginatedReviews:
         """
         Gets all the reviews from a profile as a query
@@ -202,7 +202,7 @@ class RelationalDatabase:
         :param per_page: items per page
         :return: the paginated reviews
         """
-        query = self.session.query(ReviewORM.id, ReviewORM.place_id).\
+        query = self.session.query(ReviewORM.id, ReviewORM.place_id). \
             filter(ReviewORM.owner == owner)
         total_count = query.count()
         query = query.limit(per_page).offset(page * per_page)
@@ -211,7 +211,7 @@ class RelationalDatabase:
         return PaginatedReviews(page=page, per_page=per_page,
                                 total=total_count, reviews=reviews)
 
-    def query_places_by_profile(self, owner: str,
+    def query_places_by_profile(self, owner: WalletID,
                                 page: int, per_page: int) -> PaginatedPlaces:
         """
         Gets all the places from a profile as a query

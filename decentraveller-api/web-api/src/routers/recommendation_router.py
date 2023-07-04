@@ -6,11 +6,13 @@ from fastapi_utils.inferring_router import InferringRouter
 from sqlalchemy import func, distinct, not_
 from starlette.status import HTTP_404_NOT_FOUND
 
-from src.api_models.place import PlaceID, PlaceInDB, PlaceWithStats
+from src.api_models.place import PlaceID, PlaceWithStats
+from src.api_models.profile import WalletID, wallet_id_validator
 from src.dependencies.relational_database import build_relational_database, RelationalDatabase
 from src.dependencies.vector_database import VectorDatabase
 from src.orms.place import PlaceORM
 from src.orms.review import ReviewORM
+
 
 recommendation_router = InferringRouter()
 
@@ -131,7 +133,7 @@ class RecommendationCBV:
         raise HTTPException(status_code=HTTP_404_NOT_FOUND)
 
     @recommendation_router.get("/profile/{owner}/recommendations")
-    def get_profile_recommendation(self, owner: str,
+    def get_profile_recommendation(self, owner: WalletID = Depends(wallet_id_validator),
                                    limit: int = Query(default=20),
                                    latitude: Optional[float] = Query(default=None),
                                    longitude: Optional[float] = Query(default=None)) -> List[PlaceWithStats]:
