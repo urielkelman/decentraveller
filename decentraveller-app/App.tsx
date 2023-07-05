@@ -1,4 +1,5 @@
 import 'react-native-gesture-handler';
+import '@walletconnect/react-native-compat';
 import { useEffect } from 'react';
 import * as SplashScreen from 'expo-splash-screen';
 import * as Notifications from 'expo-notifications';

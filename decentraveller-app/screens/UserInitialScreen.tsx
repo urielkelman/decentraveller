@@ -8,18 +8,20 @@ import { apiAdapter } from '../api/apiAdapter';
 import { mockApiAdapter } from '../api/mockApiAdapter';
 import HomeNavigator from './home/HomeNavigator';
 import DecentravellerInformativeModal from '../commons/components/DecentravellerInformativeModal';
+import { useWalletConnectModal } from '@walletconnect/modal-react-native';
 
 const adapter = apiAdapter;
 
 const DecentravellerInitialScreen = () => {
-    let [stackToRender, setStackToRender] = React.useState<'Login' | 'Home' | 'Registration'>('Login');
+    const { isConnected, address } = useWalletConnectModal();
+    const [stackToRender, setStackToRender] = React.useState<'Login' | 'Home' | 'Registration'>('Login');
     const appContext = useAppContext();
     const setUserNickname = appContext.userNickname.setValue;
     const setUserCreatedAt = appContext.userCreatedAt.setValue;
     const setUserInterest = appContext.userInterest.setValue;
 
     const getUser = async () => {
-        const user = await adapter.getUser(appContext.connectionContext.connectedAddress, () => {
+        const user = await adapter.getUser(address, () => {
             setStackToRender('Registration');
         });
 
@@ -33,13 +35,13 @@ const DecentravellerInitialScreen = () => {
 
     useEffect(() => {
         (async () => {
-            if (!appContext.connectionContext) {
+            if (!isConnected) {
                 setStackToRender('Login');
             } else {
                 await getUser();
             }
         })();
-    }, [appContext.connectionContext]);
+    }, [isConnected]);
 
     const onSuccessfulRegistration = () => {
         setStackToRender('Home');

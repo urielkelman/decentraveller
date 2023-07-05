@@ -1,6 +1,5 @@
 import { Modal, Pressable, View, Text, StyleSheet } from 'react-native';
 import { useAppContext } from '../../context/AppContext';
-import { useWalletConnect } from '@walletconnect/react-native-dapp';
 
 const styles = StyleSheet.create({
     centeredView: {
@@ -51,7 +50,8 @@ const WrongChainModal = () => {
     // console.log(appContext.connectionContext && appContext.connectionContext.isWrongChain)
     return (
         <Modal
-            visible={appContext.connectionContext && appContext.connectionContext.isWrongChain}
+            //visible={appContext.connectionContext && appContext.connectionContext.isWrongChain}
+            visible={false}
             animationType="slide"
             transparent={false}
         >
@@ -60,7 +60,7 @@ const WrongChainModal = () => {
                     <Text style={styles.modalText}>Update to correct chain!</Text>
                     <Pressable
                         style={[styles.button, styles.buttonClose]}
-                        onPress={() => appContext.pushChangeUpdate()}
+                        //onPress={() => appContext.pushChangeUpdate()}
                     >
                         <Text style={styles.textStyle}>Update</Text>
                     </Pressable>

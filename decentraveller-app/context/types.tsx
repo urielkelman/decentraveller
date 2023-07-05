@@ -1,9 +1,3 @@
-export interface ConnectionContext {
-    connectedAddress: string;
-    connectedChainId: number;
-    isWrongChain: boolean;
-}
-
 export interface DeviceDimensions {
     width: number;
     height: number;
@@ -15,10 +9,6 @@ export interface AppContextStateArg<T> {
 }
 
 export type AppContextType = {
-    connectionContext: ConnectionContext | null;
-    setConnectionContext: (newConnectionContext: ConnectionContext) => void;
-    cleanConnectionContext: () => void;
-    pushChangeUpdate: () => void;
     deviceDimensions: DeviceDimensions;
     userNickname: AppContextStateArg<string>;
     userCreatedAt: AppContextStateArg<string>;

@@ -1,16 +1,10 @@
-import { Button, Text, TouchableOpacity, View } from 'react-native';
-import { useWalletConnect } from '@walletconnect/react-native-dapp';
-import { useAppContext } from '../../context/AppContext';
-import React from 'react';
-import { Feather } from '@expo/vector-icons';
+import { Button, Text, View } from 'react-native';
+import { useWalletConnectModal } from '@walletconnect/modal-react-native';
 
 const CommunityScreen = ({ navigation }) => {
-    const connector = useWalletConnect();
-    const appContext = useAppContext();
-
+    const { provider } = useWalletConnectModal();
     const killSession = async () => {
-        appContext.cleanConnectionContext();
-        await connector.killSession();
+        await provider?.disconnect();
         console.log('session killed');
     };
 

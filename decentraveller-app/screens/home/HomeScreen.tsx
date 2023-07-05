@@ -11,13 +11,16 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { DECENTRAVELLER_DEFAULT_BACKGROUND_COLOR } from '../../commons/global';
 import LoadingComponent from '../../commons/components/DecentravellerLoading';
 import { registerForPushNotificationsAsync } from '../../commons/notifications/notifications';
+import { useWalletConnectModal } from '@walletconnect/modal-react-native';
 
 const adapter = apiAdapter;
 
 const PERMISSION_GRANTED = 'granted';
 
 const HomeScreen = ({ navigation }) => {
-    const { userLocation, connectionContext } = useAppContext();
+    const { address, provider } = useWalletConnectModal();
+    provider.sendAsync;
+    const { userLocation } = useAppContext();
     const [loadingRecommendedPlaces, setLoadingRecommendedPlaces] = React.useState<boolean>(false);
     const [recommendedPlaces, setRecommendedPlaces] = React.useState<PlaceResponse[]>([]);
     const [showPlacesNotFound, setShowPlacesNotFound] = React.useState<boolean>(false);
@@ -26,7 +29,7 @@ const HomeScreen = ({ navigation }) => {
 
     const getWithLocation = async ([latitude, longitude]: [string?, string?]) => {
         const recommendedPlacesResponse: PlaceResponse[] = await adapter.getRecommendedPlacesForAddress(
-            connectionContext.connectedAddress,
+            address,
             [],
             onNotFoundRecommendations
         );
@@ -55,7 +58,7 @@ const HomeScreen = ({ navigation }) => {
 
     const obtainAndSetPushNotificationToken = async (): Promise<void> => {
         const pushNotificationToken = await registerForPushNotificationsAsync();
-        await apiAdapter.sendPushNotificationToken(connectionContext.connectedAddress, pushNotificationToken);
+        await apiAdapter.sendPushNotificationToken(address, pushNotificationToken);
     };
 
     useEffect(() => {

@@ -1,6 +1,5 @@
 import React from 'react';
 import { TouchableOpacity, Text, View, ImageBackground, Image } from 'react-native';
-import { useWalletConnect } from '@walletconnect/react-native-dapp';
 import { useAppContext } from '../../context/AppContext';
 import {
     connectWalletScreenTextStyle,
@@ -10,18 +9,20 @@ import {
     wholeScreenViewStyle,
     imageViewStyle,
 } from '../../styles/conectWalletStyles';
+import { useWalletConnectModal, WalletConnectModal } from '@walletconnect/modal-react-native';
+import { clientMeta, sessionParams, WALLET_CONNECT_PROJECT_ID } from '../../config/walletConnectConfig';
 
 const ConnectWalletScreen = () => {
-    const connector = useWalletConnect();
+    const { open } = useWalletConnectModal();
 
-    const connectWallet = React.useCallback(async () => {
+    const connectWallet = async () => {
         console.log('Trying to connect....');
         try {
-            return await connector.connect();
+            return await open();
         } catch (e) {
             console.error('Error when requesting wallet connection', e);
         }
-    }, [connector]);
+    };
 
     return (
         <View style={wholeScreenViewStyle.container}>
@@ -65,6 +66,11 @@ const ConnectWalletScreen = () => {
                     </TouchableOpacity>
                 </View>
             </View>
+            <WalletConnectModal
+                projectId={WALLET_CONNECT_PROJECT_ID}
+                providerMetadata={clientMeta}
+                sessionParams={sessionParams}
+            />
         </View>
     );
 };

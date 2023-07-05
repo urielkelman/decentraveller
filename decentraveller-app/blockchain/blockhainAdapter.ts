@@ -1,10 +1,10 @@
 import '@ethersproject/shims';
 import { ethers } from 'ethers';
-import WalletConnect from '@walletconnect/client';
 import { ContractFunction, DecentravellerContract, decentravellerMainContract } from './contracts';
 import { Blockchain, BlockchainByConnectorChainId, LOCAL_DEVELOPMENT_CHAIN_ID } from './config';
 import { withTimeout } from '../commons/functions/utils';
 import { JSON_RPC_URL } from '../api/config';
+import { DEFAULT_CHAIN_ID } from '../context/AppContext';
 
 const BLOCKCHAIN_TIMEOUT_IN_MILLIS = 30000;
 const BLOCKCHAIN_TRANSACTION_TASK_NAME = 'Blockchain transaction';
@@ -20,39 +20,39 @@ class BlockchainAdapter {
     }
 
     private async populateAndSend(
-        connector: WalletConnect,
+        wcProvider,
         contract: DecentravellerContract,
         functionName: string,
         ...args: unknown[]
     ): Promise<string> {
-        const provider: ethers.providers.Provider = this.getProvider(connector.chainId);
-        const blockchain: Blockchain = BlockchainByConnectorChainId[connector.chainId];
+        const ethersProvider: ethers.providers.Provider = this.getProvider(DEFAULT_CHAIN_ID);
+        const blockchain: Blockchain = BlockchainByConnectorChainId[DEFAULT_CHAIN_ID];
         const contractAddress: string = contract.addressesByBlockchain[blockchain];
         const contractFunction: ContractFunction = contract.functions[functionName];
         const ethersContract: ethers.Contract = new ethers.Contract(
             contractAddress,
             contractFunction.fullContractABI,
-            provider
+            ethersProvider
         );
         const populatedTransaction: ethers.PopulatedTransaction = await ethersContract.populateTransaction[
             contractFunction.functionName
         ].call(this, ...args);
-        const connectedAccount: string = connector.accounts[0];
+        //const connectedAccount: string = connector.accounts[0];
         return await withTimeout(
             async () => {
                 console.log('send transaction');
-                const transactionHash: string = await connector.sendTransaction({
+                /*const transactionHash: string = await connector.sendTransaction({
                     from: connectedAccount,
                     to: contractAddress,
                     data: populatedTransaction.data,
                 });
                 console.log(transactionHash);
-                const txReceipt = await provider.waitForTransaction(transactionHash);
+                const txReceipt = await ethersProvider.waitForTransaction(transactionHash);
                 if (txReceipt.status === 0) {
                     console.log(txReceipt);
                     throw new Error('An exception happened during transaction execution.');
                 }
-                return transactionHash;
+                return transactionHash;*/
             },
             BLOCKCHAIN_TIMEOUT_IN_MILLIS,
             BLOCKCHAIN_TRANSACTION_TASK_NAME
@@ -60,7 +60,7 @@ class BlockchainAdapter {
     }
 
     async createAddNewPlaceTransaction(
-        connector: WalletConnect,
+        provider,
         placeName: string,
         latitude: string,
         longitude: string,
@@ -70,7 +70,7 @@ class BlockchainAdapter {
     ): Promise<string> {
         try {
             return await this.populateAndSend(
-                connector,
+                provider,
                 decentravellerMainContract,
                 'addPlace',
                 placeName,
@@ -86,7 +86,7 @@ class BlockchainAdapter {
     }
 
     async createRegisterUserTransaction(
-        connector: WalletConnect,
+        provider,
         nickname: string,
         country: string,
         interest: string,
@@ -94,7 +94,7 @@ class BlockchainAdapter {
     ): Promise<string> {
         try {
             return await this.populateAndSend(
-                connector,
+                provider,
                 decentravellerMainContract,
                 'registerProfile',
                 nickname,
