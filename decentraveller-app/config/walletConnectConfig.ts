@@ -1,3 +1,5 @@
+const { scheme } = require('expo');
+
 export const WALLET_CONNECT_PROJECT_ID = '0796da7712aba2acab6735c1c6091a82';
 
 export const clientMeta = {
@@ -6,7 +8,7 @@ export const clientMeta = {
     url: 'https://walletconnect.com/',
     icons: ['https://avatars.githubusercontent.com/u/37784886'],
     redirect: {
-        native: 'YOUR_APP_SCHEME://',
+        native: `${scheme}://`,
         // universal: 'YOUR_APP_UNIVERSAL_LINK.com',
     },
 };
