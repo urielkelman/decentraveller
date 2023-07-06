@@ -1,6 +1,5 @@
 import React from 'react';
 import { TouchableOpacity, Text, View, ImageBackground, Image } from 'react-native';
-import { useWalletConnect } from '@walletconnect/react-native-dapp';
 import { useAppContext } from '../../context/AppContext';
 import {
     connectWalletScreenTextStyle,
@@ -10,18 +9,41 @@ import {
     wholeScreenViewStyle,
     imageViewStyle,
 } from '../../styles/conectWalletStyles';
+import { useWalletConnectModal, WalletConnectModal } from '@walletconnect/modal-react-native';
+import { IProviderMetadata } from '@walletconnect/modal-react-native';
+
+export const providerMetadata: IProviderMetadata = {
+    name: 'React Native V2 dApp',
+    description: 'RN dApp by WalletConnect',
+    url: 'https://walletconnect.com/',
+    icons: ['https://avatars.githubusercontent.com/u/37784886'],
+    redirect: {
+        native: 'w3msample://',
+    },
+};
+
+export const sessionParams = {
+    namespaces: {
+        eip155: {
+            methods: ['eth_sendTransaction', 'eth_signTransaction', 'eth_sign', 'personal_sign', 'eth_signTypedData'],
+            chains: ['eip155:1'],
+            events: ['chainChanged', 'accountsChanged'],
+            rpcMap: {},
+        },
+    },
+};
 
 const ConnectWalletScreen = () => {
-    const connector = useWalletConnect();
+    const { provider, open } = useWalletConnectModal();
 
-    const connectWallet = React.useCallback(async () => {
+    const connectWallet = async () => {
         console.log('Trying to connect....');
         try {
-            return await connector.connect();
+            return await open();
         } catch (e) {
             console.error('Error when requesting wallet connection', e);
         }
-    }, [connector]);
+    };
 
     return (
         <View style={wholeScreenViewStyle.container}>
@@ -65,6 +87,11 @@ const ConnectWalletScreen = () => {
                     </TouchableOpacity>
                 </View>
             </View>
+            <WalletConnectModal
+                projectId={''}
+                providerMetadata={providerMetadata}
+                sessionParams={sessionParams}
+            />
         </View>
     );
 };

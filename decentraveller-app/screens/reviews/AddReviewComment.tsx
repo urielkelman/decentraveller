@@ -6,7 +6,7 @@ import DecentravellerButton from '../../commons/components/DecentravellerButton'
 import { addReviewCommentStyles } from '../../styles/addReviewStyles';
 import { RouteProp, useRoute } from '@react-navigation/native';
 import { blockchainAdapter } from '../../blockchain/blockhainAdapter';
-import { useWalletConnect } from '@walletconnect/react-native-dapp';
+import { useWalletConnectModal } from '@walletconnect/modal-react-native';
 
 const adapter = blockchainAdapter;
 
@@ -20,7 +20,7 @@ const AddReviewComment = ({ navigation }) => {
     const { selectedImage, placeId } = route.params;
     const [comment, setComment] = useState<string>('');
     const [rating, setRating] = useState<number>(0);
-    const connector = useWalletConnect();
+    const { provider } = useWalletConnectModal();
 
     const handleRating = (selectedRating) => {
         setRating(selectedRating);
@@ -45,7 +45,7 @@ const AddReviewComment = ({ navigation }) => {
     };
 
     const onClickFinish = async () => {
-        const transactionHash = await adapter.addPlaceReviewTransaction(connector, placeId, comment, rating, [
+        const transactionHash = await adapter.addPlaceReviewTransaction(provider, placeId, comment, rating, [
             selectedImage,
         ]);
 

@@ -1,8 +1,8 @@
 import React from 'react';
 import { AppContextStateArg, AppContextType, ConnectionContext, DeviceDimensions } from './types';
 import { Dimensions } from 'react-native';
-import { useWalletConnect } from '@walletconnect/react-native-dapp';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useWalletConnectModal } from '@walletconnect/modal-react-native';
 
 export const AppContext = React.createContext<AppContextType | null>(null);
 
@@ -24,11 +24,11 @@ const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
     const [interest, setUserInterest] = React.useState<string>('');
     const [location, setLocation] = React.useState<[string, string] | undefined>(undefined);
 
-    const connector = useWalletConnect();
+    const { provider, isConnected, address } = useWalletConnectModal();
 
     const pushChangeUpdate = async () => {
-        try {
-            await connector.sendCustomRequest({
+        /* try {
+            await provider.sendCustomRequest({
                 id: 1,
                 jsonrpc: '2.0',
                 method: 'wallet_switchEthereumChain',
@@ -58,7 +58,7 @@ const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
                     console.log('An error happened when trying to add ethereum chain.', e);
                 }
             }
-        }
+        }*/
     };
 
     const deviceDimensions: DeviceDimensions = React.useMemo<DeviceDimensions>(
@@ -99,6 +99,7 @@ const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
 
     const updateConnectionContext = (address, chainId) => {
         const isWrongChain = chainId !== DEFAULT_CHAIN_ID;
+        console.log('isWrongChain', isWrongChain);
         setConnectionContext({
             connectedAddress: address,
             connectedChainId: chainId,
@@ -107,32 +108,55 @@ const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
     };
 
     React.useEffect(() => {
-        console.log('connected:', connector.connected);
-        console.log('session:', connector.session);
-        console.log(connector.chainId);
+        console.log('connected:', isConnected);
+        // console.log('session:', provider?.session);
+        // console.log('full provider', provider)
+        console.log('con context', connectionContext);
 
-        if (connector.connected) {
-            updateConnectionContext(connector.accounts[0], connector.chainId);
+        if (isConnected) {
+            updateConnectionContext(address, 5);
 
             if (!subscriptionsDone) {
                 setSubscriptionsDone(true);
 
-                connector.on('disconnect', async (error, payload) => {
+                provider.client.on('session_event', (event) => {
+                    console.log('session event received: ', event);
+                    console.log('c1', connectionContext);
+                    console.log('c2', event.params.event.name);
+                    console.log('c3', event.params.event.data);
+
+                    console.log(
+                        'condition',
+                        connectionContext &&
+                            event.params.event.name === 'chainChanged' &&
+                            connectionContext.connectedChainId !== event.params.event.data
+                    );
+                    if (
+                        connectionContext &&
+                        event.params.event.name === 'chainChanged' &&
+                        connectionContext.connectedChainId !== event.params.event.data
+                    ) {
+                        console.log('updating con context');
+                        updateConnectionContext(address, event.params.event.data);
+                    }
+                });
+
+                provider.client.on('session_delete', async (event) => {
+                    console.log('session delete received: ', event);
                     setSubscriptionsDone(false);
                     setConnectionContext(null);
                 });
 
-                connector.on('session_update', async (error, payload) => {
-                    const params: UpdateSessionPayloadParams = payload.params[0];
-                    console.log(params);
-                    console.log('session_update');
-                    if (connectionContext && params.chainId !== connectionContext.connectedChainId) {
+                provider.client.on('session_update', async (args) => {
+                    console.log('session update received: ', args);
+                    const params = args.params.namespaces[0];
+                    /*if (connectionContext && params.chainId !== connectionContext.connectedChainId) {
                         updateConnectionContext(params.accounts[0], params.chainId);
-                    }
+                    }*/
                 });
             }
         }
-    }, [connector.connected]);
+    }, [isConnected]);
 
     const cleanConnectionContext = () => setConnectionContext(null);
 

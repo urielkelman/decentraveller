@@ -20,7 +20,7 @@ class BlockchainAdapter {
     }
 
     private async populateAndSendWithAddress(
-        connector: WalletConnect,
+        connector,
         contract: DecentravellerContract,
         functionName: string,
         contractAddress: string,
@@ -58,7 +58,7 @@ class BlockchainAdapter {
     }
 
     private async populateAndSend(
-        connector: WalletConnect,
+        connector,
         contract: DecentravellerContract,
         functionName: string,
         ...args: unknown[]
@@ -69,7 +69,7 @@ class BlockchainAdapter {
     }
 
     async createAddNewPlaceTransaction(
-        connector: WalletConnect,
+        connector,
         placeName: string,
         latitude: string,
         longitude: string,
@@ -95,7 +95,7 @@ class BlockchainAdapter {
     }
 
     async createRegisterUserTransaction(
-        connector: WalletConnect,
+        connector,
         nickname: string,
         country: string,
         interest: string,
@@ -117,7 +117,7 @@ class BlockchainAdapter {
     }
 
     async addPlaceReviewTransaction(
-        connector: WalletConnect,
+        connector,
         placeId: number,
         comment: string,
         rating: number,
