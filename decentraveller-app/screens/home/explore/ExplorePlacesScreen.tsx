@@ -1,6 +1,7 @@
-import { View } from 'react-native';
+import {Modal, TouchableOpacity, View} from 'react-native';
 import { useAppContext } from '../../../context/AppContext';
-import React from 'react';
+import { Text, StyleSheet } from 'react-native';
+import React, {useState} from 'react';
 import { explorePlacesScreenWording } from './wording';
 import { PlaceResponse } from '../../../api/response/places';
 import { mockApiAdapter } from '../../../api/mockApiAdapter';
@@ -17,8 +18,10 @@ import { getAndParseGeocoding } from '../../../commons/functions/geocoding';
 import { Entypo, Ionicons } from '@expo/vector-icons';
 import { GeocodingElement } from '../place/CreatePlaceContext';
 import LoadingComponent from '../../../commons/components/DecentravellerLoading';
+import FilterModal from "./FilterModal";
+import {FilterModalData} from "./types";
 
-const adapter = apiAdapter;
+const adapter = mockApiAdapter;
 
 const ExplorePlacesScreen = ({ navigation }) => {
     const { userLocation } = useAppContext();
@@ -35,6 +38,21 @@ const ExplorePlacesScreen = ({ navigation }) => {
     const [locationPickerOpen, setLocationPickerOpen] = React.useState<boolean>(false);
     const [locationPickerItems, setLocationPickerItems] = React.useState<PickerItem[]>([]);
     const [lastLocationLabelSearched, setLastLocationLabelSearched] = React.useState<string>();
+
+    const [modalVisible, setModalVisible] = useState<boolean>(false);
+    const [orderBy, setOrderBy] = useState<string>('Best rated');
+    const [minStars, setMinStars] = useState<number>(1);
+    const [maxDistance, setMaxDistance] = useState<number>(0.1);
+
+    const filterModalDataProps: FilterModalData = {
+        orderBy: orderBy,
+        setOrderBy: setOrderBy,
+        minStars: minStars,
+        setMinStars: setMinStars,
+        maxDistance:  maxDistance,
+        setMaxDistance: setMaxDistance,
+    }
+
 
     const ownLocationPickerValue = userLocation
         ? JSON.stringify({
@@ -114,6 +132,11 @@ const ExplorePlacesScreen = ({ navigation }) => {
         })();
     };
 
+    const toggleModal = () => {
+        console.log(orderBy, maxDistance, minStars)
+        setModalVisible(!modalVisible);
+    };
+
     const componentToRender = loadingPlaces ? <LoadingComponent /> : <DecentravellerPlacesItems places={places} />;
 
     return (
@@ -152,14 +175,87 @@ const ExplorePlacesScreen = ({ navigation }) => {
                         showTitle={false}
                     />
                 </View>
-                <View style={{ flex: 0.1, alignItems: 'center', justifyContent: 'center' }}>
+                <TouchableOpacity
+                    style={{ flex: 0.1, alignItems: 'center', justifyContent: 'center' }}
+                    onPress={toggleModal}
+                >
                     <Ionicons name="funnel" size={25} color={DECENTRAVELLER_DEFAULT_CONTRAST_COLOR} />
-                </View>
+                </TouchableOpacity>
+                <Modal
+                    visible={modalVisible}
+                    transparent={true}
+                    animationType="fade"
+                >
+                    <View style={styles.filterModalContainer}>
+                        <View style={styles.filterModal}>
+                            <FilterModal route={{ params: { filterModalData: filterModalDataProps } }} />
+                            <TouchableOpacity
+                                style={styles.filterModalButton}
+                                onPress={toggleModal}
+                            >
+                                <Text style={styles.filterModalButtonText}>Back</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </Modal>
+
             </View>
             <View style={{ backgroundColor: 'black', height: 2, borderRadius: 2 }} />
             <View style={{ flex: 0.9 }}>{componentToRender}</View>
         </View>
     );
 };
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        flexDirection: 'column',
+        backgroundColor: DECENTRAVELLER_DEFAULT_BACKGROUND_COLOR,
+        alignContent: 'flex-start',
+    },
+    header: {
+        flex: 0.1,
+        flexDirection: 'row',
+        marginTop: 10,
+    },
+    headerIcon: {
+        flex: 0.1,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    headerPicker: {
+        flex: 0.85,
+    },
+    separator: {
+        backgroundColor: 'black',
+        height: 2,
+        borderRadius: 2,
+    },
+    content: {
+        flex: 0.9,
+    },
+    filterModalContainer: {
+        flex: 1,
+        backgroundColor: 'rgba(255, 225, 225, 0.9)',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    filterModal: {
+        backgroundColor: 'white',
+        padding: 20,
+        borderRadius: 10,
+        alignItems: 'center',
+    },
+    filterModalButton: {
+        backgroundColor: '#983B46',
+        padding: 10,
+        borderRadius: 10,
+        marginBottom: 20,
+    },
+    filterModalButtonText: {
+        color: 'white',
+        fontWeight: 'bold',
+    },
+});
 
 export default ExplorePlacesScreen;
