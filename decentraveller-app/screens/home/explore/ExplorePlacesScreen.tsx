@@ -40,9 +40,9 @@ const ExplorePlacesScreen = ({ navigation }) => {
     const [lastLocationLabelSearched, setLastLocationLabelSearched] = React.useState<string>();
 
     const [modalVisible, setModalVisible] = useState<boolean>(false);
-    const [orderBy, setOrderBy] = useState<string>('Best rated');
-    const [minStars, setMinStars] = useState<number>(1);
-    const [maxDistance, setMaxDistance] = useState<number>(0.1);
+    const [orderBy, setOrderBy] = useState<string>(null);
+    const [minStars, setMinStars] = useState<number>(null);
+    const [maxDistance, setMaxDistance] = useState<number>(null);
 
     const filterModalDataProps: FilterModalData = {
         orderBy: orderBy,
