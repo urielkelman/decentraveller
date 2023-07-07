@@ -137,6 +137,12 @@ const ExplorePlacesScreen = ({ navigation }) => {
         setModalVisible(!modalVisible);
     };
 
+    const clearFilters = () => {
+        setMinStars(null);
+        setMaxDistance(null);
+        setOrderBy(null)
+    };
+
     const componentToRender = loadingPlaces ? <LoadingComponent /> : <DecentravellerPlacesItems places={places} />;
 
     return (
@@ -189,12 +195,17 @@ const ExplorePlacesScreen = ({ navigation }) => {
                     <View style={styles.filterModalContainer}>
                         <View style={styles.filterModal}>
                             <FilterModal route={{ params: { filterModalData: filterModalDataProps } }} />
-                            <TouchableOpacity
-                                style={styles.filterModalButton}
-                                onPress={toggleModal}
-                            >
-                                <Text style={styles.filterModalButtonText}>Back</Text>
-                            </TouchableOpacity>
+                            <View style={styles.modalButtons}>
+                                <TouchableOpacity style={[styles.filterModalButton, { marginRight: 10 }]} onPress={toggleModal}>
+                                    <Text style={styles.filterModalButtonText}>Back</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={[styles.filterModalButton, { marginRight: 10 }]} onPress={toggleModal}>
+                                    <Text style={styles.filterModalButtonText}>Send</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={styles.filterModalButton} onPress={clearFilters}>
+                                    <Text style={styles.filterModalButtonText}>Clear</Text>
+                                </TouchableOpacity>
+                            </View>
                         </View>
                     </View>
                 </Modal>
@@ -208,7 +219,7 @@ const ExplorePlacesScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        flex: 0.1,
         flexDirection: 'column',
         backgroundColor: DECENTRAVELLER_DEFAULT_BACKGROUND_COLOR,
         alignContent: 'flex-start',
@@ -235,22 +246,33 @@ const styles = StyleSheet.create({
         flex: 0.9,
     },
     filterModalContainer: {
-        flex: 1,
-        backgroundColor: 'rgba(255, 225, 225, 0.9)',
+        flex: 0.825,
+        backgroundColor: 'white',
         justifyContent: 'center',
         alignItems: 'center',
+        marginTop: 80,
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 10,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 100,
+        elevation: 50,
     },
     filterModal: {
-        backgroundColor: 'white',
+        backgroundColor: 'rgba(255, 225, 225, 0.5)',
         padding: 20,
         borderRadius: 10,
         alignItems: 'center',
     },
+    modalButtons: {
+        flexDirection: 'row',
+    },
     filterModalButton: {
-        backgroundColor: '#983B46',
+        backgroundColor: DECENTRAVELLER_DEFAULT_CONTRAST_COLOR,
         padding: 10,
         borderRadius: 10,
-        marginBottom: 20,
     },
     filterModalButtonText: {
         color: 'white',

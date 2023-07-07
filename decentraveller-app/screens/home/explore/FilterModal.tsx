@@ -2,10 +2,34 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import Slider from '@react-native-community/slider';
 import {FilterModalProps} from "./types";
+import { Ionicons } from '@expo/vector-icons';
+import {PickerItem} from "../../../commons/types";
+import {DECENTRAVELLER_DEFAULT_CONTRAST_COLOR, interestsItems} from "../../../commons/global";
+import DecentravellerPicker from "../../../commons/components/DecentravellerPicker";
+
+
+const Bullet = ({ label, selected, onPress }) => {
+    return (
+        <View style={styles.bulletOptionContainer}>
+            <Ionicons
+                name={selected ? 'md-checkmark-circle' : 'md-radio-button-off'}
+                size={16}
+                color={selected ? DECENTRAVELLER_DEFAULT_CONTRAST_COLOR : 'lightgray'}
+            />
+            <Text style={[styles.bulletOption, selected && styles.bulletOptionSelected]} onPress={onPress}>
+                {label}
+            </Text>
+        </View>
+    );
+};
 
 const FilterModal: React.FC<FilterModalProps> = ({ route }) => {
     const {filterModalData} = route.params
     const {orderBy, setOrderBy, minStars, setMinStars, maxDistance, setMaxDistance} = filterModalData
+
+    const [interestPickerItems, setInterestPickerItems] = React.useState<PickerItem[]>(interestsItems);
+    const [interestPickerValue, setInterestPickerValue] = React.useState<string>(null);
+    const [interestPickerOpen, setInterestPickerOpen] = React.useState<boolean>(false);
 
     const handleOrderByChange = (value) => {
         setOrderBy(value);
@@ -24,23 +48,38 @@ const FilterModal: React.FC<FilterModalProps> = ({ route }) => {
             <View style={styles.optionContainer}>
                 <Text style={styles.label}>Order by:</Text>
                 <View style={styles.bulletContainer}>
-                    <BulletOption
+                    <Bullet
                         label="Best rated"
                         selected={orderBy === 'Best rated'}
                         onPress={() => handleOrderByChange('Best rated')}
                     />
-                    <BulletOption
+                    <Bullet
                         label="Amount of comments"
                         selected={orderBy === 'Amount of comments'}
                         onPress={() => handleOrderByChange('Amount of comments')}
                     />
-                    <BulletOption
+                    <Bullet
                         label="Distance"
                         selected={orderBy === 'Distance'}
                         onPress={() => handleOrderByChange('Distance')}
                     />
                 </View>
             </View>
+            <Text style={styles.label}>Interest</Text>
+            <DecentravellerPicker
+                titleText={''}
+                dropdownPlaceholder={"Select Interest"}
+                items={interestPickerItems}
+                setItems={setInterestPickerItems}
+                value={interestPickerValue}
+                setValue={setInterestPickerValue}
+                open={interestPickerOpen}
+                setOpen={setInterestPickerOpen}
+                onOpen={() => {}}
+                searchable={true}
+                zIndex={1000}
+                zIndexInverse={3000}
+            />
             <View style={styles.optionContainer}>
                 <Text style={styles.label}>Min stars:</Text>
                 <Slider
@@ -57,9 +96,9 @@ const FilterModal: React.FC<FilterModalProps> = ({ route }) => {
                 <Text style={styles.label}>Max distance:</Text>
                 <Slider
                     style={styles.slider}
-                    minimumValue={0.1}
+                    minimumValue={0.5}
                     maximumValue={10}
-                    step={0.1}
+                    step={0.5}
                     value={maxDistance}
                     onValueChange={handleMaxDistanceChange}
                 />
@@ -69,42 +108,24 @@ const FilterModal: React.FC<FilterModalProps> = ({ route }) => {
     );
 };
 
-const BulletOption = ({ label, selected, onPress }) => {
-    return (
-        <Text
-            style={[styles.bulletOption, selected && styles.bulletOptionSelected]}
-            onPress={onPress}
-        >
-            {label}
-        </Text>
-    );
-};
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingHorizontal: 20,
-        paddingTop: 20,
+        paddingHorizontal: 50,
+        paddingTop: 10,
     },
     optionContainer: {
-        marginBottom: 20,
+        paddingHorizontal: 10,
     },
     label: {
-        fontSize: 16,
+        fontSize: 20,
         fontWeight: 'bold',
-        marginBottom: 10,
+        fontFamily: 'Montserrat_400Regular',
     },
     bulletContainer: {
-        flexDirection: 'row',
+        flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'space-between',
-    },
-    bulletOption: {
-        fontSize: 14,
-        marginBottom: 5,
-    },
-    bulletOptionSelected: {
-        fontWeight: 'bold',
     },
     slider: {
         width: '100%',
@@ -112,6 +133,22 @@ const styles = StyleSheet.create({
     sliderValue: {
         textAlign: 'center',
         marginTop: 5,
+    },
+    bulletOptionContainer: {
+        flexDirection: 'row',
+        alignItems: 'flex-start',
+        textAlign: 'left'
+    },
+    bulletOption: {
+        fontSize: 16,
+        marginLeft: 10,
+        marginBottom: 5,
+
+    },
+    bulletOptionSelected: {
+        fontWeight: 'bold',
+        fontSize: 16,
+        color: DECENTRAVELLER_DEFAULT_CONTRAST_COLOR
     },
 });
 
