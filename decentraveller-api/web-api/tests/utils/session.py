@@ -10,6 +10,12 @@ from src.orms import Base
 def _fk_pragma_on_connect(dbapi_con, con_record):
     dbapi_con.execute('pragma foreign_keys=ON')
     dbapi_con.create_function('log', 1, math.log10)
+    dbapi_con.create_function('pow', 1, math.pow)
+    dbapi_con.create_function('radians', 1, math.radians)
+    dbapi_con.create_function('sin', 1, math.sin)
+    dbapi_con.create_function('cos', 1, math.cos)
+    dbapi_con.create_function('asin', 1, math.asin)
+    dbapi_con.create_function('sqrt', 1, math.sqrt)
 
 def restart_database():
     global engine

@@ -13,7 +13,6 @@ from src.dependencies.vector_database import VectorDatabase
 from src.orms.place import PlaceORM
 from src.orms.review import ReviewORM
 
-
 recommendation_router = InferringRouter()
 
 NEAR_PLACE_DISTANCE_KM = 5
@@ -31,6 +30,33 @@ class RecommendationCBV:
     vector_database: VectorDatabase = Depends(VectorDatabase)
 
     @staticmethod
+    def filter_places_from_query(query: Query,
+                                 excluded_place_ids: List[PlaceID]) -> Query:
+        """
+        Filter a list of place ids from a query
+        :param query: the query
+        :param excluded_place_ids: the places to filter
+        :return: a new query
+        """
+        return query.filter(not_(PlaceORM.id.in_(excluded_place_ids)))
+
+    @staticmethod
+    def filter_near_distance(query: Query, latitude: float, longitude: float,
+                             km_distance: float) -> Query():
+        """
+        Given a place query filters by distance
+        :param query: the query
+        :param latitude: latitude
+        :param longitude: longitude
+        :param km_distance: distance allowed from latitude and longitude
+        :return: a filtered Query
+        """
+        return query. \
+            filter(RelationalDatabase.km_distance_query_func(PlaceORM.latitude,
+                                                             PlaceORM.longitude,
+                                                             latitude, longitude) <= km_distance)
+
+    @staticmethod
     def get_good_nearby_places(database: RelationalDatabase,
                                latitude: float, longitude: float,
                                km_distance: float, excluded_place_ids: List[PlaceID],
@@ -46,12 +72,9 @@ class RecommendationCBV:
         :param limit: the limit of recommendations
         :return: a list of places
         """
-        nearby = database.session.query(PlaceORM). \
-            filter(PlaceORM.latitude >= latitude - km_distance). \
-            filter(PlaceORM.latitude <= latitude + km_distance). \
-            filter(PlaceORM.longitude >= longitude - km_distance). \
-            filter(PlaceORM.longitude <= longitude + km_distance). \
-            filter(not_(PlaceORM.id.in_(excluded_place_ids))).subquery()
+        nearby = database.session.query(PlaceORM)
+        nearby = RecommendationCBV.filter_near_distance(nearby, latitude, longitude, km_distance)
+        nearby = RecommendationCBV.filter_places_from_query(nearby, excluded_place_ids).subquery()
         distance_similars = database.session.query(ReviewORM.place_id). \
             join(nearby, nearby.c.id == ReviewORM.place_id). \
             group_by(ReviewORM.place_id). \

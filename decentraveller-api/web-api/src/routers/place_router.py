@@ -1,14 +1,20 @@
-from fastapi import Depends, HTTPException
+from typing import Optional, List, Union
+
+from fastapi import Depends, HTTPException, Query
 from fastapi_utils.cbv import cbv
 from fastapi_utils.inferring_router import InferringRouter
+from sqlalchemy import func, distinct, desc, asc
 from sqlalchemy.exc import IntegrityError
 from starlette.status import HTTP_404_NOT_FOUND, HTTP_400_BAD_REQUEST
 
-from src.api_models.place import PlaceID, PlaceUpdate, PlaceInDB, PlaceBody, PlaceWithStats
-from src.dependencies.vector_database import VectorDatabase
-from src.dependencies.relational_database import build_relational_database, RelationalDatabase
 from src.api_models.bulk_results import PaginatedPlaces
+from src.api_models.place import PlaceID, PlaceUpdate, PlaceInDB, PlaceBody, \
+    PlaceWithStats, PlaceWithDistance, PlaceCategory
 from src.api_models.profile import WalletID, wallet_id_validator
+from src.dependencies.relational_database import build_relational_database, RelationalDatabase
+from src.dependencies.vector_database import VectorDatabase
+from src.orms.place import PlaceORM
+from src.orms.review import ReviewORM
 
 place_router = InferringRouter()
 
@@ -92,3 +98,79 @@ class PlaceCBV:
         if not places:
             raise HTTPException(status_code=HTTP_404_NOT_FOUND)
         return places
+
+    @place_router.get("/places/search")
+    def search_places(self,
+                      page: int = Query(default=1),
+                      per_page: int = Query(default=20),
+                      latitude: Optional[float] = Query(default=None),
+                      longitude: Optional[float] = Query(default=None),
+                      at_least_stars: Optional[float] = Query(default=None),
+                      maximum_distance: Optional[float] = Query(deafult=None),
+                      place_category: Optional[PlaceCategory] = Query(default=None),
+                      sort_by: Optional[str] = Query(deafult="relevancy")) \
+            -> Union[List[PlaceWithStats], List[PlaceWithDistance]]:
+        """
+        Search places by multiple criteria
+
+        :param page: the page
+        :param per_page: per page results
+        :param latitude: the latitude (optional)
+        :param longitude: the longitude (optional)
+        :param at_least_stars: minimum mean stars filter (optional)
+        :param maximum_distance: maximum distance filter.
+        ignored if latitude and longitude not provided (optional)
+        :param place_category: place type to query (optional)
+        :param sort_by: default is relevancy (optional).
+        Possible options: relevancy, score, distance, reviews
+        :return: the places data
+        """
+        located_query = latitude is not None and longitude is not None
+        places = self.database.session.query(PlaceORM, func.avg(ReviewORM.score).label("score"),
+                                             func.count(ReviewORM.id).label("reviews")). \
+            join(ReviewORM, ReviewORM.place_id == PlaceORM.id, isouter=True).group_by(PlaceORM.id)
+        if located_query:
+            places = places.subquery()
+            places = self.database.session.query(PlaceORM, places.c.score, places.c.reviews,
+                                                 RelationalDatabase.km_distance_query_func(PlaceORM.latitude,
+                                                                                           PlaceORM.longitude,
+                                                                                           latitude, longitude).
+                                                 label("distance")).join(places, places.c.id == ReviewORM.place_id)
+        if place_category is not None:
+            places = places.filter(PlaceORM.category == place_category)
+        if at_least_stars:
+            places = places.filter(f"score >={at_least_stars}")
+        if maximum_distance and located_query:
+            if not located_query:
+                raise HTTPException(status_code=HTTP_400_BAD_REQUEST,
+                                    detail=f"Can't filter by distance if latitude and longitude is not provided")
+            places = places.filter(f"distance <={maximum_distance}")
+        if sort_by == "relevancy":
+            places = places.order_by((func.avg(ReviewORM.score) *
+                                      func.log(func.count(distinct(ReviewORM.owner)))).desc())
+        elif sort_by == "score":
+            places = places.order_by(desc("score"))
+        elif sort_by == "distance":
+            if not located_query:
+                raise HTTPException(status_code=HTTP_400_BAD_REQUEST,
+                                    detail=f"Can't sort by distance if latitude and longitude is not provided")
+            places = places.order_by(asc("distance"))
+        elif sort_by == "reviews":
+            places = places.order_by(desc("reviews"))
+        else:
+            raise HTTPException(status_code=HTTP_400_BAD_REQUEST,
+                                detail=f"sort_by parameter does not accept the value: {sort_by}")
+
+        places = places.limit(per_page).offset(page * per_page).all()
+
+        if places:
+            if located_query:
+                return [PlaceWithDistance(**PlaceInDB.from_orm(p[0]).dict(),
+                                          score=p[1], reviews=p[2], distance=p[3])
+                        for p in places]
+            else:
+                return [PlaceWithStats(**PlaceInDB.from_orm(p[0]).dict(),
+                                       score=p[1], reviews=p[2])
+                        for p in places]
+
+        raise HTTPException(status_code=HTTP_404_NOT_FOUND)
