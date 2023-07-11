@@ -3,11 +3,11 @@ from typing import Optional
 from fastapi import Depends, HTTPException, Query
 from fastapi_utils.cbv import cbv
 from fastapi_utils.inferring_router import InferringRouter
-from sqlalchemy import func, distinct, desc, asc
+from sqlalchemy import func, distinct, desc, asc, text
 from sqlalchemy.exc import IntegrityError
 from starlette.status import HTTP_404_NOT_FOUND, HTTP_400_BAD_REQUEST
 
-from src.api_models.bulk_results import PaginatedPlaces
+from src.api_models.bulk_results import PaginatedPlaces, PaginatedPlacesWithDistance
 from src.api_models.place import PlaceID, PlaceUpdate, PlaceInDB, PlaceBody, \
     PlaceWithStats, PlaceWithDistance, PlaceCategory
 from src.api_models.profile import WalletID, wallet_id_validator
@@ -109,7 +109,7 @@ class PlaceCBV:
                       maximum_distance: Optional[float] = Query(default=None),
                       place_category: Optional[PlaceCategory] = Query(default=None),
                       sort_by: Optional[str] = Query(default="relevancy")) \
-            -> PaginatedPlaces:
+            -> PaginatedPlacesWithDistance:
         """
         Search places by multiple criteria
 
@@ -124,25 +124,26 @@ class PlaceCBV:
         :return: the places data
         """
         located_query = latitude is not None and longitude is not None
-        places = self.database.session.query(PlaceORM, func.avg(ReviewORM.score).label("score"),
-                                             func.count(ReviewORM.id).label("reviews")). \
-            join(ReviewORM, ReviewORM.place_id == PlaceORM.id, isouter=True).group_by(PlaceORM.id)
         if located_query:
-            places = places.subquery()
-            places = self.database.session.query(PlaceORM, places.c.score, places.c.reviews,
+            places = self.database.session.query(PlaceORM, func.avg(ReviewORM.score).label("score"),
+                                                 func.count(ReviewORM.id).label("reviews"),
                                                  RelationalDatabase.km_distance_query_func(PlaceORM.latitude,
                                                                                            PlaceORM.longitude,
                                                                                            latitude, longitude).
-                                                 label("distance")).join(places, places.c.id == ReviewORM.place_id)
+                                                 label("distance"))
+        else:
+            places = self.database.session.query(PlaceORM, func.avg(ReviewORM.score).label("score"),
+                                                 func.count(ReviewORM.id).label("reviews"))
+        places = places.join(ReviewORM, ReviewORM.place_id == PlaceORM.id, isouter=True).group_by(PlaceORM.id)
         if place_category is not None:
             places = places.filter(PlaceORM.category == place_category)
         if at_least_stars:
-            places = places.filter(f"score >={at_least_stars}")
+            places = places.filter(text(f"score >={at_least_stars}"))
         if maximum_distance is not None and located_query:
             if not located_query:
                 raise HTTPException(status_code=HTTP_400_BAD_REQUEST,
                                     detail=f"Can't filter by distance if latitude and longitude is not provided")
-            places = places.filter(f"distance <={maximum_distance}")
+            places = places.filter(text(f"distance <={maximum_distance}"))
         if sort_by == "relevancy":
             places = places.order_by((self.database.relevancy_score(
                 func.avg(ReviewORM.score), func.count(distinct(ReviewORM.owner)))).desc())
@@ -163,16 +164,11 @@ class PlaceCBV:
         places = places.limit(per_page).offset(page * per_page).all()
 
         if places:
-            if located_query:
-                places = [PlaceWithDistance(**PlaceInDB.from_orm(p[0]).dict(),
-                                            score=p[1], reviews=p[2], distance=p[3])
-                          for p in places]
-            else:
-                places = [PlaceWithStats(**PlaceInDB.from_orm(p[0]).dict(),
-                                         score=p[1], reviews=p[2])
-                          for p in places]
-
-            return PaginatedPlaces(places=places, total=total_count,
-                                   page=per_page, per_page=per_page)
+            places = [PlaceWithDistance(**PlaceInDB.from_orm(p[0]).dict(),
+                                        score=p[1], reviews=p[2],
+                                        km_distance=p[3] if located_query else None)
+                      for p in places]
+            return PaginatedPlacesWithDistance(places=places, total=total_count,
+                                               page=per_page, per_page=per_page)
         else:
             raise HTTPException(status_code=HTTP_404_NOT_FOUND)

@@ -54,5 +54,5 @@ class PlaceWithDistance(PlaceWithStats):
     """
     Place with distance and stats
     """
-    km_distance: float
+    km_distance: Optional[float]
 

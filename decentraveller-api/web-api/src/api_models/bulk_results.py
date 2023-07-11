@@ -24,4 +24,10 @@ class PaginatedPlaces(PaginatedResultBase):
     """
     Paginated reviews model
     """
-    places: Union[List[PlaceWithStats], List[PlaceWithDistance]]
+    places: List[PlaceWithStats]
+
+class PaginatedPlacesWithDistance(PaginatedResultBase):
+    """
+    Paginated reviews model
+    """
+    places: List[PlaceWithDistance]
