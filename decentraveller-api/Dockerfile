@@ -4,5 +4,5 @@ COPY web-api/pyproject.toml .
 RUN apt-get update
 RUN apt-get install libpq-dev
 RUN pip3 install poetry
-RUN poetry install
+RUN poetry install --with dev
 COPY ./web-api .
