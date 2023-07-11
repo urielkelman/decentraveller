@@ -79,7 +79,8 @@ class RecommendationCBV:
             join(nearby, nearby.c.id == ReviewORM.place_id). \
             group_by(ReviewORM.place_id). \
             having(func.count(distinct(ReviewORM.owner)) >= MINIMUM_REVIEWS_TO_RECOMMEND). \
-            order_by((func.avg(ReviewORM.score) * func.log(func.count(distinct(ReviewORM.owner)))).desc()). \
+            order_by((database.relevancy_score(
+            func.avg(ReviewORM.score), func.count(distinct(ReviewORM.owner)))).desc()). \
             limit(limit).subquery()
         distance_similars = database.session.query(PlaceORM.id). \
             join(distance_similars, distance_similars.c.place_id == PlaceORM.id).all()

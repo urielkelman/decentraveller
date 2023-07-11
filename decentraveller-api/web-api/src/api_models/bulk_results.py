@@ -1,7 +1,7 @@
-from typing import List
+from typing import List, Union
 from fastapi_utils.api_model import APIModel
 from src.api_models.review import ReviewInDB
-from src.api_models.place import PlaceWithStats
+from src.api_models.place import PlaceWithStats, PlaceWithDistance
 
 
 class PaginatedResultBase(APIModel):
@@ -24,4 +24,4 @@ class PaginatedPlaces(PaginatedResultBase):
     """
     Paginated reviews model
     """
-    places: List[PlaceWithStats]
+    places: Union[List[PlaceWithStats], List[PlaceWithDistance]]

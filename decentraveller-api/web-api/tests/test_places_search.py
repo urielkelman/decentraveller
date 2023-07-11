@@ -1,0 +1,111 @@
+import pytest
+
+from tests.utils.client import client
+from tests.utils.session import restart_database
+
+
+@pytest.fixture
+def cleanup():
+    restart_database()
+    yield None
+
+@pytest.fixture
+def setup_dataset():
+
+    for i in range(20):
+        response = client.post("/profile",
+                               json={"owner": '0x{:040X}'.format(i),
+                                     "nickname": f"test{i}",
+                                     "country": "AR",
+                                     "interest": "ACCOMMODATION"},
+                               )
+        assert response.status_code == 201
+
+    response = client.post("/profile",
+                           json={"owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
+                                 "nickname": "test",
+                                 "country": "AR",
+                                 "interest": "ACCOMMODATION"},
+                           )
+    assert response.status_code == 201
+
+    response = client.get("/place/0")
+    assert response.status_code == 404
+
+    response = client.post("/place",
+                           json={"id": 0,
+                                 "owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
+                                 "name": "McDonalds",
+                                 "address": "Av. Callao & Av. Santa Fe",
+                                 "latitude": -34.596007,
+                                 "longitude": -58.393154,
+                                 "category": "GASTRONOMY"},
+                           )
+    assert response.status_code == 201
+    response = client.post("/place",
+                           json={"id": 1,
+                                 "owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
+                                 "name": "Tienda de cafe",
+                                 "address": "Av. Callao & Av. Santa Fe",
+                                 "latitude": -34.595987,
+                                 "longitude": -58.393471,
+                                 "category": "GASTRONOMY"},
+                           )
+    assert response.status_code == 201
+    response = client.post("/place",
+                           json={"id": 2,
+                                 "owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
+                                 "name": "Starbucks Coffee",
+                                 "address": "Av. Callao 702, C1023 CABA",
+                                 "latitude": -34.600723,
+                                 "longitude": -58.392964,
+                                 "category": "GASTRONOMY"},
+                           )
+    assert response.status_code == 201
+    response = client.post("/place",
+                           json={"id": 3,
+                                 "owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
+                                 "name": "Maldini",
+                                 "address": "Vedia 3626",
+                                 "latitude": -34.546015,
+                                 "longitude": -58.489325,
+                                 "category": "GASTRONOMY"},
+                           )
+    assert response.status_code == 201
+    response = client.post("/place",
+                           json={"id": 4,
+                                 "owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
+                                 "name": "El Viejo Tucho",
+                                 "address": "Av. América 696, Sáenz Peña, Provincia de Buenos Aires",
+                                 "latitude": -34.602272,
+                                 "longitude": -58.528238,
+                                 "category": "GASTRONOMY"},
+                           )
+    assert response.status_code == 201
+
+    response = client.post("/place",
+                           json={"id": 5,
+                                 "owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
+                                 "name": "Parque de la costa",
+                                 "address": "Vivanco 1509, B1648AAB Tigre, Provincia de Buenos Aires",
+                                 "latitude": -34.416924,
+                                 "longitude": -58.576922,
+                                 "category": "ENTERTAINMENT"},
+                           )
+    assert response.status_code == 201
+
+    response = client.post("/place",
+                           json={"id": 6,
+                                 "owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
+                                 "name": "Cinepolis Houssay",
+                                 "address": "Av. Córdoba 2135, C1121 CABA",
+                                 "latitude": -34.599493,
+                                 "longitude": -58.398176,
+                                 "category": "ENTERTAINMENT"},
+                           )
+    assert response.status_code == 201
+
+def test_blank_search(cleanup, setup_dataset):
+    response = client.get("/places/search", params={"page": 0, "per_page": 2})
+    assert response.status_code == 200
+    assert response.json()['total'] == 7

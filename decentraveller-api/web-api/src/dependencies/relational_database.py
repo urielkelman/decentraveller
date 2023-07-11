@@ -1,6 +1,6 @@
 from typing import Optional, Dict, List, Union, Callable
 
-from sqlalchemy import func
+from sqlalchemy import func, case
 from sqlalchemy.orm import Session
 
 from src.api_models.bulk_results import PaginatedReviews, PaginatedPlaces
@@ -48,6 +48,17 @@ class RelationalDatabase:
         :return: the session
         """
         return self._session
+
+    @staticmethod
+    def relevancy_score(mean_score, review_count):
+        """
+        Computes the relevancy score
+        :param mean_score: the mean score
+        :param review_count: the review count
+        :return: the relevancy score
+        """
+        return case((review_count == 0, 0), else_=mean_score*func.log(review_count))
+
 
     @staticmethod
     def km_distance_query_func(lat1: float, lon1: float,
