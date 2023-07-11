@@ -62,7 +62,8 @@
         "vm-browserify": "^1.1.2",
         "web3": "^1.8.0",
         "xml2js": "^0.4.23",
-        "expo-location": "~14.2.2"
+        "expo-location": "~14.2.2",
+        "expo-image-picker": "~13.1.1"
     },
     "devDependencies": {
         "@babel/core": "^7.12.9",

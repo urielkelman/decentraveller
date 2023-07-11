@@ -21,7 +21,6 @@ export type AppContextType = {
     pushChangeUpdate: () => void;
     deviceDimensions: DeviceDimensions;
     userNickname: AppContextStateArg<string>;
-    userWalletAddress: AppContextStateArg<string>;
     userCreatedAt: AppContextStateArg<string>;
     userInterest: AppContextStateArg<string>;
     userLocation: AppContextStateArg<[string, string]>;

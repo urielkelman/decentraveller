@@ -1,12 +1,12 @@
-from typing import Optional, Dict, List, Union, Callable
+from typing import Optional, Dict, List, Union, Callable, Tuple
 
-from sqlalchemy import func
+from sqlalchemy import func, tuple_
 from sqlalchemy.orm import Session
 
 from src.api_models.bulk_results import PaginatedReviews, PaginatedPlaces
 from src.api_models.place import PlaceID, PlaceInDB, PlaceWithStats
-from src.api_models.review import ReviewID, ReviewInDB, ReviewBody
-from src.api_models.profile import WalletID
+from src.api_models.profile import ProfileInDB, WalletID
+from src.api_models.review import ReviewID, ReviewInDB, ReviewBody, ReviewWithProfile
 from src.orms.place import PlaceORM
 from src.orms.profile import ProfileORM
 from src.orms.review import ReviewORM
@@ -61,8 +61,26 @@ class RelationalDatabase:
             filter(PlaceORM.id.in_(tuple(place_ids))) \
             .group_by(PlaceORM.id).all()
         return [PlaceWithStats(**PlaceInDB.from_orm(p[0]).dict(),
-                               stars=p[1], reviews=p[2])
+                               score=p[1], reviews=p[2])
                 for p in result]
+
+    def _get_reviews_by_ids(self, ids: List[Tuple[ReviewID, PlaceID]]) \
+            -> List[ReviewWithProfile]:
+        """
+        Get reviews by id
+        :param ids: list of reviews and place ids
+        :return: the reviews
+        """
+        result = self.session.query(ReviewORM, ProfileORM). \
+            join(ProfileORM, ProfileORM.owner == ReviewORM.owner). \
+            filter(tuple_(ReviewORM.id, ReviewORM.place_id).in_(tuple(ids))).all()
+        parsed_result = []
+        for p in result:
+            review = ReviewInDB.from_orm(p[0]).dict()
+            review['owner'] = ProfileInDB.from_orm(p[1])
+            parsed_result.append(review)
+        return [ReviewWithProfile(**p)
+                for p in parsed_result]
 
     def query_places(self, place_ids: Union[PlaceID, List[PlaceID]]) \
             -> Union[Optional[PlaceWithStats], List[PlaceWithStats]]:
@@ -94,7 +112,7 @@ class RelationalDatabase:
         self.session.add(place_orm)
         self.session.commit()
         return PlaceWithStats(**PlaceInDB.from_orm(place_orm).dict(),
-                              stars=None, reviews=0)
+                              score=None, reviews=0)
 
     def update_place(self, place_id: PlaceID, place_data: Dict) -> Optional[PlaceWithStats]:
         """
@@ -116,7 +134,7 @@ class RelationalDatabase:
         self.session.commit()
         return self.query_places(place_id)
 
-    def query_review(self, review_id: ReviewID, place_id: PlaceID) -> Optional[ReviewInDB]:
+    def query_review(self, review_id: ReviewID, place_id: PlaceID) -> Optional[ReviewWithProfile]:
         """
         Gets a review from the database by its id
 
@@ -124,10 +142,10 @@ class RelationalDatabase:
         :param place_id: the place id
         :return: a review ORM or None if the id does not exist
         """
-        review: Optional[ReviewORM] = self.session.query(ReviewORM).get((review_id, place_id))
-        if not review:
+        reviews = self._get_reviews_by_ids([(review_id, place_id)])
+        if not reviews:
             return None
-        return ReviewInDB.from_orm(review)
+        return reviews[0]
 
     def add_review(self, review: ReviewBody):
         """
@@ -165,10 +183,12 @@ class RelationalDatabase:
         :param per_page: items per page
         :return: the paginated reviews
         """
-        query = self.session.query(ReviewORM).filter(ReviewORM.place_id == place_id)
+        query = self.session.query(ReviewORM.id, ReviewORM.place_id). \
+            filter(ReviewORM.place_id == place_id)
         total_count = query.count()
         query = query.limit(per_page).offset(page * per_page)
-        reviews = [ReviewInDB.from_orm(r) for r in query.all()]
+        ids = [(r[0], r[1]) for r in query.all()]
+        reviews = self._get_reviews_by_ids(ids)
         return PaginatedReviews(page=page, per_page=per_page,
                                 total=total_count, reviews=reviews)
 
@@ -182,10 +202,12 @@ class RelationalDatabase:
         :param per_page: items per page
         :return: the paginated reviews
         """
-        query = self.session.query(ReviewORM).filter(ReviewORM.owner == owner)
+        query = self.session.query(ReviewORM.id, ReviewORM.place_id). \
+            filter(ReviewORM.owner == owner)
         total_count = query.count()
         query = query.limit(per_page).offset(page * per_page)
-        reviews = [ReviewInDB.from_orm(r) for r in query.all()]
+        ids = [(r[0], r[1]) for r in query.all()]
+        reviews = self._get_reviews_by_ids(ids)
         return PaginatedReviews(page=page, per_page=per_page,
                                 total=total_count, reviews=reviews)
 

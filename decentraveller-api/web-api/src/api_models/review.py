@@ -5,8 +5,8 @@ from fastapi_utils.api_model import APIModel
 from pydantic import validator
 
 from src.api_models.place import PlaceID
+from src.api_models.profile import ProfileInDB
 from src.api_models.profile import WalletID, wallet_id_validator
-
 
 ReviewID = NewType("ReviewId", int)
 
@@ -31,3 +31,14 @@ class ReviewInDB(ReviewBody):
     Review API Model
     """
     created_at: datetime
+
+class ReviewWithProfile(ReviewInDB):
+    """
+    Review with profile
+    """
+    owner: ProfileInDB
+
+    @validator('owner')
+    def wallet_id_validator(cls, v):
+        assert isinstance(v, ProfileInDB)
+        return v

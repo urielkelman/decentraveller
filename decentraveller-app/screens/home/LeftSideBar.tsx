@@ -14,13 +14,13 @@ import RootNavigator from './RootNavigator';
 const Drawer = createDrawerNavigator();
 
 const CustomDrawerContent = (props: DrawerContentComponentProps) => {
-    const { userNickname, userWalletAddress } = useAppContext();
-
+    const { userNickname, connectionContext } = useAppContext();
+    console.log(connectionContext);
     const user = {
         // TODO: Take profileImage from backend when implementation is developed
         profileImage: require('../../assets/mock_images/cryptochica.png'),
         name: userNickname.value,
-        walletAddress: obfuscateAddress(userWalletAddress.value),
+        walletAddress: connectionContext?.connectedAddress ? obfuscateAddress(connectionContext.connectedAddress) : '',
     };
 
     return (
