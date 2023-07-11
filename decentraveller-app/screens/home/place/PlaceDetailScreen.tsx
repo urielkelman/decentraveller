@@ -1,9 +1,9 @@
 import { View, Image, Text, StyleSheet, Dimensions } from 'react-native';
 import PlaceReviewsBox from './PlaceReviewsBox';
 import { placeDetailStyles } from '../../../styles/placeDetailStyles';
-import {PlaceDetailData, PlaceDetailScreenProps} from './types';
+import { PlaceDetailData, PlaceDetailScreenProps } from './types';
 import React, { useEffect } from 'react';
-import {RouteProp} from "@react-navigation/native";
+import { RouteProp } from '@react-navigation/native';
 
 const path = '../../../assets/mock_images/eretz-inside.jpeg';
 const locationIconPath = '../../../assets/images/location.png';
@@ -16,6 +16,36 @@ type BulletItemProps = {
     value: string;
     marginTop: number;
 };
+
+function formatScore(number) {
+    const formattedNumber = Number(number).toFixed(2);
+    return formattedNumber.toString();
+}
+
+function needsMultipleLines(str: string): boolean {
+    const words = str.trim().split(/\s+/);
+    return str.length > 16 && words.length > 1;
+}
+
+function renderNameText(name: string): JSX.Element {
+    const shouldShowInTwoLines = needsMultipleLines(name);
+
+    if (shouldShowInTwoLines) {
+        const words = name.trim().split(/\s+/);
+        const halfIndex = Math.ceil(words.length / 2);
+        const name_1 = words.slice(0, halfIndex).join(' ');
+        const name_2 = words.slice(halfIndex).join(' ');
+
+        return (
+            <>
+                <Text style={placeDetailStyles.titleText2}>{name_1}</Text>
+                <Text style={placeDetailStyles.titleText2}>{name_2}</Text>
+            </>
+        );
+    } else {
+        return <Text style={placeDetailStyles.titleText}>{name}</Text>;
+    }
+}
 
 const bulletItemComponent: React.FC<BulletItemProps> = ({ iconPath, title, value, marginTop }) => {
     return (
@@ -32,6 +62,7 @@ const bulletItemComponent: React.FC<BulletItemProps> = ({ iconPath, title, value
 const PlaceDetailScreen: React.FC<PlaceDetailScreenProps> = ({ route }) => {
     const { placeItemData } = route.params;
     const { id, name, address, score, reviewCount } = placeItemData;
+    const shouldShowInTwoLines = needsMultipleLines(name);
 
     return (
         <View style={placeDetailStyles.container}>
@@ -40,7 +71,7 @@ const PlaceDetailScreen: React.FC<PlaceDetailScreenProps> = ({ route }) => {
             </View>
             <View style={placeDetailStyles.shadowContainer} />
             <View style={placeDetailStyles.textContainer}>
-                <Text style={placeDetailStyles.titleText}>{name}</Text>
+                {renderNameText(name)}
                 <View style={placeDetailStyles.bulletItem}>
                     <Image source={require(locationIconPath)} style={placeDetailStyles.bulletLocationImage} />
                     <Text style={placeDetailStyles.locationText}>{address}</Text>
@@ -50,7 +81,7 @@ const PlaceDetailScreen: React.FC<PlaceDetailScreenProps> = ({ route }) => {
                 {bulletItemComponent({
                     iconPath: rankingIconPath,
                     title: 'Rating',
-                    value: score.toString(),
+                    value: formatScore(score),
                     marginTop: 0,
                 })}
                 {bulletItemComponent({

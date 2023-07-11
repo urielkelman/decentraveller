@@ -5,7 +5,7 @@ from starlette.status import HTTP_404_NOT_FOUND, HTTP_400_BAD_REQUEST
 
 from src.api_models.place import PlaceID
 from src.api_models.profile import WalletID, wallet_id_validator
-from src.api_models.review import ReviewInDB, ReviewID, ReviewBody
+from src.api_models.review import ReviewInDB, ReviewID, ReviewBody, ReviewWithProfile
 from src.api_models.bulk_results import PaginatedReviews
 from src.dependencies.relational_database import build_relational_database, RelationalDatabase
 from sqlalchemy.exc import IntegrityError
@@ -33,7 +33,7 @@ class ReviewCBV:
                                 detail="Either the place or the profile does not exist")
 
     @review_router.get("/review")
-    def get_review(self, review_id: ReviewID, place_id: PlaceID) -> ReviewInDB:
+    def get_review(self, review_id: ReviewID, place_id: PlaceID) -> ReviewWithProfile:
         """
         Get a review by its id
 

@@ -3,9 +3,9 @@ import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import { placeReviewsBoxStyles } from '../../../styles/placeDetailStyles';
 import { ReviewResponse, ReviewsResponse } from '../../../api/response/reviews';
 import { mockApiAdapter } from '../../../api/mockApiAdapter';
-import {NavigationProp, RouteProp, useNavigation} from '@react-navigation/native';
-import {HomeStackScreens} from "../HomeNavigator";
-import {AddReviewImagesScreenProp} from "./types";
+import { NavigationProp, RouteProp, useNavigation } from '@react-navigation/native';
+import { HomeStackScreens } from '../HomeNavigator';
+import { AddReviewImagesScreenProp } from './types';
 
 const adapter = mockApiAdapter;
 
