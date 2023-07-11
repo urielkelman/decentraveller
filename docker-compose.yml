@@ -13,7 +13,7 @@ services:
 
   api:
     build: decentraveller-api/
-    command: uvicorn src.app:app --host 0.0.0.0 --log-level debug
+    command: poetry run uvicorn src.app:app --host 0.0.0.0 --log-level debug
     ports:
       - 8000:8000
     environment:
