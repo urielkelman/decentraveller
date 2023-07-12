@@ -6,6 +6,7 @@ import { Ionicons } from '@expo/vector-icons';
 import {PickerItem} from "../../../commons/types";
 import {DECENTRAVELLER_DEFAULT_CONTRAST_COLOR, interestsItems} from "../../../commons/global";
 import DecentravellerPicker from "../../../commons/components/DecentravellerPicker";
+import {explorePlacesScreenWording} from "./wording";
 
 
 const Bullet = ({ label, selected, onPress }) => {
@@ -25,15 +26,20 @@ const Bullet = ({ label, selected, onPress }) => {
 
 const FilterModal: React.FC<FilterModalProps> = ({ route }) => {
     const {filterModalData} = route.params
-    const {orderBy, setOrderBy, minStars, setMinStars, maxDistance, setMaxDistance} = filterModalData
+    const {orderBy, setOrderBy, minStars, setMinStars, maxDistance, setMaxDistance, interest, setInterest} = filterModalData
 
     const [interestPickerItems, setInterestPickerItems] = React.useState<PickerItem[]>(interestsItems);
-    const [interestPickerValue, setInterestPickerValue] = React.useState<string>(null);
     const [interestPickerOpen, setInterestPickerOpen] = React.useState<boolean>(false);
+
+    const [initDistance, setInitD] = React.useState<number>(maxDistance? maxDistance : 0);
+    const [initStars, setInitS] = React.useState<number>(minStars? maxDistance : 0);
 
     const handleOrderByChange = (value) => {
         setOrderBy(value);
     };
+
+    React.useEffect(() => {
+    }, []);
 
     const handleMinStarsChange = (value) => {
         setMinStars(value);
@@ -71,8 +77,8 @@ const FilterModal: React.FC<FilterModalProps> = ({ route }) => {
                 dropdownPlaceholder={"Select Interest"}
                 items={interestPickerItems}
                 setItems={setInterestPickerItems}
-                value={interestPickerValue}
-                setValue={setInterestPickerValue}
+                value={interest}
+                setValue={setInterest}
                 open={interestPickerOpen}
                 setOpen={setInterestPickerOpen}
                 onOpen={() => {}}
@@ -84,25 +90,25 @@ const FilterModal: React.FC<FilterModalProps> = ({ route }) => {
                 <Text style={styles.label}>Min stars:</Text>
                 <Slider
                     style={styles.slider}
-                    minimumValue={1}
+                    minimumValue={0}
                     maximumValue={5}
                     step={1}
-                    value={minStars}
+                    value={initStars}
                     onValueChange={handleMinStarsChange}
                 />
-                <Text style={styles.sliderValue}>{minStars}</Text>
+                <Text style={styles.sliderValue}>{initStars !== 0 ? initStars: 'Not apply'}</Text>
             </View>
             <View style={styles.optionContainer}>
                 <Text style={styles.label}>Max distance:</Text>
                 <Slider
                     style={styles.slider}
-                    minimumValue={0.5}
+                    minimumValue={0}
                     maximumValue={10}
                     step={0.5}
-                    value={maxDistance}
+                    value={initDistance}
                     onValueChange={handleMaxDistanceChange}
                 />
-                <Text style={styles.sliderValue}>{maxDistance}km</Text>
+                <Text style={styles.sliderValue}>{initDistance !== 0 ? maxDistance.toString() + 'km': 'Not apply'}</Text>
             </View>
         </View>
     );

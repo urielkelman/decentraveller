@@ -40,17 +40,21 @@ const ExplorePlacesScreen = ({ navigation }) => {
     const [lastLocationLabelSearched, setLastLocationLabelSearched] = React.useState<string>();
 
     const [modalVisible, setModalVisible] = useState<boolean>(false);
-    const [orderBy, setOrderBy] = useState<string>(null);
-    const [minStars, setMinStars] = useState<number>(null);
-    const [maxDistance, setMaxDistance] = useState<number>(null);
+    const [sortBy, setSortBy] = useState<string>(null);
+    const [minStars, setMinStars] = useState<number>(0);
+    const [maxDistance, setMaxDistance] = useState<number>(0);
+    const [interestPickerValue, setInterestPickerValue] = useState<string>(null);
+
 
     const filterModalDataProps: FilterModalData = {
-        orderBy: orderBy,
-        setOrderBy: setOrderBy,
+        orderBy: sortBy,
+        setOrderBy: setSortBy,
         minStars: minStars,
         setMinStars: setMinStars,
         maxDistance:  maxDistance,
         setMaxDistance: setMaxDistance,
+        interest: interestPickerValue,
+        setInterest: setInterestPickerValue,
     }
 
 
@@ -82,23 +86,35 @@ const ExplorePlacesScreen = ({ navigation }) => {
         }
     };
 
-    React.useEffect(() => {
+    const fetchPlaces = async (): Promise<void> => {
         if (userLocation) {
-            setLocationPickerPlaceholder(explorePlacesScreenWording.EXPLORE_PLACE_LOCATION_PICKER_CURRENT_LOCATION);
+            const [latitude, longitude] = userLocation.value;
+            setLoadingPlaces(true);
+            const places = await adapter.getRecommendedPlaces(
+                [latitude, longitude],
+                interestPickerValue,
+                sortBy,
+                minStars !== 0 ? minStars : null,
+                maxDistance !== 0 ? maxDistance : null
+            );
+            setPlaces(places);
+            setLoadingPlaces(false);
+            setLocationPickerValue(ownLocationPickerValue);
+            setLastLocationLabelSearched(
+                explorePlacesScreenWording.EXPLORE_PLACE_LOCATION_PICKER_CURRENT_LOCATION
+            );
         }
+    };
 
-        (async () => {
+        React.useEffect(() => {
             if (userLocation) {
-                const [latitude, longitude] = userLocation.value;
-                setLoadingPlaces(true);
-                const places = await adapter.getRecommendedPlaces([latitude, longitude]);
-                setPlaces(places);
-                setLoadingPlaces(false);
-                setLocationPickerValue(ownLocationPickerValue);
-                setLastLocationLabelSearched(explorePlacesScreenWording.EXPLORE_PLACE_LOCATION_PICKER_CURRENT_LOCATION);
+                setLocationPickerPlaceholder(explorePlacesScreenWording.EXPLORE_PLACE_LOCATION_PICKER_CURRENT_LOCATION);
             }
-        })();
-    }, []);
+
+            (async () => {
+                await fetchPlaces()
+            })();
+        }, []);
 
     const onOpenPicker = () => {
         setLocationPickerItemsWrappedWithOwnLocation(
@@ -132,15 +148,22 @@ const ExplorePlacesScreen = ({ navigation }) => {
         })();
     };
 
+    const filterPlaces = () => {
+        (async () => {
+            await fetchPlaces()
+        })();
+        setModalVisible(!modalVisible);
+    };
+
     const toggleModal = () => {
-        console.log(orderBy, maxDistance, minStars)
         setModalVisible(!modalVisible);
     };
 
     const clearFilters = () => {
-        setMinStars(null);
-        setMaxDistance(null);
-        setOrderBy(null)
+        setMinStars(0);
+        setMaxDistance(0);
+        setSortBy(null)
+        setInterestPickerValue(null)
     };
 
     const componentToRender = loadingPlaces ? <LoadingComponent /> : <DecentravellerPlacesItems places={places} />;
@@ -199,7 +222,7 @@ const ExplorePlacesScreen = ({ navigation }) => {
                                 <TouchableOpacity style={[styles.filterModalButton, { marginRight: 10 }]} onPress={toggleModal}>
                                     <Text style={styles.filterModalButtonText}>Back</Text>
                                 </TouchableOpacity>
-                                <TouchableOpacity style={[styles.filterModalButton, { marginRight: 10 }]} onPress={toggleModal}>
+                                <TouchableOpacity style={[styles.filterModalButton, { marginRight: 10 }]} onPress={filterPlaces}>
                                     <Text style={styles.filterModalButtonText}>Send</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity style={styles.filterModalButton} onPress={clearFilters}>
