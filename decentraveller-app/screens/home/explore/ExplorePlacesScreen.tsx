@@ -86,34 +86,34 @@ const ExplorePlacesScreen = ({ navigation }) => {
         }
     };
 
-    const fetchPlaces = async (): Promise<void> => {
-        if (userLocation) {
-            const [latitude, longitude] = userLocation.value;
-            setLoadingPlaces(true);
-            const places = await adapter.getRecommendedPlaces(
-                [latitude, longitude],
-                interestPickerValue,
-                sortBy,
-                minStars !== 0 ? minStars : null,
-                maxDistance !== 0 ? maxDistance : null
-            );
-            setPlaces(places);
-            setLoadingPlaces(false);
-            setLocationPickerValue(ownLocationPickerValue);
-            setLastLocationLabelSearched(
-                explorePlacesScreenWording.EXPLORE_PLACE_LOCATION_PICKER_CURRENT_LOCATION
-            );
-        }
+    const fetchPlaces = async (latitude: string, longitude: string): Promise<void> => {
+        setLoadingPlaces(true);
+        const places = await adapter.getRecommendedPlaces(
+            [latitude, longitude],
+            interestPickerValue,
+            sortBy,
+            minStars !== 0 ? minStars : null,
+            maxDistance !== 0 ? maxDistance : null
+        );
+        setPlaces(places);
+        setLoadingPlaces(false);
+        setLocationPickerValue(ownLocationPickerValue);
+        setLastLocationLabelSearched(
+            explorePlacesScreenWording.EXPLORE_PLACE_LOCATION_PICKER_CURRENT_LOCATION
+        );
+
     };
 
         React.useEffect(() => {
             if (userLocation) {
                 setLocationPickerPlaceholder(explorePlacesScreenWording.EXPLORE_PLACE_LOCATION_PICKER_CURRENT_LOCATION);
             }
-
-            (async () => {
-                await fetchPlaces()
-            })();
+            if (userLocation){
+                (async () => {
+                    const [latitude, longitude] = userLocation.value;
+                    await fetchPlaces(latitude, longitude)
+                })();
+            }
         }, []);
 
     const onOpenPicker = () => {
@@ -133,24 +133,28 @@ const ExplorePlacesScreen = ({ navigation }) => {
     };
 
     const onSelection = (item: PickerItem) => {
-        (async () => {
-            if (lastLocationLabelSearched !== item.label) {
-                setLoadingPlaces(true);
-                const geocodingElement: GeocodingElement = JSON.parse(item.value);
-                const places = await adapter.getRecommendedPlaces([
-                    geocodingElement.latitude,
-                    geocodingElement.longitude,
-                ]);
-                setPlaces(places);
-                setLoadingPlaces(false);
-                setLastLocationLabelSearched(item.label);
-            }
-        })();
+        if (lastLocationLabelSearched !== item.label) {
+            const geocodingElement: GeocodingElement = JSON.parse(item.value);
+            (async () => {
+                await fetchPlaces(geocodingElement.latitude, geocodingElement.longitude)
+            })();
+        }
     };
 
     const filterPlaces = () => {
+        let latitude: string;
+        let longitude: string;
+
+        if (userLocation) {
+            [latitude, longitude] = userLocation.value
+        } else {
+            const geocodingElement: GeocodingElement = JSON.parse(lastLocationLabelSearched)
+            latitude = geocodingElement.latitude
+            longitude = geocodingElement.longitude
+        }
+
         (async () => {
-            await fetchPlaces()
+            await fetchPlaces(latitude, longitude)
         })();
         setModalVisible(!modalVisible);
     };
@@ -167,6 +171,11 @@ const ExplorePlacesScreen = ({ navigation }) => {
     };
 
     const componentToRender = loadingPlaces ? <LoadingComponent /> : <DecentravellerPlacesItems places={places} />;
+
+    const initialValues = {
+        stars: minStars,
+        distance: maxDistance,
+    };
 
     return (
         <View
@@ -217,7 +226,7 @@ const ExplorePlacesScreen = ({ navigation }) => {
                 >
                     <View style={styles.filterModalContainer}>
                         <View style={styles.filterModal}>
-                            <FilterModal route={{ params: { filterModalData: filterModalDataProps } }} />
+                            <FilterModal route={{ params: { filterModalData: filterModalDataProps } }} initialValues={initialValues} />
                             <View style={styles.modalButtons}>
                                 <TouchableOpacity style={[styles.filterModalButton, { marginRight: 10 }]} onPress={toggleModal}>
                                     <Text style={styles.filterModalButtonText}>Back</Text>

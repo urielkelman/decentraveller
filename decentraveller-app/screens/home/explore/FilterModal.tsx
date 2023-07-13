@@ -22,7 +22,8 @@ const Bullet = ({ label, selected, onPress }) => {
     );
 };
 
-const FilterModal: React.FC<FilterModalProps> = ({ route }) => {
+const FilterModal: React.FC<FilterModalProps> = ({ route, initialValues }) => {
+
     const {filterModalData} = route.params
     const {orderBy, setOrderBy, minStars, setMinStars, maxDistance, setMaxDistance, interest, setInterest} = filterModalData
 
@@ -34,7 +35,10 @@ const FilterModal: React.FC<FilterModalProps> = ({ route }) => {
     };
 
     React.useEffect(() => {
-    }, []);
+        setMaxDistance(initialValues.distance);
+        setMinStars(initialValues.stars);
+    }, [initialValues.distance, initialValues.stars, orderBy, interest]);
+
 
     const handleMinStarsChange = (value) => {
         setMinStars(value);

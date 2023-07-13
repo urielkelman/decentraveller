@@ -20,4 +20,8 @@ export type FilterModalProps = {
     route: {
         params: FilterModalParams;
     };
+    initialValues: {
+        stars: number,
+        distance: number
+    }
 };
