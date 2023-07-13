@@ -6,8 +6,6 @@ import { Ionicons } from '@expo/vector-icons';
 import {PickerItem} from "../../../commons/types";
 import {DECENTRAVELLER_DEFAULT_CONTRAST_COLOR, interestsItems} from "../../../commons/global";
 import DecentravellerPicker from "../../../commons/components/DecentravellerPicker";
-import {explorePlacesScreenWording} from "./wording";
-
 
 const Bullet = ({ label, selected, onPress }) => {
     return (
@@ -30,9 +28,6 @@ const FilterModal: React.FC<FilterModalProps> = ({ route }) => {
 
     const [interestPickerItems, setInterestPickerItems] = React.useState<PickerItem[]>(interestsItems);
     const [interestPickerOpen, setInterestPickerOpen] = React.useState<boolean>(false);
-
-    const [initDistance, setInitD] = React.useState<number>(maxDistance? maxDistance : 0);
-    const [initStars, setInitS] = React.useState<number>(minStars? maxDistance : 0);
 
     const handleOrderByChange = (value) => {
         setOrderBy(value);
@@ -93,10 +88,10 @@ const FilterModal: React.FC<FilterModalProps> = ({ route }) => {
                     minimumValue={0}
                     maximumValue={5}
                     step={1}
-                    value={initStars}
+                    value={minStars}
                     onValueChange={handleMinStarsChange}
                 />
-                <Text style={styles.sliderValue}>{initStars !== 0 ? initStars: 'Not apply'}</Text>
+                <Text style={styles.sliderValue}>{minStars !== 0 ? minStars: 'Not apply'}</Text>
             </View>
             <View style={styles.optionContainer}>
                 <Text style={styles.label}>Max distance:</Text>
@@ -105,10 +100,10 @@ const FilterModal: React.FC<FilterModalProps> = ({ route }) => {
                     minimumValue={0}
                     maximumValue={10}
                     step={0.5}
-                    value={initDistance}
+                    value={maxDistance}
                     onValueChange={handleMaxDistanceChange}
                 />
-                <Text style={styles.sliderValue}>{initDistance !== 0 ? maxDistance.toString() + 'km': 'Not apply'}</Text>
+                <Text style={styles.sliderValue}>{maxDistance !== 0 ? maxDistance.toString() + 'km': 'Not apply'}</Text>
             </View>
         </View>
     );
