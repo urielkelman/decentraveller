@@ -156,7 +156,9 @@ const ExplorePlacesScreen = ({ navigation }) => {
         (async () => {
             await fetchPlaces(latitude, longitude)
         })();
+
         setModalVisible(!modalVisible);
+        clearFilters()
     };
 
     const toggleModal = () => {
@@ -171,11 +173,6 @@ const ExplorePlacesScreen = ({ navigation }) => {
     };
 
     const componentToRender = loadingPlaces ? <LoadingComponent /> : <DecentravellerPlacesItems places={places} />;
-
-    const initialValues = {
-        stars: minStars,
-        distance: maxDistance,
-    };
 
     return (
         <View
@@ -226,7 +223,7 @@ const ExplorePlacesScreen = ({ navigation }) => {
                 >
                     <View style={styles.filterModalContainer}>
                         <View style={styles.filterModal}>
-                            <FilterModal route={{ params: { filterModalData: filterModalDataProps } }} initialValues={initialValues} />
+                            <FilterModal route={{ params: { filterModalData: filterModalDataProps } }}/>
                             <View style={styles.modalButtons}>
                                 <TouchableOpacity style={[styles.filterModalButton, { marginRight: 10 }]} onPress={toggleModal}>
                                     <Text style={styles.filterModalButtonText}>Back</Text>
