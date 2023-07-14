@@ -1,6 +1,6 @@
 from typing import Optional, Dict, List, Union, Callable, Tuple
 
-from sqlalchemy import func, tuple_
+from sqlalchemy import func, case, tuple_
 from sqlalchemy.orm import Session
 
 from src.api_models.bulk_results import PaginatedReviews, PaginatedPlaces
@@ -48,6 +48,44 @@ class RelationalDatabase:
         :return: the session
         """
         return self._session
+
+    @staticmethod
+    def relevancy_score(mean_score, review_count):
+        """
+        Computes the relevancy score
+        :param mean_score: the mean score
+        :param review_count: the review count
+        :return: the relevancy score
+        """
+        return case((review_count == 0, 0), else_=mean_score*func.log(review_count))
+
+
+    @staticmethod
+    def km_distance_query_func(lat1: float, lon1: float,
+                               lat2: float, lon2: float):
+        """
+        Km distance function for using inside a query
+        :param lat1: the first latitude
+        :param lon1: the first longitude
+        :param lat2: the second latitude
+        :param lon2: the second longitude
+        :return: a distance
+        """
+        lat1_rad = func.radians(lat1)
+        lon1_rad = func.radians(lon1)
+        lat2_rad = func.radians(lat2)
+        lon2_rad = func.radians(lon2)
+
+        # Calculate the distance using the haversine formula
+        dlon = lon2_rad - lon1_rad
+        dlat = lat2_rad - lat1_rad
+        sin_dlat = func.sin(dlat / 2)
+        sin_dlon = func.sin(dlon / 2)
+        a = sin_dlat * sin_dlat + func.cos(lat1_rad) * func.cos(lat2_rad) * sin_dlon * sin_dlon
+        c = 2 * func.asin(func.sqrt(a))
+        distance = 6371 * c  # Radius of the Earth in kilometers
+
+        return distance
 
     def _get_places_by_ids(self, place_ids: List[PlaceID]) -> List[PlaceWithStats]:
         """

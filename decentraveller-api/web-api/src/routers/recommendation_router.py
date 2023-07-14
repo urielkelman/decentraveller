@@ -13,10 +13,9 @@ from src.dependencies.vector_database import VectorDatabase
 from src.orms.place import PlaceORM
 from src.orms.review import ReviewORM
 
-
 recommendation_router = InferringRouter()
 
-NEAR_PLACE_DISTANCE = 0.03
+NEAR_PLACE_DISTANCE_KM = 3.5
 MINIMUM_REVIEWS_TO_RECOMMEND = 4
 LAST_VISITED_PLACES_TO_QUERY_SIMILARS = 5
 LAST_VISITED_PLACES_TO_CONSIDER = 1000
@@ -31,9 +30,36 @@ class RecommendationCBV:
     vector_database: VectorDatabase = Depends(VectorDatabase)
 
     @staticmethod
+    def filter_places_from_query(query: Query,
+                                 excluded_place_ids: List[PlaceID]) -> Query:
+        """
+        Filter a list of place ids from a query
+        :param query: the query
+        :param excluded_place_ids: the places to filter
+        :return: a new query
+        """
+        return query.filter(not_(PlaceORM.id.in_(excluded_place_ids)))
+
+    @staticmethod
+    def filter_near_distance(query: Query, latitude: float, longitude: float,
+                             km_distance: float) -> Query():
+        """
+        Given a place query filters by distance
+        :param query: the query
+        :param latitude: latitude
+        :param longitude: longitude
+        :param km_distance: distance allowed from latitude and longitude
+        :return: a filtered Query
+        """
+        return query. \
+            filter(RelationalDatabase.km_distance_query_func(PlaceORM.latitude,
+                                                             PlaceORM.longitude,
+                                                             latitude, longitude) <= km_distance)
+
+    @staticmethod
     def get_good_nearby_places(database: RelationalDatabase,
                                latitude: float, longitude: float,
-                               degree_distance: float, excluded_place_ids: List[PlaceID],
+                               km_distance: float, excluded_place_ids: List[PlaceID],
                                limit: int = 5) -> List[PlaceWithStats]:
         """
         Get good nearby places to a location
@@ -41,22 +67,20 @@ class RecommendationCBV:
         :param database: the database
         :param latitude: the latitude
         :param longitude: the longitude
-        :param degree_distance: admitted degree distance to consider nearby
+        :param km_distance: admitted km distance to consider nearby
         :param excluded_place_ids: place ids excluded from recommendation
         :param limit: the limit of recommendations
         :return: a list of places
         """
-        nearby = database.session.query(PlaceORM). \
-            filter(PlaceORM.latitude >= latitude - degree_distance). \
-            filter(PlaceORM.latitude <= latitude + degree_distance). \
-            filter(PlaceORM.longitude >= longitude - degree_distance). \
-            filter(PlaceORM.longitude <= longitude + degree_distance). \
-            filter(not_(PlaceORM.id.in_(excluded_place_ids))).subquery()
+        nearby = database.session.query(PlaceORM)
+        nearby = RecommendationCBV.filter_near_distance(nearby, latitude, longitude, km_distance)
+        nearby = RecommendationCBV.filter_places_from_query(nearby, excluded_place_ids).subquery()
         distance_similars = database.session.query(ReviewORM.place_id). \
             join(nearby, nearby.c.id == ReviewORM.place_id). \
             group_by(ReviewORM.place_id). \
             having(func.count(distinct(ReviewORM.owner)) >= MINIMUM_REVIEWS_TO_RECOMMEND). \
-            order_by((func.avg(ReviewORM.score) * func.log(func.count(distinct(ReviewORM.owner)))).desc()). \
+            order_by((database.relevancy_score(
+            func.avg(ReviewORM.score), func.count(distinct(ReviewORM.owner)))).desc()). \
             limit(limit).subquery()
         distance_similars = database.session.query(PlaceORM.id). \
             join(distance_similars, distance_similars.c.place_id == PlaceORM.id).all()
@@ -87,7 +111,7 @@ class RecommendationCBV:
             if not place:
                 raise HTTPException(status_code=HTTP_404_NOT_FOUND)
             distance_similars = RecommendationCBV.get_good_nearby_places(database, place.latitude,
-                                                                         place.longitude, NEAR_PLACE_DISTANCE,
+                                                                         place.longitude, NEAR_PLACE_DISTANCE_KM,
                                                                          [place_id], limit)
             if distance_similars:
                 similars += distance_similars
@@ -153,7 +177,7 @@ class RecommendationCBV:
         nearby = None
         if latitude and longitude:
             nearby = self.get_good_nearby_places(self.database, latitude, longitude,
-                                                 NEAR_PLACE_DISTANCE, last_places, limit)
+                                                 NEAR_PLACE_DISTANCE_KM, last_places, limit)
         place_similars = []
         for place_id in last_places[:LAST_VISITED_PLACES_TO_QUERY_SIMILARS]:
             place_similars.append(self.get_similars_to_place(self.database, self.vector_database,
@@ -202,7 +226,7 @@ class RecommendationCBV:
         places_to_avoid = set()
         if latitude and longitude:
             nearby = self.get_good_nearby_places(self.database, latitude, longitude,
-                                                  NEAR_PLACE_DISTANCE, [], limit)
+                                                 NEAR_PLACE_DISTANCE_KM, [], limit)
             if nearby:
                 result += [p for p in nearby[:limit - len(result)]]
                 places_to_avoid.update([r.id for r in result])
