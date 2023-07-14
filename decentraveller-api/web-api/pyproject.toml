@@ -1,0 +1,28 @@
+[tool.poetry]
+name = "decentraveller"
+version = "0.1.0"
+description = ""
+authors = ["Gianmarco Cafferata <giancafferata@hotmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+fastapi = "0.100.0"
+fastapi-utils = "*"
+sqlalchemy = "*"
+alembic = "*"
+psycopg2 = "*"
+requests = "*"
+pillow = "*"
+weaviate-client = "*"
+urllib3 = "^1.26.0"
+httpx = "*"
+uvicorn = {version = "*", extras = ["standard"]}
+
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.4.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

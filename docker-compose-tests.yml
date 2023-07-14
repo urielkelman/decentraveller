@@ -1,7 +1,7 @@
 services:
   api-unit-tests:
     build: decentraveller-api/
-    command: pytest tests
+    command: poetry run pytest tests
   load-sample-data:
     build: decentraveller-blockchain/
     command: ./node_modules/.bin/hardhat --config hardhat.config.ts --network localhost run scripts/load_data.ts
