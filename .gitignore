@@ -16,6 +16,7 @@ __pycache__*
 *yarn.lock
 *.env
 *poetry.lock
+*poetry.lock
 
 decentraveller-ipfs/*
 !decentraveller-ipfs/config
