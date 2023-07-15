@@ -48,3 +48,11 @@ class PlaceWithStats(PlaceInDB):
     """
     score: Optional[float]
     reviews: int
+
+
+class PlaceWithDistance(PlaceWithStats):
+    """
+    Place with distance and stats
+    """
+    km_distance: Optional[float]
+
