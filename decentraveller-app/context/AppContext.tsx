@@ -6,7 +6,7 @@ import { useWalletConnectModal } from '@walletconnect/modal-react-native';
 
 export const AppContext = React.createContext<AppContextType | null>(null);
 
-const DEFAULT_CHAIN_ID = 31337;
+export const DEFAULT_CHAIN_ID = 31337;
 const UNRECOGNIZED_CHAIN_ID_MESSAGE = (chainId) =>
     `Unrecognized chain ID "${chainId}". Try adding the chain using wallet_addEthereumChain first.`;
 
@@ -17,6 +17,7 @@ interface UpdateSessionPayloadParams {
 
 const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
     const [connectionContext, setConnectionContext] = React.useState<ConnectionContext>(null);
+    const connectionContextRef = React.useRef<ConnectionContext>(null);
     const [subscriptionsDone, setSubscriptionsDone] = React.useState<boolean>(false);
 
     const [nickname, setUserNickname] = React.useState<string>('');
@@ -98,43 +99,42 @@ const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
     }, []);
 
     const updateConnectionContext = (address, chainId) => {
+        console.log('Updating connection context', address, chainId);
         const isWrongChain = chainId !== DEFAULT_CHAIN_ID;
-        console.log('isWrongChain', isWrongChain);
-        setConnectionContext({
+        const newConnectionContext = {
             connectedAddress: address,
             connectedChainId: chainId,
             isWrongChain: isWrongChain,
-        });
+        };
+        setConnectionContext(newConnectionContext);
+        connectionContextRef.current = newConnectionContext;
     };
 
     React.useEffect(() => {
         console.log('connected:', isConnected);
-        // console.log('session:', provider?.session);
         // console.log('full provider', provider)
-        console.log('con context', connectionContext);
+        provider?.setDefaultChain(DEFAULT_CHAIN_ID.toString());
 
         if (isConnected) {
-            updateConnectionContext(address, 5);
-
             if (!subscriptionsDone) {
                 setSubscriptionsDone(true);
 
                 provider.client.on('session_event', (event) => {
                     console.log('session event received: ', event);
-                    console.log('c1', connectionContext);
+                    console.log('c1', connectionContextRef.current);
                     console.log('c2', event.params.event.name);
                     console.log('c3', event.params.event.data);
 
                     console.log(
                         'condition',
-                        connectionContext &&
+                        connectionContextRef.current &&
                             event.params.event.name === 'chainChanged' &&
-                            connectionContext.connectedChainId !== event.params.event.data
+                            connectionContextRef.current.connectedChainId !== event.params.event.data
                     );
                     if (
                         connectionContext &&
                         event.params.event.name === 'chainChanged' &&
-                        connectionContext.connectedChainId !== event.params.event.data
+                        connectionContextRef.current.connectedChainId !== event.params.event.data
                     ) {
                         console.log('updating con context');
                         updateConnectionContext(address, event.params.event.data);
@@ -156,9 +156,12 @@ const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
                 });
             }
         }
-    }, [isConnected]);
+    }, [isConnected, provider]);
 
-    const cleanConnectionContext = () => setConnectionContext(null);
+    const cleanConnectionContext = () => {
+        setConnectionContext(null);
+        connectionContextRef.current = null;
+    }
 
     return (
         <AppContext.Provider

@@ -1,6 +1,6 @@
 import React from 'react';
 import { TouchableOpacity, Text, View, ImageBackground, Image } from 'react-native';
-import { useAppContext } from '../../context/AppContext';
+import {DEFAULT_CHAIN_ID, useAppContext} from '../../context/AppContext';
 import {
     connectWalletScreenTextStyle,
     connectWalletScreenViewStyle,
@@ -26,7 +26,7 @@ export const sessionParams = {
     namespaces: {
         eip155: {
             methods: ['eth_sendTransaction', 'eth_signTransaction', 'eth_sign', 'personal_sign', 'eth_signTypedData'],
-            chains: ['eip155:1'],
+            chains: [`eip155:${DEFAULT_CHAIN_ID}`],
             events: ['chainChanged', 'accountsChanged'],
             rpcMap: {},
         },
@@ -88,7 +88,7 @@ const ConnectWalletScreen = () => {
                 </View>
             </View>
             <WalletConnectModal
-                projectId={''}
+                projectId={'0796da7712aba2acab6735c1c6091a82'}
                 providerMetadata={providerMetadata}
                 sessionParams={sessionParams}
             />
