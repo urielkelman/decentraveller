@@ -34,7 +34,7 @@ export const sessionParams = {
 };
 
 const ConnectWalletScreen = () => {
-    const { provider, open } = useWalletConnectModal();
+    const { open } = useWalletConnectModal();
 
     const connectWallet = async () => {
         console.log('Trying to connect....');

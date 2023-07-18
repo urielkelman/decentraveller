@@ -1,4 +1,3 @@
-import WalletConnect from '@walletconnect/client';
 import { decentravellerMainContract } from './contracts/decentravellerMainContract';
 
 class BlockchainAdapter {
