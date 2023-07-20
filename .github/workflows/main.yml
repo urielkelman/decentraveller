@@ -15,7 +15,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Install dependencies
-      run: apt update && apt install -y wget diff openimageio-tools
+      run: sudo apt-get update && sudo apt-get install -y wget diff openimageio-tools
     - name: Build images
       run: make docker-image
     - name: Run environment
