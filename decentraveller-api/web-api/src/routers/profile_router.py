@@ -1,4 +1,5 @@
-from fastapi import Depends, HTTPException, Query, Response
+from fastapi import Depends, HTTPException, Query, Response, File
+from typing_extensions import Annotated
 from fastapi_utils.cbv import cbv
 from fastapi_utils.inferring_router import InferringRouter
 from sqlalchemy.exc import IntegrityError
@@ -6,9 +7,11 @@ from starlette.status import HTTP_400_BAD_REQUEST, HTTP_404_NOT_FOUND
 
 from src.api_models.profile import ProfileInDB, ProfileBody, WalletID, wallet_id_validator
 from src.dependencies.avatar_generator import AvatarGenerator
-from src.orms.profile import ProfileORM
+from src.dependencies.ipfs_controller import IPFSController
 from src.dependencies.relational_database import build_relational_database, RelationalDatabase
-
+from src.orms.profile import ProfileORM
+from io import BytesIO
+from PIL import Image
 
 profile_router = InferringRouter()
 
@@ -17,6 +20,7 @@ profile_router = InferringRouter()
 class ProfileCBV:
     database: RelationalDatabase = Depends(build_relational_database)
     avatar_generator: AvatarGenerator = Depends(AvatarGenerator)
+    ipfs_controller: IPFSController = Depends(IPFSController)
 
     @profile_router.get("/profile/{owner}")
     def get_profile(self, owner: WalletID = Depends(wallet_id_validator)) -> ProfileInDB:
@@ -56,11 +60,52 @@ class ProfileCBV:
         if profile is None:
             raise HTTPException(status_code=HTTP_404_NOT_FOUND)
 
-        if not profile.avatar_ipfs_uri:
+        if not profile.ipfs_hash:
             return Response(content=self.avatar_generator.generate_default_avatar(profile.owner, res),
                             media_type="image/jpeg")
+        else:
+            try:
+                return Response(content=self.ipfs_controller.get_file(profile.ipfs_hash),
+                                media_type="image/jpeg")
+            except FileNotFoundError:
+                raise HTTPException(status_code=HTTP_404_NOT_FOUND)
 
-        return Response(content=b"", media_type="image/jpeg")
+    @staticmethod
+    def resize_image_squared(image: bytes) -> bytes:
+        """
+        Resizes an image as squared and compress it
+        :param image: the image bytes
+        :return: the new image bytes
+        """
+        image = Image.open(BytesIO(image))
+        minsize = min(*image.size)
+        minsize = min(minsize, 2048)
+        image = image.resize((minsize, minsize)).convert('RGBA')
+        final = Image.new("RGB", image.size, (255, 255, 255))
+        final.paste(image, (0, 0), image)
+
+        bytesfile = BytesIO()
+        final.save(bytesfile, format='jpeg', optimize=True, quality=95)
+        return bytesfile.getvalue()
+
+    @profile_router.post("/profile/{owner}/avatar.jpg")
+    def upload_avatar(self, file: Annotated[bytes, File()],
+                      owner: WalletID = Depends(wallet_id_validator)):
+        """
+        Gets a profile avatar
+
+        :param file: uploaded file
+        :param owner: the address of the owner
+        """
+
+        profile = self.database.get_profile_orm(owner)
+        file = self.resize_image_squared(file)
+        filehash = self.ipfs_controller.add_file(file)
+        self.ipfs_controller.pin_file(filehash)
+        profile.ipfs_hash = filehash
+        self.database.session.add(profile)
+        self.database.session.commit()
+        return ProfileInDB.from_orm(profile)
 
     @profile_router.post("/profile", status_code=201)
     def post_profile(self, profile: ProfileBody) -> ProfileInDB:
@@ -87,4 +132,3 @@ class ProfileCBV:
             raise HTTPException(status_code=HTTP_400_BAD_REQUEST,
                                 detail="The nickname is already in use.")
         return ProfileInDB.from_orm(profile_orm)
-

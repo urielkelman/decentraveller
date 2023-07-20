@@ -31,6 +31,8 @@ services:
     environment:
       - SQLALCHEMY_DATABASE_URL=postgresql://webapi:webapi@database:5432/webapi
       - WEAVIATE_DATABASE_URL=http://weaviate:8080
+      - IPFS_NODE_URL=http://ipfs:5001
+      - PYTHONHASHSEED=0
     depends_on:
       - database
       - weaviate
