@@ -18,6 +18,7 @@ weaviate-client = "*"
 urllib3 = "^1.26.0"
 httpx = "*"
 uvicorn = {version = "*", extras = ["standard"]}
+python-multipart = "^0.0.6"
 
 
 [tool.poetry.group.dev.dependencies]
