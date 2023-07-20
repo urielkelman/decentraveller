@@ -22,13 +22,16 @@ export const providerMetadata: IProviderMetadata = {
     },
 };
 
+const a = `eip155:${DEFAULT_CHAIN_ID}`
 export const sessionParams = {
     namespaces: {
         eip155: {
             methods: ['eth_sendTransaction', 'eth_signTransaction', 'eth_sign', 'personal_sign', 'eth_signTypedData'],
             chains: [`eip155:${DEFAULT_CHAIN_ID}`],
             events: ['chainChanged', 'accountsChanged'],
-            rpcMap: {},
+            rpcMap: {
+                'eip155:13337':'https://dtblockchain.loca.lt'
+            },
         },
     },
 };

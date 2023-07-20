@@ -30,8 +30,6 @@ const DecentravellerInitialScreen = () => {
         setStackToRender('Home');
     };
 
-    console.log(appContext.connectionContext);
-
     useEffect(() => {
         (async () => {
             if (!appContext.connectionContext) {

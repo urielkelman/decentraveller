@@ -7,7 +7,7 @@ import { decentravellerPlaceContract } from './contracts/decentravellerPlaceCont
 import { withTimeout } from '../commons/functions/utils';
 import {DEFAULT_CHAIN_ID} from "../context/AppContext";
 
-const BLOCKCHAIN_TIMEOUT_IN_MILLIS = 30000;
+const BLOCKCHAIN_TIMEOUT_IN_MILLIS = 10000;
 const BLOCKCHAIN_TRANSACTION_TASK_NAME = 'Blockchain transaction';
 
 class BlockchainAdapter {
@@ -25,13 +25,17 @@ class BlockchainAdapter {
             contractFunction.fullContractABI,
             web3Provider
         );
+        console.log(provider.session)
         const populatedTransaction: ethers.PopulatedTransaction = await ethersContract.populateTransaction[
             contractFunction.functionName
         ].call(this, ...args);
-        const connectedSigner: ethers.providers.JsonRpcSigner = web3Provider.getSigner();
+        const connectedSigner = await web3Provider.getBlockNumber();
+        console.log('connected s', connectedSigner)
         return await withTimeout(
             async () => {
-                console.log('ca', contractAddress);
+                /*const network = await web3Provider.getNetwork();
+                console.log('network', network)
+                console.log('data', populatedTransaction.data)
                 const txResponse: ethers.providers.TransactionResponse = await connectedSigner.sendTransaction({
                     to: contractAddress,
                     data: populatedTransaction.data,
@@ -42,6 +46,24 @@ class BlockchainAdapter {
                     throw new Error('An exception happened during transaction execution.');
                 }
                 return txResponse.hash;
+                const {chainId} = await web3Provider.getNetwork();
+                console.log(chainId)
+                const amount = ethers.utils.parseEther('0.0001');
+                const address = '0x0000000000000000000000000000000000000000';
+                const transaction = {
+                    to: address,
+                    value: amount,
+                    chainId,
+                };
+
+                // Send the transaction using the signer
+                const txResponse = await connectedSigner.sendTransaction(transaction);
+                const transactionHash = txResponse.hash;
+                console.log('transactionHash is ' + transactionHash);
+
+                // Wait for the transaction to be mined (optional)
+                const receipt = await txResponse.wait();
+                console.log('Transaction was mined in block:', receipt.blockNumber);*/
             },
             BLOCKCHAIN_TIMEOUT_IN_MILLIS,
             BLOCKCHAIN_TRANSACTION_TASK_NAME
@@ -54,8 +76,9 @@ class BlockchainAdapter {
         functionName: string,
         ...args: unknown[]
     ): Promise<string> {
-        const contractAddress: string = contract.addressesByBlockchain[DEFAULT_CHAIN_ID];
-        return this.populateAndSendWithAddress(provider, contract, functionName, contractAddress, args);
+        const blockchain: Blockchain = BlockchainByChainId[DEFAULT_CHAIN_ID]
+        const contractAddress: string = contract.addressesByBlockchain[blockchain];
+        return this.populateAndSendWithAddress(provider, contract, functionName, contractAddress, ...args);
     }
 
     async createAddNewPlaceTransaction(

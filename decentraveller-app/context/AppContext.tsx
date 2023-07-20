@@ -113,9 +113,10 @@ const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
     React.useEffect(() => {
         console.log('connected:', isConnected);
         // console.log('full provider', provider)
-        provider?.setDefaultChain(DEFAULT_CHAIN_ID.toString());
+        provider?.setDefaultChain(`eip155:${DEFAULT_CHAIN_ID.toString()}`);
 
         if (isConnected) {
+            updateConnectionContext(address, DEFAULT_CHAIN_ID);
             if (!subscriptionsDone) {
                 setSubscriptionsDone(true);
 
