@@ -1,5 +1,14 @@
-import requests
 import os
+
+import requests
+
+
+class MaximumUploadSizeExceeded(AttributeError):
+    """
+    Exception for maximum limit exceeded
+    """
+    pass
+
 
 class IPFSController:
     """
@@ -8,6 +17,7 @@ class IPFSController:
     ADD_ENDPOINT = "/api/v0/add"
     PIN_ENDPOINT = "/api/v0/pin/add"
     GET_ENDPOINT = "/api/v0/cat"
+    MAXIMUM_BYTES_SIZE_ALLOWED = 5 * 1000000
 
     def __init__(self):
         self.ipfs_node_url = os.getenv("IPFS_NODE_URL")
@@ -19,6 +29,8 @@ class IPFSController:
         :param file: the file to add
         :return: the hash of the stored file
         """
+        if len(file) > self.MAXIMUM_BYTES_SIZE_ALLOWED:
+            raise MaximumUploadSizeExceeded
 
         files = {
             'file': file,

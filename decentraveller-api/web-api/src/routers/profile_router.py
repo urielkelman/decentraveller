@@ -7,7 +7,7 @@ from starlette.status import HTTP_400_BAD_REQUEST, HTTP_404_NOT_FOUND
 
 from src.api_models.profile import ProfileInDB, ProfileBody, WalletID, wallet_id_validator
 from src.dependencies.avatar_generator import AvatarGenerator
-from src.dependencies.ipfs_controller import IPFSController
+from src.dependencies.ipfs_controller import IPFSController, MaximumUploadSizeExceeded
 from src.dependencies.relational_database import build_relational_database, RelationalDatabase
 from src.orms.profile import ProfileORM
 from io import BytesIO
@@ -100,7 +100,11 @@ class ProfileCBV:
 
         profile = self.database.get_profile_orm(owner)
         file = self.resize_image_squared(file)
-        filehash = self.ipfs_controller.add_file(file)
+        try:
+            filehash = self.ipfs_controller.add_file(file)
+        except MaximumUploadSizeExceeded:
+            raise HTTPException(status_code=HTTP_400_BAD_REQUEST,
+                                detail="The file is too big.")
         self.ipfs_controller.pin_file(filehash)
         profile.ipfs_hash = filehash
         self.database.session.add(profile)
