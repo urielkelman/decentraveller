@@ -7,6 +7,8 @@ import { alternativePlacesMock, defaultPlacesMock } from './mocks/places';
 import { ReviewsResponse } from './response/reviews';
 import { emptyReviewsResponse, manyReviewsResponse, oneReviewsResponse } from './mocks/reviews';
 import { PlaceResponse } from './response/places';
+import {HttpGetRequest} from "../connectors/HttpConnector";
+import {RECOMMENDED_PLACES_BY_LOCATION_ENDPOINT} from "./config";
 
 const searchTextHondurasResponse = ['Honduras', 'Honduras ', 'Honduras 4', 'Honduras 47', 'Honduras 470'];
 
@@ -65,7 +67,44 @@ class MockApiAdapter extends Adapter {
         return defaultPlacesMock;
     }
 
-    async getRecommendedPlaces([latitude, longitude]: [string, string]): Promise<PlaceResponse[]> {
+    async getRecommendedPlaces(
+        [latitude, longitude]: [string, string],
+        interest?: string,
+        sort_by?: string | null,
+        at_least_stars?: number | null,
+        maximum_distance?: number | null
+    ): Promise<PlaceResponse[]> {
+        const queryParams: Record<string, string> = {
+            latitude: latitude,
+            longitude: longitude,
+            page: '1',
+            per_page: '5000',
+        };
+
+        if (sort_by !== null && sort_by !== undefined) {
+            queryParams.sort_by = sort_by;
+        }
+
+        if (interest !== null && interest !== undefined) {
+            queryParams.place_category = interest;
+        }
+
+        if (at_least_stars !== null && at_least_stars !== undefined) {
+            queryParams.at_least_stars = at_least_stars.toString();
+        }
+
+        if (maximum_distance !== null && maximum_distance !== undefined) {
+            queryParams.maximum_distance = maximum_distance.toString();
+        }
+
+        const httpRequest: HttpGetRequest = {
+            url: RECOMMENDED_PLACES_BY_LOCATION_ENDPOINT,
+            queryParams,
+            onError: (e) => console.log('Error'),
+        };
+
+        console.log(httpRequest)
+
         if (latitude === '-34.584472' && longitude === '-58.435681') {
             return alternativePlacesMock;
         }
