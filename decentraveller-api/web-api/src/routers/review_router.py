@@ -1,14 +1,15 @@
 from fastapi import Depends, HTTPException
 from fastapi_utils.cbv import cbv
 from fastapi_utils.inferring_router import InferringRouter
+from sqlalchemy.exc import IntegrityError
 from starlette.status import HTTP_404_NOT_FOUND, HTTP_400_BAD_REQUEST
 
+from src.api_models.bulk_results import PaginatedReviews
 from src.api_models.place import PlaceID
 from src.api_models.profile import WalletID, wallet_id_validator
 from src.api_models.review import ReviewInDB, ReviewID, ReviewBody, ReviewWithProfile
-from src.api_models.bulk_results import PaginatedReviews
+from src.dependencies.indexer_auth import indexer_auth
 from src.dependencies.relational_database import build_relational_database, RelationalDatabase
-from sqlalchemy.exc import IntegrityError
 
 review_router = InferringRouter()
 
@@ -17,7 +18,7 @@ review_router = InferringRouter()
 class ReviewCBV:
     database: RelationalDatabase = Depends(build_relational_database)
 
-    @review_router.post("/review", status_code=201)
+    @review_router.post("/review", status_code=201, dependencies=[Depends(indexer_auth)])
     def create_review(self, review: ReviewBody) -> ReviewInDB:
         """
         Creates a new review in the database
