@@ -92,7 +92,7 @@ class ProfileCBV:
     def upload_avatar(self, file: Annotated[bytes, File()],
                       owner: WalletID = Depends(wallet_id_validator)):
         """
-        Gets a profile avatar
+        Uploads a profile avatar
 
         :param file: uploaded file
         :param owner: the address of the owner
