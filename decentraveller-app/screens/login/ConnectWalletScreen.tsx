@@ -1,6 +1,6 @@
 import React from 'react';
 import { TouchableOpacity, Text, View, ImageBackground, Image } from 'react-native';
-import {DEFAULT_CHAIN_ID, useAppContext} from '../../context/AppContext';
+import { DEFAULT_CHAIN_ID, useAppContext } from '../../context/AppContext';
 import {
     connectWalletScreenTextStyle,
     connectWalletScreenViewStyle,
@@ -22,7 +22,6 @@ export const providerMetadata: IProviderMetadata = {
     },
 };
 
-const a = `eip155:${DEFAULT_CHAIN_ID}`
 export const sessionParams = {
     namespaces: {
         eip155: {
@@ -30,7 +29,7 @@ export const sessionParams = {
             chains: [`eip155:${DEFAULT_CHAIN_ID}`],
             events: ['chainChanged', 'accountsChanged'],
             rpcMap: {
-                'eip155:13337':'https://dtblockchain.loca.lt'
+                31337: 'https://dtblockchain.loca.lt',
             },
         },
     },

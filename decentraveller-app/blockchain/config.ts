@@ -8,4 +8,4 @@ export const BlockchainByChainId: { [key in number]: Blockchain } = {
     5: Blockchain.GOERLI,
 };
 
-export const LOCAL_DEVELOPMENT_CHAIN_ID = 31337;
+    export const LOCAL_DEVELOPMENT_CHAIN_ID = 31337;

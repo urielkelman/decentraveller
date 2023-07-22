@@ -162,7 +162,7 @@ const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
     const cleanConnectionContext = () => {
         setConnectionContext(null);
         connectionContextRef.current = null;
-    }
+    };
 
     return (
         <AppContext.Provider

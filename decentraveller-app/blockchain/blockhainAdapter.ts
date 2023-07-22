@@ -5,35 +5,49 @@ import { Blockchain, BlockchainByChainId, LOCAL_DEVELOPMENT_CHAIN_ID } from './c
 import { ContractFunction, DecentravellerContract } from './contracts/common';
 import { decentravellerPlaceContract } from './contracts/decentravellerPlaceContract';
 import { withTimeout } from '../commons/functions/utils';
-import {DEFAULT_CHAIN_ID} from "../context/AppContext";
+import { DEFAULT_CHAIN_ID } from '../context/AppContext';
 
 const BLOCKCHAIN_TIMEOUT_IN_MILLIS = 10000;
 const BLOCKCHAIN_TRANSACTION_TASK_NAME = 'Blockchain transaction';
 
 class BlockchainAdapter {
-        private async populateAndSendWithAddress(
+    private getProvider(chainId: number): ethers.providers.Provider {
+        if (chainId === LOCAL_DEVELOPMENT_CHAIN_ID) {
+            return new ethers.providers.JsonRpcProvider('https://dtblockchain.loca.lt');
+        } else {
+            return ethers.getDefaultProvider(chainId);
+        }
+    }
+    private async populateAndSendWithAddress(
         provider,
         contract: DecentravellerContract,
         functionName: string,
         contractAddress: string,
         ...args: unknown[]
     ): Promise<string> {
+        console.log('wcprov', provider)
+        const prov = this.getProvider(31337);
+        const bn = await prov.getBlockNumber();
+        console.log('block number', bn);
+
         const web3Provider: ethers.providers.Web3Provider = new ethers.providers.Web3Provider(provider);
+        console.log(web3Provider)
+        console.log(prov)
         const contractFunction: ContractFunction = contract.functions[functionName];
         const ethersContract: ethers.Contract = new ethers.Contract(
             contractAddress,
             contractFunction.fullContractABI,
             web3Provider
         );
-        console.log(provider.session)
+        console.log(provider.session);
         const populatedTransaction: ethers.PopulatedTransaction = await ethersContract.populateTransaction[
             contractFunction.functionName
         ].call(this, ...args);
-        const connectedSigner = await web3Provider.getBlockNumber();
-        console.log('connected s', connectedSigner)
+        const connectedSigner = web3Provider.getSigner( );
+        console.log('connected s', connectedSigner);
         return await withTimeout(
             async () => {
-                /*const network = await web3Provider.getNetwork();
+                const network = await web3Provider.getNetwork();
                 console.log('network', network)
                 console.log('data', populatedTransaction.data)
                 const txResponse: ethers.providers.TransactionResponse = await connectedSigner.sendTransaction({
@@ -46,7 +60,7 @@ class BlockchainAdapter {
                     throw new Error('An exception happened during transaction execution.');
                 }
                 return txResponse.hash;
-                const {chainId} = await web3Provider.getNetwork();
+                /*const {chainId} = await web3Provider.getNetwork();
                 console.log(chainId)
                 const amount = ethers.utils.parseEther('0.0001');
                 const address = '0x0000000000000000000000000000000000000000';
@@ -76,7 +90,7 @@ class BlockchainAdapter {
         functionName: string,
         ...args: unknown[]
     ): Promise<string> {
-        const blockchain: Blockchain = BlockchainByChainId[DEFAULT_CHAIN_ID]
+        const blockchain: Blockchain = BlockchainByChainId[DEFAULT_CHAIN_ID];
         const contractAddress: string = contract.addressesByBlockchain[blockchain];
         return this.populateAndSendWithAddress(provider, contract, functionName, contractAddress, ...args);
     }
@@ -140,7 +154,11 @@ class BlockchainAdapter {
         const blockchain: Blockchain = BlockchainByChainId[DEFAULT_CHAIN_ID];
         const contractFunction: ContractFunction = decentravellerMainContract.functions['getPlaceAddress'];
         const mainContractAddress: string = decentravellerMainContract.addressesByBlockchain[blockchain];
-        const decentravellerMain = new ethers.Contract(mainContractAddress, contractFunction.fullContractABI, web3Provider);
+        const decentravellerMain = new ethers.Contract(
+            mainContractAddress,
+            contractFunction.fullContractABI,
+            web3Provider
+        );
         const placeAddress = await decentravellerMain.getPlaceAddress(placeId);
         try {
             return await this.populateAndSendWithAddress(
