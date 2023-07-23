@@ -19,22 +19,22 @@ const DecentravellerInitialScreen = () => {
     const setUserInterest = appContext.userInterest.setValue;
 
     const getUser = async () => {
-        const user = await adapter.getUser("uri", () => {
+        const user = await adapter.getUser('uri', () => {
             setStackToRender('Registration');
         });
 
         if (!user) return;
 
-        const userProfileImage = await adapter.getUserProfileImage("uri", () => {
-            console.log("There was a problem fetching the image")
-        })
+        const userProfileImage = await adapter.getUserProfileImage('uri', () => {
+            console.log('There was a problem fetching the image');
+        });
 
-        console.log("imagen en base64:" + userProfileImage)
+        console.log('imagen en base64:' + userProfileImage);
 
         setUserNickname(user.nickname);
         setUserCreatedAt(user.createdAt);
         setUserInterest(user.interest);
-        setUserProfileImage(userProfileImage)
+        setUserProfileImage(userProfileImage);
         setStackToRender('Home');
     };
 

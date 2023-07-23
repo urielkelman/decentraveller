@@ -6,7 +6,8 @@ import {
     RECOMMENDED_PLACES_BY_LOCATION_ENDPOINT,
     OWNED_PLACES_ENDPOINT,
     RECOMMENDED_PLACES_BY_PROFILE_ENDPOINT,
-    REVIEWS_PLACES_ENDPOINT, GET_PROFILE_IMAGE,
+    REVIEWS_PLACES_ENDPOINT,
+    GET_PROFILE_IMAGE,
 } from './config';
 import { UserResponse } from './response/user';
 import Adapter from './Adapter';

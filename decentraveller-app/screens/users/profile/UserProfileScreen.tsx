@@ -16,7 +16,7 @@ const UserProfileScreen = ({ navigation }) => {
     const user = {
         profileImage: userProfileImage.value,
         name: userNickname.value,
-        walletAddress: '0x' + "connectionContext.connectedAddress",
+        walletAddress: '0x' + 'connectionContext.connectedAddress',
         createdAt: userCreatedAt.value,
         interest: userInterest.value,
         tokens: 67,
@@ -34,7 +34,7 @@ const UserProfileScreen = ({ navigation }) => {
                     <View style={userProfileMainStyles.imageCircle}>
                         <Image
                             source={{
-                                uri: `data:image/jpeg;base64,${user.profileImage}`
+                                uri: `data:image/jpeg;base64,${user.profileImage}`,
                             }}
                             style={userProfileMainStyles.circleDimensions}
                         />
