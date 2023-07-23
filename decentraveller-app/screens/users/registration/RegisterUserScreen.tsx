@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { View, Text, StyleSheet, KeyboardAvoidingView } from 'react-native';
+import React from 'react';
+import { View, Text } from 'react-native';
 import { useCreateUserContext } from './CreateUserContext';
 import { blockchainAdapter } from '../../../blockchain/blockhainAdapter';
 import { mockBlockchainAdapter } from '../../../blockchain/mockBlockchainAdapter';
@@ -9,8 +9,7 @@ import DecentravellerPicker from '../../../commons/components/DecentravellerPick
 import { registrationScreenStyles } from '../../../styles/registrationScreensStyles';
 import DecentravellerInformativeModal from '../../../commons/components/DecentravellerInformativeModal';
 import { registerUserScreenWordings } from './wording';
-import { useWalletConnectModal } from '@walletconnect/modal-react-native';
-import {useAppContext} from "../../../context/AppContext";
+import { useAppContext } from '../../../context/AppContext';
 
 const RegisterUserScreen = ({ navigation }) => {
     const { interestPicker, countryPicker, nickname, setNickname } = useCreateUserContext();

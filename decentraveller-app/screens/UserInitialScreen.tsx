@@ -35,7 +35,6 @@ const DecentravellerInitialScreen = () => {
 
     useEffect(() => {
         (async () => {
-            console.log('context in uis', appContext.connectionContext);
             if (!appContext.connectionContext) {
                 setStackToRender('Login');
             } else {
@@ -58,8 +57,6 @@ const DecentravellerInitialScreen = () => {
                 return <RegistrationNavigator onSuccess={onSuccessfulRegistration} />;
         }
     };
-
-    console.log(stackToRender);
 
     return (
         <NavigationContainer>

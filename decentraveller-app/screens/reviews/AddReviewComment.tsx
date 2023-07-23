@@ -6,8 +6,7 @@ import DecentravellerButton from '../../commons/components/DecentravellerButton'
 import { addReviewCommentStyles } from '../../styles/addReviewStyles';
 import { RouteProp, useRoute } from '@react-navigation/native';
 import { blockchainAdapter } from '../../blockchain/blockhainAdapter';
-import { useWalletConnectModal } from '@walletconnect/modal-react-native';
-import {useAppContext} from "../../context/AppContext";
+import { useAppContext } from '../../context/AppContext';
 
 const adapter = blockchainAdapter;
 

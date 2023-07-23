@@ -5,15 +5,12 @@ import { addPlaceScreenWordings } from './wording';
 import React from 'react';
 import { GeocodingElement, useCreatePlaceContext } from './CreatePlaceContext';
 import DecentravellerPicker from '../../../commons/components/DecentravellerPicker';
-import { apiAdapter } from '../../../api/apiAdapter';
 import DecentravellerButton from '../../../commons/components/DecentravellerButton';
-import { mockApiAdapter } from '../../../api/mockApiAdapter';
 import { blockchainAdapter } from '../../../blockchain/blockhainAdapter';
 import DecentravellerInformativeModal from '../../../commons/components/DecentravellerInformativeModal';
 import { getAndParseGeocoding } from '../../../commons/functions/geocoding';
 import { MINIMUM_ADDRESS_LENGTH_TO_SHOW_PICKER } from '../../../commons/global';
-import { useWalletConnectModal } from '@walletconnect/modal-react-native';
-import {useAppContext} from "../../../context/AppContext";
+import { useAppContext } from '../../../context/AppContext';
 
 const CreatePlaceLocationScreen = () => {
     const { placeName, placeTypePicker, countryPicker, addressPicker } = useCreatePlaceContext();

@@ -9,7 +9,7 @@ const CommunityScreen = ({ navigation }) => {
 
     const killSession = async () => {
         appContext.cleanConnectionContext();
-        await provider.disconnect;
+        await provider.disconnect();
         console.log('session killed');
     };
 
