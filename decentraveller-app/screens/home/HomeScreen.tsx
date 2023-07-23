@@ -11,7 +11,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { DECENTRAVELLER_DEFAULT_BACKGROUND_COLOR } from '../../commons/global';
 import LoadingComponent from '../../commons/components/DecentravellerLoading';
 
-const adapter = apiAdapter;
+const adapter = mockApiAdapter;
 
 const PERMISSION_GRANTED = 'granted';
 
@@ -43,7 +43,7 @@ const HomeScreen = ({ navigation }) => {
             const longitude = location.coords.longitude.toString();
             userLocation.setValue([latitude, longitude]);
             const recommendedPlacesResponse: PlaceResponse[] = await adapter.getRecommendedPlacesForAddress(
-                connectionContext.connectedAddress,
+                "connectionContext.connectedAddress",
                 [latitude, longitude]
             );
             setLoadingRecommendedPlaces(false);

@@ -20,7 +20,7 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
         // TODO: Take profileImage from backend when implementation is developed
         profileImage: require('../../assets/mock_images/cryptochica.png'),
         name: userNickname.value,
-        walletAddress: connectionContext?.connectedAddress ? obfuscateAddress(connectionContext.connectedAddress) : '',
+        walletAddress: connectionContext?.connectedAddress ? obfuscateAddress("connectionContext.connectedAddress") : '',
     };
 
     return (
