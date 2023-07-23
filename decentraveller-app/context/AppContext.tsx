@@ -3,6 +3,7 @@ import { AppContextStateArg, AppContextType, ConnectionContext, DeviceDimensions
 import { Dimensions } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useWalletConnectModal } from '@walletconnect/modal-react-native';
+import { ethers } from 'ethers';
 
 export const AppContext = React.createContext<AppContextType | null>(null);
 
@@ -25,18 +26,20 @@ const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
     const [interest, setUserInterest] = React.useState<string>('');
     const [location, setLocation] = React.useState<[string, string] | undefined>(undefined);
 
+    const [web3Provider, setWeb3Provider] = React.useState<ethers.providers.Web3Provider | null>(null);
+
     const { provider, isConnected, address } = useWalletConnectModal();
 
     const pushChangeUpdate = async () => {
-        /* try {
-            await provider.sendCustomRequest({
-                id: 1,
-                jsonrpc: '2.0',
+        try {
+            console.log('Trying to request switch chain');
+            await provider.request({
                 method: 'wallet_switchEthereumChain',
-                params: [{ chainId: '0x7a69' }],
+                params: [{ chainId: ethers.utils.hexValue(DEFAULT_CHAIN_ID) }],
             });
         } catch (e) {
-            if (e.message === UNRECOGNIZED_CHAIN_ID_MESSAGE('0x7a69')) {
+            console.log('error switching chain', e);
+            /*if (e.message === UNRECOGNIZED_CHAIN_ID_MESSAGE('0x7a69')) {
                 try {
                     await connector.sendCustomRequest({
                         id: 2,
@@ -58,8 +61,8 @@ const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
                 } catch (e) {
                     console.log('An error happened when trying to add ethereum chain.', e);
                 }
-            }
-        }*/
+            }*/
+        }
     };
 
     const deviceDimensions: DeviceDimensions = React.useMemo<DeviceDimensions>(
@@ -98,7 +101,16 @@ const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
         wipeAsyncStorage().catch((e) => console.log('There was a problem wiping async storage', e));
     }, []);
 
-    const updateConnectionContext = (address, chainId) => {
+    const updateConnectionContext = async (address) => {
+        const mmCId = await provider.request({
+            method: "eth_chainId",
+            params: []
+        })
+
+        console.log('mmCid', mmCId)
+
+        const web3Provider = new ethers.providers.Web3Provider(provider);
+        const chainId = (await web3Provider.getNetwork()).chainId;
         console.log('Updating connection context', address, chainId);
         const isWrongChain = chainId !== DEFAULT_CHAIN_ID;
         const newConnectionContext = {
@@ -111,34 +123,19 @@ const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
     };
 
     React.useEffect(() => {
-        console.log('connected:', isConnected);
-        // console.log('full provider', provider)
-        provider?.setDefaultChain(`eip155:${DEFAULT_CHAIN_ID.toString()}`);
-
         if (isConnected) {
-            updateConnectionContext(address, DEFAULT_CHAIN_ID);
+            updateConnectionContext(address);
             if (!subscriptionsDone) {
                 setSubscriptionsDone(true);
 
                 provider.client.on('session_event', (event) => {
-                    console.log('session event received: ', event);
-                    console.log('c1', connectionContextRef.current);
-                    console.log('c2', event.params.event.name);
-                    console.log('c3', event.params.event.data);
-
-                    console.log(
-                        'condition',
-                        connectionContextRef.current &&
-                            event.params.event.name === 'chainChanged' &&
-                            connectionContextRef.current.connectedChainId !== event.params.event.data
-                    );
                     if (
                         connectionContext &&
                         event.params.event.name === 'chainChanged' &&
                         connectionContextRef.current.connectedChainId !== event.params.event.data
                     ) {
                         console.log('updating con context');
-                        updateConnectionContext(address, event.params.event.data);
+                        updateConnectionContext(address);
                     }
                 });
 
@@ -146,14 +143,6 @@ const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
                     console.log('session delete received: ', event);
                     setSubscriptionsDone(false);
                     setConnectionContext(null);
-                });
-
-                provider.client.on('session_update', async (args) => {
-                    console.log('session update received: ', args);
-                    const params = args.params.namespaces[0];
-                    /*if (connectionContext && params.chainId !== connectionContext.connectedChainId) {
-                        updateConnectionContext(params.accounts[0], params.chainId);
-                    }*/
                 });
             }
         }
@@ -168,6 +157,7 @@ const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
         <AppContext.Provider
             value={{
                 connectionContext,
+                web3Provider,
                 deviceDimensions,
                 setConnectionContext,
                 pushChangeUpdate,

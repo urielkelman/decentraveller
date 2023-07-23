@@ -7,8 +7,8 @@ import { alternativePlacesMock, defaultPlacesMock } from './mocks/places';
 import { ReviewsResponse } from './response/reviews';
 import { emptyReviewsResponse, manyReviewsResponse, oneReviewsResponse } from './mocks/reviews';
 import { PlaceResponse } from './response/places';
-import {HttpGetRequest} from "../connectors/HttpConnector";
-import {RECOMMENDED_PLACES_BY_LOCATION_ENDPOINT} from "./config";
+import { HttpGetRequest } from '../connectors/HttpConnector';
+import { RECOMMENDED_PLACES_BY_LOCATION_ENDPOINT } from './config';
 
 const searchTextHondurasResponse = ['Honduras', 'Honduras ', 'Honduras 4', 'Honduras 47', 'Honduras 470'];
 
@@ -103,7 +103,7 @@ class MockApiAdapter extends Adapter {
             onError: (e) => console.log('Error'),
         };
 
-        console.log(httpRequest)
+        console.log(httpRequest);
 
         if (latitude === '-34.584472' && longitude === '-58.435681') {
             return alternativePlacesMock;

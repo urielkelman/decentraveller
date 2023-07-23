@@ -11,18 +11,21 @@ import HomeNavigator from './home/HomeNavigator';
 const adapter = mockApiAdapter;
 
 const DecentravellerInitialScreen = () => {
-    let [stackToRender, setStackToRender] = React.useState<'Login' | 'Home' | 'Registration'>('Home');
+    let [stackToRender, setStackToRender] = React.useState<'Login' | 'Home' | 'Registration'>('Login');
     const appContext = useAppContext();
     const setUserNickname = appContext.userNickname.setValue;
     const setUserCreatedAt = appContext.userCreatedAt.setValue;
     const setUserInterest = appContext.userInterest.setValue;
 
     const getUser = async () => {
-        const user = await adapter.getUser("uri", () => {
+        const user = await adapter.getUser(appContext.connectionContext.connectedAddress, () => {
             setStackToRender('Registration');
         });
 
-        if (!user) return;
+        if (!user) {
+            setStackToRender('Registration');
+            return;
+        }
 
         setUserNickname(user.nickname);
         setUserCreatedAt(user.createdAt);
@@ -32,8 +35,9 @@ const DecentravellerInitialScreen = () => {
 
     useEffect(() => {
         (async () => {
+            console.log('context in uis', appContext.connectionContext);
             if (!appContext.connectionContext) {
-                setStackToRender('Home');
+                setStackToRender('Login');
             } else {
                 await getUser();
             }
@@ -54,6 +58,8 @@ const DecentravellerInitialScreen = () => {
                 return <RegistrationNavigator onSuccess={onSuccessfulRegistration} />;
         }
     };
+
+    console.log(stackToRender);
 
     return (
         <NavigationContainer>

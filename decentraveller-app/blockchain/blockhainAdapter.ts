@@ -25,14 +25,11 @@ class BlockchainAdapter {
         contractAddress: string,
         ...args: unknown[]
     ): Promise<string> {
-        console.log('wcprov', provider)
-        const prov = this.getProvider(31337);
-        const bn = await prov.getBlockNumber();
-        console.log('block number', bn);
+        console.log('wcprov', provider);
+        provider.setDefaultChain('eip155:31337');
 
         const web3Provider: ethers.providers.Web3Provider = new ethers.providers.Web3Provider(provider);
-        console.log(web3Provider)
-        console.log(prov)
+        console.log(web3Provider);
         const contractFunction: ContractFunction = contract.functions[functionName];
         const ethersContract: ethers.Contract = new ethers.Contract(
             contractAddress,
@@ -43,16 +40,17 @@ class BlockchainAdapter {
         const populatedTransaction: ethers.PopulatedTransaction = await ethersContract.populateTransaction[
             contractFunction.functionName
         ].call(this, ...args);
-        const connectedSigner = web3Provider.getSigner( );
+        const connectedSigner = web3Provider.getSigner();
         console.log('connected s', connectedSigner);
         return await withTimeout(
             async () => {
                 const network = await web3Provider.getNetwork();
-                console.log('network', network)
-                console.log('data', populatedTransaction.data)
+                console.log('network', network);
+                console.log('data', populatedTransaction.data);
                 const txResponse: ethers.providers.TransactionResponse = await connectedSigner.sendTransaction({
                     to: contractAddress,
                     data: populatedTransaction.data,
+                    chainId: DEFAULT_CHAIN_ID,
                 });
                 const txReceipt = await txResponse.wait();
                 if (txReceipt.status === 0) {

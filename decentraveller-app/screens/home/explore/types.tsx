@@ -9,7 +9,7 @@ export interface FilterModalData {
     maxDistance: number;
     setMaxDistance: (value: number) => void;
     interest: string;
-    setInterest:  (value: string) => void;
+    setInterest: (value: string) => void;
 }
 
 type FilterModalParams = {
