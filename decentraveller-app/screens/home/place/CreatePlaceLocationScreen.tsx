@@ -13,6 +13,7 @@ import DecentravellerInformativeModal from '../../../commons/components/Decentra
 import { getAndParseGeocoding } from '../../../commons/functions/geocoding';
 import { MINIMUM_ADDRESS_LENGTH_TO_SHOW_PICKER } from '../../../commons/global';
 import { useWalletConnectModal } from '@walletconnect/modal-react-native';
+import {useAppContext} from "../../../context/AppContext";
 
 const CreatePlaceLocationScreen = () => {
     const { placeName, placeTypePicker, countryPicker, addressPicker } = useCreatePlaceContext();
@@ -20,7 +21,7 @@ const CreatePlaceLocationScreen = () => {
     const [loadingGeocodingResponse, setLoadingGeocodingResponse] = React.useState<boolean>(false);
     const [loadingAddPlaceResponse, setLoadingAddPlaceResponse] = React.useState<boolean>(false);
     const [showErrorModal, setShowErrorModal] = React.useState<boolean>(false);
-    const { provider } = useWalletConnectModal();
+    const { web3Provider } = useAppContext();
 
     const onChangeSearchAddressText = async (text: string) => {
         addressPicker.setValue(text);
@@ -44,7 +45,7 @@ const CreatePlaceLocationScreen = () => {
         setLoadingAddPlaceResponse(true);
         const selectedGeocodingElement: GeocodingElement = JSON.parse(addressPicker.value);
         const transactionHash = await blockchainAdapter.createAddNewPlaceTransaction(
-            provider,
+            web3Provider,
             placeName,
             selectedGeocodingElement.latitude,
             selectedGeocodingElement.longitude,
