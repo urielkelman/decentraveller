@@ -43,7 +43,7 @@ const HomeScreen = ({ navigation }) => {
             const longitude = location.coords.longitude.toString();
             userLocation.setValue([latitude, longitude]);
             const recommendedPlacesResponse: PlaceResponse[] = await adapter.getRecommendedPlacesForAddress(
-                "connectionContext.connectedAddress",
+                'connectionContext.connectedAddress',
                 [latitude, longitude]
             );
             setLoadingRecommendedPlaces(false);

@@ -1,11 +1,11 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import Slider from '@react-native-community/slider';
-import {FilterModalProps} from "./types";
+import { FilterModalProps } from './types';
 import { Ionicons } from '@expo/vector-icons';
-import {PickerItem} from "../../../commons/types";
-import {DECENTRAVELLER_DEFAULT_CONTRAST_COLOR, interestsItems} from "../../../commons/global";
-import DecentravellerPicker from "../../../commons/components/DecentravellerPicker";
+import { PickerItem } from '../../../commons/types';
+import { DECENTRAVELLER_DEFAULT_CONTRAST_COLOR, interestsItems } from '../../../commons/global';
+import DecentravellerPicker from '../../../commons/components/DecentravellerPicker';
 
 const Bullet = ({ label, selected, onPress }) => {
     return (
@@ -23,9 +23,9 @@ const Bullet = ({ label, selected, onPress }) => {
 };
 
 const FilterModal: React.FC<FilterModalProps> = ({ route }) => {
-
-    const {filterModalData} = route.params
-    const {orderBy, setOrderBy, minStars, setMinStars, maxDistance, setMaxDistance, interest, setInterest} = filterModalData
+    const { filterModalData } = route.params;
+    const { orderBy, setOrderBy, minStars, setMinStars, maxDistance, setMaxDistance, interest, setInterest } =
+        filterModalData;
 
     const [interestPickerItems, setInterestPickerItems] = React.useState<PickerItem[]>(interestsItems);
     const [interestPickerOpen, setInterestPickerOpen] = React.useState<boolean>(false);
@@ -67,7 +67,7 @@ const FilterModal: React.FC<FilterModalProps> = ({ route }) => {
             <Text style={styles.label}>Interest</Text>
             <DecentravellerPicker
                 titleText={''}
-                dropdownPlaceholder={"Select Interest"}
+                dropdownPlaceholder={'Select Interest'}
                 items={interestPickerItems}
                 setItems={setInterestPickerItems}
                 value={interest}
@@ -89,7 +89,7 @@ const FilterModal: React.FC<FilterModalProps> = ({ route }) => {
                     value={minStars}
                     onValueChange={handleMinStarsChange}
                 />
-                <Text style={styles.sliderValue}>{minStars !== 0 ? minStars: 'Not apply'}</Text>
+                <Text style={styles.sliderValue}>{minStars !== 0 ? minStars : 'Not apply'}</Text>
             </View>
             <View style={styles.optionContainer}>
                 <Text style={styles.label}>Max distance:</Text>
@@ -101,7 +101,9 @@ const FilterModal: React.FC<FilterModalProps> = ({ route }) => {
                     value={maxDistance}
                     onValueChange={handleMaxDistanceChange}
                 />
-                <Text style={styles.sliderValue}>{maxDistance !== 0 ? maxDistance.toString() + 'km': 'Not apply'}</Text>
+                <Text style={styles.sliderValue}>
+                    {maxDistance !== 0 ? maxDistance.toString() + 'km' : 'Not apply'}
+                </Text>
             </View>
         </View>
     );
@@ -136,18 +138,17 @@ const styles = StyleSheet.create({
     bulletOptionContainer: {
         flexDirection: 'row',
         alignItems: 'flex-start',
-        textAlign: 'left'
+        textAlign: 'left',
     },
     bulletOption: {
         fontSize: 16,
         marginLeft: 10,
         marginBottom: 5,
-
     },
     bulletOptionSelected: {
         fontWeight: 'bold',
         fontSize: 16,
-        color: DECENTRAVELLER_DEFAULT_CONTRAST_COLOR
+        color: DECENTRAVELLER_DEFAULT_CONTRAST_COLOR,
     },
 });
 

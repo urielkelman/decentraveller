@@ -13,20 +13,28 @@ const adapter = mockApiAdapter;
 const DecentravellerInitialScreen = () => {
     let [stackToRender, setStackToRender] = React.useState<'Login' | 'Home' | 'Registration'>('Home');
     const appContext = useAppContext();
+    const setUserProfileImage = appContext.userProfileImage.setValue;
     const setUserNickname = appContext.userNickname.setValue;
     const setUserCreatedAt = appContext.userCreatedAt.setValue;
     const setUserInterest = appContext.userInterest.setValue;
 
     const getUser = async () => {
-        const user = await adapter.getUser("uri", () => {
+        const user = await adapter.getUser('uri', () => {
             setStackToRender('Registration');
         });
 
         if (!user) return;
 
+        const userProfileImage = await adapter.getUserProfileImage('uri', () => {
+            console.log('There was a problem fetching the image');
+        });
+
+        console.log('imagen en base64:' + userProfileImage);
+
         setUserNickname(user.nickname);
         setUserCreatedAt(user.createdAt);
         setUserInterest(user.interest);
+        setUserProfileImage(userProfileImage);
         setStackToRender('Home');
     };
 
