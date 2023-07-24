@@ -7,7 +7,7 @@ from fastapi_utils.inferring_router import InferringRouter
 from starlette.status import HTTP_400_BAD_REQUEST
 from typing_extensions import Annotated
 
-from src.dependencies.ipfs_controller import IPFSController, MaximumUploadSizeExceeded
+from src.dependencies.ipfs_service import IPFSController, MaximumUploadSizeExceeded
 
 image_asset_router = InferringRouter()
 

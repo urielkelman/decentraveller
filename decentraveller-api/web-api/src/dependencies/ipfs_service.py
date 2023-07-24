@@ -10,7 +10,7 @@ class MaximumUploadSizeExceeded(AttributeError):
     pass
 
 
-class IPFSController:
+class IPFSService:
     """
     IPFS Controller
     """

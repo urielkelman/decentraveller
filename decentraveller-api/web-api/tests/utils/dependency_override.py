@@ -4,7 +4,7 @@ from fastapi.testclient import TestClient
 
 from src.app import app
 from src.dependencies.relational_database import build_relational_database, RelationalDatabase
-from src.dependencies.ipfs_controller import IPFSController
+from src.dependencies.ipfs_service import IPFSController
 
 def build_test_relational_database():
     from tests.utils.session import SessionLocal
