@@ -7,7 +7,7 @@ from starlette.status import HTTP_400_BAD_REQUEST, HTTP_404_NOT_FOUND
 
 from src.api_models.profile import ProfileInDB, ProfileBody, WalletID, wallet_id_validator
 from src.dependencies.avatar_generator import AvatarGenerator
-from src.dependencies.ipfs_service import IPFSController, MaximumUploadSizeExceeded
+from src.dependencies.ipfs_service import IPFSService, MaximumUploadSizeExceeded
 from src.dependencies.relational_database import build_relational_database, RelationalDatabase
 from src.orms.profile import ProfileORM
 from io import BytesIO
@@ -20,7 +20,7 @@ profile_router = InferringRouter()
 class ProfileCBV:
     database: RelationalDatabase = Depends(build_relational_database)
     avatar_generator: AvatarGenerator = Depends(AvatarGenerator)
-    ipfs_controller: IPFSController = Depends(IPFSController)
+    ipfs_controller: IPFSService = Depends(IPFSService)
 
     @profile_router.get("/profile/{owner}")
     def get_profile(self, owner: WalletID = Depends(wallet_id_validator)) -> ProfileInDB:

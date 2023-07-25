@@ -4,7 +4,7 @@ from fastapi.testclient import TestClient
 
 from src.app import app
 from src.dependencies.relational_database import build_relational_database, RelationalDatabase
-from src.dependencies.ipfs_service import IPFSController
+from src.dependencies.ipfs_service import IPFSService
 
 def build_test_relational_database():
     from tests.utils.session import SessionLocal
@@ -16,7 +16,7 @@ def build_test_relational_database():
         db.close()
 
 
-class MockIPFS(IPFSController):
+class MockIPFS(IPFSService):
     """
     Mock IPFS
     """
@@ -52,6 +52,6 @@ class MockIPFS(IPFSController):
 
 
 app.dependency_overrides[build_relational_database] = build_test_relational_database
-app.dependency_overrides[IPFSController] = MockIPFS
+app.dependency_overrides[IPFSService] = MockIPFS
 
 client = TestClient(app)

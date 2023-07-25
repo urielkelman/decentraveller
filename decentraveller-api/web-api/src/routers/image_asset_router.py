@@ -7,14 +7,14 @@ from fastapi_utils.inferring_router import InferringRouter
 from starlette.status import HTTP_400_BAD_REQUEST
 from typing_extensions import Annotated
 
-from src.dependencies.ipfs_service import IPFSController, MaximumUploadSizeExceeded
+from src.dependencies.ipfs_service import IPFSService, MaximumUploadSizeExceeded
 
 image_asset_router = InferringRouter()
 
 
 @cbv(image_asset_router)
 class ImageAssetCBV:
-    ipfs_controller: IPFSController = Depends(IPFSController)
+    ipfs_controller: IPFSService = Depends(IPFSService)
 
     @staticmethod
     def image_jpeg_compression(image: bytes) -> bytes:
