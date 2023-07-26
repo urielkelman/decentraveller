@@ -8,6 +8,7 @@ from starlette.status import HTTP_400_BAD_REQUEST, HTTP_404_NOT_FOUND
 from src.api_models.profile import ProfileInDB, ProfileBody, WalletID, wallet_id_validator
 from src.dependencies.avatar_generator import AvatarGenerator
 from src.dependencies.ipfs_service import IPFSService, MaximumUploadSizeExceeded
+from src.dependencies.indexer_auth import indexer_auth
 from src.dependencies.relational_database import build_relational_database, RelationalDatabase
 from src.orms.profile import ProfileORM
 from io import BytesIO
@@ -111,7 +112,7 @@ class ProfileCBV:
         self.database.session.commit()
         return ProfileInDB.from_orm(profile)
 
-    @profile_router.post("/profile", status_code=201)
+    @profile_router.post("/profile", status_code=201, dependencies=[Depends(indexer_auth)])
     def post_profile(self, profile: ProfileBody) -> ProfileInDB:
         """
         Creates a new profile in the database
