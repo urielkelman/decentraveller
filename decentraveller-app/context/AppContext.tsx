@@ -25,6 +25,7 @@ const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
     const [createdAt, setUserCreatedAt] = React.useState<string>('');
     const [interest, setUserInterest] = React.useState<string>('');
     const [location, setLocation] = React.useState<[string, string] | undefined>(undefined);
+    const [profileImage, setProfileImage] = React.useState<string>('');
 
     const [web3Provider, setWeb3Provider] = React.useState<ethers.providers.Web3Provider | null>(null);
 
@@ -88,6 +89,8 @@ const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
     const userCreatedAt: AppContextStateArg<string> = memoFactory(createdAt, setUserCreatedAt);
 
     const userInterest: AppContextStateArg<string> = memoFactory(interest, setUserInterest);
+
+    const userProfileImage: AppContextStateArg<string> = memoFactory(profileImage, setProfileImage);
 
     const userLocation: AppContextStateArg<[string, string]> = memoFactory(location, setLocation);
 
@@ -160,6 +163,7 @@ const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
                 userCreatedAt,
                 userInterest,
                 userLocation,
+                userProfileImage,
             }}
         >
             {children}

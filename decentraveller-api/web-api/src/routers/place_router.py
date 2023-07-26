@@ -11,6 +11,7 @@ from src.api_models.bulk_results import PaginatedPlaces, PaginatedPlacesWithDist
 from src.api_models.place import PlaceID, PlaceUpdate, PlaceInDB, PlaceBody, \
     PlaceWithStats, PlaceWithDistance, PlaceCategory
 from src.api_models.profile import WalletID, wallet_id_validator
+from src.dependencies.indexer_auth import indexer_auth
 from src.dependencies.relational_database import build_relational_database, RelationalDatabase
 from src.dependencies.vector_database import VectorDatabase
 from src.orms.place import PlaceORM
@@ -24,7 +25,7 @@ class PlaceCBV:
     database: RelationalDatabase = Depends(build_relational_database)
     vector_database: VectorDatabase = Depends(VectorDatabase)
 
-    @place_router.post("/place", status_code=201)
+    @place_router.post("/place", status_code=201, dependencies=[Depends(indexer_auth)])
     def create_place(self, place: PlaceInDB) -> PlaceWithStats:
         """
         Creates a new place in the database
@@ -52,7 +53,7 @@ class PlaceCBV:
             raise HTTPException(status_code=HTTP_404_NOT_FOUND)
         return place
 
-    @place_router.put("/place/{place_id}")
+    @place_router.put("/place/{place_id}", dependencies=[Depends(indexer_auth)])
     def overwrite_place(self, place_id: PlaceID, place: PlaceBody) -> PlaceWithStats:
         """
         Overwrites a place in the database
@@ -66,7 +67,7 @@ class PlaceCBV:
             raise HTTPException(status_code=HTTP_404_NOT_FOUND)
         return place
 
-    @place_router.patch("/place/{place_id}")
+    @place_router.patch("/place/{place_id}", dependencies=[Depends(indexer_auth)])
     def update_place(self, place_id: PlaceID, place: PlaceUpdate) -> PlaceWithStats:
         """
         Updates a place in the database

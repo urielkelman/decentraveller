@@ -3,6 +3,8 @@ import axios, { AxiosRequestConfig } from "axios";
 import { EventRequest, EventRequestBody } from "./types";
 import AxiosRequestBuilder from "./AxiosRequestBuilder";
 
+const indexerApiKey = process.env.INDEXER_API_KEY
+
 class MainServerAdapter {
     public async makeRequest<T extends EventRequestBody>(
         eventRequest: EventRequest<T>
@@ -11,6 +13,7 @@ class MainServerAdapter {
             .withBody(eventRequest.body)
             .withMethod(eventRequest.method)
             .withUrl(eventRequest.endpoint)
+            .withHeaders({ Authorization: `Bearer ${indexerApiKey}` })
             .build();
 
         // console.log("Axios request:", axiosRequest);

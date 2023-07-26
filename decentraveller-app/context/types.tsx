@@ -27,6 +27,7 @@ export type AppContextType = {
     userCreatedAt: AppContextStateArg<string>;
     userInterest: AppContextStateArg<string>;
     userLocation: AppContextStateArg<[string, string]>;
+    userProfileImage: AppContextStateArg<string>;
 };
 
 export type DecentravellerPlaceCategory = 'GASTRONOMY' | 'ENTERTAINMENT' | 'ACCOMMODATION' | 'OTHER';
