@@ -10,12 +10,13 @@ import HomeNavigator from './home/HomeNavigator';
 import DecentravellerInformativeModal from '../commons/components/DecentravellerInformativeModal';
 import { useWalletConnectModal } from '@walletconnect/modal-react-native';
 
-const adapter = apiAdapter;
+const adapter = mockApiAdapter;
 
 const DecentravellerInitialScreen = () => {
     const { isConnected, address } = useWalletConnectModal();
     const [stackToRender, setStackToRender] = React.useState<'Login' | 'Home' | 'Registration'>('Login');
     const appContext = useAppContext();
+    const setUserProfileImage = appContext.userProfileImage.setValue;
     const setUserNickname = appContext.userNickname.setValue;
     const setUserCreatedAt = appContext.userCreatedAt.setValue;
     const setUserInterest = appContext.userInterest.setValue;
@@ -25,11 +26,21 @@ const DecentravellerInitialScreen = () => {
             setStackToRender('Registration');
         });
 
-        if (!user) return;
+        if (!user) {
+            setStackToRender('Registration');
+            return;
+        }
+
+        const userProfileImage = await adapter.getUserProfileImage('uri', () => {
+            console.log('There was a problem fetching the image');
+        });
+
+        console.log('imagen en base64:' + userProfileImage);
 
         setUserNickname(user.nickname);
         setUserCreatedAt(user.createdAt);
         setUserInterest(user.interest);
+        setUserProfileImage(userProfileImage);
         setStackToRender('Home');
     };
 

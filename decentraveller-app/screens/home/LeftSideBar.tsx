@@ -14,13 +14,13 @@ import RootNavigator from './RootNavigator';
 const Drawer = createDrawerNavigator();
 
 const CustomDrawerContent = (props: DrawerContentComponentProps) => {
-    const { userNickname, connectionContext } = useAppContext();
-    console.log(connectionContext);
+    const { userNickname, connectionContext, userProfileImage } = useAppContext();
     const user = {
-        // TODO: Take profileImage from backend when implementation is developed
-        profileImage: require('../../assets/mock_images/cryptochica.png'),
+        profileImage: userProfileImage.value,
         name: userNickname.value,
-        walletAddress: connectionContext?.connectedAddress ? obfuscateAddress(connectionContext.connectedAddress) : '',
+        walletAddress: connectionContext?.connectedAddress
+            ? obfuscateAddress('connectionContext.connectedAddress')
+            : '',
     };
 
     return (
@@ -28,7 +28,12 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
             <SafeAreaView style={drawerStyles.container}>
                 <View style={drawerStyles.userContainer}>
                     <View style={drawerStyles.profileImageContainer}>
-                        <Image source={user.profileImage} style={drawerStyles.profileImage} />
+                        <Image
+                            source={{
+                                uri: `data:image/jpeg;base64,${user.profileImage}`,
+                            }}
+                            style={drawerStyles.profileImage}
+                        />
                     </View>
                     <View>
                         <Text style={drawerStyles.userName}>{user.name}</Text>

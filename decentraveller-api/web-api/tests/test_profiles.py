@@ -2,7 +2,7 @@ from datetime import datetime
 
 import pytest
 
-from tests.utils.client import client
+from tests.utils.dependency_override import client
 from tests.utils.session import restart_database
 
 

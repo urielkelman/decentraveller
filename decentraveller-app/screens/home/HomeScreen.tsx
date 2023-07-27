@@ -13,7 +13,7 @@ import LoadingComponent from '../../commons/components/DecentravellerLoading';
 import { registerForPushNotificationsAsync } from '../../commons/notifications/notifications';
 import { useWalletConnectModal } from '@walletconnect/modal-react-native';
 
-const adapter = apiAdapter;
+const adapter = mockApiAdapter;
 
 const PERMISSION_GRANTED = 'granted';
 

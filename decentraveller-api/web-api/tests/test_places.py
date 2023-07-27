@@ -1,6 +1,6 @@
 import pytest
 
-from tests.utils.client import client
+from tests.utils.dependency_override import client
 from tests.utils.session import restart_database
 
 
@@ -8,6 +8,18 @@ from tests.utils.session import restart_database
 def cleanup():
     restart_database()
     yield None
+
+@pytest.fixture
+def setup_dataset():
+
+    for i in range(20):
+        response = client.post("/profile",
+                               json={"owner": '0x{:040X}'.format(i),
+                                     "nickname": f"test{i}",
+                                     "country": "AR",
+                                     "interest": "ACCOMMODATION"},
+                               )
+        assert response.status_code == 201
 
 
 def test_missing_place_404(cleanup):

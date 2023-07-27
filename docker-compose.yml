@@ -13,12 +13,13 @@ services:
 
   api:
     build: decentraveller-api/
-    command: uvicorn src.app:app --host 0.0.0.0 --log-level debug
+    command: poetry run uvicorn src.app:app --host 0.0.0.0 --log-level debug
     ports:
       - 8000:8000
     environment:
       - SQLALCHEMY_DATABASE_URL=postgresql://webapi:webapi@database:5432/webapi
       - WEAVIATE_DATABASE_URL=http://weaviate:8080
+      - INDEXER_API_KEY=asd123
     depends_on:
       - database
       - weaviate
@@ -37,6 +38,7 @@ services:
     environment:
       - BLOCKCHAIN_URI=http://blockchain:8545
       - API_ENDPOINT=http://api:8000
+      - INDEXER_API_KEY=asd123
     depends_on:
       - blockchain
     deploy:

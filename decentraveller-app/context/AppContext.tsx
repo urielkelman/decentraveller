@@ -1,6 +1,7 @@
 import React from 'react';
 import { AppContextStateArg, AppContextType, DeviceDimensions } from './types';
 import { Dimensions } from 'react-native';
+<<<<<<< HEAD
 import { useWalletConnectModal } from '@walletconnect/modal-react-native';
 
 export const AppContext = React.createContext<AppContextType | null>(null);
@@ -11,6 +12,15 @@ export const AppContext = React.createContext<AppContextType | null>(null);
 export const DEFAULT_CHAIN_ID = 5;
 const DEFAULT_CHAIN_ID_HEX = '0x5';
 
+=======
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useWalletConnectModal } from '@walletconnect/modal-react-native';
+import { ethers } from 'ethers';
+
+export const AppContext = React.createContext<AppContextType | null>(null);
+
+export const DEFAULT_CHAIN_ID = 31337;
+>>>>>>> main
 const UNRECOGNIZED_CHAIN_ID_MESSAGE = (chainId) =>
     `Unrecognized chain ID "${chainId}". Try adding the chain using wallet_addEthereumChain first.`;
 
@@ -20,13 +30,20 @@ interface UpdateSessionPayloadParams {
 }
 
 const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
+<<<<<<< HEAD
+=======
+    const [connectionContext, setConnectionContext] = React.useState<ConnectionContext>(null);
+    const connectionContextRef = React.useRef<ConnectionContext>(null);
+>>>>>>> main
     const [subscriptionsDone, setSubscriptionsDone] = React.useState<boolean>(false);
 
     const [nickname, setUserNickname] = React.useState<string>('');
     const [createdAt, setUserCreatedAt] = React.useState<string>('');
     const [interest, setUserInterest] = React.useState<string>('');
     const [location, setLocation] = React.useState<[string, string] | undefined>(undefined);
+    const [profileImage, setProfileImage] = React.useState<string>('');
 
+<<<<<<< HEAD
     const { isConnected, address, provider } = useWalletConnectModal();
 
     const pushChangeUpdate = async () => {
@@ -39,6 +56,22 @@ const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
             });
         } catch (e) {
             if (e.message === UNRECOGNIZED_CHAIN_ID_MESSAGE(DEFAULT_CHAIN_ID_HEX)) {
+=======
+    const [web3Provider, setWeb3Provider] = React.useState<ethers.providers.Web3Provider | null>(null);
+
+    const { provider, isConnected, address } = useWalletConnectModal();
+
+    const pushChangeUpdate = async () => {
+        try {
+            console.log('Trying to request switch chain');
+            await provider.request({
+                method: 'wallet_switchEthereumChain',
+                params: [{ chainId: ethers.utils.hexValue(DEFAULT_CHAIN_ID) }],
+            });
+        } catch (e) {
+            console.log('error switching chain', e);
+            /*if (e.message === UNRECOGNIZED_CHAIN_ID_MESSAGE('0x7a69')) {
+>>>>>>> main
                 try {
                     await connector.sendCustomRequest({
                         id: 2,
@@ -60,8 +93,13 @@ const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
                 } catch (e) {
                     console.log('An error happened when trying to add ethereum chain.', e);
                 }
+<<<<<<< HEAD
             }
         }*/
+=======
+            }*/
+        }
+>>>>>>> main
     };
 
     const deviceDimensions: DeviceDimensions = React.useMemo<DeviceDimensions>(
@@ -88,16 +126,83 @@ const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
 
     const userInterest: AppContextStateArg<string> = memoFactory(interest, setUserInterest);
 
+    const userProfileImage: AppContextStateArg<string> = memoFactory(profileImage, setProfileImage);
+
     const userLocation: AppContextStateArg<[string, string]> = memoFactory(location, setLocation);
+
+<<<<<<< HEAD
+    return (
+        <AppContext.Provider
+            value={{
+=======
+    React.useEffect(() => {
+        /* This effect allow us to clean sessions that the WalletConnect connector stores in the AsyncStorage */
+        const wipeAsyncStorage = async () => {
+            await AsyncStorage.clear();
+            setConnectionContext(null);
+        };
+
+        wipeAsyncStorage().catch((e) => console.log('There was a problem wiping async storage', e));
+    }, []);
+
+    const updateConnectionContext = async (address) => {
+        const web3Provider = new ethers.providers.Web3Provider(provider);
+        const chainId = (await web3Provider.getNetwork()).chainId;
+        console.log('Updating connection context', address, chainId);
+        const isWrongChain = chainId !== DEFAULT_CHAIN_ID;
+        const newConnectionContext = {
+            connectedAddress: address,
+            connectedChainId: chainId,
+            isWrongChain: isWrongChain,
+        };
+        setConnectionContext(newConnectionContext);
+        setWeb3Provider(web3Provider);
+        connectionContextRef.current = newConnectionContext;
+    };
+
+    React.useEffect(() => {
+        if (isConnected) {
+            updateConnectionContext(address);
+            if (!subscriptionsDone) {
+                setSubscriptionsDone(true);
+
+                provider.client.on('session_event', (event) => {
+                    if (
+                        connectionContext &&
+                        event.params.event.name === 'chainChanged' &&
+                        connectionContextRef.current.connectedChainId !== event.params.event.data
+                    ) {
+                        console.log('updating con context');
+                        updateConnectionContext(address);
+                    }
+                });
+
+                provider.client.on('session_delete', async (event) => {
+                    console.log('session delete received: ', event);
+                    setSubscriptionsDone(false);
+                    setConnectionContext(null);
+                });
+            }
+        }
+    }, [isConnected, provider]);
+
+    const cleanConnectionContext = () => {
+        setConnectionContext(null);
+        connectionContextRef.current = null;
+    };
 
     return (
         <AppContext.Provider
             value={{
+                connectionContext,
+                web3Provider,
+>>>>>>> main
                 deviceDimensions,
                 userNickname,
                 userCreatedAt,
                 userInterest,
                 userLocation,
+                userProfileImage,
             }}
         >
             {children}

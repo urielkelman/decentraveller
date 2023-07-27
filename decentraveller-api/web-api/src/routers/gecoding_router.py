@@ -23,7 +23,7 @@ class GeocodingCBV:
         :return: result of the search
         """
         try:
-            points = self.geocoding_api.        forward_geocoding(address, country)
+            points = self.geocoding_api.forward_geocoding(address, country)
         except GeoCodingAPIError:
             raise HTTPException(HTTP_500_INTERNAL_SERVER_ERROR,
                                 "The geocoding service is not working."
