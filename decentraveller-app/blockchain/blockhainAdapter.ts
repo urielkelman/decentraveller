@@ -1,56 +1,46 @@
 import '@ethersproject/shims';
 import { ethers } from 'ethers';
-import WalletConnect from '@walletconnect/client';
 import { decentravellerMainContract } from './contracts/decentravellerMainContract';
-import { Blockchain, BlockchainByConnectorChainId, LOCAL_DEVELOPMENT_CHAIN_ID } from './config';
+import { Blockchain, BlockchainByChainId } from './config';
 import { ContractFunction, DecentravellerContract } from './contracts/common';
 import { decentravellerPlaceContract } from './contracts/decentravellerPlaceContract';
 import { withTimeout } from '../commons/functions/utils';
+import { DEFAULT_CHAIN_ID } from '../context/AppContext';
 
-const BLOCKCHAIN_TIMEOUT_IN_MILLIS = 30000;
+const BLOCKCHAIN_TIMEOUT_IN_MILLIS = 100000;
 const BLOCKCHAIN_TRANSACTION_TASK_NAME = 'Blockchain transaction';
 
 class BlockchainAdapter {
-    private getProvider(chainId: number): ethers.providers.Provider {
-        if (chainId === LOCAL_DEVELOPMENT_CHAIN_ID) {
-            return new ethers.providers.JsonRpcProvider('http://10.0.2.2:8545');
-        } else {
-            return ethers.getDefaultProvider(chainId);
-        }
-    }
-
     private async populateAndSendWithAddress(
-        connector: WalletConnect,
+        web3Provider: ethers.providers.Web3Provider,
         contract: DecentravellerContract,
         functionName: string,
         contractAddress: string,
         ...args: unknown[]
     ): Promise<string> {
-        const provider: ethers.providers.Provider = this.getProvider(connector.chainId);
         const contractFunction: ContractFunction = contract.functions[functionName];
         const ethersContract: ethers.Contract = new ethers.Contract(
             contractAddress,
             contractFunction.fullContractABI,
-            provider
+            web3Provider
         );
         const populatedTransaction: ethers.PopulatedTransaction = await ethersContract.populateTransaction[
             contractFunction.functionName
         ].call(this, ...args);
-        const connectedAccount: string = connector.accounts[0];
+        const connectedSigner = web3Provider.getSigner();
         return await withTimeout(
             async () => {
-                console.log('ca', contractAddress);
-                const transactionHash: string = await connector.sendTransaction({
-                    from: connectedAccount,
+                const txResponse: ethers.providers.TransactionResponse = await connectedSigner.sendTransaction({
                     to: contractAddress,
                     data: populatedTransaction.data,
+                    chainId: DEFAULT_CHAIN_ID,
                 });
-                const txReceipt = await provider.waitForTransaction(transactionHash);
+                const txReceipt = await txResponse.wait();
                 if (txReceipt.status === 0) {
                     console.log(txReceipt);
                     throw new Error('An exception happened during transaction execution.');
                 }
-                return transactionHash;
+                return txResponse.hash;
             },
             BLOCKCHAIN_TIMEOUT_IN_MILLIS,
             BLOCKCHAIN_TRANSACTION_TASK_NAME
@@ -58,18 +48,18 @@ class BlockchainAdapter {
     }
 
     private async populateAndSend(
-        connector: WalletConnect,
+        web3Provider: ethers.providers.Web3Provider,
         contract: DecentravellerContract,
         functionName: string,
         ...args: unknown[]
     ): Promise<string> {
-        const blockchain: Blockchain = BlockchainByConnectorChainId[connector.chainId];
+        const blockchain: Blockchain = BlockchainByChainId[DEFAULT_CHAIN_ID];
         const contractAddress: string = contract.addressesByBlockchain[blockchain];
-        return this.populateAndSendWithAddress(connector, contract, functionName, contractAddress, args);
+        return this.populateAndSendWithAddress(web3Provider, contract, functionName, contractAddress, ...args);
     }
 
     async createAddNewPlaceTransaction(
-        connector: WalletConnect,
+        web3Provider: ethers.providers.Web3Provider,
         placeName: string,
         latitude: string,
         longitude: string,
@@ -79,7 +69,7 @@ class BlockchainAdapter {
     ): Promise<string> {
         try {
             return await this.populateAndSend(
-                connector,
+                web3Provider,
                 decentravellerMainContract,
                 'addPlace',
                 placeName,
@@ -95,7 +85,7 @@ class BlockchainAdapter {
     }
 
     async createRegisterUserTransaction(
-        connector: WalletConnect,
+        web3Provider: ethers.providers.Web3Provider,
         nickname: string,
         country: string,
         interest: string,
@@ -103,7 +93,7 @@ class BlockchainAdapter {
     ): Promise<string> {
         try {
             return await this.populateAndSend(
-                connector,
+                web3Provider,
                 decentravellerMainContract,
                 'registerProfile',
                 nickname,
@@ -117,21 +107,24 @@ class BlockchainAdapter {
     }
 
     async addPlaceReviewTransaction(
-        connector: WalletConnect,
+        web3Provider: ethers.providers.Web3Provider,
         placeId: number,
         comment: string,
         rating: number,
         images: string[]
     ): Promise<string> {
-        const provider = this.getProvider(connector.chainId);
-        const blockchain: Blockchain = BlockchainByConnectorChainId[connector.chainId];
+        const blockchain: Blockchain = BlockchainByChainId[DEFAULT_CHAIN_ID];
         const contractFunction: ContractFunction = decentravellerMainContract.functions['getPlaceAddress'];
         const mainContractAddress: string = decentravellerMainContract.addressesByBlockchain[blockchain];
-        const decentravellerMain = new ethers.Contract(mainContractAddress, contractFunction.fullContractABI, provider);
+        const decentravellerMain = new ethers.Contract(
+            mainContractAddress,
+            contractFunction.fullContractABI,
+            web3Provider
+        );
         const placeAddress = await decentravellerMain.getPlaceAddress(placeId);
         try {
             return await this.populateAndSendWithAddress(
-                connector,
+                web3Provider,
                 decentravellerPlaceContract,
                 'addReview',
                 placeAddress,

@@ -5,14 +5,12 @@ import { addPlaceScreenWordings } from './wording';
 import React from 'react';
 import { GeocodingElement, useCreatePlaceContext } from './CreatePlaceContext';
 import DecentravellerPicker from '../../../commons/components/DecentravellerPicker';
-import { apiAdapter } from '../../../api/apiAdapter';
 import DecentravellerButton from '../../../commons/components/DecentravellerButton';
-import { mockApiAdapter } from '../../../api/mockApiAdapter';
 import { blockchainAdapter } from '../../../blockchain/blockhainAdapter';
-import { useWalletConnect } from '@walletconnect/react-native-dapp';
 import DecentravellerInformativeModal from '../../../commons/components/DecentravellerInformativeModal';
 import { getAndParseGeocoding } from '../../../commons/functions/geocoding';
 import { MINIMUM_ADDRESS_LENGTH_TO_SHOW_PICKER } from '../../../commons/global';
+import { useAppContext } from '../../../context/AppContext';
 
 const CreatePlaceLocationScreen = () => {
     const { placeName, placeTypePicker, countryPicker, addressPicker } = useCreatePlaceContext();
@@ -20,7 +18,7 @@ const CreatePlaceLocationScreen = () => {
     const [loadingGeocodingResponse, setLoadingGeocodingResponse] = React.useState<boolean>(false);
     const [loadingAddPlaceResponse, setLoadingAddPlaceResponse] = React.useState<boolean>(false);
     const [showErrorModal, setShowErrorModal] = React.useState<boolean>(false);
-    const connector = useWalletConnect();
+    const { web3Provider } = useAppContext();
 
     const onChangeSearchAddressText = async (text: string) => {
         addressPicker.setValue(text);
@@ -44,7 +42,7 @@ const CreatePlaceLocationScreen = () => {
         setLoadingAddPlaceResponse(true);
         const selectedGeocodingElement: GeocodingElement = JSON.parse(addressPicker.value);
         const transactionHash = await blockchainAdapter.createAddNewPlaceTransaction(
-            connector,
+            web3Provider,
             placeName,
             selectedGeocodingElement.latitude,
             selectedGeocodingElement.longitude,

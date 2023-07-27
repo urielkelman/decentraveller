@@ -7,8 +7,8 @@ import { alternativePlacesMock, defaultPlacesMock } from './mocks/places';
 import { ReviewsResponse } from './response/reviews';
 import { emptyReviewsResponse, manyReviewsResponse, oneReviewsResponse } from './mocks/reviews';
 import { PlaceResponse } from './response/places';
-import { httpAPIConnector, HttpGetRequest } from '../connectors/HttpConnector';
-import { GET_PROFILE_IMAGE, RECOMMENDED_PLACES_BY_LOCATION_ENDPOINT } from './config';
+import { HttpGetRequest } from '../connectors/HttpConnector';
+import { RECOMMENDED_PLACES_BY_LOCATION_ENDPOINT } from './config';
 
 const searchTextHondurasResponse = ['Honduras', 'Honduras ', 'Honduras 4', 'Honduras 47', 'Honduras 470'];
 

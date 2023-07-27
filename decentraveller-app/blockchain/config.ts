@@ -3,7 +3,7 @@ export enum Blockchain {
     GOERLI = 'GOERLI',
 }
 
-export const BlockchainByConnectorChainId: { [key in number]: Blockchain } = {
+export const BlockchainByChainId: { [key in number]: Blockchain } = {
     31337: Blockchain.LOCALHOST,
     5: Blockchain.GOERLI,
 };
