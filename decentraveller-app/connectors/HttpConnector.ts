@@ -1,6 +1,5 @@
 import axios from 'axios';
-import { API_ENDPOINT } from '../api/config';
-import { is } from 'react-native-country-flag/dist/flags/flagsIndex';
+import {API_ENDPOINT} from '../api/config';
 
 interface HttpBaseRequest {
     url: string;
@@ -24,18 +23,21 @@ class HttpConnector {
     }
 
     private static processError(httpRequest: HttpBaseRequest, error: any) {
-        if (axios.isAxiosError(error)) {
-            console.log('Status', error.response.status);
+        if (axios.isAxiosError(error) && error.code !== 'ERR_NETWORK') {
+            console.log('is axios error');
+            console.log('Status', error)
             console.log(error.message);
             httpRequest.onStatusCodeError &&
                 httpRequest.onStatusCodeError[error.response.status] &&
                 httpRequest.onStatusCodeError[error.response.status]();
         } else {
+            console.log('ahora en el else')
             httpRequest.onUnexpectedError(error);
         }
     }
 
     async get<T>(httpGetRequest: HttpGetRequest): Promise<T> {
+        console.log(httpGetRequest)
         try {
             const { data } = await axios.get<T>(httpGetRequest.url, {
                 baseURL: this.baseURL,
@@ -46,13 +48,13 @@ class HttpConnector {
             HttpConnector.processError(httpGetRequest, error);
         }
     }
-
     async post<T>(httpPostRequest: HttpPostRequest): Promise<T> {
         try {
-            const { data } = await axios.post<T>(httpPostRequest.url, {
+            console.log('to post', httpPostRequest)
+            const { data } = await axios.post<T>(httpPostRequest.url, httpPostRequest.body, {
                 baseURL: this.baseURL,
-                data: httpPostRequest.body,
             });
+
             return data;
         } catch (error) {
             HttpConnector.processError(httpPostRequest, error);
@@ -61,14 +63,13 @@ class HttpConnector {
 
     async getBase64Bytes(httpRequest: HttpGetRequest): Promise<string> {
         try {
-            const base64String = await axios
+            return await axios
                 .get(httpRequest.url, {
                     baseURL: this.baseURL,
                     params: httpRequest.queryParams,
                     responseType: 'arraybuffer',
                 })
                 .then((response) => Buffer.from(response.data, 'binary').toString('base64'));
-            return base64String;
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 console.log(error.status);
@@ -76,7 +77,7 @@ class HttpConnector {
             } else {
                 console.log(error);
             }
-            httpRequest.onError(error);
+            httpRequest.onUnexpectedError(error);
         }
     }
 }

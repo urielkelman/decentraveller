@@ -96,7 +96,6 @@ class ApiAdapter extends Adapter {
                       longitude: long,
                   }
                 : undefined;
-        console.log(formatString(RECOMMENDED_PLACES_BY_PROFILE_ENDPOINT, { owner: walletAddress }));
         const httpRequest: HttpGetRequest = {
             url: formatString(RECOMMENDED_PLACES_BY_PROFILE_ENDPOINT, { owner: walletAddress }),
             queryParams: queryParams,
@@ -141,7 +140,6 @@ class ApiAdapter extends Adapter {
         return await httpAPIConnector.get(httpRequest);
     }
 
-<<<<<<< HEAD
     async sendPushNotificationToken(walletAddress: string, pushToken: string): Promise<void> {
         const httpPostRequest: HttpPostRequest = {
             url: PUSH_NOTIFICATION_TOKEN_ENDPOINT,
@@ -149,22 +147,22 @@ class ApiAdapter extends Adapter {
                 owner: walletAddress,
                 pushToken: pushToken,
             },
-            onUnexpectedError: (e) => console.log('Error'),
+            onUnexpectedError: (e) => console.log('Error', e),
         };
 
         return await httpAPIConnector.post(httpPostRequest);
-=======
+    }
+
     async getUserProfileImage(walletAddress: string, onFailed: () => void): Promise<string> {
         const httpRequest: HttpGetRequest = {
             url: formatString(GET_PROFILE_IMAGE, { owner: walletAddress }),
             queryParams: {},
-            onError: (e) => {
+            onUnexpectedError: (e) => {
                 onFailed();
             },
         };
 
         return await httpAPIConnector.getBase64Bytes(httpRequest);
->>>>>>> main
     }
 }
 

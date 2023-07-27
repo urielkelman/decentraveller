@@ -19,7 +19,7 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
         profileImage: userProfileImage.value,
         name: userNickname.value,
         walletAddress: connectionContext?.connectedAddress
-            ? obfuscateAddress('connectionContext.connectedAddress')
+            ? obfuscateAddress(connectionContext.connectedAddress)
             : '',
     };
 

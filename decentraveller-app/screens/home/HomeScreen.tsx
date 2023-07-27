@@ -57,7 +57,9 @@ const HomeScreen = ({ navigation }) => {
     };
 
     const obtainAndSetPushNotificationToken = async (): Promise<void> => {
+        console.log('register')
         const pushNotificationToken = await registerForPushNotificationsAsync();
+        console.log('push token')
         await apiAdapter.sendPushNotificationToken(address, pushNotificationToken);
     };
 
@@ -67,6 +69,8 @@ const HomeScreen = ({ navigation }) => {
             await obtainAndSetPushNotificationToken();
         })();
     }, []);
+
+    console.log(loadingRecommendedPlaces)
 
     const componentToRender = loadingRecommendedPlaces ? (
         <LoadingComponent />

@@ -62,7 +62,8 @@ class MockApiAdapter extends Adapter {
 
     async getRecommendedPlacesForAddress(
         walletAddress: string,
-        [latitude, longitude]: [string?, string?]
+        [latitude, longitude]: [string?, string?],
+        onNotFound: () => void,
     ): Promise<PlaceResponse[]> {
         return defaultPlacesMock;
     }
@@ -100,7 +101,7 @@ class MockApiAdapter extends Adapter {
         const httpRequest: HttpGetRequest = {
             url: RECOMMENDED_PLACES_BY_LOCATION_ENDPOINT,
             queryParams,
-            onError: (e) => console.log('Error'),
+            onUnexpectedError: (e) => console.log('Error'),
         };
 
         console.log(httpRequest);

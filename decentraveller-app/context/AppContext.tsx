@@ -1,18 +1,6 @@
 import React from 'react';
-import { AppContextStateArg, AppContextType, DeviceDimensions } from './types';
+import {AppContextStateArg, AppContextType, ConnectionContext, DeviceDimensions} from './types';
 import { Dimensions } from 'react-native';
-<<<<<<< HEAD
-import { useWalletConnectModal } from '@walletconnect/modal-react-native';
-
-export const AppContext = React.createContext<AppContextType | null>(null);
-
-//const DEFAULT_CHAIN_ID = 31337;
-//const DEFAULT_CHAIN_ID_HEX = '0x7a69';
-
-export const DEFAULT_CHAIN_ID = 5;
-const DEFAULT_CHAIN_ID_HEX = '0x5';
-
-=======
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useWalletConnectModal } from '@walletconnect/modal-react-native';
 import { ethers } from 'ethers';
@@ -20,7 +8,6 @@ import { ethers } from 'ethers';
 export const AppContext = React.createContext<AppContextType | null>(null);
 
 export const DEFAULT_CHAIN_ID = 31337;
->>>>>>> main
 const UNRECOGNIZED_CHAIN_ID_MESSAGE = (chainId) =>
     `Unrecognized chain ID "${chainId}". Try adding the chain using wallet_addEthereumChain first.`;
 
@@ -30,11 +17,8 @@ interface UpdateSessionPayloadParams {
 }
 
 const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
-<<<<<<< HEAD
-=======
     const [connectionContext, setConnectionContext] = React.useState<ConnectionContext>(null);
     const connectionContextRef = React.useRef<ConnectionContext>(null);
->>>>>>> main
     const [subscriptionsDone, setSubscriptionsDone] = React.useState<boolean>(false);
 
     const [nickname, setUserNickname] = React.useState<string>('');
@@ -43,20 +27,6 @@ const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
     const [location, setLocation] = React.useState<[string, string] | undefined>(undefined);
     const [profileImage, setProfileImage] = React.useState<string>('');
 
-<<<<<<< HEAD
-    const { isConnected, address, provider } = useWalletConnectModal();
-
-    const pushChangeUpdate = async () => {
-        /*try {
-            await connector.sendCustomRequest({
-                id: 1,
-                jsonrpc: '2.0',
-                method: 'wallet_switchEthereumChain',
-                params: [{ chainId: DEFAULT_CHAIN_ID_HEX }],
-            });
-        } catch (e) {
-            if (e.message === UNRECOGNIZED_CHAIN_ID_MESSAGE(DEFAULT_CHAIN_ID_HEX)) {
-=======
     const [web3Provider, setWeb3Provider] = React.useState<ethers.providers.Web3Provider | null>(null);
 
     const { provider, isConnected, address } = useWalletConnectModal();
@@ -71,7 +41,6 @@ const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
         } catch (e) {
             console.log('error switching chain', e);
             /*if (e.message === UNRECOGNIZED_CHAIN_ID_MESSAGE('0x7a69')) {
->>>>>>> main
                 try {
                     await connector.sendCustomRequest({
                         id: 2,
@@ -93,13 +62,8 @@ const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
                 } catch (e) {
                     console.log('An error happened when trying to add ethereum chain.', e);
                 }
-<<<<<<< HEAD
-            }
-        }*/
-=======
             }*/
         }
->>>>>>> main
     };
 
     const deviceDimensions: DeviceDimensions = React.useMemo<DeviceDimensions>(
@@ -130,11 +94,6 @@ const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
 
     const userLocation: AppContextStateArg<[string, string]> = memoFactory(location, setLocation);
 
-<<<<<<< HEAD
-    return (
-        <AppContext.Provider
-            value={{
-=======
     React.useEffect(() => {
         /* This effect allow us to clean sessions that the WalletConnect connector stores in the AsyncStorage */
         const wipeAsyncStorage = async () => {
@@ -148,10 +107,11 @@ const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
     const updateConnectionContext = async (address) => {
         const web3Provider = new ethers.providers.Web3Provider(provider);
         const chainId = (await web3Provider.getNetwork()).chainId;
+        console.log('chain id getted', chainId);
         console.log('Updating connection context', address, chainId);
         const isWrongChain = chainId !== DEFAULT_CHAIN_ID;
         const newConnectionContext = {
-            connectedAddress: address,
+            connectedAddress: address.toLowerCase(),
             connectedChainId: chainId,
             isWrongChain: isWrongChain,
         };
@@ -196,13 +156,15 @@ const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
             value={{
                 connectionContext,
                 web3Provider,
->>>>>>> main
                 deviceDimensions,
                 userNickname,
                 userCreatedAt,
                 userInterest,
                 userLocation,
                 userProfileImage,
+                pushChangeUpdate,
+                setConnectionContext,
+                cleanConnectionContext,
             }}
         >
             {children}
