@@ -162,9 +162,12 @@ const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
                 userInterest,
                 userLocation,
                 userProfileImage,
+<<<<<<< HEAD
                 pushChangeUpdate,
                 setConnectionContext,
                 cleanConnectionContext,
+=======
+>>>>>>> af7c037bdb5b1f67aeecbb573a8f2f7cf9a746be
             }}
         >
             {children}

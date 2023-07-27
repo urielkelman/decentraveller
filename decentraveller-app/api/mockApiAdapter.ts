@@ -63,7 +63,7 @@ class MockApiAdapter extends Adapter {
     async getRecommendedPlacesForAddress(
         walletAddress: string,
         [latitude, longitude]: [string?, string?],
-        onNotFound: () => void,
+        onNotFound: () => void
     ): Promise<PlaceResponse[]> {
         return defaultPlacesMock;
     }

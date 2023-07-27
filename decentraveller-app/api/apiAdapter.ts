@@ -7,7 +7,10 @@ import {
     OWNED_PLACES_ENDPOINT,
     RECOMMENDED_PLACES_BY_PROFILE_ENDPOINT,
     REVIEWS_PLACES_ENDPOINT,
+<<<<<<< HEAD
     PUSH_NOTIFICATION_TOKEN_ENDPOINT,
+=======
+>>>>>>> af7c037bdb5b1f67aeecbb573a8f2f7cf9a746be
     GET_PROFILE_IMAGE,
 } from './config';
 import { UserResponse } from './response/user';
@@ -77,7 +80,11 @@ class ApiAdapter extends Adapter {
         const httpRequest: HttpGetRequest = {
             url: RECOMMENDED_PLACES_BY_LOCATION_ENDPOINT,
             queryParams,
+<<<<<<< HEAD
             onUnexpectedError: (e) => console.log('Error', e),
+=======
+            onError: (e) => console.log('Error'),
+>>>>>>> af7c037bdb5b1f67aeecbb573a8f2f7cf9a746be
         };
 
         return await httpAPIConnector.get(httpRequest);

@@ -5,7 +5,7 @@ import { Blockchain, BlockchainByChainId, LOCAL_DEVELOPMENT_CHAIN_ID } from './c
 import { withTimeout } from '../commons/functions/utils';
 import { DEFAULT_CHAIN_ID } from '../context/AppContext';
 import { decentravellerPlaceContract } from './contracts/decentravellerPlaceContract';
-import {decentravellerMainContract} from "./contracts/decentravellerMainContract";
+import { decentravellerMainContract } from './contracts/decentravellerMainContract';
 
 const BLOCKCHAIN_TIMEOUT_IN_MILLIS = 100000;
 const BLOCKCHAIN_TRANSACTION_TASK_NAME = 'Blockchain transaction';
@@ -27,20 +27,20 @@ class BlockchainAdapter {
         const populatedTransaction: ethers.PopulatedTransaction = await ethersContract.populateTransaction[
             contractFunction.functionName
         ].call(this, ...args);
-        console.log('conn signer')
+        console.log('conn signer');
         const connectedSigner = web3Provider.getSigner();
-        console.log('conn signer getted')
+        console.log('conn signer getted');
 
         return await withTimeout(
             async () => {
-                console.log('about sent tx')
+                console.log('about sent tx');
 
                 const txResponse: ethers.providers.TransactionResponse = await connectedSigner.sendTransaction({
                     to: contractAddress,
                     data: populatedTransaction.data,
                     chainId: DEFAULT_CHAIN_ID,
                 });
-                console.log('sent tx')
+                console.log('sent tx');
 
                 const txReceipt = await txResponse.wait();
                 if (txReceipt.status === 0) {

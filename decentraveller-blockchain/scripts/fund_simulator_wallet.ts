@@ -1,6 +1,6 @@
 import { ethers } from "hardhat";
 
-const SIMULATOR_WALLET_ADDRESS = "0x0BF8367F0E7C00813AEf31f7b19d60e54b7033b2";
+const SIMULATOR_WALLET_ADDRESS = "0x968C99f227a5D5015d3c50501C91353096AD7931";
 
 const main = async () => {
     const signer = (await ethers.getSigners())[0];

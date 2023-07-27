@@ -80,6 +80,27 @@ class HttpConnector {
             httpRequest.onUnexpectedError(error);
         }
     }
+
+    async getBase64Bytes(httpRequest: HttpGetRequest): Promise<string> {
+        try {
+            const base64String = await axios
+                .get(httpRequest.url, {
+                    baseURL: this.baseURL,
+                    params: httpRequest.queryParams,
+                    responseType: 'arraybuffer',
+                })
+                .then((response) => Buffer.from(response.data, 'binary').toString('base64'));
+            return base64String;
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                console.log(error.status);
+                console.log(error.message);
+            } else {
+                console.log(error);
+            }
+            httpRequest.onError(error);
+        }
+    }
 }
 
 const httpAPIConnector = new HttpConnector(API_ENDPOINT);

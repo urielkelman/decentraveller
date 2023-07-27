@@ -1,5 +1,5 @@
 import placeContractABI from './../abis/placeContractABI.json';
-import {DecentravellerContract} from "../contractTypes";
+import { DecentravellerContract } from '../contractTypes';
 
 const placeContractStringifiedABI = JSON.stringify(placeContractABI);
 
