@@ -1,3 +1,5 @@
+import logging
+
 from fastapi import Depends, HTTPException, Query, Response
 from fastapi_utils.cbv import cbv
 from fastapi_utils.inferring_router import InferringRouter
@@ -97,6 +99,7 @@ class ProfileCBV:
         """
         profile_orm = self.database.get_profile_orm(profile_push_token.owner)
         if not profile_orm:
+            logging.error('Profile for address {} was not found.'.format(profile_push_token.owner))
             raise HTTPException(status_code=HTTP_404_NOT_FOUND,
                                 detail="Non existent profile")
 
