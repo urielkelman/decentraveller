@@ -30,8 +30,9 @@ class ReviewCBV:
         """
         try:
             inserted_review = self.database.add_review(review)
-            review_owner = self.database.get_profile_orm(review.owner)
-            self.push_notification_adapter.send_push_message(review_owner.push_token, "message notif", "extra de la notif")
+            place_from_review = self.database.query_places(inserted_review.place_id)
+            place_owner = self.database.get_profile_orm(place_from_review.owner)
+            self.push_notification_adapter.send_push_message(place_owner.push_token, "message notif", "extra de la notif")
             return inserted_review
         except IntegrityError:
             raise HTTPException(status_code=HTTP_400_BAD_REQUEST,

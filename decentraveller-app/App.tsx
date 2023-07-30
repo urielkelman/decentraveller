@@ -13,8 +13,17 @@ import {
     Montserrat_800ExtraBold,
 } from '@expo-google-fonts/montserrat';
 import { useFonts } from 'expo-font';
+import {Alert} from "react-native";
 
 SplashScreen.preventAutoHideAsync();
+
+Notifications.setNotificationHandler({
+    handleNotification: async () => ({
+        shouldShowAlert: true,
+        shouldPlaySound: false,
+        shouldSetBadge: false,
+    }),
+});
 
 export default function App() {
     const [fontsLoaded] = useFonts({
@@ -34,7 +43,21 @@ export default function App() {
 
     useEffect(() => {
         const subscription = Notifications.addNotificationReceivedListener((notification) => {
+            console.log('notification received')
             console.log(notification);
+            let title = notification.request.content.title; // Notification title
+            let body = notification.request.content.body; // Notification body or message
+            let data = notification.request.content.data; // Extra data sent along with the notification
+
+            // Now, you can handle the notification in any way you want.
+            // For example, you could show an alert with the notification message:
+            /*Notifications.scheduleNotificationAsync({
+                content: {
+                    title: title,
+                    body: body,
+                },
+                trigger: null,
+            });*/
         });
 
         return () => {

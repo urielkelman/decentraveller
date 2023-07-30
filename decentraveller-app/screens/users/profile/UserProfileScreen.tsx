@@ -16,7 +16,8 @@ const UserProfileScreen = ({ navigation }) => {
     const user = {
         profileImage: userProfileImage.value,
         name: userNickname.value,
-        walletAddress: '0x' + 'connectionContext.connectedAddress',
+        // walletAddress: '0x' + connectionContext.connectedAddress,
+        walletAddress: '0x968C99f227a5D5015d3c50501C91353096AD7931',
         createdAt: userCreatedAt.value,
         interest: userInterest.value,
         tokens: 67,

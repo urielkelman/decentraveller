@@ -19,7 +19,6 @@ const PERMISSION_GRANTED = 'granted';
 
 const HomeScreen = ({ navigation }) => {
     const { address, provider } = useWalletConnectModal();
-    provider.sendAsync;
     const { userLocation } = useAppContext();
     const [loadingRecommendedPlaces, setLoadingRecommendedPlaces] = React.useState<boolean>(false);
     const [recommendedPlaces, setRecommendedPlaces] = React.useState<PlaceResponse[]>([]);
@@ -50,17 +49,21 @@ const HomeScreen = ({ navigation }) => {
         }
         console.log('Permission granted');
         const location = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.High });
+        console.log('location', location);
         const latitude = location.coords.latitude.toString();
         const longitude = location.coords.longitude.toString();
         userLocation.setValue([latitude, longitude]);
+        console.log('to get')
         await getWithLocation([latitude, longitude]);
+        console.log('geted')
     };
 
     const obtainAndSetPushNotificationToken = async (): Promise<void> => {
         console.log('register')
         const pushNotificationToken = await registerForPushNotificationsAsync();
         console.log('push token')
-        await apiAdapter.sendPushNotificationToken(address, pushNotificationToken);
+        await apiAdapter.sendPushNotificationToken('0x968C99f227a5D5015d3c50501C91353096AD7931', pushNotificationToken);
+//        await apiAdapter.sendPushNotificationToken(address, pushNotificationToken);
     };
 
     useEffect(() => {
@@ -70,11 +73,9 @@ const HomeScreen = ({ navigation }) => {
         })();
     }, []);
 
-    console.log(loadingRecommendedPlaces)
-
     const componentToRender = loadingRecommendedPlaces ? (
         <LoadingComponent />
-    ) : setShowPlacesNotFound ? (
+    ) : showPlacesNotFound ? (
         <Text>We couldn't find any place for you. Try in the Explore Tab.</Text>
     ) : (
         <DecentravellerPlacesItems places={recommendedPlaces} />

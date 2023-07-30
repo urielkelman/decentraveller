@@ -42,6 +42,9 @@ class MockApiAdapter extends Adapter {
             case '3FZbgi29cpjq2GjdwV8eyHuJJnkLtktZc5': {
                 return UriUserResponse;
             }
+            case '0x968C99f227a5D5015d3c50501C91353096AD7931': {
+                return UriUserResponse;
+            }
         }
     }
 

@@ -10,7 +10,7 @@ import HomeNavigator from './home/HomeNavigator';
 import DecentravellerInformativeModal from '../commons/components/DecentravellerInformativeModal';
 import { useWalletConnectModal } from '@walletconnect/modal-react-native';
 
-const adapter = mockApiAdapter;
+const adapter = apiAdapter;
 
 const DecentravellerInitialScreen = () => {
     const { isConnected, address } = useWalletConnectModal();
@@ -62,6 +62,7 @@ const DecentravellerInitialScreen = () => {
     };
 
     const navigatorToRender = () => {
+        return <HomeNavigator />
         switch (stackToRender) {
             case 'Home':
                 return <HomeNavigator />;

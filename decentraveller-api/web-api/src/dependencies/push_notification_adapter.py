@@ -42,14 +42,19 @@ class PushNotificationAdapter(NotificationAdapter):
 
     def send_push_message(self, token, message, extra=None):
         try:
+            logger.info('Expo token: {}'.format(token))
             response = PushClient(session=self.session).publish(
                 PushMessage(to=token,
+                            title='Push',
+                            sound='default',
+                            badge=1,
                             body=message,
-                            data=extra))
+                            data={'extra': extra}))
             response.validate_response()
         except (PushServerError, ConnectionError, HTTPError) as exc:
             # Encountered some likely formatting/validation error.
-            logger.error("An error happened when trying to send push notification to expo server", exc)
+            logger.error(exc.response_data)
+            logger.error("An error happened when trying to send push notification to expo server %s", exc)
         except DeviceNotRegisteredError:
             logger.error('The device with token {} is not registered any more.'.format(token))
         except Exception as exc:
