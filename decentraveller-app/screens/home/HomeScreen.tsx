@@ -18,6 +18,7 @@ const adapter = mockApiAdapter;
 const PERMISSION_GRANTED = 'granted';
 
 const HomeScreen = ({ navigation }) => {
+    console.log(navigation.getState())
     const { address, provider } = useWalletConnectModal();
     const { userLocation } = useAppContext();
     const [loadingRecommendedPlaces, setLoadingRecommendedPlaces] = React.useState<boolean>(false);

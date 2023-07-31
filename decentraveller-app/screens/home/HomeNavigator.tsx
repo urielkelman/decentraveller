@@ -12,6 +12,7 @@ import AddReviewComment from '../reviews/AddReviewComment';
 import SuccessAddReviewScreen from '../reviews/SuccessAddReviewScreen';
 import AddReviewImages from '../reviews/AddReviewImages';
 import { PlaceDetailData } from './place/types';
+import {Linking} from "react-native";
 
 export type HomeStackScreens = {
     LeftSideBar: undefined;
@@ -29,6 +30,10 @@ export type HomeStackScreens = {
 const HomeStackNavigator = createStackNavigator<HomeStackScreens>();
 
 const HomeNavigator = () => {
+    const asd = async () => {
+        console.log('can open Url', await Linking.canOpenURL('exp://192.168.1.3:19000/--/home/sidebar/decentraveller/explore'))
+    }
+    asd()
     return (
         <CreatePlaceProvider>
             <HomeStackNavigator.Navigator initialRouteName="LeftSideBar" screenOptions={{ headerShown: false }}>

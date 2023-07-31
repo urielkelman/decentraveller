@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { AppContext, useAppContext } from '../context/AppContext';
+import {NavigationContainer, useNavigation} from '@react-navigation/native';
+import { useAppContext } from '../context/AppContext';
 import WrongChainModal from './login/WrongChainModal';
 import LoginNavigator from './login/LoginNavigator';
 import RegistrationNavigator from './users/registration/RegistrationNavigator';
@@ -12,6 +12,9 @@ import { useWalletConnectModal } from '@walletconnect/modal-react-native';
 
 const adapter = apiAdapter;
 
+import * as Linking from 'expo-linking';
+
+const prefix = Linking.createURL('/');
 const DecentravellerInitialScreen = () => {
     const { isConnected, address } = useWalletConnectModal();
     const [stackToRender, setStackToRender] = React.useState<'Login' | 'Home' | 'Registration'>('Login');
@@ -73,8 +76,38 @@ const DecentravellerInitialScreen = () => {
         }
     };
 
+    console.log(prefix)
+
     return (
-        <NavigationContainer>
+        <NavigationContainer
+            linking={{
+                prefixes: [prefix],
+                config: {
+                    screens: {
+                        HomeNavigator: {
+                            initialRouteName: 'Home',
+                            path: 'home',
+                            screens: {
+                                LeftSideBar: {
+                                    initialRouteName: 'Decentraveller',
+                                    path: 'sidebar',
+                                    screens: {
+                                        Decentraveller: {
+                                            path: 'decentraveller',
+                                            screens: {
+                                                Home: 'home',
+                                                ExplorePlaces: 'explore',
+                                                Community: 'community',
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                }
+            }}
+        >
             <WrongChainModal />
             {navigatorToRender()}
         </NavigationContainer>

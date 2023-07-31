@@ -13,7 +13,7 @@ import {
     Montserrat_800ExtraBold,
 } from '@expo-google-fonts/montserrat';
 import { useFonts } from 'expo-font';
-import {Alert} from "react-native";
+import {Alert, Linking} from "react-native";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -42,12 +42,15 @@ export default function App() {
     }, [fontsLoaded]);
 
     useEffect(() => {
-        const subscription = Notifications.addNotificationReceivedListener((notification) => {
-            console.log('notification received')
-            console.log(notification);
-            let title = notification.request.content.title; // Notification title
-            let body = notification.request.content.body; // Notification body or message
-            let data = notification.request.content.data; // Extra data sent along with the notification
+        const subscription = Notifications.addNotificationResponseReceivedListener((response) => {
+            console.log('notification received was touch')
+            console.log(response.notification);
+            let title = response.notification.request.content.title; // Notification title
+            let body = response.notification.request.content.body; // Notification body or message
+            let url = response.notification.request.content.data.url as string // Extra data sent along with the notification
+
+            Linking.openURL(url);
+
 
             // Now, you can handle the notification in any way you want.
             // For example, you could show an alert with the notification message:
