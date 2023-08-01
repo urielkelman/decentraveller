@@ -31,7 +31,7 @@ const HomeStackNavigator = createStackNavigator<HomeStackScreens>();
 
 const HomeNavigator = () => {
     const asd = async () => {
-        console.log('can open Url', await Linking.canOpenURL('exp://192.168.1.3:19000/--/home/sidebar/decentraveller/explore'))
+        console.log('can open Url', await Linking.openURL('exp://192.168.1.3:19000/--/explore'))
     }
     asd()
     return (

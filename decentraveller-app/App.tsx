@@ -48,7 +48,7 @@ export default function App() {
             let title = response.notification.request.content.title; // Notification title
             let body = response.notification.request.content.body; // Notification body or message
             let url = response.notification.request.content.data.url as string // Extra data sent along with the notification
-
+            console.log('arrived url', url)
             Linking.openURL(url);
 
 

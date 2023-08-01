@@ -49,7 +49,7 @@ class PushNotificationAdapter(NotificationAdapter):
                             sound='default',
                             badge=1,
                             body=message,
-                            data={'url': 'decentraveller://explore'}))
+                            data={'url': 'decentraveller://home/sidebar/explore'}))
             response.validate_response()
         except (PushServerError, ConnectionError, HTTPError) as exc:
             # Encountered some likely formatting/validation error.

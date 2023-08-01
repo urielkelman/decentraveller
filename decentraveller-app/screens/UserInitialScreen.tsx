@@ -84,22 +84,13 @@ const DecentravellerInitialScreen = () => {
                 prefixes: [prefix],
                 config: {
                     screens: {
-                        HomeNavigator: {
-                            initialRouteName: 'Home',
-                            path: 'home',
+                        LeftSideBar: {
                             screens: {
-                                LeftSideBar: {
-                                    initialRouteName: 'Decentraveller',
-                                    path: 'sidebar',
+                                Decentraveller: {
                                     screens: {
-                                        Decentraveller: {
-                                            path: 'decentraveller',
-                                            screens: {
-                                                Home: 'home',
-                                                ExplorePlaces: 'explore',
-                                                Community: 'community',
-                                            },
-                                        },
+                                        Home: 'home',
+                                        ExplorePlaces: 'explore',
+                                        Community: 'community',
                                     },
                                 },
                             },
