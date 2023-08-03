@@ -18,7 +18,7 @@ review_router = InferringRouter()
 @cbv(review_router)
 class ReviewCBV:
     database: RelationalDatabase = Depends(build_relational_database)
-    ipfs_controller: IPFSService = Depends(IPFSService)
+    ipfs_service: IPFSService = Depends(IPFSService)
 
     @review_router.post("/review", status_code=201, dependencies=[Depends(indexer_auth)])
     def create_review(self, review: ReviewInput) -> ReviewWithProfile:
@@ -29,7 +29,7 @@ class ReviewCBV:
         :return: the review data
         """
         for h in review.images:
-            self.ipfs_controller.pin_file(h)
+            self.ipfs_service.pin_file(h)
         try:
             r = self.database.add_review(review)
         except IntegrityError as e:
@@ -100,6 +100,6 @@ class ReviewCBV:
         image_hash = self.database.get_review_image_hash(id, place_id, image_number)
         if image_hash is None:
             raise HTTPException(status_code=HTTP_404_NOT_FOUND)
-        image_bytes = self.ipfs_controller.get_file(image_hash)
+        image_bytes = self.ipfs_service.get_file(image_hash)
         return Response(content=image_bytes,
                         media_type="image/jpeg")

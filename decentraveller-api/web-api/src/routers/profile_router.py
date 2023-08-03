@@ -21,7 +21,7 @@ profile_router = InferringRouter()
 class ProfileCBV:
     database: RelationalDatabase = Depends(build_relational_database)
     avatar_generator: AvatarGenerator = Depends(AvatarGenerator)
-    ipfs_controller: IPFSService = Depends(IPFSService)
+    ipfs_service: IPFSService = Depends(IPFSService)
 
     @profile_router.get("/profile/{owner}")
     def get_profile(self, owner: WalletID = Depends(wallet_id_validator)) -> ProfileInDB:
@@ -83,7 +83,7 @@ class ProfileCBV:
                             media_type="image/jpeg")
         else:
             try:
-                image_bytes = self.ipfs_controller.get_file(profile.ipfs_hash)
+                image_bytes = self.ipfs_service.get_file(profile.ipfs_hash)
                 image_bytes = self.resize_image(image_bytes, res)
                 return Response(content=image_bytes,
                                 media_type="image/jpeg")
@@ -121,11 +121,11 @@ class ProfileCBV:
         profile = self.database.get_profile_orm(owner)
         file = self.adapt_new_avatar(file)
         try:
-            filehash = self.ipfs_controller.add_file(file)
+            filehash = self.ipfs_service.add_file(file)
         except MaximumUploadSizeExceeded:
             raise HTTPException(status_code=HTTP_400_BAD_REQUEST,
                                 detail="The file is too big.")
-        self.ipfs_controller.pin_file(filehash)
+        self.ipfs_service.pin_file(filehash)
         self.database.add_image(filehash, pinned=True)
         profile.ipfs_hash = filehash
         self.database.session.add(profile)

@@ -25,7 +25,7 @@ place_router = InferringRouter()
 class PlaceCBV:
     database: RelationalDatabase = Depends(build_relational_database)
     vector_database: VectorDatabase = Depends(VectorDatabase)
-    ipfs_controller: IPFSService = Depends(IPFSService)
+    ipfs_service: IPFSService = Depends(IPFSService)
 
     @place_router.post("/place", status_code=201, dependencies=[Depends(indexer_auth)])
     def create_place(self, place: PlaceInDB) -> PlaceWithStats:
@@ -187,6 +187,6 @@ class PlaceCBV:
         image_hash = self.database.get_place_image_hash(place_id)
         if image_hash is None:
             raise HTTPException(status_code=HTTP_404_NOT_FOUND)
-        image_bytes = self.ipfs_controller.get_file(image_hash)
+        image_bytes = self.ipfs_service.get_file(image_hash)
         return Response(content=image_bytes,
                         media_type="image/jpeg")
