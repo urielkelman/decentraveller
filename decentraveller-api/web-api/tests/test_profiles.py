@@ -51,7 +51,7 @@ def test_create_profile(cleanup):
     response = client.get("/profile/0xeB7C917821796eb627C0719A23a139ce51226CD2/avatar.jpg")
     assert response.status_code == 200
 
-def test_profile_chance_avatar(cleanup):
+def test_profile_change_avatar(cleanup):
     response = client.post("/profile",
                            json={"owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                  "nickname": "test",

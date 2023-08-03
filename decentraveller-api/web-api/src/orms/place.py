@@ -1,6 +1,7 @@
 from sqlalchemy import Column, String, Float, Integer, Enum, ForeignKey
-from src.orms import Base
+
 from src.api_models.place_category import PlaceCategory
+from src.orms import Base
 
 
 class PlaceORM(Base):

@@ -8,12 +8,14 @@ from starlette.status import HTTP_400_BAD_REQUEST
 from typing_extensions import Annotated
 
 from src.dependencies.ipfs_service import IPFSService, MaximumUploadSizeExceeded
+from src.dependencies.relational_database import build_relational_database, RelationalDatabase
 
 image_asset_router = InferringRouter()
 
 
 @cbv(image_asset_router)
 class ImageAssetCBV:
+    database: RelationalDatabase = Depends(build_relational_database)
     ipfs_controller: IPFSService = Depends(IPFSService)
 
     @staticmethod
@@ -44,5 +46,5 @@ class ImageAssetCBV:
         except MaximumUploadSizeExceeded:
             raise HTTPException(status_code=HTTP_400_BAD_REQUEST,
                                 detail="The file is too big.")
-        self.ipfs_controller.pin_file(filehash)
+        self.database.add_image(filehash)
         return {"hash": filehash}

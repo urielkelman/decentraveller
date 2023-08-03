@@ -25,8 +25,9 @@ class MockIPFS(IPFSService):
     """
     Mock IPFS
     """
+    _data = {}
     def __init__(self):
-        self._data = {}
+        return
 
     def add_file(self, file: bytes) -> str:
         """
@@ -34,7 +35,9 @@ class MockIPFS(IPFSService):
         :param file: the file to add
         :return: the hash of the stored file
         """
-        self._data[sha256(file).hexdigest()] = file
+        filehash = sha256(file).hexdigest()
+        self._data[filehash] = file
+        return filehash
 
     def pin_file(self, file_hash: str) -> None:
         """

@@ -39,6 +39,23 @@ class ProfileCBV:
 
         return ProfileInDB.from_orm(profile)
 
+    @staticmethod
+    def resize_image(image: bytes, size: int) -> bytes:
+        """
+        Resizes an image as squared and compress it
+        :param image: the image bytes
+        :param size: new size of the image
+        :return: the new image bytes
+        """
+        image = Image.open(BytesIO(image))
+        image = image.resize((size, size)).convert('RGBA')
+        final = Image.new("RGB", image.size, (255, 255, 255))
+        final.paste(image, (0, 0), image)
+
+        bytesfile = BytesIO()
+        final.save(bytesfile, format='jpeg', optimize=True, quality=95)
+        return bytesfile.getvalue()
+
     @profile_router.get("/profile/{owner}/avatar.jpg",
                         responses={
                             200: {
@@ -66,13 +83,15 @@ class ProfileCBV:
                             media_type="image/jpeg")
         else:
             try:
-                return Response(content=self.ipfs_controller.get_file(profile.ipfs_hash),
+                image_bytes = self.ipfs_controller.get_file(profile.ipfs_hash)
+                image_bytes = self.resize_image(image_bytes, res)
+                return Response(content=image_bytes,
                                 media_type="image/jpeg")
             except FileNotFoundError:
                 raise HTTPException(status_code=HTTP_404_NOT_FOUND)
 
     @staticmethod
-    def resize_image_squared(image: bytes) -> bytes:
+    def adapt_new_avatar(image: bytes) -> bytes:
         """
         Resizes an image as squared and compress it
         :param image: the image bytes
@@ -100,13 +119,14 @@ class ProfileCBV:
         """
 
         profile = self.database.get_profile_orm(owner)
-        file = self.resize_image_squared(file)
+        file = self.adapt_new_avatar(file)
         try:
             filehash = self.ipfs_controller.add_file(file)
         except MaximumUploadSizeExceeded:
             raise HTTPException(status_code=HTTP_400_BAD_REQUEST,
                                 detail="The file is too big.")
         self.ipfs_controller.pin_file(filehash)
+        self.database.add_image(filehash, pinned=True)
         profile.ipfs_hash = filehash
         self.database.session.add(profile)
         self.database.session.commit()

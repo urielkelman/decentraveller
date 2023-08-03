@@ -1,15 +1,17 @@
 from typing import Optional, Dict, List, Union, Callable, Tuple
 
-from sqlalchemy import func, case, tuple_
+from sqlalchemy import func, case, tuple_, and_
 from sqlalchemy.orm import Session
 
 from src.api_models.bulk_results import PaginatedReviews, PaginatedPlaces
 from src.api_models.place import PlaceID, PlaceInDB, PlaceWithStats
 from src.api_models.profile import ProfileInDB, WalletID
-from src.api_models.review import ReviewID, ReviewInDB, ReviewBody, ReviewWithProfile
+from src.api_models.review import ReviewID, ReviewInDB, ReviewWithProfile, ReviewInput
+from src.orms.image import ImageORM
 from src.orms.place import PlaceORM
 from src.orms.profile import ProfileORM
 from src.orms.review import ReviewORM
+from src.orms.review_image import ReviewImageORM
 
 
 def build_relational_database():
@@ -57,8 +59,7 @@ class RelationalDatabase:
         :param review_count: the review count
         :return: the relevancy score
         """
-        return case((review_count == 0, 0), else_=mean_score*func.log(review_count))
-
+        return case((review_count == 0, 0), else_=mean_score * func.log(review_count))
 
     @staticmethod
     def km_distance_query_func(lat1: float, lon1: float,
@@ -112,9 +113,18 @@ class RelationalDatabase:
         result = self.session.query(ReviewORM, ProfileORM). \
             join(ProfileORM, ProfileORM.owner == ReviewORM.owner). \
             filter(tuple_(ReviewORM.id, ReviewORM.place_id).in_(tuple(ids))).all()
+        image_counts = self.session.query(ReviewImageORM.review_id,
+                                          ReviewImageORM.place_id,
+                                          func.count(ReviewImageORM.hash)). \
+            filter(tuple_(ReviewImageORM.review_id, ReviewORM.place_id).in_(tuple(ids))). \
+            all()
+        image_counts = {(c[0], c[1]): c[2] for c in image_counts}
         parsed_result = []
         for p in result:
-            review = ReviewInDB.from_orm(p[0]).dict()
+            count = 0
+            if (p[0].id, p[0].place_id) in image_counts:
+                count = image_counts[(p[0].id, p[0].place_id)]
+            review = ReviewInDB(**p[0].__dict__, image_count=count).dict()
             review['owner'] = ProfileInDB.from_orm(p[1])
             parsed_result.append(review)
         return [ReviewWithProfile(**p)
@@ -185,7 +195,7 @@ class RelationalDatabase:
             return None
         return reviews[0]
 
-    def add_review(self, review: ReviewBody):
+    def add_review(self, review: ReviewInput):
         """
         Adds a review to the database
         :param review: the review data to add
@@ -193,11 +203,18 @@ class RelationalDatabase:
         """
         review_orm = ReviewORM(id=review.id, place_id=review.place_id,
                                score=review.score, owner=review.owner,
-                               text=review.text, images=review.images,
-                               state=review.state)
+                               text=review.text, state=review.state)
         self.session.add(review_orm)
+        for h in review.images:
+            image_orm = self.session.query(ImageORM).get(h)
+            image_orm.pinned = True
+            review_image_orm = ReviewImageORM(hash=h, review_id=review.id,
+                                              place_id=review.place_id)
+            self.session.add(image_orm)
+            self.session.add(review_image_orm)
         self.session.commit()
-        return ReviewInDB.from_orm(review_orm)
+        reviews = self._get_reviews_by_ids([(review.id, review.place_id)])
+        return reviews[0]
 
     def get_profile_orm(self,
                         owner: WalletID) -> Optional[ProfileORM]:
@@ -265,3 +282,45 @@ class RelationalDatabase:
         places = self._get_places_by_ids([i[0] for i in query.all()])
         return PaginatedPlaces(page=page, per_page=per_page,
                                total=total_count, places=places)
+
+    def add_image(self, filehash: str, pinned: bool = False) -> None:
+        """
+        Adds an image to the database
+        :param filehash: hash of ipfs
+        :param pinned: if the file is pinned
+        """
+        image_orm = ImageORM(hash=filehash, pinned=pinned)
+        self.session.add(image_orm)
+        self.session.commit()
+
+    def get_review_image_hash(self, review_id: ReviewID,
+                              place_id: PlaceID, image_number: int) -> Optional[str]:
+        """
+        Gets a review image hash
+
+        :param review_id: the review id
+        :param place_id: the place id
+        :param image_number: the number of image
+        :return: a filehash or None if the image does not exist
+        """
+        image_query = self.session.query(ReviewImageORM.hash). \
+            join(ImageORM, ImageORM.hash == ReviewImageORM.hash).\
+            filter(and_(ReviewImageORM.review_id == review_id, ReviewImageORM.place_id == place_id)).\
+            order_by(ImageORM.created_at.asc()).offset(image_number - 1).limit(1).all()
+        if not image_query:
+            return None
+        return image_query[0][0]
+
+    def get_place_image_hash(self, place_id: PlaceID) -> Optional[str]:
+        """
+        Gets a place image hash
+        :param place_id: the place id
+        :return: the image bytes or None if there is no image
+        """
+        image_query = self.session.query(ReviewImageORM.hash). \
+            join(ImageORM, ImageORM.hash == ReviewImageORM.hash).\
+            filter(ReviewImageORM.place_id == place_id).\
+            order_by(ImageORM.score.desc()).limit(1).all()
+        if not image_query:
+            return None
+        return image_query[0][0]
