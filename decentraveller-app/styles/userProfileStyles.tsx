@@ -10,7 +10,7 @@ const userProfileMainStyles = StyleSheet.create({
         borderRadius: 10,
         marginHorizontal: 13,
         marginTop: 20,
-        width: 388,
+        width: 338,
         height: 247,
     },
     imageContainer: {
@@ -63,7 +63,7 @@ const userProfileMainStyles = StyleSheet.create({
         borderRadius: 10,
         marginHorizontal: 13,
         marginTop: 10,
-        width: 388,
+        width: 338,
         height: 100,
     },
     spacedBetweenView: {
