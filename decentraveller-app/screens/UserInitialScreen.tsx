@@ -77,14 +77,15 @@ const DecentravellerInitialScreen = () => {
     };
 
     console.log(prefix)
-
+    console.log("l", Linking.createURL("/explore"))
     return (
         <NavigationContainer
             linking={{
-                prefixes: [prefix],
+                prefixes: [Linking.createURL('/')],
                 config: {
                     screens: {
                         LeftSideBar: {
+                            // @ts-ignore
                             screens: {
                                 Decentraveller: {
                                     screens: {

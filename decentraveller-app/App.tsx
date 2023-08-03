@@ -13,7 +13,7 @@ import {
     Montserrat_800ExtraBold,
 } from '@expo-google-fonts/montserrat';
 import { useFonts } from 'expo-font';
-import {Alert, Linking} from "react-native";
+import * as Linking from 'expo-linking';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -45,22 +45,9 @@ export default function App() {
         const subscription = Notifications.addNotificationResponseReceivedListener((response) => {
             console.log('notification received was touch')
             console.log(response.notification);
-            let title = response.notification.request.content.title; // Notification title
-            let body = response.notification.request.content.body; // Notification body or message
-            let url = response.notification.request.content.data.url as string // Extra data sent along with the notification
-            console.log('arrived url', url)
-            Linking.openURL(url);
-
-
-            // Now, you can handle the notification in any way you want.
-            // For example, you could show an alert with the notification message:
-            /*Notifications.scheduleNotificationAsync({
-                content: {
-                    title: title,
-                    body: body,
-                },
-                trigger: null,
-            });*/
+            let path = response.notification.request.content.data.path as string // Extra data sent along with the notification
+            console.log('arrived path', path)
+            Linking.openURL(Linking.createURL(path));
         });
 
         return () => {

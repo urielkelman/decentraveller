@@ -9,12 +9,17 @@ import logging
 import requests
 from requests.exceptions import ConnectionError, HTTPError
 
+from src.api_models.profile import WalletID
+
 logger = logging.getLogger(__name__)
 
 
 class NotificationAdapter(ABC):
+    def __send_push_message__(self, token, message, extra):
+        pass
+
     @abstractmethod
-    def send_push_message(self, token, message, extra):
+    def send_new_review_on_place(self, token: str, place_name: str, writer_nickname: str):
         pass
 
 
@@ -24,11 +29,14 @@ def build_notification_adapter():
 
 class MockNotificationAdapter(NotificationAdapter):
 
-    def send_push_message(self, token, message, extra):
-        print('Invoked mocked method')
+    def send_new_review_on_place(self, token: str, place_name: str, writer_nickname: str):
+        pass
 
 
 class PushNotificationAdapter(NotificationAdapter):
+    # This is a development scheme. In standalone app, use "decentraveller://".
+    DEEP_LINK_SCHEME = "exp://192.168.1.3:19000/--/"
+
     def __init__(self):
         self.session = requests.Session()
         self.session.headers.update(
@@ -40,16 +48,23 @@ class PushNotificationAdapter(NotificationAdapter):
             }
         )
 
-    def send_push_message(self, token, message, extra=None):
+    def send_new_review_on_place(self, token: str, place_name: str, writer_nickname: str):
+        self.__send_push_message__(
+            token=token,
+            heading="There is a new review in %s!" % place_name,
+            content="% left a new comment and scoring." % writer_nickname,
+            deep_link_path="explore"
+        )
+
+    def __send_push_message__(self, token: str, heading: str, content: str, deep_link_path=None):
         try:
-            logger.info('Expo token: {}'.format(token))
             response = PushClient(session=self.session).publish(
                 PushMessage(to=token,
-                            title='Push',
+                            title=heading,
                             sound='default',
                             badge=1,
-                            body=message,
-                            data={'url': 'decentraveller://home/sidebar/explore'}))
+                            body=content,
+                            data={'path': self.DEEP_LINK_SCHEME + deep_link_path} if deep_link_path is not None else None))
             response.validate_response()
         except (PushServerError, ConnectionError, HTTPError) as exc:
             # Encountered some likely formatting/validation error.
