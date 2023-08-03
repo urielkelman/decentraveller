@@ -1,6 +1,5 @@
 import { Modal, Pressable, View, Text, StyleSheet } from 'react-native';
 import { useAppContext } from '../../context/AppContext';
-import { useWalletConnect } from '@walletconnect/react-native-dapp';
 
 const styles = StyleSheet.create({
     centeredView: {

@@ -11,7 +11,7 @@ import HomeNavigator from './home/HomeNavigator';
 const adapter = mockApiAdapter;
 
 const DecentravellerInitialScreen = () => {
-    let [stackToRender, setStackToRender] = React.useState<'Login' | 'Home' | 'Registration'>('Home');
+    let [stackToRender, setStackToRender] = React.useState<'Login' | 'Home' | 'Registration'>('Login');
     const appContext = useAppContext();
     const setUserProfileImage = appContext.userProfileImage.setValue;
     const setUserNickname = appContext.userNickname.setValue;
@@ -19,11 +19,14 @@ const DecentravellerInitialScreen = () => {
     const setUserInterest = appContext.userInterest.setValue;
 
     const getUser = async () => {
-        const user = await adapter.getUser('uri', () => {
+        const user = await adapter.getUser(appContext.connectionContext.connectedAddress, () => {
             setStackToRender('Registration');
         });
 
-        if (!user) return;
+        if (!user) {
+            setStackToRender('Registration');
+            return;
+        }
 
         const userProfileImage = await adapter.getUserProfileImage('uri', () => {
             console.log('There was a problem fetching the image');
@@ -38,12 +41,10 @@ const DecentravellerInitialScreen = () => {
         setStackToRender('Home');
     };
 
-    console.log(appContext.connectionContext);
-
     useEffect(() => {
         (async () => {
             if (!appContext.connectionContext) {
-                setStackToRender('Home');
+                setStackToRender('Login');
             } else {
                 await getUser();
             }
