@@ -17,8 +17,8 @@ const RegisterUserScreen = ({ navigation }) => {
     const { web3Provider } = useAppContext();
 
     const handleSubmit = async () => {
-        //const adapter = blockchainAdapter;
-        const adapter = mockBlockchainAdapter
+        const adapter = blockchainAdapter;
+        //const adapter = mockBlockchainAdapter
 
         const transactionHash = await adapter.createRegisterUserTransaction(
             web3Provider,
