@@ -1,0 +1,8 @@
+FROM python:3.9
+WORKDIR /api
+COPY web-api/pyproject.toml .
+RUN apt-get update
+RUN apt-get install libsvm-dev
+RUN pip3 install poetry
+RUN poetry install --with dev
+COPY ./web-api .
