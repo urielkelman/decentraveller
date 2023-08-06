@@ -11,14 +11,14 @@ import UserReviewsScreen from '../users/profile/UserReviewsScreen';
 import AddReviewComment from '../reviews/AddReviewComment';
 import SuccessAddReviewScreen from '../reviews/SuccessAddReviewScreen';
 import AddReviewImages from '../reviews/AddReviewImages';
-import { PlaceDetailData } from './place/types';
-import {Linking} from "react-native";
+import { PlaceDetailParams } from './place/types';
+import * as Linking from 'expo-linking';
 
 export type HomeStackScreens = {
     LeftSideBar: undefined;
     CreatePlaceNameScreen: undefined;
     CreatePlaceLocationScreen: undefined;
-    PlaceDetailScreen: { placeItemData: PlaceDetailData };
+    PlaceDetailScreen: PlaceDetailParams;
     Profile: undefined;
     UserPlacesScreen: undefined;
     UserReviewsScreen: undefined;
@@ -31,7 +31,7 @@ const HomeStackNavigator = createStackNavigator<HomeStackScreens>();
 
 const HomeNavigator = () => {
     const asd = async () => {
-        console.log('can open Url', await Linking.openURL('decentraveller://explore'))
+        console.log('can open Url', await Linking.canOpenURL('decentraveller://explore'))
     }
     asd()
     return (

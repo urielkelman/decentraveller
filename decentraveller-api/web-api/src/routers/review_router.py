@@ -36,7 +36,11 @@ class ReviewCBV:
             self.push_notification_adapter.send_new_review_on_place(
                 token=place_owner.push_token,
                 place_name=place_from_review.name,
-                writer_nickname=inserted_review_owner.nickname
+                writer_nickname=inserted_review_owner.nickname,
+                place_id=place_from_review.id,
+                place_score=place_from_review.score,
+                address=place_from_review.address,
+                reviews=place_from_review.reviews
             )
             return inserted_review
         except IntegrityError:

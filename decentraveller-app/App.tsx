@@ -47,7 +47,7 @@ export default function App() {
             console.log(response.notification);
             let path = response.notification.request.content.data.path as string // Extra data sent along with the notification
             console.log('arrived path', path)
-            Linking.openURL(Linking.createURL(path));
+            Linking.openURL(path);
         });
 
         return () => {

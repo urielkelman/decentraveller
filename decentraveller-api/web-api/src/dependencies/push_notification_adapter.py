@@ -1,4 +1,6 @@
 from abc import ABC, abstractmethod
+from typing import Optional
+
 from exponent_server_sdk import (
     DeviceNotRegisteredError,
     PushClient,
@@ -19,7 +21,10 @@ class NotificationAdapter(ABC):
         pass
 
     @abstractmethod
-    def send_new_review_on_place(self, token: str, place_name: str, writer_nickname: str):
+    def send_new_review_on_place(
+            self, token: str, writer_nickname: str, place_name: str, place_id: int, place_score: Optional[float],
+            address: str, reviews: int
+    ):
         pass
 
 
@@ -29,7 +34,10 @@ def build_notification_adapter():
 
 class MockNotificationAdapter(NotificationAdapter):
 
-    def send_new_review_on_place(self, token: str, place_name: str, writer_nickname: str):
+    def send_new_review_on_place(
+            self, token: str, writer_nickname: str, place_name: str, place_id: int, place_score: Optional[float],
+            address: str, reviews: int
+    ):
         pass
 
 
@@ -48,12 +56,21 @@ class PushNotificationAdapter(NotificationAdapter):
             }
         )
 
-    def send_new_review_on_place(self, token: str, place_name: str, writer_nickname: str):
+    def send_new_review_on_place(
+            self, token: str, writer_nickname: str, place_name: str, place_id: int, place_score: Optional[float],
+            address: str, reviews: int
+    ):
         self.__send_push_message__(
             token=token,
-            heading="There is a new review in %s!" % place_name,
-            content="% left a new comment and scoring." % writer_nickname,
-            deep_link_path="explore"
+            heading="There is a new review in {name}!".format(name=place_name),
+            content="{writer} left a new comment and scoring.".format(writer=writer_nickname),
+            deep_link_path="place/{id}/{name}/{address}/{score}/{reviewCount}".format(
+                id=str(place_id),
+                name=place_name,
+                address=address,
+                score=str(place_score),
+                reviewCount=str(reviews)
+            )
         )
 
     def __send_push_message__(self, token: str, heading: str, content: str, deep_link_path=None):

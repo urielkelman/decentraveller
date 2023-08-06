@@ -76,12 +76,10 @@ const DecentravellerInitialScreen = () => {
         }
     };
 
-    console.log(prefix)
-    console.log("l", Linking.createURL("/explore"))
     return (
         <NavigationContainer
             linking={{
-                prefixes: [Linking.createURL('/')],
+                prefixes: [prefix],
                 config: {
                     screens: {
                         LeftSideBar: {
@@ -94,6 +92,16 @@ const DecentravellerInitialScreen = () => {
                                         Community: 'community',
                                     },
                                 },
+                            },
+                        },
+                        PlaceDetailScreen: {
+                            path: 'place/:id/:name/:address/:score/:reviewCount',
+                            parse: {
+                                id: (id) => `${id}`,
+                                name: (name) => `${name}`,
+                                address: (address) => `${address}`,
+                                score: (score) => Number(score),
+                                reviewCount: (reviewCount) => Number(reviewCount),
                             },
                         },
                     },

@@ -1,7 +1,7 @@
 import { NavigationProp, RouteProp } from '@react-navigation/native';
 import { HomeStackScreens } from '../HomeNavigator';
 
-export interface PlaceDetailData {
+export interface PlaceDetailParams {
     id: number;
     name: string;
     address: string;
@@ -21,9 +21,6 @@ export type AddReviewImagesScreenProp = NavigationProp<HomeStackScreens, 'AddRev
 
 export type CreatePlaceLocationScreenProp = NavigationProp<HomeStackScreens, 'CreatePlaceLocationScreen'>;
 
-type PlaceDetailParams = {
-    placeItemData: PlaceDetailData;
-};
 
 export type PlaceDetailScreenProp = NavigationProp<HomeStackScreens, 'PlaceDetailScreen'> & {
     route: RouteProp<HomeStackScreens, 'PlaceDetailScreen'> & {
@@ -31,10 +28,6 @@ export type PlaceDetailScreenProp = NavigationProp<HomeStackScreens, 'PlaceDetai
     };
 };
 
-type PlaceDetailScreenParams = {
-    placeItemData: PlaceDetailData;
-};
-
 export type PlaceDetailScreenProps = {
-    route: RouteProp<Record<string, PlaceDetailScreenParams>, string>;
+    route: RouteProp<Record<string, PlaceDetailParams>, string>;
 };

@@ -37,6 +37,8 @@ const main = async () => {
     const registerHardhatProfileTx =
         await decentravellerContractHardhat.registerProfile("hardhat", "AR", 1);
 
+    await registerHardhatProfileTx.wait();
+
     const registerProfileTx =
         await decentravellerContractWallet.registerProfile("uriztek", "AR", 0);
     await registerProfileTx.wait();
@@ -54,19 +56,6 @@ const main = async () => {
     // Add review to place using hardhat wallet.
     const createdPlaceAddress = addPlaceTxReceipt.logs[0].address;
     console.log(createdPlaceAddress);
-    return;
-    const decentravellerPlace: DecentravellerPlace = await ethers.getContractAt(
-        "DecentravellerPlace",
-        createdPlaceAddress,
-        hardhatSigner
-    );
-    const addReviewTx = await decentravellerPlace.addReview(
-        "Excellent place to eat israeli food",
-        ["hash_1", "hash_2"],
-        5
-    );
-
-    await addReviewTx.wait();
 };
 
 main()
