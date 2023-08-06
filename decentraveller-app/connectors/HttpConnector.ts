@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {API_ENDPOINT} from '../api/config';
+import { API_ENDPOINT } from '../api/config';
 
 interface HttpBaseRequest {
     url: string;
@@ -25,19 +25,19 @@ class HttpConnector {
     private static processError(httpRequest: HttpBaseRequest, error: any) {
         if (axios.isAxiosError(error) && error.code !== 'ERR_NETWORK') {
             console.log('is axios error');
-            console.log('Status', error)
+            console.log('Status', error);
             console.log(error.message);
             httpRequest.onStatusCodeError &&
                 httpRequest.onStatusCodeError[error.response.status] &&
                 httpRequest.onStatusCodeError[error.response.status]();
         } else {
-            console.log('ahora en el else')
+            console.log('ahora en el else');
             httpRequest.onUnexpectedError(error);
         }
     }
 
     async get<T>(httpGetRequest: HttpGetRequest): Promise<T> {
-        console.log(httpGetRequest)
+        console.log(httpGetRequest);
         try {
             const { data } = await axios.get<T>(httpGetRequest.url, {
                 baseURL: this.baseURL,
@@ -50,7 +50,7 @@ class HttpConnector {
     }
     async post<T>(httpPostRequest: HttpPostRequest): Promise<T> {
         try {
-            console.log('to post', httpPostRequest)
+            console.log('to post', httpPostRequest);
             const { data } = await axios.post<T>(httpPostRequest.url, httpPostRequest.body, {
                 baseURL: this.baseURL,
             });

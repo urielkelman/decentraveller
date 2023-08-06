@@ -21,7 +21,6 @@ export type AddReviewImagesScreenProp = NavigationProp<HomeStackScreens, 'AddRev
 
 export type CreatePlaceLocationScreenProp = NavigationProp<HomeStackScreens, 'CreatePlaceLocationScreen'>;
 
-
 export type PlaceDetailScreenProp = NavigationProp<HomeStackScreens, 'PlaceDetailScreen'> & {
     route: RouteProp<HomeStackScreens, 'PlaceDetailScreen'> & {
         params: PlaceDetailParams;

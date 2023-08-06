@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from 'react';
-import {NavigationContainer, useNavigation} from '@react-navigation/native';
+import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { useAppContext } from '../context/AppContext';
 import WrongChainModal from './login/WrongChainModal';
 import LoginNavigator from './login/LoginNavigator';
@@ -38,7 +38,7 @@ const DecentravellerInitialScreen = () => {
             console.log('There was a problem fetching the image');
         });
 
-        console.log(userProfileImage)
+        console.log(userProfileImage);
 
         setUserNickname(user.nickname);
         setUserCreatedAt(user.createdAt);
@@ -49,7 +49,7 @@ const DecentravellerInitialScreen = () => {
 
     useEffect(() => {
         (async () => {
-            console.log('useEffect')
+            console.log('useEffect');
             if (!isConnected) {
                 setStackToRender('Login');
             } else {
@@ -58,14 +58,14 @@ const DecentravellerInitialScreen = () => {
         })();
     }, [isConnected]);
 
-    console.log(isConnected)
+    console.log(isConnected);
 
     const onSuccessfulRegistration = () => {
         setStackToRender('Home');
     };
 
     const navigatorToRender = () => {
-        return <HomeNavigator />
+        return <HomeNavigator />;
         switch (stackToRender) {
             case 'Home':
                 return <HomeNavigator />;
@@ -105,7 +105,7 @@ const DecentravellerInitialScreen = () => {
                             },
                         },
                     },
-                }
+                },
             }}
         >
             <WrongChainModal />

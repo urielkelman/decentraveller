@@ -31,9 +31,9 @@ const HomeStackNavigator = createStackNavigator<HomeStackScreens>();
 
 const HomeNavigator = () => {
     const asd = async () => {
-        console.log('can open Url', await Linking.canOpenURL('decentraveller://explore'))
-    }
-    asd()
+        console.log('can open Url', await Linking.canOpenURL('decentraveller://explore'));
+    };
+    asd();
     return (
         <CreatePlaceProvider>
             <HomeStackNavigator.Navigator initialRouteName="LeftSideBar" screenOptions={{ headerShown: false }}>

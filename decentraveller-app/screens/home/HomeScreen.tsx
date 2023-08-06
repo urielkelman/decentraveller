@@ -18,7 +18,7 @@ const adapter = mockApiAdapter;
 const PERMISSION_GRANTED = 'granted';
 
 const HomeScreen = ({ navigation }) => {
-    console.log(navigation.getState())
+    console.log(navigation.getState());
     const { address, provider } = useWalletConnectModal();
     const { userLocation } = useAppContext();
     const [loadingRecommendedPlaces, setLoadingRecommendedPlaces] = React.useState<boolean>(false);
@@ -54,17 +54,17 @@ const HomeScreen = ({ navigation }) => {
         const latitude = location.coords.latitude.toString();
         const longitude = location.coords.longitude.toString();
         userLocation.setValue([latitude, longitude]);
-        console.log('to get')
+        console.log('to get');
         await getWithLocation([latitude, longitude]);
-        console.log('geted')
+        console.log('geted');
     };
 
     const obtainAndSetPushNotificationToken = async (): Promise<void> => {
-        console.log('register')
+        console.log('register');
         const pushNotificationToken = await registerForPushNotificationsAsync();
-        console.log('push token')
+        console.log('push token');
         await apiAdapter.sendPushNotificationToken('0x968C99f227a5D5015d3c50501C91353096AD7931', pushNotificationToken);
-//        await apiAdapter.sendPushNotificationToken(address, pushNotificationToken);
+        //        await apiAdapter.sendPushNotificationToken(address, pushNotificationToken);
     };
 
     useEffect(() => {

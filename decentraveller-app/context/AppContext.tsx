@@ -1,5 +1,5 @@
 import React from 'react';
-import {AppContextStateArg, AppContextType, ConnectionContext, DeviceDimensions} from './types';
+import { AppContextStateArg, AppContextType, ConnectionContext, DeviceDimensions } from './types';
 import { Dimensions } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useWalletConnectModal } from '@walletconnect/modal-react-native';
