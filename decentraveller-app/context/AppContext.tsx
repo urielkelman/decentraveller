@@ -107,7 +107,6 @@ const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
     const updateConnectionContext = async (address) => {
         const web3Provider = new ethers.providers.Web3Provider(provider);
         const chainId = (await web3Provider.getNetwork()).chainId;
-        console.log('chain id getted', chainId);
         console.log('Updating connection context', address, chainId);
         const isWrongChain = chainId !== DEFAULT_CHAIN_ID;
         const newConnectionContext = {

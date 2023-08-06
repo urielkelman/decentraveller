@@ -27,20 +27,15 @@ class BlockchainAdapter {
         const populatedTransaction: ethers.PopulatedTransaction = await ethersContract.populateTransaction[
             contractFunction.functionName
         ].call(this, ...args);
-        console.log('conn signer');
         const connectedSigner = web3Provider.getSigner();
-        console.log('conn signer getted');
 
         return await withTimeout(
             async () => {
-                console.log('about sent tx');
-
                 const txResponse: ethers.providers.TransactionResponse = await connectedSigner.sendTransaction({
                     to: contractAddress,
                     data: populatedTransaction.data,
                     chainId: DEFAULT_CHAIN_ID,
                 });
-                console.log('sent tx');
 
                 const txReceipt = await txResponse.wait();
                 if (txReceipt.status === 0) {

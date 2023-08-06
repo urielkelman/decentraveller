@@ -43,8 +43,6 @@ export default function App() {
 
     useEffect(() => {
         const subscription = Notifications.addNotificationResponseReceivedListener((response) => {
-            console.log('notification received was touch');
-            console.log(response.notification);
             let path = response.notification.request.content.data.path as string; // Extra data sent along with the notification
             console.log('arrived path', path);
             Linking.openURL(path);

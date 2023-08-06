@@ -13,9 +13,6 @@ class AvatarGenerator:
     AVATAR_BACKGROUND = (69, 113, 78)
 
     def __init__(self):
-        cwd = os.getcwd()
-
-        print(f"Current working directory: {cwd}")
         self.faces = os.listdir(self.FACES_PATH)
         self.accesories = os.listdir(self.ACCESSORIES_PATH)
         self.overlays = os.listdir(self.OVERLAYS_PATH)

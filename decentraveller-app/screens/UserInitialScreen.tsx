@@ -49,7 +49,6 @@ const DecentravellerInitialScreen = () => {
 
     useEffect(() => {
         (async () => {
-            console.log('useEffect');
             if (!isConnected) {
                 setStackToRender('Login');
             } else {
@@ -58,14 +57,11 @@ const DecentravellerInitialScreen = () => {
         })();
     }, [isConnected]);
 
-    console.log(isConnected);
-
     const onSuccessfulRegistration = () => {
         setStackToRender('Home');
     };
 
     const navigatorToRender = () => {
-        return <HomeNavigator />;
         switch (stackToRender) {
             case 'Home':
                 return <HomeNavigator />;
