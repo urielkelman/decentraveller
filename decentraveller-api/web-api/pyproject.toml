@@ -19,6 +19,7 @@ urllib3 = "^1.26.0"
 httpx = "*"
 exponent_server_sdk = "*"
 uvicorn = {version = "*", extras = ["standard"]}
+python-multipart = "^0.0.6"
 
 
 [tool.poetry.group.dev.dependencies]

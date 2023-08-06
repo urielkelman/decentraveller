@@ -10,6 +10,18 @@ services:
       - POSTGRES_USER=webapi
       - POSTGRES_PASSWORD=webapi
       - POSTGRES_DB=webapi
+  
+  ipfs:
+    image: ipfs/kubo:latest
+    ports:
+      - 4001:4001/udp
+      - 4001:4001
+      - 5001:5001
+      - 8080:8080
+    environment:
+      - IPFS_PATH=/ipfs_data
+    volumes:
+      - ./decentraveller-ipfs:/ipfs_data
 
   api:
     build: decentraveller-api/
@@ -19,10 +31,13 @@ services:
     environment:
       - SQLALCHEMY_DATABASE_URL=postgresql://webapi:webapi@database:5432/webapi
       - WEAVIATE_DATABASE_URL=http://weaviate:8080
+      - IPFS_NODE_URL=http://ipfs:5001
+      - PYTHONHASHSEED=0
       - INDEXER_API_KEY=asd123
     depends_on:
       - database
       - weaviate
+      - ipfs
   
   blockchain:
     build: decentraveller-blockchain/

@@ -18,3 +18,7 @@ __pycache__*
 *poetry.lock
 
 volumes/
+decentraveller-ipfs/*
+!decentraveller-ipfs/config
+!decentraveller-ipfs/datastore_spec
+!decentraveller-ipfs/version
