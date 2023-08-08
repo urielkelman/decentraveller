@@ -18,4 +18,8 @@ const obfuscateAddress = (address) => {
 
 const formatString = (str, vars) => str.replace(/{(.*?)}/g, (_, name) => vars[name]);
 
-export { withTimeout, obfuscateAddress, formatString };
+const sleep = (ms: number): Promise<void> => {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+};
+
+export { withTimeout, obfuscateAddress, formatString, sleep };

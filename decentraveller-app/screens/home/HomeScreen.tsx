@@ -49,8 +49,14 @@ const HomeScreen = ({ navigation }) => {
             }
         }
         console.log('Permission granted');
-        const location = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.High });
-        console.log('location', location);
+        const location = await Location.getLastKnownPositionAsync();
+
+        if (location === null) {
+            console.log('Could not retrieve last position');
+            await getWithLocation([]);
+            return;
+        }
+
         const latitude = location.coords.latitude.toString();
         const longitude = location.coords.longitude.toString();
         userLocation.setValue([latitude, longitude]);
