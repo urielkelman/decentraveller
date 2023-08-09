@@ -1,3 +1,5 @@
+import logging
+
 from fastapi import Depends, HTTPException, Query, Response, File
 from typing_extensions import Annotated
 from fastapi_utils.cbv import cbv
@@ -5,7 +7,7 @@ from fastapi_utils.inferring_router import InferringRouter
 from sqlalchemy.exc import IntegrityError
 from starlette.status import HTTP_400_BAD_REQUEST, HTTP_404_NOT_FOUND
 
-from src.api_models.profile import ProfileInDB, ProfileBody, WalletID, wallet_id_validator
+from src.api_models.profile import ProfileInDB, ProfileBody, WalletID, wallet_id_validator, ProfilePushTokenBody
 from src.dependencies.avatar_generator import AvatarGenerator
 from src.dependencies.ipfs_service import IPFSService, MaximumUploadSizeExceeded
 from src.dependencies.indexer_auth import indexer_auth
@@ -127,7 +129,7 @@ class ProfileCBV:
                 profile_orm.__setattr__(k, v)
         else:
 
-            profile_orm = ProfileORM(owner=profile.owner, nickname=profile.nickname,
+            profile_orm = ProfileORM(owner=profile.owner.lower(), nickname=profile.nickname,
                                      country=profile.country,
                                      interest=profile.interest)
             self.database.session.add(profile_orm)
@@ -137,3 +139,25 @@ class ProfileCBV:
             raise HTTPException(status_code=HTTP_400_BAD_REQUEST,
                                 detail="The nickname is already in use.")
         return ProfileInDB.from_orm(profile_orm)
+
+    @profile_router.post("/profile/push-token", status_code=201)
+    def post_profile_push_address(self, profile_push_token: ProfilePushTokenBody):
+        """
+            Saves a push token for an existing profile, so it can be used to send notifications later.
+
+            :param profile_push_token: the push token associated to an owner
+        """
+        profile_orm = self.database.get_profile_orm(WalletID(profile_push_token.owner.lower()))
+        if not profile_orm:
+            logging.error('Profile for address {} was not found.'.format(profile_push_token.owner))
+            raise HTTPException(status_code=HTTP_404_NOT_FOUND,
+                                detail="Non existent profile")
+
+        profile_orm.push_token = profile_push_token.push_token
+        self.database.session.add(profile_orm)
+        self.database.session.commit()
+
+        return Response(status_code=201)
+
+
+

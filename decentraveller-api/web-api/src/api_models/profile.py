@@ -41,6 +41,14 @@ class ProfileBody(APIModel):
         return wallet_id_validator(v)
 
 
+class ProfilePushTokenBody(APIModel):
+    """
+        Profile body API Model
+    """
+    owner: WalletID
+    push_token: str
+
+
 class ProfileInDB(ProfileBody):
     """
     Profile DB API Model

@@ -47,10 +47,11 @@ const styles = StyleSheet.create({
 
 const WrongChainModal = () => {
     const appContext = useAppContext();
-
+    // console.log(appContext.connectionContext && appContext.connectionContext.isWrongChain)
     return (
         <Modal
-            visible={appContext.connectionContext && appContext.connectionContext.isWrongChain}
+            //visible={appContext.connectionContext && appContext.connectionContext.isWrongChain}
+            visible={false}
             animationType="slide"
             transparent={false}
         >
@@ -59,7 +60,7 @@ const WrongChainModal = () => {
                     <Text style={styles.modalText}>Update to correct chain!</Text>
                     <Pressable
                         style={[styles.button, styles.buttonClose]}
-                        onPress={() => appContext.pushChangeUpdate()}
+                        //onPress={() => appContext.pushChangeUpdate()}
                     >
                         <Text style={styles.textStyle}>Update</Text>
                     </Pressable>

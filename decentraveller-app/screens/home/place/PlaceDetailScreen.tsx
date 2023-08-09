@@ -1,7 +1,7 @@
 import { View, Image, Text, StyleSheet, Dimensions } from 'react-native';
 import PlaceReviewsBox from './PlaceReviewsBox';
 import { placeDetailStyles } from '../../../styles/placeDetailStyles';
-import { PlaceDetailData, PlaceDetailScreenProps } from './types';
+import { PlaceDetailParams, PlaceDetailScreenProps } from './types';
 import React, { useEffect } from 'react';
 import { RouteProp } from '@react-navigation/native';
 
@@ -60,8 +60,7 @@ const bulletItemComponent: React.FC<BulletItemProps> = ({ iconPath, title, value
 };
 
 const PlaceDetailScreen: React.FC<PlaceDetailScreenProps> = ({ route }) => {
-    const { placeItemData } = route.params;
-    const { id, name, address, score, reviewCount } = placeItemData;
+    const { id, name, address, score, reviewCount } = route.params;
     const shouldShowInTwoLines = needsMultipleLines(name);
 
     return (

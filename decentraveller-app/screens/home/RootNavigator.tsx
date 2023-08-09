@@ -41,11 +41,10 @@ const RootNavigator = () => {
             }
         };
     };
-
+    const deviceDimensions = useDeviceDimensions();
     const getBottomTabNavigatorScreenOptions = (
         route: Readonly<{ key: string; name: 'Home' | 'ExplorePlaces' | 'Community'; path?: string }>
     ): BottomTabNavigationOptions => {
-        const deviceDimensions = useDeviceDimensions();
         return {
             tabBarIcon: getTabBarIcon(
                 route,

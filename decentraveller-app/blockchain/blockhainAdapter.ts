@@ -1,11 +1,11 @@
 import '@ethersproject/shims';
 import { ethers } from 'ethers';
-import { decentravellerMainContract } from './contracts/decentravellerMainContract';
-import { Blockchain, BlockchainByChainId } from './config';
-import { ContractFunction, DecentravellerContract } from './contracts/common';
-import { decentravellerPlaceContract } from './contracts/decentravellerPlaceContract';
+import { ContractFunction, DecentravellerContract } from './contractTypes';
+import { Blockchain, BlockchainByChainId, LOCAL_DEVELOPMENT_CHAIN_ID } from './config';
 import { withTimeout } from '../commons/functions/utils';
 import { DEFAULT_CHAIN_ID } from '../context/AppContext';
+import { decentravellerPlaceContract } from './contracts/decentravellerPlaceContract';
+import { decentravellerMainContract } from './contracts/decentravellerMainContract';
 
 const BLOCKCHAIN_TIMEOUT_IN_MILLIS = 100000;
 const BLOCKCHAIN_TRANSACTION_TASK_NAME = 'Blockchain transaction';
@@ -28,6 +28,7 @@ class BlockchainAdapter {
             contractFunction.functionName
         ].call(this, ...args);
         const connectedSigner = web3Provider.getSigner();
+
         return await withTimeout(
             async () => {
                 const txResponse: ethers.providers.TransactionResponse = await connectedSigner.sendTransaction({
@@ -35,6 +36,7 @@ class BlockchainAdapter {
                     data: populatedTransaction.data,
                     chainId: DEFAULT_CHAIN_ID,
                 });
+
                 const txReceipt = await txResponse.wait();
                 if (txReceipt.status === 0) {
                     console.log(txReceipt);

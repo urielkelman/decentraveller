@@ -1,17 +1,23 @@
 import React, { useContext, useEffect } from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { AppContext, useAppContext } from '../context/AppContext';
+import { NavigationContainer, useNavigation } from '@react-navigation/native';
+import { useAppContext } from '../context/AppContext';
 import WrongChainModal from './login/WrongChainModal';
 import LoginNavigator from './login/LoginNavigator';
 import RegistrationNavigator from './users/registration/RegistrationNavigator';
 import { apiAdapter } from '../api/apiAdapter';
 import { mockApiAdapter } from '../api/mockApiAdapter';
 import HomeNavigator from './home/HomeNavigator';
+import DecentravellerInformativeModal from '../commons/components/DecentravellerInformativeModal';
+import { useWalletConnectModal } from '@walletconnect/modal-react-native';
 
-const adapter = mockApiAdapter;
+const adapter = apiAdapter;
 
+import * as Linking from 'expo-linking';
+
+const prefix = Linking.createURL('/');
 const DecentravellerInitialScreen = () => {
-    let [stackToRender, setStackToRender] = React.useState<'Login' | 'Home' | 'Registration'>('Login');
+    const { isConnected, address } = useWalletConnectModal();
+    const [stackToRender, setStackToRender] = React.useState<'Login' | 'Home' | 'Registration'>('Login');
     const appContext = useAppContext();
     const setUserProfileImage = appContext.userProfileImage.setValue;
     const setUserNickname = appContext.userNickname.setValue;
@@ -19,7 +25,7 @@ const DecentravellerInitialScreen = () => {
     const setUserInterest = appContext.userInterest.setValue;
 
     const getUser = async () => {
-        const user = await adapter.getUser(appContext.connectionContext.connectedAddress, () => {
+        const user = await adapter.getUser(address, () => {
             setStackToRender('Registration');
         });
 
@@ -28,11 +34,11 @@ const DecentravellerInitialScreen = () => {
             return;
         }
 
-        const userProfileImage = await adapter.getUserProfileImage('uri', () => {
+        const userProfileImage = await mockApiAdapter.getUserProfileImage('uri', () => {
             console.log('There was a problem fetching the image');
         });
 
-        console.log('imagen en base64:' + userProfileImage);
+        console.log(userProfileImage);
 
         setUserNickname(user.nickname);
         setUserCreatedAt(user.createdAt);
@@ -43,13 +49,13 @@ const DecentravellerInitialScreen = () => {
 
     useEffect(() => {
         (async () => {
-            if (!appContext.connectionContext) {
+            if (!isConnected) {
                 setStackToRender('Login');
             } else {
                 await getUser();
             }
         })();
-    }, [appContext.connectionContext]);
+    }, [isConnected]);
 
     const onSuccessfulRegistration = () => {
         setStackToRender('Home');
@@ -67,7 +73,37 @@ const DecentravellerInitialScreen = () => {
     };
 
     return (
-        <NavigationContainer>
+        <NavigationContainer
+            linking={{
+                prefixes: [prefix],
+                config: {
+                    screens: {
+                        LeftSideBar: {
+                            // @ts-ignore
+                            screens: {
+                                Decentraveller: {
+                                    screens: {
+                                        Home: 'home',
+                                        ExplorePlaces: 'explore',
+                                        Community: 'community',
+                                    },
+                                },
+                            },
+                        },
+                        PlaceDetailScreen: {
+                            path: 'place/:id/:name/:address/:score/:reviewCount',
+                            parse: {
+                                id: (id) => `${id}`,
+                                name: (name) => `${name}`,
+                                address: (address) => `${address}`,
+                                score: (score) => Number(score),
+                                reviewCount: (reviewCount) => Number(reviewCount),
+                            },
+                        },
+                    },
+                },
+            }}
+        >
             <WrongChainModal />
             {navigatorToRender()}
         </NavigationContainer>

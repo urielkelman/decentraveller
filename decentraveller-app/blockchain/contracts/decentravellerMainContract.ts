@@ -1,5 +1,5 @@
 import mainContractABI from '../abis/mainContractABI.json';
-import { DecentravellerContract } from './common';
+import { DecentravellerContract } from '../contractTypes';
 
 const mainContractStringfiedABI = JSON.stringify(mainContractABI);
 

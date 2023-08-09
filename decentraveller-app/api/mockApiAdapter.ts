@@ -42,6 +42,9 @@ class MockApiAdapter extends Adapter {
             case '3FZbgi29cpjq2GjdwV8eyHuJJnkLtktZc5': {
                 return UriUserResponse;
             }
+            case '0x968C99f227a5D5015d3c50501C91353096AD7931': {
+                return UriUserResponse;
+            }
         }
     }
 
@@ -62,7 +65,8 @@ class MockApiAdapter extends Adapter {
 
     async getRecommendedPlacesForAddress(
         walletAddress: string,
-        [latitude, longitude]: [string?, string?]
+        [latitude, longitude]: [string?, string?],
+        onNotFound: () => void
     ): Promise<PlaceResponse[]> {
         return defaultPlacesMock;
     }
@@ -100,7 +104,7 @@ class MockApiAdapter extends Adapter {
         const httpRequest: HttpGetRequest = {
             url: RECOMMENDED_PLACES_BY_LOCATION_ENDPOINT,
             queryParams,
-            onError: (e) => console.log('Error'),
+            onUnexpectedError: (e) => console.log('Error'),
         };
 
         console.log(httpRequest);

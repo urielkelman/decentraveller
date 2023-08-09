@@ -9,6 +9,7 @@ from src.api_models.place import PlaceID
 from src.api_models.profile import WalletID, wallet_id_validator
 from src.api_models.review import ReviewInDB, ReviewID, ReviewBody, ReviewWithProfile
 from src.dependencies.indexer_auth import indexer_auth
+from src.dependencies.push_notification_adapter import build_notification_adapter, NotificationAdapter
 from src.dependencies.relational_database import build_relational_database, RelationalDatabase
 
 review_router = InferringRouter()
@@ -17,6 +18,7 @@ review_router = InferringRouter()
 @cbv(review_router)
 class ReviewCBV:
     database: RelationalDatabase = Depends(build_relational_database)
+    push_notification_adapter: NotificationAdapter = Depends(build_notification_adapter)
 
     @review_router.post("/review", status_code=201, dependencies=[Depends(indexer_auth)])
     def create_review(self, review: ReviewBody) -> ReviewInDB:
@@ -27,9 +29,21 @@ class ReviewCBV:
         :return: the review data
         """
         try:
-
-            return self.database.add_review(review)
-        except IntegrityError as e:
+            inserted_review = self.database.add_review(review)
+            place_from_review = self.database.query_places(inserted_review.place_id)
+            place_owner = self.database.get_profile_orm(place_from_review.owner)
+            inserted_review_owner = self.database.get_profile_orm(inserted_review.owner)
+            self.push_notification_adapter.send_new_review_on_place(
+                token=place_owner.push_token,
+                place_name=place_from_review.name,
+                writer_nickname=inserted_review_owner.nickname,
+                place_id=place_from_review.id,
+                place_score=place_from_review.score,
+                address=place_from_review.address,
+                reviews=place_from_review.reviews
+            )
+            return inserted_review
+        except IntegrityError:
             raise HTTPException(status_code=HTTP_400_BAD_REQUEST,
                                 detail="Either the place or the profile does not exist")
 
