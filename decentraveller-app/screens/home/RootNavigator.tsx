@@ -79,18 +79,6 @@ const RootNavigator = () => {
                     </TouchableOpacity>
                 );
             },
-            /*tabBarButton: (props) => {
-                return (
-                    <TouchableOpacity
-                        onPress={() => {
-                            console.log("Tab pressed: ", route.name);
-                            props.onPress();
-                        }}
-                    >
-                        {props.children}
-                    </TouchableOpacity>
-                );
-            },*/
         };
     };
 
