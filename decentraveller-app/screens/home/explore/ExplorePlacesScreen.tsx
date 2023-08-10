@@ -45,6 +45,8 @@ const ExplorePlacesScreen = ({ navigation }) => {
     const [maxDistance, setMaxDistance] = useState<number>(0);
     const [interestPickerValue, setInterestPickerValue] = useState<string>(null);
 
+    console.log(locationPickerItems)
+
     const filterModalDataProps: FilterModalData = {
         orderBy: sortBy,
         setOrderBy: setSortBy,
@@ -56,7 +58,9 @@ const ExplorePlacesScreen = ({ navigation }) => {
         setInterest: setInterestPickerValue,
     };
 
-    const ownLocationPickerValue = userLocation
+    console.log('user location', userLocation)
+
+    const ownLocationPickerValue = userLocation.value
         ? JSON.stringify({
               address: explorePlacesScreenWording.EXPLORE_PLACE_LOCATION_PICKER_CURRENT_LOCATION,
               latitude: userLocation.value[0],
@@ -73,7 +77,7 @@ const ExplorePlacesScreen = ({ navigation }) => {
 
     const setLocationPickerItemsWrappedWithOwnLocation = (locationPickerItems: PickerItem[]) => {
         if (
-            userLocation &&
+            userLocation.value &&
             !locationPickerItems.some(
                 (item) => item.label === explorePlacesScreenWording.EXPLORE_PLACE_LOCATION_PICKER_CURRENT_LOCATION
             )
@@ -100,10 +104,10 @@ const ExplorePlacesScreen = ({ navigation }) => {
     };
 
     React.useEffect(() => {
-        if (userLocation) {
+        if (userLocation.value) {
             setLocationPickerPlaceholder(explorePlacesScreenWording.EXPLORE_PLACE_LOCATION_PICKER_CURRENT_LOCATION);
         }
-        if (userLocation) {
+        if (userLocation.value) {
             (async () => {
                 const [latitude, longitude] = userLocation.value;
                 await fetchPlaces(latitude, longitude);
@@ -130,6 +134,7 @@ const ExplorePlacesScreen = ({ navigation }) => {
     const onSelection = (item: PickerItem) => {
         if (lastLocationLabelSearched !== item.label) {
             const geocodingElement: GeocodingElement = JSON.parse(item.value);
+            setLocationPickerPlaceholder(geocodingElement.address);
             (async () => {
                 await fetchPlaces(geocodingElement.latitude, geocodingElement.longitude);
             })();

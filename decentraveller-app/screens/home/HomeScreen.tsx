@@ -13,12 +13,11 @@ import LoadingComponent from '../../commons/components/DecentravellerLoading';
 import { registerForPushNotificationsAsync } from '../../commons/notifications/notifications';
 import { useWalletConnectModal } from '@walletconnect/modal-react-native';
 
-const adapter = mockApiAdapter;
+const adapter = apiAdapter;
 
 const PERMISSION_GRANTED = 'granted';
 
 const HomeScreen = ({ navigation }) => {
-    console.log(navigation.getState());
     const { address, provider } = useWalletConnectModal();
     const { userLocation } = useAppContext();
     const [loadingRecommendedPlaces, setLoadingRecommendedPlaces] = React.useState<boolean>(false);
@@ -88,6 +87,8 @@ const HomeScreen = ({ navigation }) => {
     ) : (
         <DecentravellerPlacesItems places={recommendedPlaces} />
     );
+
+    console.log(userLocation)
 
     return (
         <View style={{ flex: 1, backgroundColor: DECENTRAVELLER_DEFAULT_BACKGROUND_COLOR }}>
