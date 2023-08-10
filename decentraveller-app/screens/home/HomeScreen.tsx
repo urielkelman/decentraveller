@@ -88,7 +88,7 @@ const HomeScreen = ({ navigation }) => {
         <DecentravellerPlacesItems places={recommendedPlaces} />
     );
 
-    console.log(userLocation)
+    console.log(userLocation);
 
     return (
         <View style={{ flex: 1, backgroundColor: DECENTRAVELLER_DEFAULT_BACKGROUND_COLOR }}>

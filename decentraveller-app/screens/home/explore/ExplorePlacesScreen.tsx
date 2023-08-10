@@ -45,7 +45,7 @@ const ExplorePlacesScreen = ({ navigation }) => {
     const [maxDistance, setMaxDistance] = useState<number>(0);
     const [interestPickerValue, setInterestPickerValue] = useState<string>(null);
 
-    console.log(locationPickerItems)
+    console.log(locationPickerItems);
 
     const filterModalDataProps: FilterModalData = {
         orderBy: sortBy,
@@ -58,7 +58,7 @@ const ExplorePlacesScreen = ({ navigation }) => {
         setInterest: setInterestPickerValue,
     };
 
-    console.log('user location', userLocation)
+    console.log('user location', userLocation);
 
     const ownLocationPickerValue = userLocation.value
         ? JSON.stringify({
