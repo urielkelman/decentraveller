@@ -50,7 +50,7 @@ const HomeScreen = ({ navigation }) => {
         console.log('Permission granted');
         const location = await Location.getLastKnownPositionAsync();
 
-        if (location === null) {
+        if (!location) {
             console.log('Could not retrieve last location.');
             await getWithLocation([]);
             return;
