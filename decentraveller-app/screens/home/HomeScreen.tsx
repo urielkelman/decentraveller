@@ -52,11 +52,12 @@ const HomeScreen = ({ navigation }) => {
         const location = await Location.getLastKnownPositionAsync();
 
         if (location === null) {
-            console.log('Could not retrieve last position');
+            console.log('Could not retrieve last location.');
             await getWithLocation([]);
             return;
         }
 
+        console.log('Could retrieve location:', location);
         const latitude = location.coords.latitude.toString();
         const longitude = location.coords.longitude.toString();
         userLocation.setValue([latitude, longitude]);
