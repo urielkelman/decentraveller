@@ -6,6 +6,7 @@ import { useDeviceDimensions } from '../../context/AppContext';
 import HomeScreen from './HomeScreen';
 import ExplorePlacesScreen from './explore/ExplorePlacesScreen';
 import CommunityScreen from './CommunityScreen';
+import { TouchableOpacity } from 'react-native';
 
 type RootStackScreens = {
     Home: undefined;
@@ -28,6 +29,7 @@ const RootNavigator = () => {
         route: Readonly<{ key: string; name: 'Home' | 'ExplorePlaces' | 'Community'; path?: string }>,
         iconSize: number
     ) => {
+        console.log(route.name);
         return ({ focused, color, size }: bottomTabElementProps): JSX.Element => {
             switch (route.name) {
                 case 'Home':
@@ -62,6 +64,21 @@ const RootNavigator = () => {
             },
             title: route.name.replace('Navigator', ''),
             headerShown: false,
+            tabBarButton: (props) => {
+                return (
+                    <TouchableOpacity
+                        style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
+                        onPress={() => {
+                            console.log('Tab pressed: ', route.name);
+                            if (props.onPress) {
+                                props.onPress();
+                            }
+                        }}
+                    >
+                        {props.children}
+                    </TouchableOpacity>
+                );
+            },
         };
     };
 
