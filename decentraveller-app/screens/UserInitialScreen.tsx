@@ -41,17 +41,17 @@ const DecentravellerInitialScreen = () => {
                 return;
             }
 
-        const userProfileImage = await mockApiAdapter.getUserProfileImage('uri', () => {
-            console.log('There was a problem fetching the image');
-        });
+            const userProfileImage = await mockApiAdapter.getUserProfileImage('uri', () => {
+                console.log('There was a problem fetching the image');
+            });
 
-        console.log(userProfileImage);
+            console.log(userProfileImage);
 
-        setUserNickname(user.nickname);
-        setUserCreatedAt(user.createdAt);
-        setUserInterest(user.interest);
-        setUserProfileImage(userProfileImage);
-        setStackToRender('Home');
+            setUserNickname(user.nickname);
+            setUserCreatedAt(user.createdAt);
+            setUserInterest(user.interest);
+            setUserProfileImage(userProfileImage);
+            setStackToRender('Home');
         } finally {
             setLoadingUserProfile(false);
         }
