@@ -39,6 +39,9 @@ const baseConfig: HardhatUserConfig = {
         reviewer: {
             default: 2,
         },
+        tokenOwner: {
+            default: 3,
+        },
     },
 };
 
