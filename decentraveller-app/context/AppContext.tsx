@@ -48,7 +48,7 @@ const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
                         method: 'wallet_addEthereumChain',
                         params: [
                             {
-                                chainId: '0x7a69',
+                                chainId: DEFAULT_CHAIN_ID_HEX,
                                 chainName: 'Local Hardhat',
                                 nativeCurrency: {
                                     nameText: 'Ethereum',
@@ -110,7 +110,7 @@ const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
         console.log('Updating connection context', address, chainId);
         const isWrongChain = chainId !== DEFAULT_CHAIN_ID;
         const newConnectionContext = {
-            connectedAddress: address,
+            connectedAddress: address.toLowerCase(),
             connectedChainId: chainId,
             isWrongChain: isWrongChain,
         };
@@ -156,14 +156,14 @@ const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
                 connectionContext,
                 web3Provider,
                 deviceDimensions,
-                setConnectionContext,
-                pushChangeUpdate,
-                cleanConnectionContext,
                 userNickname,
                 userCreatedAt,
                 userInterest,
                 userLocation,
                 userProfileImage,
+                pushChangeUpdate,
+                setConnectionContext,
+                cleanConnectionContext,
             }}
         >
             {children}

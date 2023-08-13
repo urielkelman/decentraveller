@@ -117,6 +117,7 @@ class RelationalDatabase:
                                           ReviewImageORM.place_id,
                                           func.count(ReviewImageORM.hash)). \
             filter(tuple_(ReviewImageORM.review_id, ReviewORM.place_id).in_(tuple(ids))). \
+            group_by(ReviewImageORM.review_id, ReviewImageORM.place_id). \
             all()
         image_counts = {(c[0], c[1]): c[2] for c in image_counts}
         parsed_result = []
@@ -216,8 +217,7 @@ class RelationalDatabase:
         reviews = self._get_reviews_by_ids([(review.id, review.place_id)])
         return reviews[0]
 
-    def get_profile_orm(self,
-                        owner: WalletID) -> Optional[ProfileORM]:
+    def get_profile_orm(self, owner: WalletID) -> Optional[ProfileORM]:
         """
         Database querying for a profile
 

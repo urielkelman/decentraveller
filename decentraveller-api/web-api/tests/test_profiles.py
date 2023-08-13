@@ -197,3 +197,30 @@ def test_profile_create_repeated_nickname_400(cleanup):
                                  "interest": "ACCOMMODATION"},
                            )
     assert response.status_code == 400
+
+
+def test_profile_create_push_token_for_non_existent_profile_returns_error(cleanup):
+    response = client.post("/profile/push-token",
+                           json={
+                               "owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
+                               "pushToken": "token"
+                           })
+
+    assert response.status_code == 404
+
+
+def test_profile_create_push_token_for_existent_user_returns_201(cleanup):
+    client.post("/profile",json={"owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
+                                 "nickname": "test",
+                                 "country": "AR",
+                                 "interest": "ACCOMMODATION"}
+                )
+
+    response = client.post("/profile/push-token",
+                           json={
+                               "owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
+                               "pushToken": "token"
+                           })
+
+    assert response.status_code == 201
+
