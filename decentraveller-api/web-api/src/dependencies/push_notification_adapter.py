@@ -1,4 +1,4 @@
-from abc import ABC, abstractmethod
+import os
 from typing import Optional
 
 from exponent_server_sdk import (
@@ -10,70 +10,52 @@ from exponent_server_sdk import (
 import logging
 import requests
 from requests.exceptions import ConnectionError, HTTPError
+from src.api_models.place import PlaceWithStats
 
-from src.api_models.profile import WalletID
 
 logger = logging.getLogger(__name__)
 
 
-class NotificationAdapter(ABC):
-    def __send_push_message__(self, token, message, extra):
-        pass
-
-    @abstractmethod
-    def send_new_review_on_place(
-            self, token: str, writer_nickname: str, place_name: str, place_id: int, place_score: Optional[float],
-            address: str, reviews: int
-    ):
-        pass
-
-
-def build_notification_adapter():
-    return PushNotificationAdapter()
-
-
-class MockNotificationAdapter(NotificationAdapter):
-
-    def send_new_review_on_place(
-            self, token: str, writer_nickname: str, place_name: str, place_id: int, place_score: Optional[float],
-            address: str, reviews: int
-    ):
-        pass
-
-
-class PushNotificationAdapter(NotificationAdapter):
-    # This is a development scheme. In standalone app, use "decentraveller://".
-    DEEP_LINK_SCHEME = "exp://192.168.1.3:19000/--/"
+class PushNotificationAdapter:
 
     def __init__(self):
-        self.session = requests.Session()
-        self.session.headers.update(
-            {
-                # "Authorization": f"Bearer {os.getenv('EXPO_TOKEN')}",
-                "accept": "application/json",
-                "accept-encoding": "gzip, deflate",
-                "content-type": "application/json",
-            }
-        )
+        self.deep_link_scheme = "exp://192.168.1.3:19000/--/"
+        if os.getenv("DEEP_LINK_SCHEME"):
+            self.deep_link_scheme = os.getenv("DEEP_LINK_SCHEME")
+        expo_token = os.getenv('EXPO_TOKEN')
+
+        self.session = None
+
+        if expo_token:
+            self.session = requests.Session()
+            self.session.headers.update(
+                {
+                    "Authorization": f"Bearer {expo_token}",
+                    "accept": "application/json",
+                    "accept-encoding": "gzip, deflate",
+                    "content-type": "application/json",
+                }
+            )
 
     def send_new_review_on_place(
-            self, token: str, writer_nickname: str, place_name: str, place_id: int, place_score: Optional[float],
-            address: str, reviews: int
+            self, token: str, place: PlaceWithStats, writer_nickname: str
     ):
         self.__send_push_message__(
             token=token,
             heading="There is a new review in {name}!".format(name=place_name),
             content="{writer} left a new comment and scoring.".format(writer=writer_nickname),
             deep_link_path="place/{id}/{name}/{address}/{score}/{reviewCount}".format(
-                id=str(place_id),
-                name=place_name,
-                address=address,
-                score=str(place_score),
-                reviewCount=str(reviews)
+                id=str(place.id),
+                name=place.name,
+                address=place.address,
+                score=str(place.score),
+                reviewCount=str(place.reviews)
             )
         )
 
     def __send_push_message__(self, token: str, heading: str, content: str, deep_link_path=None):
+        if not self.session:
+            return
         try:
             response = PushClient(session=self.session).publish(
                 PushMessage(to=token,
@@ -81,7 +63,7 @@ class PushNotificationAdapter(NotificationAdapter):
                             sound='default',
                             badge=1,
                             body=content,
-                            data={'path': self.DEEP_LINK_SCHEME + deep_link_path} if deep_link_path is not None else None))
+                            data={'path': self.deep_link_scheme + deep_link_path} if deep_link_path is not None else None))
             response.validate_response()
         except (PushServerError, ConnectionError, HTTPError) as exc:
             # Encountered some likely formatting/validation error.
