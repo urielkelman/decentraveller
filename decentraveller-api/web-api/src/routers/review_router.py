@@ -10,6 +10,7 @@ from src.api_models.profile import WalletID, wallet_id_validator
 from src.api_models.review import ReviewID, ReviewInput, ReviewWithProfile
 from src.dependencies.indexer_auth import indexer_auth
 from src.dependencies.ipfs_service import IPFSService
+from src.dependencies.push_notification_adapter import PushNotificationAdapter
 from src.dependencies.relational_database import build_relational_database, RelationalDatabase
 
 review_router = InferringRouter()
@@ -19,6 +20,7 @@ review_router = InferringRouter()
 class ReviewCBV:
     database: RelationalDatabase = Depends(build_relational_database)
     ipfs_service: IPFSService = Depends(IPFSService)
+    push_notification_adapter: PushNotificationAdapter = Depends(PushNotificationAdapter)
 
     @review_router.post("/review", status_code=201, dependencies=[Depends(indexer_auth)])
     def create_review(self, review: ReviewInput) -> ReviewWithProfile:
@@ -31,11 +33,22 @@ class ReviewCBV:
         for h in review.images:
             self.ipfs_service.pin_file(h)
         try:
-            r = self.database.add_review(review)
-        except IntegrityError as e:
+            inserted_review = self.database.add_review(review)
+        except IntegrityError:
             raise HTTPException(status_code=HTTP_400_BAD_REQUEST,
                                 detail="Either the place or the profile does not exist")
-        return r
+        try:
+            place_from_review = self.database.query_places(inserted_review.place_id)
+            place_owner = self.database.get_profile_orm(place_from_review.owner)
+            inserted_review_owner = inserted_review.owner
+            self.push_notification_adapter.send_new_review_on_place(
+                token=place_owner.push_token,
+                place = place_from_review,
+                writer_nickname = inserted_review_owner.nickname,
+            )
+        except Exception:
+            pass
+        return inserted_review
 
     @review_router.get("/review")
     def get_review(self, id: ReviewID, place_id: PlaceID) -> ReviewWithProfile:

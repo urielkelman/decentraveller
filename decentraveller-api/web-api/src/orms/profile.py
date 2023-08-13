@@ -15,3 +15,4 @@ class ProfileORM(Base):
     interest = Column(Enum(PlaceCategory), nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     ipfs_hash = Column(ForeignKey("images.hash"), default=None)
+    push_token = Column(String, nullable=True, default=None)

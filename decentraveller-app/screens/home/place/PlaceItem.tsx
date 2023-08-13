@@ -8,7 +8,7 @@ import eretzMockImage from '../../../assets/mock_images/eretz-restaurant-in-buen
 import { ISOCodeByCountry } from './countriesConfig';
 import { Rating } from 'react-native-rating-element';
 import { MaterialIcons } from '@expo/vector-icons';
-import { PlaceDetailData, PlaceDetailScreenProp } from './types';
+import { PlaceDetailParams, PlaceDetailScreenProp } from './types';
 import { useNavigation } from '@react-navigation/native';
 import { HomeStackScreens } from '../HomeNavigator';
 
@@ -64,7 +64,7 @@ const PlaceItem: React.FC<PlaceItemProps> = ({
 
     const capitalizedCategory = capitalizeCategory(category);
 
-    const placeDetailData: PlaceDetailData = {
+    const placeDetailParams: PlaceDetailParams = {
         id: id,
         name: name,
         address: address,
@@ -73,7 +73,7 @@ const PlaceItem: React.FC<PlaceItemProps> = ({
     };
 
     return (
-        <TouchableOpacity onPress={() => navigation.navigate('PlaceDetailScreen', { placeItemData: placeDetailData })}>
+        <TouchableOpacity onPress={() => navigation.navigate('PlaceDetailScreen', placeDetailParams)}>
             <View style={placeItemStyle.container}>
                 <View style={placeItemStyle.leftContainer}>
                     <Image style={placeItemStyle.image} source={eretzMockImage} />
