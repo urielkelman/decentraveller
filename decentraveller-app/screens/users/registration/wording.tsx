@@ -11,6 +11,5 @@ export const registerUserScreenWordings = {
     REGISTER_SUCCESS_SUB_TITLE:
         'Browse between different sites, rate them and get tokens to moderate the discussions, your participation has no limits',
     REGISTER_WELCOME_TITLE: 'We noticed that this is the first time you have joined. Welcome to:',
-    REGISTER_WELCOME_SUB_TITLE:
-        'To manage you better we want to ask you for some data, but hey! They are completely optional',
+    REGISTER_WELCOME_SUB_TITLE: 'To improve your experience in the app, we want to ask you for some data!',
 };

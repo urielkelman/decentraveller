@@ -1,5 +1,6 @@
 /* eslint-disable eslint-comments/no-unlimited-disable */
 /* eslint-disable */
+require('@walletconnect/react-native-compat');
 require('react-native-gesture-handler');
 require('./polyfills');
 

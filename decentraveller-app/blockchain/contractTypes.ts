@@ -1,4 +1,4 @@
-import { Blockchain } from '../config';
+import { Blockchain } from './config';
 
 interface AddressesByBlockchain {
     GOERLI: string;

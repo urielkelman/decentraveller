@@ -199,8 +199,7 @@ class RelationalDatabase:
         self.session.commit()
         return ReviewInDB.from_orm(review_orm)
 
-    def get_profile_orm(self,
-                        owner: WalletID) -> Optional[ProfileORM]:
+    def get_profile_orm(self, owner: WalletID) -> Optional[ProfileORM]:
         """
         Database querying for a profile
 

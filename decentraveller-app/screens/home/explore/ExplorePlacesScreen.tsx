@@ -20,6 +20,7 @@ import { GeocodingElement } from '../place/CreatePlaceContext';
 import LoadingComponent from '../../../commons/components/DecentravellerLoading';
 import FilterModal from './FilterModal';
 import { FilterModalData } from './types';
+import DecentravellerInformativeModal from '../../../commons/components/DecentravellerInformativeModal';
 
 const adapter = mockApiAdapter;
 
@@ -33,11 +34,13 @@ const ExplorePlacesScreen = ({ navigation }) => {
     const [locationPickerPlaceholder, setLocationPickerPlaceholder] = React.useState<string>(
         explorePlacesScreenWording.EXPLORE_PLACE_LOCATION_PICKER_SEARCH_LOCATION
     );
+    const [showNotLocationErrorModal, setShowLocationErrorModal] = React.useState<boolean>(false);
 
     const [locationPickerValue, setLocationPickerValue] = React.useState<string>(null);
     const [locationPickerOpen, setLocationPickerOpen] = React.useState<boolean>(false);
     const [locationPickerItems, setLocationPickerItems] = React.useState<PickerItem[]>([]);
     const [lastLocationLabelSearched, setLastLocationLabelSearched] = React.useState<string>();
+    const [lastLocationSearched, setLastLocationSearched] = React.useState<[string, string]>(undefined);
 
     const [modalVisible, setModalVisible] = useState<boolean>(false);
     const [sortBy, setSortBy] = useState<string>(null);
@@ -56,7 +59,7 @@ const ExplorePlacesScreen = ({ navigation }) => {
         setInterest: setInterestPickerValue,
     };
 
-    const ownLocationPickerValue = userLocation
+    const ownLocationPickerValue = userLocation.value
         ? JSON.stringify({
               address: explorePlacesScreenWording.EXPLORE_PLACE_LOCATION_PICKER_CURRENT_LOCATION,
               latitude: userLocation.value[0],
@@ -73,7 +76,7 @@ const ExplorePlacesScreen = ({ navigation }) => {
 
     const setLocationPickerItemsWrappedWithOwnLocation = (locationPickerItems: PickerItem[]) => {
         if (
-            userLocation &&
+            userLocation.value &&
             !locationPickerItems.some(
                 (item) => item.label === explorePlacesScreenWording.EXPLORE_PLACE_LOCATION_PICKER_CURRENT_LOCATION
             )
@@ -84,8 +87,13 @@ const ExplorePlacesScreen = ({ navigation }) => {
         }
     };
 
-    const fetchPlaces = async (latitude: string, longitude: string): Promise<void> => {
+    const fetchPlaces = async (
+        latitude: string,
+        longitude: string,
+        lastLocationLabelSearched: string
+    ): Promise<void> => {
         setLoadingPlaces(true);
+        console.log('to fetch places', latitude, longitude, lastLocationLabelSearched);
         const places = await adapter.getRecommendedPlaces(
             [latitude, longitude],
             interestPickerValue,
@@ -95,18 +103,19 @@ const ExplorePlacesScreen = ({ navigation }) => {
         );
         setPlaces(places);
         setLoadingPlaces(false);
-        setLocationPickerValue(ownLocationPickerValue);
-        setLastLocationLabelSearched(explorePlacesScreenWording.EXPLORE_PLACE_LOCATION_PICKER_CURRENT_LOCATION);
+        setLastLocationLabelSearched(lastLocationLabelSearched);
+        setLastLocationSearched([latitude, longitude]);
     };
 
     React.useEffect(() => {
-        if (userLocation) {
-            setLocationPickerPlaceholder(explorePlacesScreenWording.EXPLORE_PLACE_LOCATION_PICKER_CURRENT_LOCATION);
-        }
-        if (userLocation) {
+        if (userLocation.value) {
             (async () => {
                 const [latitude, longitude] = userLocation.value;
-                await fetchPlaces(latitude, longitude);
+                await fetchPlaces(
+                    latitude,
+                    longitude,
+                    explorePlacesScreenWording.EXPLORE_PLACE_LOCATION_PICKER_CURRENT_LOCATION
+                );
             })();
         }
     }, []);
@@ -129,31 +138,29 @@ const ExplorePlacesScreen = ({ navigation }) => {
 
     const onSelection = (item: PickerItem) => {
         if (lastLocationLabelSearched !== item.label) {
+            clearFilters();
             const geocodingElement: GeocodingElement = JSON.parse(item.value);
             (async () => {
-                await fetchPlaces(geocodingElement.latitude, geocodingElement.longitude);
+                await fetchPlaces(geocodingElement.latitude, geocodingElement.longitude, geocodingElement.address);
             })();
         }
     };
 
     const filterPlaces = () => {
-        let latitude: string;
-        let longitude: string;
-
-        if (userLocation) {
-            [latitude, longitude] = userLocation.value;
-        } else {
-            const geocodingElement: GeocodingElement = JSON.parse(lastLocationLabelSearched);
-            latitude = geocodingElement.latitude;
-            longitude = geocodingElement.longitude;
+        if (!lastLocationSearched) {
+            /* This scenario only happens when a user does not have the location activated and try to apply filters
+               without manually entering a location.
+             */
+            console.log('User did not activate the location. And also it did not select any location yet.');
+            setShowLocationErrorModal(true);
+            return;
         }
 
         (async () => {
-            await fetchPlaces(latitude, longitude);
+            await fetchPlaces(lastLocationSearched[0], lastLocationSearched[1], lastLocationLabelSearched);
         })();
 
         setModalVisible(!modalVisible);
-        clearFilters();
     };
 
     const toggleModal = () => {
@@ -238,6 +245,12 @@ const ExplorePlacesScreen = ({ navigation }) => {
             </View>
             <View style={{ backgroundColor: 'black', height: 2, borderRadius: 2 }} />
             <View style={{ flex: 0.9 }}>{componentToRender}</View>
+            <DecentravellerInformativeModal
+                informativeText={'You should pick a location before trying to filter places.'}
+                visible={showNotLocationErrorModal}
+                closeModalText={'OK!'}
+                handleCloseModal={() => setShowLocationErrorModal(false)}
+            />
         </View>
     );
 };
