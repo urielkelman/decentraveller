@@ -42,6 +42,9 @@ const baseConfig: HardhatUserConfig = {
         tokenOwner: {
             default: 3,
         },
+        tokenMinter: {
+            default: 4,
+        },
     },
 };
 

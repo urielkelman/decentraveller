@@ -6,11 +6,12 @@ const deployFunction: DeployFunction = async function (
 ) {
     const { getNamedAccounts, deployments } = hre;
     const { deploy } = deployments;
-    const { tokenOwner } = await getNamedAccounts();
+    const { tokenOwner, tokenMinter } = await getNamedAccounts();
 
     await deploy("DecentravellerToken", {
         from: tokenOwner,
         log: true,
+        args: [1, 2, tokenOwner, [tokenMinter]],
     });
 };
 
