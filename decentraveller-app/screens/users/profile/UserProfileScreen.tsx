@@ -1,5 +1,5 @@
-import React from 'react';
-import {View, Text, Image, StyleSheet, TouchableOpacity, Alert} from 'react-native';
+import React, {useState} from 'react';
+import {View, Text, Image, StyleSheet, TouchableOpacity, Alert, Modal} from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { userProfileMainStyles } from '../../../styles/userProfileStyles';
 import { useAppContext } from '../../../context/AppContext';
@@ -12,20 +12,28 @@ export type UserProfileScreens = {
 
 const HomeStackNavigator = createStackNavigator<UserProfileScreens>();
 
-const handleImageUpload = async () => {
-    try {
-        const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-        const result = await ImagePicker.launchImageLibraryAsync();
-
-        if (!result.cancelled) {
-        }
-    } catch (error) {
-        Alert.alert('Error', error.message);
-    }
-};
-
 const UserProfileScreen = ({ navigation }) => {
     const { userNickname, connectionContext, userCreatedAt, userInterest, userProfileImage } = useAppContext();
+
+    const [selectedImage, setSelectedImage] = useState(null);
+    const [isModalVisible, setIsModalVisible] = useState(false);
+
+    const toggleModal = () => {
+        setIsModalVisible(!isModalVisible);
+    };
+
+    const handleImageUpload = async () => {
+        try {
+            const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+            const result = await ImagePicker.launchImageLibraryAsync();
+
+            if (!result.cancelled) {
+                setSelectedImage(result.uri);
+            }
+        } catch (error) {
+            Alert.alert('Error', error.message);
+        }
+    };
 
     const user = {
         profileImage: userProfileImage.value,
@@ -35,10 +43,6 @@ const UserProfileScreen = ({ navigation }) => {
         interest: userInterest.value,
         tokens: 67,
         sharedLocation: 'Yes',
-    };
-
-    const onClickContinue = () => {
-        navigation.navigate('UserProfileEditScreen');
     };
 
     return (
@@ -53,7 +57,7 @@ const UserProfileScreen = ({ navigation }) => {
                             style={userProfileMainStyles.circleDimensions}
                         />
                     </View>
-                    <TouchableOpacity style={userProfileMainStyles.smallCircleButton} onPress={handleImageUpload}>
+                    <TouchableOpacity style={userProfileMainStyles.smallCircleButton} onPress={toggleModal}>
                         <Image
                             source={require('../../../assets/images/pencil.png')}
                             style={userProfileMainStyles.smallCircleImage}
@@ -101,6 +105,23 @@ const UserProfileScreen = ({ navigation }) => {
                     </View>
                 </View>
             </TouchableOpacity>
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={isModalVisible}
+                onRequestClose={toggleModal}
+            >
+                <View style={userProfileMainStyles.modalContainer}>
+                    <View style={userProfileMainStyles.modalContent}>
+                        <TouchableOpacity onPress={handleImageUpload}>
+                            <Text style={userProfileMainStyles.modalOption}>Select Image</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={toggleModal}>
+                            <Text style={userProfileMainStyles.modalOption}>Cancel</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </Modal>
         </View>
     );
 };

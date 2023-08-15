@@ -100,9 +100,9 @@ const userProfileMainStyles = StyleSheet.create({
     smallCircleButton: {
         position: 'absolute',
         top: -10,
-        right: 100,
-        width: 45,
-        height: 45,
+        right: 110,
+        width: 35,
+        height: 35,
         borderRadius: 100,
         backgroundColor: '#983B46',
         justifyContent: 'center',
@@ -111,6 +111,22 @@ const userProfileMainStyles = StyleSheet.create({
     smallCircleImage: {
         width: 24,
         height: 24,
+    },
+    modalContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    },
+    modalContent: {
+        backgroundColor: 'white',
+        padding: 20,
+        borderRadius: 10,
+    },
+    modalOption: {
+        fontSize: 18,
+        paddingVertical: 10,
+        textAlign: 'center',
     },
 });
 
