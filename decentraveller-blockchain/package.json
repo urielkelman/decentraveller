@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
+  "engines": {
+    "node": "^14 || ^16"
+  },
   "scripts": {
     "start:local": "./node_modules/.bin/hardhat --config hardhat.config.ts node",
     "deploy:local": "./node_modules/.bin/hardhat --config hardhat.config.ts --network localhost run scripts/deploy.ts"
@@ -11,6 +14,7 @@
     "@chainlink/contracts": "^0.5.1",
     "@ethersproject/abi": "^5.4.7",
     "@ethersproject/providers": "^5.4.7",
+    "@noble/hashes": "1.1.2",
     "@nomicfoundation/hardhat-chai-matchers": "^1.0.0",
     "@nomicfoundation/hardhat-network-helpers": "^1.0.0",
     "@nomicfoundation/hardhat-toolbox": "^2.0.0",
