@@ -317,3 +317,40 @@ def test_get_paginated_places(cleanup):
                                             "category": "GASTRONOMY",
                                             "score": None,
                                             "reviews": 0}
+
+def test_create_place_no_image(cleanup):
+    response = client.post("/profile",
+                           json={"owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
+                                 "nickname": "test",
+                                 "country": "AR",
+                                 "interest": "ACCOMMODATION"},
+                           )
+    assert response.status_code == 201
+
+    response = client.get("/place/0")
+    assert response.status_code == 404
+
+    response = client.post("/place",
+                           json={"id": 0,
+                                 "owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
+                                 "name": "McDonalds",
+                                 "address": "Av. Callao & Av. Santa Fe",
+                                 "latitude": -34.595983,
+                                 "longitude": -58.393329,
+                                 "category": "GASTRONOMY"},
+                           )
+    assert response.status_code == 201
+
+    response = client.get("/place/0")
+    assert response.status_code == 200
+    assert response.json() == {"id": 0,
+                               "owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
+                               "name": "McDonalds",
+                               "address": "Av. Callao & Av. Santa Fe",
+                               "latitude": -34.595983,
+                               "longitude": -58.393329,
+                               "category": "GASTRONOMY",
+                               "score": None,
+                               "reviews": 0}
+    response = client.get("/place/0/image.jpg")
+    assert response.status_code == 404

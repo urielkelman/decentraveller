@@ -50,7 +50,7 @@ class IPFSService:
         r = requests.post(self.ipfs_node_url + self.PIN_ENDPOINT,
                           params={"arg": file_hash})
         if not r.status_code == 200:
-            raise FileNotFoundError
+            raise FileNotFoundError(file_hash)
 
     def get_file(self, file_hash: str) -> bytes:
         """

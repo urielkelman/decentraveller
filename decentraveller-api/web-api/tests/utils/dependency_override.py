@@ -3,7 +3,7 @@ from hashlib import sha256
 from fastapi.testclient import TestClient
 
 from src.app import app
-from src.dependencies.push_notification_adapter import MockNotificationAdapter, build_notification_adapter
+from src.dependencies.push_notification_adapter import PushNotificationAdapter
 from src.dependencies.relational_database import build_relational_database, RelationalDatabase
 from src.dependencies.indexer_auth import indexer_auth
 from src.dependencies.ipfs_service import IPFSService
@@ -27,13 +27,20 @@ def build_mock_notification_adapter():
     return MockNotificationAdapter()
 
 
+class MockNotificationAdapter(PushNotificationAdapter):
+
+    def send_new_review_on_place(self, *args, **kwargs):
+        return
+
+
 class MockIPFS(IPFSService):
     """
     Mock IPFS
     """
+    _data = {}
 
     def __init__(self):
-        self._data = {}
+        return
 
     def add_file(self, file: bytes) -> str:
         """
@@ -41,7 +48,9 @@ class MockIPFS(IPFSService):
         :param file: the file to add
         :return: the hash of the stored file
         """
-        self._data[sha256(file).hexdigest()] = file
+        filehash = sha256(file).hexdigest()
+        self._data[filehash] = file
+        return filehash
 
     def pin_file(self, file_hash: str) -> None:
         """
@@ -63,7 +72,7 @@ class MockIPFS(IPFSService):
 
 
 app.dependency_overrides[build_relational_database] = build_test_relational_database
-app.dependency_overrides[build_notification_adapter] = build_mock_notification_adapter
+app.dependency_overrides[PushNotificationAdapter] = MockNotificationAdapter
 app.dependency_overrides[indexer_auth] = mock_indexer_auth
 app.dependency_overrides[IPFSService] = MockIPFS
 
