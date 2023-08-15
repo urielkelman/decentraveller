@@ -5,6 +5,7 @@ import { userProfileMainStyles } from '../../../styles/userProfileStyles';
 import { useAppContext } from '../../../context/AppContext';
 import {addReviewImagesStyles} from "../../../styles/addReviewStyles";
 import * as ImagePicker from "expo-image-picker";
+import {apiAdapter} from "../../../api/apiAdapter";
 
 export type UserProfileScreens = {
     UserProfileScreen: undefined;
@@ -27,8 +28,16 @@ const UserProfileScreen = ({ navigation }) => {
             const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
             const result = await ImagePicker.launchImageLibraryAsync();
 
-            if (!result.cancelled) {
-                setSelectedImage(result.uri);
+            if (!result.canceled) {
+                const imageUri = result.assets[0].uri;
+                console.log(imageUri)
+                try {
+                    await apiAdapter.sendProfileImage(user.walletAddress, imageUri);
+                    console.log('Avatar success updated.');
+
+                } catch (error) {
+                    console.error('Error on avatar updating:', error);
+                }
             }
         } catch (error) {
             Alert.alert('Error', error.message);

@@ -15,6 +15,12 @@ export interface HttpPostRequest extends HttpBaseRequest {
     body: { [key: string]: string | number };
 }
 
+// Lo dejo como nueva interfaz inicialmente y despues vemos si alteramos la original
+export interface HttpPostImageRequest extends HttpBaseRequest {
+    body: FormData
+    headers: { [key: string]: string };
+}
+
 class HttpConnector {
     private readonly baseURL: string;
 
@@ -48,7 +54,7 @@ class HttpConnector {
             HttpConnector.processError(httpGetRequest, error);
         }
     }
-    async post<T>(httpPostRequest: HttpPostRequest): Promise<T> {
+    async post<T>(httpPostRequest: HttpPostRequest | HttpPostImageRequest): Promise<T> {
         try {
             console.log('to post', httpPostRequest);
             const { data } = await axios.post<T>(httpPostRequest.url, httpPostRequest.body, {
@@ -78,27 +84,6 @@ class HttpConnector {
                 console.log(error);
             }
             httpRequest.onUnexpectedError(error);
-        }
-    }
-
-    async getBase64Bytes(httpRequest: HttpGetRequest): Promise<string> {
-        try {
-            const base64String = await axios
-                .get(httpRequest.url, {
-                    baseURL: this.baseURL,
-                    params: httpRequest.queryParams,
-                    responseType: 'arraybuffer',
-                })
-                .then((response) => Buffer.from(response.data, 'binary').toString('base64'));
-            return base64String;
-        } catch (error) {
-            if (axios.isAxiosError(error)) {
-                console.log(error.status);
-                console.log(error.message);
-            } else {
-                console.log(error);
-            }
-            httpRequest.onError(error);
         }
     }
 }
