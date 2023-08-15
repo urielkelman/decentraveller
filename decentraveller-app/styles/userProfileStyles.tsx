@@ -97,6 +97,21 @@ const userProfileMainStyles = StyleSheet.create({
         fontWeight: 'bold',
         color: 'blue',
     },
+    smallCircleButton: {
+        position: 'absolute',
+        top: -10,
+        right: 100,
+        width: 45,
+        height: 45,
+        borderRadius: 100,
+        backgroundColor: '#983B46',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    smallCircleImage: {
+        width: 24,
+        height: 24,
+    },
 });
 
 export { userProfileMainStyles };
