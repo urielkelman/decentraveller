@@ -7,6 +7,7 @@ from src.dependencies.push_notification_adapter import PushNotificationAdapter
 from src.dependencies.relational_database import build_relational_database, RelationalDatabase
 from src.dependencies.indexer_auth import indexer_auth
 from src.dependencies.ipfs_service import IPFSService
+from src.dependencies.ml_services import MLServices
 
 
 def build_test_relational_database():
@@ -71,9 +72,17 @@ class MockIPFS(IPFSService):
         return self._data[file_hash]
 
 
+class MockMLServices(MLServices):
+
+    def aesthetic_score(self, image_bytes: bytes) -> float:
+        return 0.0
+
+
+
 app.dependency_overrides[build_relational_database] = build_test_relational_database
 app.dependency_overrides[PushNotificationAdapter] = MockNotificationAdapter
 app.dependency_overrides[indexer_auth] = mock_indexer_auth
 app.dependency_overrides[IPFSService] = MockIPFS
+app.dependency_overrides[MLServices] = MockMLServices
 
 client = TestClient(app)

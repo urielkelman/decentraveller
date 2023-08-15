@@ -10,8 +10,8 @@ class ReviewImageORM(Base):
     __tablename__ = "review_images"
 
     hash = Column(ForeignKey("images.hash"), primary_key=True)
-    review_id = Column(Integer, nullable=False)
-    place_id = Column(Integer, nullable=False)
+    review_id = Column(Integer, primary_key=True)
+    place_id = Column(Integer, primary_key=True)
     __table_args__ = (ForeignKeyConstraint(["review_id", "place_id"],
                                            ["reviews.id", "reviews.place_id"]),
                       {})

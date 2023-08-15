@@ -2,6 +2,7 @@ from typing import Optional, Dict, List, Union, Callable, Tuple
 
 from sqlalchemy import func, case, tuple_, and_
 from sqlalchemy.orm import Session
+from sqlalchemy.exc import IntegrityError
 
 from src.api_models.bulk_results import PaginatedReviews, PaginatedPlaces
 from src.api_models.place import PlaceID, PlaceInDB, PlaceWithStats
@@ -283,15 +284,20 @@ class RelationalDatabase:
         return PaginatedPlaces(page=page, per_page=per_page,
                                total=total_count, places=places)
 
-    def add_image(self, filehash: str, pinned: bool = False) -> None:
+    def add_image(self, filehash: str, pinned: bool = False,
+                  score: float = 0.0) -> None:
         """
         Adds an image to the database
         :param filehash: hash of ipfs
         :param pinned: if the file is pinned
+        :param score: image score
         """
-        image_orm = ImageORM(hash=filehash, pinned=pinned)
-        self.session.add(image_orm)
-        self.session.commit()
+        try:
+            image_orm = ImageORM(hash=filehash, pinned=pinned, score=score)
+            self.session.add(image_orm)
+            self.session.commit()
+        except IntegrityError:
+            return
 
     def get_review_image_hash(self, review_id: ReviewID,
                               place_id: PlaceID, image_number: int) -> Optional[str]:
