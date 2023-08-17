@@ -4,6 +4,8 @@ pragma solidity ^0.8.17;
 import "./DecentravellerPlace.sol";
 import "./DecentravellerDataTypes.sol";
 import "./DecentravellerPlaceCloneFactory.sol";
+import "./DecentravellerGovernance.sol";
+import "./DecentravellerToken.sol";
 import "hardhat/console.sol";
 
 error Place__NonExistent(uint256 placeId);
@@ -12,19 +14,52 @@ error Profile__NicknameInUse(string nickname);
 error Address__Unregistered(address sender);
 
 contract Decentraveller {
+    struct DecentravellerRule {
+        uint256 proposalId;
+        bool haveBeenApproved;
+        string statement;
+    }
+
     event UpdatedProfile(
-        address owner,
+        address indexed owner,
         string nickname,
         string country,
         DecentravellerDataTypes.DecentravellerPlaceCategory interest
     );
 
-    uint256 private currentPlaceId;
+    event DecentravellerRuleProposed(
+        uint256 indexed ruleId,
+        uint256 proposalId,
+        string statement
+    );
+
+    event DecentravellerRuleApproved(
+        uint256 indexed ruleId,
+        uint256 proposalId
+    );
+
+    DecentravellerGovernance governance;
     DecentravellerPlaceCloneFactory placeFactory;
+
+    uint256 private currentPlaceId;
+    uint256 private currentRuleId;
+
     mapping(uint256 => address) private placeAddressByPlaceId;
     mapping(string => uint) private placeIdByPlaceLocation;
     mapping(address => DecentravellerDataTypes.DecentravellerProfile) profilesByOwner;
     mapping(string => address) ownersByNicknames;
+    mapping(uint256 => DecentravellerRule) ruleById;
+
+    constructor(address _governance, address _placesFactory) {
+        governance = DecentravellerGovernance(payable(_governance));
+        placeFactory = DecentravellerPlaceCloneFactory(_placesFactory);
+        currentPlaceId = 0;
+    }
+
+    modifier onlyGovernance() {
+        require(msg.sender == address(governance));
+        _;
+    }
 
     function registerProfile(
         string calldata _nickname,
@@ -50,11 +85,6 @@ contract Decentraveller {
         emit UpdatedProfile(msg.sender, _nickname, _country, _interest);
 
         return msg.sender;
-    }
-
-    constructor(address _placesFactory) {
-        placeFactory = DecentravellerPlaceCloneFactory(_placesFactory);
-        currentPlaceId = 0;
     }
 
     function addPlace(
@@ -99,6 +129,51 @@ contract Decentraveller {
     }
 
     function getCurrentPlaceId() external view returns (uint256) {
+        return currentPlaceId;
+    }
+
+    function approveProposedRule(uint256 ruleId) external onlyGovernance {}
+
+    function proposeToGovernor(
+        bytes memory data,
+        string memory proposalStatement
+    ) internal returns (uint256) {
+        address[] memory targets = new address[](1);
+        uint256[] memory values = new uint256[](1);
+        bytes[] memory calldatas = new bytes[](1);
+
+        targets[0] = address(this);
+        values[0] = 0;
+        calldatas[0] = data;
+
+        uint256 proposalId = governance.propose(
+            targets,
+            values,
+            calldatas,
+            proposalStatement
+        );
+        return proposalId;
+    }
+
+    function createNewRuleProposal(
+        string memory ruleStatement
+    ) external returns (uint256) {
+        currentRuleId += 1;
+        bytes memory proposalCallData = abi.encodeWithSelector(
+            this.approveProposedRule.selector,
+            currentRuleId
+        );
+        uint256 proposalId = proposeToGovernor(proposalCallData, ruleStatement);
+        ruleById[currentRuleId] = DecentravellerRule({
+            proposalId: proposalId,
+            haveBeenApproved: false,
+            statement: ruleStatement
+        });
+        emit DecentravellerRuleProposed(
+            currentRuleId,
+            proposalId,
+            ruleStatement
+        );
         return currentPlaceId;
     }
 }

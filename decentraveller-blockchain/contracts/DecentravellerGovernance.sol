@@ -3,21 +3,124 @@ pragma solidity ^0.8.17;
 
 import "@openzeppelin/contracts/governance/Governor.sol";
 import "@openzeppelin/contracts/governance/extensions/GovernorCountingSimple.sol";
+import "@openzeppelin/contracts/governance/extensions/GovernorVotes.sol";
+import "@openzeppelin/contracts/governance/extensions/GovernorVotesQuorumFraction.sol";
+import "@openzeppelin/contracts/governance/extensions/GovernorTimelockControl.sol";
+import "@openzeppelin/contracts/governance/compatibility/GovernorCompatibilityBravo.sol";
 
-contract DecentravellerGovernance is GovernorCountingSimple {
-    constructor(string memory name) Governor(name) {}
+contract DecentravellerGovernance is
+    Governor,
+    GovernorVotes,
+    GovernorVotesQuorumFraction,
+    GovernorTimelockControl,
+    GovernorCompatibilityBravo
+{
+    address private decentraveller;
 
-    function votingDelay() public view virtual override returns (uint256) {}
+    constructor(
+        address _decentraveller,
+        IVotes token,
+        TimelockController _timelock
+    )
+        Governor("Decentraveller Governor")
+        GovernorVotes(token)
+        GovernorVotesQuorumFraction(5)
+        GovernorTimelockControl(_timelock)
+    {
+        decentraveller = _decentraveller;
+    }
 
-    function votingPeriod() public view virtual override returns (uint256) {}
+    modifier onlyDecentraveller() {
+        require(msg.sender == decentraveller);
+        _;
+    }
 
-    function quorum(
-        uint256 blockNumber
-    ) public view virtual override returns (uint256) {}
+    function votingDelay() public pure override returns (uint256) {
+        return 1 days;
+    }
 
-    function _getVotes(
-        address account,
-        uint256 blockNumber,
-        bytes memory params
-    ) internal view virtual override returns (uint256) {}
+    function proposalThreshold() public pure override returns (uint256) {
+        return 10;
+    }
+
+    function votingPeriod() public pure override returns (uint256) {
+        return 3 days;
+    }
+
+    function state(
+        uint256 proposalId
+    )
+        public
+        view
+        override(Governor, IGovernor, GovernorTimelockControl)
+        returns (ProposalState)
+    {
+        return super.state(proposalId);
+    }
+
+    function propose(
+        address[] memory targets,
+        uint256[] memory values,
+        bytes[] memory calldatas,
+        string memory description
+    )
+        public
+        override(Governor, GovernorCompatibilityBravo, IGovernor)
+        onlyDecentraveller
+        returns (uint256)
+    {
+        return super.propose(targets, values, calldatas, description);
+    }
+
+    function cancel(
+        address[] memory targets,
+        uint256[] memory values,
+        bytes[] memory calldatas,
+        bytes32 descriptionHash
+    )
+        public
+        override(Governor, GovernorCompatibilityBravo, IGovernor)
+        returns (uint256)
+    {
+        return super.cancel(targets, values, calldatas, descriptionHash);
+    }
+
+    function _execute(
+        uint256 proposalId,
+        address[] memory targets,
+        uint256[] memory values,
+        bytes[] memory calldatas,
+        bytes32 descriptionHash
+    ) internal override(Governor, GovernorTimelockControl) {
+        super._execute(proposalId, targets, values, calldatas, descriptionHash);
+    }
+
+    function _cancel(
+        address[] memory targets,
+        uint256[] memory values,
+        bytes[] memory calldatas,
+        bytes32 descriptionHash
+    ) internal override(Governor, GovernorTimelockControl) returns (uint256) {
+        return super._cancel(targets, values, calldatas, descriptionHash);
+    }
+
+    function _executor()
+        internal
+        view
+        override(Governor, GovernorTimelockControl)
+        returns (address)
+    {
+        return super._executor();
+    }
+
+    function supportsInterface(
+        bytes4 interfaceId
+    )
+        public
+        view
+        override(Governor, IERC165, GovernorTimelockControl)
+        returns (bool)
+    {
+        return super.supportsInterface(interfaceId);
+    }
 }

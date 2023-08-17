@@ -2,7 +2,6 @@
 pragma solidity ^0.8.17;
 
 import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Votes.sol";
-import "@openzeppelin/contracts/governance/Governor.sol";
 import "@openzeppelin/contracts/governance/extensions/GovernorVotes.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/draft-ERC20Permit.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
@@ -40,14 +39,12 @@ contract DecentravellerToken is ERC20Votes, AccessControl {
 
     function rewardNewPlace(address to) external onlyRole(MINTER_ROLE) {
         reward(to, newPlaceRewardAmount);
-        _delegate(to, to);
     }
 
     function rewardNewReview(address to) external onlyRole(MINTER_ROLE) {
         reward(to, newReviewRewardAmount);
     }
 
-    // Ensure that no one else can call the public "delegate" function provided by ERC20Votes
     function delegate(address) public pure override {
         revert Delegation__Fobidden();
     }
@@ -70,5 +67,13 @@ contract DecentravellerToken is ERC20Votes, AccessControl {
 
     function getMinterRole() external pure returns (bytes32) {
         return MINTER_ROLE;
+    }
+
+    function clock() public view override returns (uint48) {
+        return uint48(block.timestamp);
+    }
+
+    function CLOCK_MODE() public pure override returns (string memory) {
+        return "mode=timestamp";
     }
 }
