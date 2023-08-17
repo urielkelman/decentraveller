@@ -35,21 +35,35 @@ const placeDetailStyles = StyleSheet.create({
         left: 20,
     },
     titleText: {
-        fontSize: 35,
+        fontSize: 30,
         fontWeight: 'bold',
         marginTop: 1,
     },
     titleText2: {
-        fontSize: 35,
+        fontSize: 30,
         fontWeight: 'bold',
         marginTop: -15,
     },
     locationText: {
-        fontSize: 18,
+        fontSize: 15,
         fontWeight: '100',
         fontFamily: 'Montserrat_400Regular',
         width: 250,
         height: 50,
+    },
+    locationText2: {
+        fontSize: 12,
+        fontWeight: '100',
+        fontFamily: 'Montserrat_400Regular',
+        width: 250,
+        height: 50,
+    },
+    location2TextContainer: {
+        flexDirection: 'column',
+    },
+    location2TextMargin: {
+        marginBottom: -35,
+        marginRight: 20
     },
     bulletsContainer: {
         position: 'absolute',

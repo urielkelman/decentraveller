@@ -1,5 +1,11 @@
 import { GeocodingResponse } from './response/geocoding';
-import { httpAPIConnector, HttpConnector, HttpGetRequest, HttpPostRequest } from '../connectors/HttpConnector';
+import {
+    httpAPIConnector,
+    HttpConnector,
+    HttpGetRequest,
+    HttpPostImageRequest,
+    HttpPostRequest
+} from '../connectors/HttpConnector';
 import {
     FORWARD_GEOCODING_ENDPOINT,
     GET_USER_ENDPOINT,
@@ -8,13 +14,15 @@ import {
     RECOMMENDED_PLACES_BY_PROFILE_ENDPOINT,
     REVIEWS_PLACES_ENDPOINT,
     PUSH_NOTIFICATION_TOKEN_ENDPOINT,
-    GET_PROFILE_IMAGE,
+    PROFILE_IMAGE,
 } from './config';
 import { UserResponse } from './response/user';
 import Adapter from './Adapter';
 import { formatString } from '../commons/functions/utils';
 import { ReviewsResponse } from './response/reviews';
 import { PlaceResponse } from './response/places';
+import * as FileSystem from 'expo-file-system';
+
 
 enum HTTPStatusCode {
     BAD_REQUEST = 400,
@@ -155,7 +163,7 @@ class ApiAdapter extends Adapter {
 
     async getUserProfileImage(walletAddress: string, onFailed: () => void): Promise<string> {
         const httpRequest: HttpGetRequest = {
-            url: formatString(GET_PROFILE_IMAGE, { owner: walletAddress }),
+            url: formatString(PROFILE_IMAGE, { owner: walletAddress }),
             queryParams: {},
             onUnexpectedError: (e) => {
                 onFailed();
@@ -163,6 +171,34 @@ class ApiAdapter extends Adapter {
         };
 
         return await httpAPIConnector.getBase64Bytes(httpRequest);
+    }
+
+    async sendProfileImage(walletAddress: string, imageUri: string): Promise<void> {
+        try {
+            const imageInfo = await FileSystem.getInfoAsync(imageUri);
+
+            if (imageInfo.exists) {
+                const imageBase64 = await FileSystem.readAsStringAsync(imageUri, { encoding: FileSystem.EncodingType.Base64 });
+
+                const formData = new FormData();
+                formData.append('profileImage', imageBase64);
+
+                const httpPostRequest: HttpPostImageRequest = {
+                    url: formatString(PROFILE_IMAGE, { owner: walletAddress }),
+                    body: formData,
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                    onUnexpectedError: (e) => console.log('Error', e),
+                };
+
+                await httpAPIConnector.post(httpPostRequest);
+            } else {
+                console.log('Image file does not exist.');
+            }
+        } catch (error) {
+            console.error(error);
+        }
     }
 }
 
