@@ -14,7 +14,15 @@ dotenv.config();
 const localhostHost = process.env.LOCALHOST_HOST_ADDRESS || "localhost";
 
 const baseConfig: HardhatUserConfig = {
-    solidity: "0.8.17",
+    solidity: {
+        version: "0.8.17",
+        settings: {
+            optimizer: {
+                enabled: true,
+                runs: 200,
+            },
+        },
+    },
     defaultNetwork: "hardhat",
     networks: {
         localhost: {

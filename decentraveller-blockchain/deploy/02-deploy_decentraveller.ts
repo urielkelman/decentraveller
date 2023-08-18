@@ -4,8 +4,8 @@ import { DeployFunction } from "hardhat-deploy/types";
 const deployFunction: DeployFunction = async function (
     hre: HardhatRuntimeEnvironment
 ) {
-    const { getNamedAccounts, deployments } = hre;
-    const { deploy } = deployments;
+    const { getNamedAccounts, deployments, ethers } = hre;
+    const { deploy, get } = deployments;
     const { deployer } = await getNamedAccounts();
 
     const decentravellerReview = await deploy("DecentravellerReview", {
@@ -39,9 +39,14 @@ const deployFunction: DeployFunction = async function (
         }
     );
 
-    const decentraveller = await deploy("Decentraveller", {
+    const governanceDeployment = await get("DecentravellerGovernance");
+
+    await deploy("Decentraveller", {
         from: deployer,
-        args: [decentravellerPlaceFactory.address],
+        args: [
+            governanceDeployment.address,
+            decentravellerPlaceFactory.address,
+        ],
         log: true,
     });
 };

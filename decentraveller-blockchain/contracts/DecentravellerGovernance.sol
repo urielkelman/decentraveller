@@ -2,6 +2,7 @@
 pragma solidity ^0.8.17;
 
 import "@openzeppelin/contracts/governance/Governor.sol";
+import "@openzeppelin/contracts/governance/TimelockController.sol";
 import "@openzeppelin/contracts/governance/extensions/GovernorCountingSimple.sol";
 import "@openzeppelin/contracts/governance/extensions/GovernorVotes.sol";
 import "@openzeppelin/contracts/governance/extensions/GovernorVotesQuorumFraction.sol";
@@ -15,10 +16,7 @@ contract DecentravellerGovernance is
     GovernorTimelockControl,
     GovernorCompatibilityBravo
 {
-    address private decentraveller;
-
     constructor(
-        address _decentraveller,
         IVotes token,
         TimelockController _timelock
     )
@@ -26,14 +24,7 @@ contract DecentravellerGovernance is
         GovernorVotes(token)
         GovernorVotesQuorumFraction(5)
         GovernorTimelockControl(_timelock)
-    {
-        decentraveller = _decentraveller;
-    }
-
-    modifier onlyDecentraveller() {
-        require(msg.sender == decentraveller);
-        _;
-    }
+    {}
 
     function votingDelay() public pure override returns (uint256) {
         return 1 days;
@@ -66,7 +57,6 @@ contract DecentravellerGovernance is
     )
         public
         override(Governor, GovernorCompatibilityBravo, IGovernor)
-        onlyDecentraveller
         returns (uint256)
     {
         return super.propose(targets, values, calldatas, description);

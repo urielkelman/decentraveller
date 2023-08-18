@@ -33,10 +33,7 @@ contract Decentraveller {
         string statement
     );
 
-    event DecentravellerRuleApproved(
-        uint256 indexed ruleId,
-        uint256 proposalId
-    );
+    event DecentravellerRuleApproved(uint256 indexed ruleId);
 
     DecentravellerGovernance governance;
     DecentravellerPlaceCloneFactory placeFactory;
@@ -132,7 +129,10 @@ contract Decentraveller {
         return currentPlaceId;
     }
 
-    function approveProposedRule(uint256 ruleId) external onlyGovernance {}
+    function approveProposedRule(uint256 ruleId) external onlyGovernance {
+        ruleById[ruleId].haveBeenApproved = true;
+        emit DecentravellerRuleApproved(ruleId);
+    }
 
     function proposeToGovernor(
         bytes memory data,
