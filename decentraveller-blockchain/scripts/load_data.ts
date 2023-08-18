@@ -2,8 +2,6 @@ import { ethers } from "hardhat";
 import { Decentraveller, DecentravellerPlace } from "../typechain-types";
 import { readFileSync } from "fs";
 
-const DEFAULT_MOCK_HASHES = ["0xhash1", "0xhash2", "0xhash3"];
-
 const main = async () => {
     const signers = await ethers.getSigners();
     /*Contracts are connected to different signers */
@@ -91,7 +89,7 @@ const main = async () => {
         );
         const result = await placeContract.addReview(
             reviewData["text"],
-            DEFAULT_MOCK_HASHES,
+            [],
             Math.round(parseFloat(reviewData["stars"]))
         );
 

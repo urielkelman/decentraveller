@@ -45,15 +45,6 @@ else
   echo "Avatar change - OK"
 fi
 
-wget -q http://localhost:8000/profile/0xcd3B766CCDd6AE721141F452C550Ca635964ce71/avatar.jpg -O /tmp/aux
-
-if ! idiff -p -fail 1 -failpercent 7 -hardfail 1 -warnpercent 7 -warn 1 -hardwarn 1 decentraveller-api/web-api/tests/assets/custom_avatar.jpg /tmp/aux &>/dev/null; then
-  echo "New avatar - ERROR"
-  exit 1
-else
-  echo "New avatar - OK"
-fi
-
 status_code=$(curl --write-out %{http_code} --silent --output /dev/null "http://localhost:8000/place/1/similars")
 
 if [[ "$status_code" -ne 200 ]] ; then

@@ -4,6 +4,8 @@ import pytest
 
 from tests.utils.dependency_override import client
 from tests.utils.session import restart_database
+from PIL import Image
+from io import BytesIO
 
 
 @pytest.fixture
@@ -119,20 +121,20 @@ def test_create_review(cleanup):
                            )
     assert response.status_code == 201
 
-    response = client.get("/review", params={'review_id': 1, 'place_id': 0})
+    response = client.get("/review", params={'id': 1, 'place_id': 0})
     assert response.status_code == 200
     assert {k: {a: b for a,b in v.items() if a!= "createdAt"} if isinstance(v, dict) else v
             for k, v
             in response.json().items()
             if k != "createdAt"} == {"id": 1,
                                      "placeId": 0,
+                                     "imageCount": 0,
                                      "score": 5,
                                      "owner": {"owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                                "nickname": "test",
                                                "country": "AR",
                                                "interest": "ACCOMMODATION"},
                                      "text": "Muy bueno el combo de sebastian yatra",
-                                     "images": [],
                                      "state": "UNCENSORED"}
     assert datetime.fromisoformat(response.json()['createdAt']).date() == datetime.utcnow().date()
 
@@ -206,13 +208,13 @@ def test_get_reviews_by_place(cleanup):
             in response.json()['reviews'][0].items()
             if k != "createdAt"} == {"id": 1,
                                      "placeId": 0,
+                                     "imageCount": 0,
                                      "score": 5,
                                      "owner": {"owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                                "nickname": "test",
                                                "country": "AR",
                                                "interest": "ACCOMMODATION"},
                                      "text": "Muy bueno el combo de sebastian yatra",
-                                     "images": [],
                                      "state": "UNCENSORED"}
     assert datetime.fromisoformat(response.json()['reviews'][0]['createdAt']).date() == datetime.utcnow().date()
     assert {k: {a: b for a,b in v.items() if a!= "createdAt"} if isinstance(v, dict) else v
@@ -220,13 +222,13 @@ def test_get_reviews_by_place(cleanup):
             in response.json()['reviews'][1].items()
             if k != "createdAt"} == {"id": 2,
                                      "placeId": 0,
+                                     "imageCount": 0,
                                      "score": 5,
                                      "owner": {"owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                                "nickname": "test",
                                                "country": "AR",
                                                "interest": "ACCOMMODATION"},
                                      "text": "Me pedi un mcflurry oreo",
-                                     "images": [],
                                      "state": "UNCENSORED"}
     assert datetime.fromisoformat(response.json()['reviews'][1]['createdAt']).date() == datetime.utcnow().date()
 
@@ -239,13 +241,13 @@ def test_get_reviews_by_place(cleanup):
             in response.json()['reviews'][0].items()
             if k != "createdAt"} == {"id": 3,
                                      "placeId": 0,
+                                     "imageCount": 0,
                                      "score": 3,
                                      "owner": {"owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                                "nickname": "test",
                                                "country": "AR",
                                                "interest": "ACCOMMODATION"},
                                      "text": "Me atendieron mal",
-                                     "images": [],
                                      "state": "UNCENSORED"}
     assert datetime.fromisoformat(response.json()['reviews'][0]['createdAt']).date() == datetime.utcnow().date()
 
@@ -317,13 +319,13 @@ def test_get_reviews_by_owner(cleanup):
             in response.json()['reviews'][0].items()
             if k != "createdAt"} == {"id": 1,
                                      "placeId": 0,
+                                     "imageCount": 0,
                                      "score": 5,
                                      "owner": {"owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                                "nickname": "test",
                                                "country": "AR",
                                                "interest": "ACCOMMODATION"},
                                      "text": "Muy bueno el combo de sebastian yatra",
-                                     "images": [],
                                      "state": "UNCENSORED"}
     assert datetime.fromisoformat(response.json()['reviews'][0]['createdAt']).date() == datetime.utcnow().date()
     assert {k: {a: b for a,b in v.items() if a!= "createdAt"} if isinstance(v, dict) else v
@@ -331,13 +333,13 @@ def test_get_reviews_by_owner(cleanup):
             in response.json()['reviews'][1].items()
             if k != "createdAt"} == {"id": 2,
                                      "placeId": 0,
+                                     "imageCount": 0,
                                      "score": 5,
                                      "owner": {"owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                                "nickname": "test",
                                                "country": "AR",
                                                "interest": "ACCOMMODATION"},
                                      "text": "Me pedi un mcflurry oreo",
-                                     "images": [],
                                      "state": "UNCENSORED"}
     assert datetime.fromisoformat(response.json()['reviews'][1]['createdAt']).date() == datetime.utcnow().date()
 
@@ -351,12 +353,209 @@ def test_get_reviews_by_owner(cleanup):
             in response.json()['reviews'][0].items()
             if k != "createdAt"} == {"id": 3,
                                      "placeId": 0,
+                                     "imageCount": 0,
                                      "score": 3,
                                      "owner": {"owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                                "nickname": "test",
                                                "country": "AR",
                                                "interest": "ACCOMMODATION"},
                                      "text": "Me atendieron mal",
-                                     "images": [],
                                      "state": "UNCENSORED"}
     assert datetime.fromisoformat(response.json()['reviews'][0]['createdAt']).date() == datetime.utcnow().date()
+
+def test_create_review_with_image(cleanup):
+    response = client.post("/profile",
+                           json={"owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
+                                 "nickname": "test",
+                                 "country": "AR",
+                                 "interest": "ACCOMMODATION"},
+                           )
+    assert response.status_code == 201
+
+    response = client.post("/upload",
+                           files={"file": open("tests/assets/place_image.jpg", "rb").read()})
+    assert response.status_code == 200
+    filehash = response.json()['hash']
+
+    response = client.post("/place",
+                           json={"id": 0,
+                                 "owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
+                                 "name": "McDonalds",
+                                 "address": "Av. Callao & Av. Santa Fe",
+                                 "latitude": -34.595983,
+                                 "longitude": -58.393329,
+                                 "openHours": {"Monday - Monday": "24hs"},
+                                 "categories": "Fast food"},
+                           )
+    assert response.status_code == 201
+
+    response = client.get("/review/1")
+    assert response.status_code == 404
+
+    response = client.post("/review",
+                           json={"id": 1,
+                                 "placeId": 0,
+                                 "score": 5,
+                                 "owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
+                                 "text": "Muy bueno el combo de sebastian yatra",
+                                 "images": [filehash],
+                                 "state": "UNCENSORED"},
+                           )
+    assert response.status_code == 201
+
+    response = client.get("/review", params={'id': 1, 'place_id': 0})
+    assert response.status_code == 200
+    assert {k: {a: b for a,b in v.items() if a!= "createdAt"} if isinstance(v, dict) else v
+            for k, v
+            in response.json().items()
+            if k != "createdAt"} == {"id": 1,
+                                     "placeId": 0,
+                                     "imageCount": 1,
+                                     "score": 5,
+                                     "owner": {"owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
+                                               "nickname": "test",
+                                               "country": "AR",
+                                               "interest": "ACCOMMODATION"},
+                                     "text": "Muy bueno el combo de sebastian yatra",
+                                     "state": "UNCENSORED"}
+    assert datetime.fromisoformat(response.json()['createdAt']).date() == datetime.utcnow().date()
+
+    response = client.get("/review/1.jpg", params={'id': 1, 'place_id': 0})
+    assert response.status_code == 200
+    image = Image.open(BytesIO(response.content))
+    assert image.size == (392, 450)
+
+def test_create_review_with_images(cleanup):
+    response = client.post("/profile",
+                           json={"owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
+                                 "nickname": "test",
+                                 "country": "AR",
+                                 "interest": "ACCOMMODATION"},
+                           )
+    assert response.status_code == 201
+
+    response = client.post("/upload",
+                           files={"file": open("tests/assets/place_image.jpg", "rb").read()})
+    assert response.status_code == 200
+    filehash = response.json()['hash']
+
+    response = client.post("/upload",
+                           files={"file": open("tests/assets/place_image2.jpg", "rb").read()})
+    assert response.status_code == 200
+    filehash2 = response.json()['hash']
+
+    response = client.post("/place",
+                           json={"id": 0,
+                                 "owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
+                                 "name": "McDonalds",
+                                 "address": "Av. Callao & Av. Santa Fe",
+                                 "latitude": -34.595983,
+                                 "longitude": -58.393329,
+                                 "openHours": {"Monday - Monday": "24hs"},
+                                 "categories": "Fast food"},
+                           )
+    assert response.status_code == 201
+
+    response = client.get("/review/1")
+    assert response.status_code == 404
+
+    response = client.post("/review",
+                           json={"id": 1,
+                                 "placeId": 0,
+                                 "score": 5,
+                                 "owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
+                                 "text": "Muy bueno el combo de sebastian yatra",
+                                 "images": [filehash, filehash2],
+                                 "state": "UNCENSORED"},
+                           )
+    assert response.status_code == 201
+
+    response = client.get("/review", params={'id': 1, 'place_id': 0})
+    assert response.status_code == 200
+    assert {k: {a: b for a,b in v.items() if a!= "createdAt"} if isinstance(v, dict) else v
+            for k, v
+            in response.json().items()
+            if k != "createdAt"} == {"id": 1,
+                                     "placeId": 0,
+                                     "imageCount": 2,
+                                     "score": 5,
+                                     "owner": {"owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
+                                               "nickname": "test",
+                                               "country": "AR",
+                                               "interest": "ACCOMMODATION"},
+                                     "text": "Muy bueno el combo de sebastian yatra",
+                                     "state": "UNCENSORED"}
+    assert datetime.fromisoformat(response.json()['createdAt']).date() == datetime.utcnow().date()
+
+    response = client.get("/review/1.jpg", params={'id': 1, 'place_id': 0})
+    assert response.status_code == 200
+    image = Image.open(BytesIO(response.content))
+    assert image.size == (392, 450)
+
+    response = client.get("/review/2.jpg", params={'id': 1, 'place_id': 0})
+    assert response.status_code == 200
+    image = Image.open(BytesIO(response.content))
+    assert image.size == (1080, 1080)
+
+def test_place_image(cleanup):
+    response = client.post("/profile",
+                           json={"owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
+                                 "nickname": "test",
+                                 "country": "AR",
+                                 "interest": "ACCOMMODATION"},
+                           )
+    assert response.status_code == 201
+
+    response = client.post("/upload",
+                           files={"file": open("tests/assets/place_image.jpg", "rb").read()})
+    assert response.status_code == 200
+    filehash = response.json()['hash']
+
+    response = client.post("/place",
+                           json={"id": 0,
+                                 "owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
+                                 "name": "McDonalds",
+                                 "address": "Av. Callao & Av. Santa Fe",
+                                 "latitude": -34.595983,
+                                 "longitude": -58.393329,
+                                 "openHours": {"Monday - Monday": "24hs"},
+                                 "categories": "Fast food"},
+                           )
+    assert response.status_code == 201
+
+    response = client.get("/review/1")
+    assert response.status_code == 404
+
+    response = client.post("/review",
+                           json={"id": 1,
+                                 "placeId": 0,
+                                 "score": 5,
+                                 "owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
+                                 "text": "Muy bueno el combo de sebastian yatra",
+                                 "images": [filehash],
+                                 "state": "UNCENSORED"},
+                           )
+    assert response.status_code == 201
+
+    response = client.get("/review", params={'id': 1, 'place_id': 0})
+    assert response.status_code == 200
+    assert {k: {a: b for a,b in v.items() if a!= "createdAt"} if isinstance(v, dict) else v
+            for k, v
+            in response.json().items()
+            if k != "createdAt"} == {"id": 1,
+                                     "placeId": 0,
+                                     "imageCount": 1,
+                                     "score": 5,
+                                     "owner": {"owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
+                                               "nickname": "test",
+                                               "country": "AR",
+                                               "interest": "ACCOMMODATION"},
+                                     "text": "Muy bueno el combo de sebastian yatra",
+                                     "state": "UNCENSORED"}
+    assert datetime.fromisoformat(response.json()['createdAt']).date() == datetime.utcnow().date()
+
+    response = client.get("/place/0/image.jpg")
+    assert response.status_code == 200
+    image = Image.open(BytesIO(response.content))
+    assert image.size == (392, 450)
+

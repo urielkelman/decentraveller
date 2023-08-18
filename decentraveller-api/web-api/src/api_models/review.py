@@ -19,17 +19,23 @@ class ReviewBody(APIModel):
     score: int
     owner: WalletID
     text: str
-    images: list[str]
     state: str
 
     @validator('owner')
     def wallet_id_validator(cls, v):
         return wallet_id_validator(v)
 
+class ReviewInput(ReviewBody):
+    """
+    Review input API
+    """
+    images: list[str]
+
 class ReviewInDB(ReviewBody):
     """
     Review API Model
     """
+    image_count: int
     created_at: datetime
 
 class ReviewWithProfile(ReviewInDB):

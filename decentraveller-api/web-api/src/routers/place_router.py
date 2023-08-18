@@ -1,6 +1,6 @@
 from typing import Optional
 
-from fastapi import Depends, HTTPException, Query
+from fastapi import Depends, HTTPException, Query, Response
 from fastapi_utils.cbv import cbv
 from fastapi_utils.inferring_router import InferringRouter
 from sqlalchemy import func, distinct, desc, asc, text
@@ -14,6 +14,7 @@ from src.api_models.profile import WalletID, wallet_id_validator
 from src.dependencies.indexer_auth import indexer_auth
 from src.dependencies.relational_database import build_relational_database, RelationalDatabase
 from src.dependencies.vector_database import VectorDatabase
+from src.dependencies.ipfs_service import IPFSService
 from src.orms.place import PlaceORM
 from src.orms.review import ReviewORM
 
@@ -24,6 +25,7 @@ place_router = InferringRouter()
 class PlaceCBV:
     database: RelationalDatabase = Depends(build_relational_database)
     vector_database: VectorDatabase = Depends(VectorDatabase)
+    ipfs_service: IPFSService = Depends(IPFSService)
 
     @place_router.post("/place", status_code=201, dependencies=[Depends(indexer_auth)])
     def create_place(self, place: PlaceInDB) -> PlaceWithStats:
@@ -173,3 +175,18 @@ class PlaceCBV:
                                                page=per_page, per_page=per_page)
         else:
             raise HTTPException(status_code=HTTP_404_NOT_FOUND)
+
+    @place_router.get("/place/{place_id}/image.jpg")
+    def get_place_image(self, place_id: PlaceID):
+        """
+        Get a place image by its id
+
+        :param place_id: the place id
+        :return: the image or 404 if there is no image
+        """
+        image_hash = self.database.get_place_image_hash(place_id)
+        if image_hash is None:
+            raise HTTPException(status_code=HTTP_404_NOT_FOUND)
+        image_bytes = self.ipfs_service.get_file(image_hash)
+        return Response(content=image_bytes,
+                        media_type="image/jpeg")
