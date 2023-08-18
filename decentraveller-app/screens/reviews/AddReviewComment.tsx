@@ -7,8 +7,8 @@ import { addReviewCommentStyles } from '../../styles/addReviewStyles';
 import { RouteProp, useRoute } from '@react-navigation/native';
 import { blockchainAdapter } from '../../blockchain/blockhainAdapter';
 import { useAppContext } from '../../context/AppContext';
-import {apiAdapter} from "../../api/apiAdapter";
-import {mockApiAdapter} from "../../api/mockApiAdapter";
+import { apiAdapter } from '../../api/apiAdapter';
+import { mockApiAdapter } from '../../api/mockApiAdapter';
 
 const adapter = blockchainAdapter;
 const adapterApi = mockApiAdapter;
@@ -41,18 +41,18 @@ const AddReviewComment = ({ navigation }) => {
                             color={i <= rating ? '#FFD700' : '#cc6060'}
                         />
                     </Text>
-                </TouchableOpacity>
+                </TouchableOpacity>,
             );
         }
         return stars;
     };
 
     const onClickFinish = async () => {
-        const response = await adapterApi.sendReviewImage(connectionContext.connectedAddress, selectedImage );
+        const response = await adapterApi.sendReviewImage(connectionContext.connectedAddress, selectedImage);
 
-        if (!response) return
+        if (!response) return;
 
-        const imageHash = response.hash
+        const imageHash = response.hash;
         const transactionHash = await adapter.addPlaceReviewTransaction(web3Provider, placeId, comment, rating, [
             imageHash,
         ]);

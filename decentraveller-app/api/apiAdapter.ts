@@ -4,7 +4,7 @@ import {
     HttpConnector,
     HttpGetRequest,
     HttpPostImageRequest,
-    HttpPostRequest
+    HttpPostRequest,
 } from '../connectors/HttpConnector';
 import {
     FORWARD_GEOCODING_ENDPOINT,
@@ -19,10 +19,9 @@ import {
 import { UserResponse } from './response/user';
 import Adapter from './Adapter';
 import { formatString } from '../commons/functions/utils';
-import {ReviewImageResponse, ReviewsResponse} from './response/reviews';
+import { ReviewImageResponse, ReviewsResponse } from './response/reviews';
 import { PlaceResponse } from './response/places';
 import * as FileSystem from 'expo-file-system';
-
 
 enum HTTPStatusCode {
     BAD_REQUEST = 400,
@@ -57,7 +56,7 @@ class ApiAdapter extends Adapter {
         interest?: string,
         sort_by?: string | null,
         at_least_stars?: number | null,
-        maximum_distance?: number | null
+        maximum_distance?: number | null,
     ): Promise<PlaceResponse[]> {
         const queryParams: Record<string, string> = {
             latitude: latitude,
@@ -94,7 +93,7 @@ class ApiAdapter extends Adapter {
     async getRecommendedPlacesForAddress(
         walletAddress: string,
         [latitude, longitude]: [string?, string?],
-        onNotFound: () => void
+        onNotFound: () => void,
     ): Promise<PlaceResponse[]> {
         const [lat, long] = ['39.95', '-75.175'];
         const queryParams =
@@ -178,7 +177,9 @@ class ApiAdapter extends Adapter {
             const imageInfo = await FileSystem.getInfoAsync(imageUri);
 
             if (imageInfo.exists) {
-                const imageBase64 = await FileSystem.readAsStringAsync(imageUri, { encoding: FileSystem.EncodingType.Base64 });
+                const imageBase64 = await FileSystem.readAsStringAsync(imageUri, {
+                    encoding: FileSystem.EncodingType.Base64,
+                });
 
                 const formData = new FormData();
                 formData.append('profileImage', imageBase64);
@@ -206,7 +207,9 @@ class ApiAdapter extends Adapter {
             const imageInfo = await FileSystem.getInfoAsync(imageUri);
 
             if (imageInfo.exists) {
-                const imageBase64 = await FileSystem.readAsStringAsync(imageUri, { encoding: FileSystem.EncodingType.Base64 });
+                const imageBase64 = await FileSystem.readAsStringAsync(imageUri, {
+                    encoding: FileSystem.EncodingType.Base64,
+                });
 
                 const formData = new FormData();
                 formData.append('reviewImage', imageBase64);

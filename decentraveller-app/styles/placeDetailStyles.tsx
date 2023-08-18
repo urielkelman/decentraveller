@@ -63,7 +63,7 @@ const placeDetailStyles = StyleSheet.create({
     },
     location2TextMargin: {
         marginBottom: -35,
-        marginRight: 20
+        marginRight: 20,
     },
     bulletsContainer: {
         position: 'absolute',

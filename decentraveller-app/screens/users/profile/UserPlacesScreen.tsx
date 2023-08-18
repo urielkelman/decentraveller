@@ -16,7 +16,7 @@ const UserPlacesScreen = ({}) => {
         (async () => {
             const placesResponse: PlaceResponse[] = await adapter.getMyPlacesPlaces(
                 // appContext.connectionContext.connectedAddress
-                ''
+                '',
             );
             setUserPlaces(placesResponse);
         })();

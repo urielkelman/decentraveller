@@ -8,7 +8,7 @@ import { NavigationProp, RouteProp, useNavigation } from '@react-navigation/nati
 import { HomeStackScreens } from '../home/HomeNavigator';
 import { AddReviewCommentScreenProp, AddReviewImagesProps } from './types';
 import { PlaceDetailScreenProps } from '../home/place/types';
-import {apiAdapter} from "../../api/apiAdapter";
+import { apiAdapter } from '../../api/apiAdapter';
 
 const imagePath1 = '../../assets/images/ar4.jpeg';
 const imagePath2 = '../../assets/images/ar2.jpeg';
@@ -40,7 +40,7 @@ const AddReviewImages: React.FC<AddReviewImagesProps> = ({ route }) => {
 
             if (!result.canceled) {
                 const imageUri = result.assets[0].uri;
-                setSelectedImage(imageUri)
+                setSelectedImage(imageUri);
             }
         } catch (error) {
             Alert.alert('Error', error.message);

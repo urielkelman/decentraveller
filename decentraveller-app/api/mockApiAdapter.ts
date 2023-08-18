@@ -4,13 +4,13 @@ import { UserResponse } from './response/user';
 import { GianUserResponse, MatiUserResponse, UriUserResponse } from './mocks/user';
 import Adapter from './Adapter';
 import { alternativePlacesMock, defaultPlacesMock } from './mocks/places';
-import {ReviewImageResponse, ReviewsResponse} from './response/reviews';
-import {emptyReviewsResponse, imageReviewResponse, manyReviewsResponse, oneReviewsResponse} from './mocks/reviews';
+import { ReviewImageResponse, ReviewsResponse } from './response/reviews';
+import { emptyReviewsResponse, imageReviewResponse, manyReviewsResponse, oneReviewsResponse } from './mocks/reviews';
 import { PlaceResponse } from './response/places';
-import {httpAPIConnector, HttpGetRequest, HttpPostImageRequest} from '../connectors/HttpConnector';
-import {PROFILE_IMAGE, RECOMMENDED_PLACES_BY_LOCATION_ENDPOINT} from './config';
-import * as FileSystem from "expo-file-system";
-import {formatString} from "../commons/functions/utils";
+import { httpAPIConnector, HttpGetRequest, HttpPostImageRequest } from '../connectors/HttpConnector';
+import { PROFILE_IMAGE, RECOMMENDED_PLACES_BY_LOCATION_ENDPOINT } from './config';
+import * as FileSystem from 'expo-file-system';
+import { formatString } from '../commons/functions/utils';
 
 const searchTextHondurasResponse = ['Honduras', 'Honduras ', 'Honduras 4', 'Honduras 47', 'Honduras 470'];
 
@@ -68,7 +68,7 @@ class MockApiAdapter extends Adapter {
     async getRecommendedPlacesForAddress(
         walletAddress: string,
         [latitude, longitude]: [string?, string?],
-        onNotFound: () => void
+        onNotFound: () => void,
     ): Promise<PlaceResponse[]> {
         return defaultPlacesMock;
     }
@@ -78,7 +78,7 @@ class MockApiAdapter extends Adapter {
         interest?: string,
         sort_by?: string | null,
         at_least_stars?: number | null,
-        maximum_distance?: number | null
+        maximum_distance?: number | null,
     ): Promise<PlaceResponse[]> {
         const queryParams: Record<string, string> = {
             latitude: latitude,
@@ -135,7 +135,7 @@ class MockApiAdapter extends Adapter {
     }
 
     async sendReviewImage(walletAddress: string, imageUri: string): Promise<ReviewImageResponse> {
-        return imageReviewResponse
+        return imageReviewResponse;
     }
 }
 

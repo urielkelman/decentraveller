@@ -17,7 +17,7 @@ export interface HttpPostRequest extends HttpBaseRequest {
 
 // Lo dejo como nueva interfaz inicialmente y despues vemos si alteramos la original
 export interface HttpPostImageRequest extends HttpBaseRequest {
-    body: FormData
+    body: FormData;
     headers: { [key: string]: string };
 }
 

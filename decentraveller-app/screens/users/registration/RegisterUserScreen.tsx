@@ -25,7 +25,7 @@ const RegisterUserScreen = ({ navigation }) => {
             nickname,
             countryPicker.value,
             interestPicker.value,
-            onError
+            onError,
         );
 
         if (!transactionHash) return;

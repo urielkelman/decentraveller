@@ -28,7 +28,7 @@ const CreateUserProvider: React.FC<React.ReactNode> = ({ children }) => {
     const [countryPickerValue, setCountryPickerValue] = React.useState<string>(null);
     const [countryPickerOpen, setCountryPickerOpen] = React.useState<boolean>(false);
     const [countryPickerItems, setCountryPickerItems] = React.useState<PickerItem[]>(
-        Object.keys(ISOCodeByCountry).map((country) => ({ label: country, value: ISOCodeByCountry[country] }))
+        Object.keys(ISOCodeByCountry).map((country) => ({ label: country, value: ISOCodeByCountry[country] })),
     );
     const onOpenPicker = (pickerOpened: CREATE_USER_PICKER) => {
         switch (pickerOpened) {
