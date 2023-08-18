@@ -1,3 +1,7 @@
+export type ReviewImageResponse = {
+    hash: string;
+};
+
 export type ReviewResponse = {
     placeId: number;
     score: number;

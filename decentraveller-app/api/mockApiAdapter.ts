@@ -4,11 +4,13 @@ import { UserResponse } from './response/user';
 import { GianUserResponse, MatiUserResponse, UriUserResponse } from './mocks/user';
 import Adapter from './Adapter';
 import { alternativePlacesMock, defaultPlacesMock } from './mocks/places';
-import { ReviewsResponse } from './response/reviews';
-import { emptyReviewsResponse, manyReviewsResponse, oneReviewsResponse } from './mocks/reviews';
+import {ReviewImageResponse, ReviewsResponse} from './response/reviews';
+import {emptyReviewsResponse, imageReviewResponse, manyReviewsResponse, oneReviewsResponse} from './mocks/reviews';
 import { PlaceResponse } from './response/places';
-import { HttpGetRequest } from '../connectors/HttpConnector';
-import { RECOMMENDED_PLACES_BY_LOCATION_ENDPOINT } from './config';
+import {httpAPIConnector, HttpGetRequest, HttpPostImageRequest} from '../connectors/HttpConnector';
+import {PROFILE_IMAGE, RECOMMENDED_PLACES_BY_LOCATION_ENDPOINT} from './config';
+import * as FileSystem from "expo-file-system";
+import {formatString} from "../commons/functions/utils";
 
 const searchTextHondurasResponse = ['Honduras', 'Honduras ', 'Honduras 4', 'Honduras 47', 'Honduras 470'];
 
@@ -130,6 +132,10 @@ class MockApiAdapter extends Adapter {
 
     async getUserProfileImage(walletAddress: string, onFailed: () => void): Promise<string> {
         return 'iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAIAAADTED8xAAAEYklEQVR4nOzd3cvY8x/H8d+136VZtCIHxBQHrGRuSmbtwA5wpBwoi6skuTvAgRzYCNGUAwcOaFkiU3NZUsaaaSRFKzM1K8pNkyOlmEm2A3/Fu9Tz8fgDXp/vybP34Xfx8M6t/5t0/NmLRvc/eumR0f1Dqx4b3X/zn7NG98/Ytn90f9Wh2e+/+8zl0f0Vo+vwHycA0gRAmgBIEwBpAiBNAKQJgDQBkCYA0gRAmgBIEwBpAiBNAKQJgDQBkCYA0gRAmgBIEwBpAiBNAKQJgDQBkCYA0gRAmgBIEwBpAiBNAKQtvvHMn6MPXLZi9ej+K9d+O7p/9l1HR/cvP3DO6P6HWy4d3b/khR9H928597TRfReANAGQJgDSBECaAEgTAGkCIE0ApAmANAGQJgDSBECaAEgTAGkCIE0ApAmANAGQJgDSBECaAEgTAGkCIE0ApAmANAGQJgDSBECaAEgTAGkCIG3hyIFjow98uvLq0f2DX1wzun/fhtn/J/z0y72j+zu2Lozu73/g99H9hy8+ObrvApAmANIEQJoASBMAaQIgTQCkCYA0AZAmANIEQJoASBMAaQIgTQCkCYA0AZAmANIEQJoASBMAaQIgTQCkCYA0AZAmANIEQJoASBMAaQIgTQCkLVxw//bRB45tXjm6v/vg8uj+40+sG92/bdM7o/s3Hz0xuv/edfeM7j/63Tej+y4AaQIgTQCkCYA0AZAmANIEQJoASBMAaQIgTQCkCYA0AZAmANIEQJoASBMAaQIgTQCkCYA0AZAmANIEQJoASBMAaQIgTQCkCYA0AZAmANIEQNrC95tvH31gx4M3jO4fvHXX6P7pD305ur/xyTtG9z/fc3x0f/Xaq0b3/9hw5ei+C0CaAEgTAGkCIE0ApAmANAGQJgDSBECaAEgTAGkCIE0ApAmANAGQJgDSBECaAEgTAGkCIE0ApAmANAGQJgDSBECaAEgTAGkCIE0ApAmANAGQtnDFmmOjD3y849XR/Z3LF47ur129Z3R/5dP7Rvf/Prl9dH/LvhtH90++vm503wUgTQCkCYA0AZAmANIEQJoASBMAaQIgTQCkCYA0AZAmANIEQJoASBMAaQIgTQCkCYA0AZAmANIEQJoASBMAaQIgTQCkCYA0AZAmANIEQJoASFtcWl4/+sCRt/eO7l///J2j+0sfnD+6v/GvH0b3Xzt6YnT/qaXZ/yect+bn0X0XgDQBkCYA0gRAmgBIEwBpAiBNAKQJgDQBkCYA0gRAmgBIEwBpAiBNAKQJgDQBkCYA0gRAmgBIEwBpAiBNAKQJgDQBkCYA0gRAmgBIEwBpAiBt8aavl0YfeHfb+6P7v546PLq/661PRvdfPLVpdP+59S+P7u/+6rfR/c/2/n903wUgTQCkCYA0AZAmANIEQJoASBMAaQIgTQCkCYA0AZAmANIEQJoASBMAaQIgTQCkCYA0AZAmANIEQJoASBMAaQIgTQCkCYA0AZAmANIEQJoASPs3AAD//0zzZUNB7GJ+AAAAAElFTkSuQmCC';
+    }
+
+    async sendReviewImage(walletAddress: string, imageUri: string): Promise<ReviewImageResponse> {
+        return imageReviewResponse
     }
 }
 

@@ -30,7 +30,6 @@ const UserProfileScreen = ({ navigation }) => {
 
             if (!result.canceled) {
                 const imageUri = result.assets[0].uri;
-                console.log(imageUri)
                 try {
                     await apiAdapter.sendProfileImage(user.walletAddress, imageUri);
                     console.log('Avatar success updated.');
