@@ -202,7 +202,7 @@ class ApiAdapter extends Adapter {
         }
     }
 
-    async sendReviewImage(walletAddress: string, imageUri: string): Promise<ReviewImageResponse> {
+    async sendReviewImage(walletAddress: string, imageUri: string, onFailed: () => void): Promise<ReviewImageResponse> {
         try {
             const imageInfo = await FileSystem.getInfoAsync(imageUri);
 
@@ -220,7 +220,10 @@ class ApiAdapter extends Adapter {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                     },
-                    onUnexpectedError: (e) => console.log('Error', e),
+                    onUnexpectedError: (e) => {
+                        console.log(e);
+                        onFailed();
+                    },
                 };
 
                 return await httpAPIConnector.post(httpPostRequest);
