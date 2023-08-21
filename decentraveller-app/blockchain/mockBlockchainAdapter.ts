@@ -11,7 +11,7 @@ class BlockchainAdapter {
         return 'transactionHashConfirmed';
     }
 
-    async addPlaceReviewTransaction(connector, comment: string, rating: number, images: string[]): Promise<string> {
+    async addPlaceReviewTransaction(connector, placeId:number, comment: string, rating: number, images: string[]): Promise<string> {
         return 'transactionHashConfirmed';
     }
 }

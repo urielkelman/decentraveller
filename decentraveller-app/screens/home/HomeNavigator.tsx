@@ -23,7 +23,7 @@ export type HomeStackScreens = {
     UserPlacesScreen: undefined;
     UserReviewsScreen: undefined;
     AddReviewImages: { placeId: number };
-    AddReviewComment: { selectedImage: any; placeId: number };
+    AddReviewComment: { selectedImages: string[]; placeId: number };
     SuccessAddReviewScreen: undefined;
 };
 

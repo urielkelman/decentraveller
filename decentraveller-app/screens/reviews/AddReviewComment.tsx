@@ -15,13 +15,13 @@ const adapter = blockchainAdapter;
 const adapterApi = mockApiAdapter;
 
 type AddReviewCommentParams = {
-    selectedImage: string;
+    selectedImages: string[];
     placeId: number;
 };
 
 const AddReviewComment = ({ navigation }) => {
     const route = useRoute<RouteProp<Record<string, AddReviewCommentParams>, string>>();
-    const { selectedImage, placeId } = route.params;
+    const { selectedImages, placeId } = route.params;
     const [comment, setComment] = useState<string>('');
     const [rating, setRating] = useState<number>(0);
     const { connectionContext, web3Provider } = useAppContext();
@@ -50,7 +50,7 @@ const AddReviewComment = ({ navigation }) => {
     };
 
     const onClickFinish = async () => {
-        const response = await adapterApi.sendReviewImage(connectionContext.connectedAddress, selectedImage, () => {
+        const response = await adapterApi.sendReviewImage(connectionContext.connectedAddress, selectedImages, () => {
             setShowErrorModal(true);
         });
 
