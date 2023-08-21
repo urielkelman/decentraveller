@@ -14,7 +14,7 @@ import {
     RECOMMENDED_PLACES_BY_PROFILE_ENDPOINT,
     REVIEWS_PLACES_ENDPOINT,
     PUSH_NOTIFICATION_TOKEN_ENDPOINT,
-    PROFILE_IMAGE,
+    PROFILE_IMAGE, UPLOAD_IMAGE,
 } from './config';
 import { UserResponse } from './response/user';
 import Adapter from './Adapter';
@@ -215,7 +215,7 @@ class ApiAdapter extends Adapter {
                 formData.append('reviewImage', imageBase64);
 
                 const httpPostRequest: HttpPostImageRequest = {
-                    url: formatString(PROFILE_IMAGE, { owner: walletAddress }),
+                    url: formatString(UPLOAD_IMAGE, { owner: walletAddress }),
                     body: formData,
                     headers: {
                         'Content-Type': 'multipart/form-data',
