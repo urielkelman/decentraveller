@@ -118,7 +118,7 @@ const addReviewImagesStyles = StyleSheet.create({
         width: 180,
         height: 180,
         borderRadius: 90,
-        marginLeft: -150
+        marginLeft: -150,
     },
     horizontalImageContainer: {
         flexDirection: 'row',

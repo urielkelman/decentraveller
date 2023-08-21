@@ -48,7 +48,7 @@ const AddReviewImages: React.FC<AddReviewImagesProps> = ({ route }) => {
             });
 
             if (!result.canceled) {
-                const selectedImages = result.assets.map(asset => asset.uri);
+                const selectedImages = result.assets.map((asset) => asset.uri);
                 setSelectedImages(selectedImages);
             }
         } catch (error) {
@@ -56,7 +56,7 @@ const AddReviewImages: React.FC<AddReviewImagesProps> = ({ route }) => {
         }
     };
 
-    const multiImageOffset = -150
+    const multiImageOffset = -150;
 
     return (
         <View style={addReviewImagesStyles.container}>
@@ -74,15 +74,16 @@ const AddReviewImages: React.FC<AddReviewImagesProps> = ({ route }) => {
                     <View style={addReviewImagesStyles.horizontalImageContainer}>
                         {selectedImages.length > 0 ? (
                             selectedImages.map((uri, index) => (
-                                    <Image
-                                        key={index}
-                                        source={{ uri }}
-                                        style={[
-                                            addReviewImagesStyles.imageUpload,
-                                            {
-                                                marginLeft: index > 0 ? multiImageOffset : 0,},
-                                        ]}
-                                    />
+                                <Image
+                                    key={index}
+                                    source={{ uri }}
+                                    style={[
+                                        addReviewImagesStyles.imageUpload,
+                                        {
+                                            marginLeft: index > 0 ? multiImageOffset : 0,
+                                        },
+                                    ]}
+                                />
                             ))
                         ) : (
                             <Image

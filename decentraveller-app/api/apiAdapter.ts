@@ -14,7 +14,8 @@ import {
     RECOMMENDED_PLACES_BY_PROFILE_ENDPOINT,
     REVIEWS_PLACES_ENDPOINT,
     PUSH_NOTIFICATION_TOKEN_ENDPOINT,
-    PROFILE_IMAGE, UPLOAD_IMAGE,
+    PROFILE_IMAGE,
+    UPLOAD_IMAGE,
 } from './config';
 import { UserResponse } from './response/user';
 import Adapter from './Adapter';
@@ -202,7 +203,11 @@ class ApiAdapter extends Adapter {
         }
     }
 
-    async sendReviewImage(walletAddress: string, imagesUriList: string, onFailed: () => void): Promise<ReviewImageResponse> {
+    async sendReviewImage(
+        walletAddress: string,
+        imagesUriList: string,
+        onFailed: () => void,
+    ): Promise<ReviewImageResponse> {
         try {
             const formData = new FormData();
 
@@ -217,7 +222,6 @@ class ApiAdapter extends Adapter {
                     formData.append('files', imageBase64);
                 }
             }
-
 
             const httpPostRequest: HttpPostImageRequest = {
                 url: formatString(UPLOAD_IMAGE, { owner: walletAddress }),
