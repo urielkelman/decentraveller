@@ -30,7 +30,7 @@ const HomeScreen = ({ navigation }) => {
         const recommendedPlacesResponse: PlaceResponse[] = await adapter.getRecommendedPlacesForAddress(
             address,
             [],
-            onNotFoundRecommendations
+            onNotFoundRecommendations,
         );
         setRecommendedPlaces(recommendedPlacesResponse);
         setLoadingRecommendedPlaces(false);

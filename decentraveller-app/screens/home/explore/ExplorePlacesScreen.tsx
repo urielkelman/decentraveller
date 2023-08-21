@@ -32,7 +32,7 @@ const ExplorePlacesScreen = ({ navigation }) => {
     const [lastSearchTextLength, setLastSearchTextLength] = React.useState<number>(0);
     const [loadingGeocodingResponse, setLoadingGeocodingResponse] = React.useState<boolean>(false);
     const [locationPickerPlaceholder, setLocationPickerPlaceholder] = React.useState<string>(
-        explorePlacesScreenWording.EXPLORE_PLACE_LOCATION_PICKER_SEARCH_LOCATION
+        explorePlacesScreenWording.EXPLORE_PLACE_LOCATION_PICKER_SEARCH_LOCATION,
     );
     const [showNotLocationErrorModal, setShowLocationErrorModal] = React.useState<boolean>(false);
 
@@ -78,7 +78,7 @@ const ExplorePlacesScreen = ({ navigation }) => {
         if (
             userLocation.value &&
             !locationPickerItems.some(
-                (item) => item.label === explorePlacesScreenWording.EXPLORE_PLACE_LOCATION_PICKER_CURRENT_LOCATION
+                (item) => item.label === explorePlacesScreenWording.EXPLORE_PLACE_LOCATION_PICKER_CURRENT_LOCATION,
             )
         ) {
             setLocationPickerItems([ownLocationPickerItem].concat(locationPickerItems));
@@ -90,7 +90,7 @@ const ExplorePlacesScreen = ({ navigation }) => {
     const fetchPlaces = async (
         latitude: string,
         longitude: string,
-        lastLocationLabelSearched: string
+        lastLocationLabelSearched: string,
     ): Promise<void> => {
         setLoadingPlaces(true);
         console.log('to fetch places', latitude, longitude, lastLocationLabelSearched);
@@ -99,7 +99,7 @@ const ExplorePlacesScreen = ({ navigation }) => {
             interestPickerValue,
             sortBy,
             minStars !== 0 ? minStars : null,
-            maxDistance !== 0 ? maxDistance : null
+            maxDistance !== 0 ? maxDistance : null,
         );
         setPlaces(places);
         setLoadingPlaces(false);
@@ -114,7 +114,7 @@ const ExplorePlacesScreen = ({ navigation }) => {
                 await fetchPlaces(
                     latitude,
                     longitude,
-                    explorePlacesScreenWording.EXPLORE_PLACE_LOCATION_PICKER_CURRENT_LOCATION
+                    explorePlacesScreenWording.EXPLORE_PLACE_LOCATION_PICKER_CURRENT_LOCATION,
                 );
             })();
         }
@@ -122,7 +122,7 @@ const ExplorePlacesScreen = ({ navigation }) => {
 
     const onOpenPicker = () => {
         setLocationPickerItemsWrappedWithOwnLocation(
-            locationPickerItems.filter((item) => item.value === locationPickerValue)
+            locationPickerItems.filter((item) => item.value === locationPickerValue),
         );
     };
 

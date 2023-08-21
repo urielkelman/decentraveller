@@ -54,22 +54,32 @@ function renderLocationText(location: string): JSX.Element {
         const words = location.trim().split(/\s+/);
         const halfIndex = Math.ceil(words.length / 3);
         const location_1 = words.slice(0, halfIndex).join(' ');
-        const location_2 = words.slice(halfIndex, 2*halfIndex).join(' ');
-        const location_3 = words.slice(2*halfIndex).join(' ');
+        const location_2 = words.slice(halfIndex, 2 * halfIndex).join(' ');
+        const location_3 = words.slice(2 * halfIndex).join(' ');
 
-        return <View style={placeDetailStyles.bulletItem}>
-            <Image source={require(locationIconPath)} style={placeDetailStyles.bulletLocationImage} />
-            <View style={placeDetailStyles.location2TextContainer}>
-                <Text style={[placeDetailStyles.locationText2, placeDetailStyles.location2TextMargin]}>{location_1}</Text>
-                <Text style={[placeDetailStyles.locationText2, placeDetailStyles.location2TextMargin]}>{location_2}</Text>
-                <Text style={[placeDetailStyles.locationText2, placeDetailStyles.location2TextMargin]}>{location_3}</Text>
+        return (
+            <View style={placeDetailStyles.bulletItem}>
+                <Image source={require(locationIconPath)} style={placeDetailStyles.bulletLocationImage} />
+                <View style={placeDetailStyles.location2TextContainer}>
+                    <Text style={[placeDetailStyles.locationText2, placeDetailStyles.location2TextMargin]}>
+                        {location_1}
+                    </Text>
+                    <Text style={[placeDetailStyles.locationText2, placeDetailStyles.location2TextMargin]}>
+                        {location_2}
+                    </Text>
+                    <Text style={[placeDetailStyles.locationText2, placeDetailStyles.location2TextMargin]}>
+                        {location_3}
+                    </Text>
+                </View>
             </View>
-        </View>
+        );
     } else {
-        return <View style={placeDetailStyles.bulletItem}>
-            <Image source={require(locationIconPath)} style={placeDetailStyles.bulletLocationImage} />
-            <Text style={placeDetailStyles.locationText}>{location}</Text>
-        </View>
+        return (
+            <View style={placeDetailStyles.bulletItem}>
+                <Image source={require(locationIconPath)} style={placeDetailStyles.bulletLocationImage} />
+                <Text style={placeDetailStyles.locationText}>{location}</Text>
+            </View>
+        );
     }
 }
 

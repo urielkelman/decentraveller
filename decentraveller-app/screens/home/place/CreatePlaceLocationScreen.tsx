@@ -48,7 +48,7 @@ const CreatePlaceLocationScreen = () => {
             selectedGeocodingElement.longitude,
             selectedGeocodingElement.address,
             parseInt(placeTypePicker.value),
-            onErrorAddingPlace
+            onErrorAddingPlace,
         );
         setLoadingAddPlaceResponse(false);
         console.log('Transaction confirmed with hash', transactionHash);

@@ -19,7 +19,7 @@ const PlaceReviewsBox = ({ placeId }) => {
             setLoadingReviews(true);
             const reviewsResponse: ReviewsResponse = await adapter.getPlaceReviews(
                 // appContext.connectionContext.connectedAddress
-                placeId
+                placeId,
             );
             setLoadingReviews(false);
             setReviews(reviewsResponse.results);

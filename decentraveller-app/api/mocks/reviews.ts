@@ -1,4 +1,4 @@
-import { ReviewsResponse } from '../response/reviews';
+import { ReviewImageResponse, ReviewsResponse } from '../response/reviews';
 
 export const manyReviewsResponse: ReviewsResponse = {
     results: [
@@ -40,6 +40,10 @@ export const oneReviewsResponse: ReviewsResponse = {
             state: '10/02/2023',
         },
     ],
+};
+
+export const imageReviewResponse: ReviewImageResponse = {
+    hash: 'hash1234',
 };
 
 export const emptyReviewsResponse: ReviewsResponse = {

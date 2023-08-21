@@ -7,8 +7,12 @@ import { addReviewCommentStyles } from '../../styles/addReviewStyles';
 import { RouteProp, useRoute } from '@react-navigation/native';
 import { blockchainAdapter } from '../../blockchain/blockhainAdapter';
 import { useAppContext } from '../../context/AppContext';
+import { apiAdapter } from '../../api/apiAdapter';
+import { mockApiAdapter } from '../../api/mockApiAdapter';
+import DecentravellerInformativeModal from '../../commons/components/DecentravellerInformativeModal';
 
 const adapter = blockchainAdapter;
+const adapterApi = mockApiAdapter;
 
 type AddReviewCommentParams = {
     selectedImage: string;
@@ -20,7 +24,8 @@ const AddReviewComment = ({ navigation }) => {
     const { selectedImage, placeId } = route.params;
     const [comment, setComment] = useState<string>('');
     const [rating, setRating] = useState<number>(0);
-    const { web3Provider } = useAppContext();
+    const { connectionContext, web3Provider } = useAppContext();
+    const [showErrorModal, setShowErrorModal] = React.useState<boolean>(false);
 
     const handleRating = (selectedRating) => {
         setRating(selectedRating);
@@ -38,15 +43,22 @@ const AddReviewComment = ({ navigation }) => {
                             color={i <= rating ? '#FFD700' : '#cc6060'}
                         />
                     </Text>
-                </TouchableOpacity>
+                </TouchableOpacity>,
             );
         }
         return stars;
     };
 
     const onClickFinish = async () => {
+        const response = await adapterApi.sendReviewImage(connectionContext.connectedAddress, selectedImage, () => {
+            setShowErrorModal(true);
+        });
+
+        if (!response) return;
+
+        const imageHash = response.hash;
         const transactionHash = await adapter.addPlaceReviewTransaction(web3Provider, placeId, comment, rating, [
-            selectedImage,
+            imageHash,
         ]);
 
         if (!transactionHash) return;
@@ -88,6 +100,12 @@ const AddReviewComment = ({ navigation }) => {
             </View>
 
             <DecentravellerButton text={'Finish'} loading={false} onPress={onClickFinish} />
+            <DecentravellerInformativeModal
+                informativeText={'Error ocurred'}
+                visible={showErrorModal}
+                closeModalText={'Close'}
+                handleCloseModal={() => setShowErrorModal(false)}
+            />
         </KeyboardAvoidingView>
     );
 };

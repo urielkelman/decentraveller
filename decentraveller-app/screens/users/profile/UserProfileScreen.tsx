@@ -1,11 +1,11 @@
-import React, {useState} from 'react';
-import {View, Text, Image, StyleSheet, TouchableOpacity, Alert, Modal} from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, Image, StyleSheet, TouchableOpacity, Alert, Modal } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { userProfileMainStyles } from '../../../styles/userProfileStyles';
 import { useAppContext } from '../../../context/AppContext';
-import {addReviewImagesStyles} from "../../../styles/addReviewStyles";
-import * as ImagePicker from "expo-image-picker";
-import {apiAdapter} from "../../../api/apiAdapter";
+import { addReviewImagesStyles } from '../../../styles/addReviewStyles';
+import * as ImagePicker from 'expo-image-picker';
+import { apiAdapter } from '../../../api/apiAdapter';
 
 export type UserProfileScreens = {
     UserProfileScreen: undefined;
@@ -30,11 +30,9 @@ const UserProfileScreen = ({ navigation }) => {
 
             if (!result.canceled) {
                 const imageUri = result.assets[0].uri;
-                console.log(imageUri)
                 try {
                     await apiAdapter.sendProfileImage(user.walletAddress, imageUri);
                     console.log('Avatar success updated.');
-
                 } catch (error) {
                     console.error('Error on avatar updating:', error);
                 }
@@ -114,12 +112,7 @@ const UserProfileScreen = ({ navigation }) => {
                     </View>
                 </View>
             </TouchableOpacity>
-            <Modal
-                animationType="slide"
-                transparent={true}
-                visible={isModalVisible}
-                onRequestClose={toggleModal}
-            >
+            <Modal animationType="slide" transparent={true} visible={isModalVisible} onRequestClose={toggleModal}>
                 <View style={userProfileMainStyles.modalContainer}>
                     <View style={userProfileMainStyles.modalContent}>
                         <TouchableOpacity onPress={handleImageUpload}>
