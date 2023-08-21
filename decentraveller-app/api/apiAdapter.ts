@@ -202,34 +202,36 @@ class ApiAdapter extends Adapter {
         }
     }
 
-    async sendReviewImage(walletAddress: string, imageUri: string, onFailed: () => void): Promise<ReviewImageResponse> {
+    async sendReviewImage(walletAddress: string, imagesUriList: string, onFailed: () => void): Promise<ReviewImageResponse> {
         try {
-            const imageInfo = await FileSystem.getInfoAsync(imageUri);
+            const formData = new FormData();
 
-            if (imageInfo.exists) {
-                const imageBase64 = await FileSystem.readAsStringAsync(imageUri, {
-                    encoding: FileSystem.EncodingType.Base64,
-                });
+            for (const imageUri of imagesUriList) {
+                const imageInfo = await FileSystem.getInfoAsync(imageUri);
 
-                const formData = new FormData();
-                formData.append('reviewImage', imageBase64);
+                if (imageInfo.exists) {
+                    const imageBase64 = await FileSystem.readAsStringAsync(imageUri, {
+                        encoding: FileSystem.EncodingType.Base64,
+                    });
 
-                const httpPostRequest: HttpPostImageRequest = {
-                    url: formatString(UPLOAD_IMAGE, { owner: walletAddress }),
-                    body: formData,
-                    headers: {
-                        'Content-Type': 'multipart/form-data',
-                    },
-                    onUnexpectedError: (e) => {
-                        console.log(e);
-                        onFailed();
-                    },
-                };
-
-                return await httpAPIConnector.post(httpPostRequest);
-            } else {
-                console.log('Image file does not exist.');
+                    formData.append('files', imageBase64);
+                }
             }
+
+
+            const httpPostRequest: HttpPostImageRequest = {
+                url: formatString(UPLOAD_IMAGE, { owner: walletAddress }),
+                body: formData,
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+                onUnexpectedError: (e) => {
+                    console.log(e);
+                    onFailed();
+                },
+            };
+
+            return await httpAPIConnector.post(httpPostRequest);
         } catch (error) {
             console.error(error);
         }

@@ -56,6 +56,8 @@ const AddReviewImages: React.FC<AddReviewImagesProps> = ({ route }) => {
         }
     };
 
+    const multiImageOffset = -150
+
     return (
         <View style={addReviewImagesStyles.container}>
             <View style={addReviewImagesStyles.commentExampleContainer}>
@@ -78,7 +80,7 @@ const AddReviewImages: React.FC<AddReviewImagesProps> = ({ route }) => {
                                         style={[
                                             addReviewImagesStyles.imageUpload,
                                             {
-                                                marginLeft: index > 0 ? -150 : 0,},
+                                                marginLeft: index > 0 ? multiImageOffset : 0,},
                                         ]}
                                     />
                             ))
