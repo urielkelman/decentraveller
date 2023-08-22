@@ -2,7 +2,6 @@
 pragma solidity ^0.8.17;
 
 import "@openzeppelin/contracts/governance/Governor.sol";
-import "@openzeppelin/contracts/governance/extensions/GovernorCountingSimple.sol";
 import "@openzeppelin/contracts/governance/extensions/GovernorVotes.sol";
 import "@openzeppelin/contracts/governance/extensions/GovernorVotesQuorumFraction.sol";
 import "@openzeppelin/contracts/governance/extensions/GovernorTimelockControl.sol";
@@ -29,12 +28,11 @@ contract DecentravellerGovernance is
     {}
 
     function _msgSender() internal view override returns (address) {
-        console.log(tx.origin);
         return tx.origin;
     }
 
     function votingDelay() public pure override returns (uint256) {
-        return 1 days;
+        return 3 hours;
     }
 
     function proposalThreshold() public pure override returns (uint256) {
@@ -42,7 +40,7 @@ contract DecentravellerGovernance is
     }
 
     function votingPeriod() public pure override returns (uint256) {
-        return 3 days;
+        return 2 days;
     }
 
     function state(
@@ -66,12 +64,6 @@ contract DecentravellerGovernance is
         override(Governor, GovernorCompatibilityBravo, IGovernor)
         returns (uint256)
     {
-        console.log("clock", super.clock());
-        console.log("sender", msg.sender);
-        console.log(
-            "votes in contract",
-            super.getVotes(tx.origin, super.clock() - 1)
-        );
         return super.propose(targets, values, calldatas, description);
     }
 
@@ -115,6 +107,20 @@ contract DecentravellerGovernance is
     {
         return super._executor();
     }
+
+    /*function queue(
+        address[] memory targets,
+        uint256[] memory values,
+        bytes[] memory calldatas,
+        bytes32 descriptionHash
+    )
+        public
+        virtual
+        override(GovernorTimelockControl, IGovernorTimelock)
+        returns (uint256)
+    {
+        return super.queue(targets, values, calldatas, descriptionHash);
+    }*/
 
     function supportsInterface(
         bytes4 interfaceId

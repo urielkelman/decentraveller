@@ -5,7 +5,6 @@ import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Votes.sol";
 import "@openzeppelin/contracts/governance/extensions/GovernorVotes.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/draft-ERC20Permit.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
-import "hardhat/console.sol";
 
 error Delegation__Fobidden();
 
@@ -30,7 +29,6 @@ contract DecentravellerToken is ERC20Votes, AccessControl {
     ) external onlyRole(ADMIN_ROLE) {
         uint mintersLength = minters.length;
         for (uint i = 0; i < mintersLength; i++) {
-            console.log(minters[i]);
             _grantRole(MINTER_ROLE, minters[i]);
         }
     }

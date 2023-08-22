@@ -54,6 +54,9 @@ const baseConfig: HardhatUserConfig = {
         tokenMinter: {
             default: 4,
         },
+        faucet: {
+            default: 5,
+        },
     },
 };
 

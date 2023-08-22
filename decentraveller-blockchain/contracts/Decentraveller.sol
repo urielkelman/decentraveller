@@ -13,6 +13,7 @@ error Place__AlreadyExistent(uint256 placeId);
 error Profile__NicknameInUse(string nickname);
 error Address__Unregistered(address sender);
 error OnlyGovernance__Execution();
+error Rule__NonExistent(uint256 ruleId);
 
 contract Decentraveller {
     struct DecentravellerRule {
@@ -54,6 +55,7 @@ contract Decentraveller {
         governance = DecentravellerGovernance(payable(_governance));
         placeFactory = DecentravellerPlaceCloneFactory(_placesFactory);
         currentPlaceId = 0;
+        currentRuleId = 0;
     }
 
     modifier onlyGovernance() {
@@ -140,7 +142,7 @@ contract Decentraveller {
     function approveProposedRule(uint256 ruleId) external onlyGovernance {
         ruleById[ruleId].status = DecentravellerDataTypes
             .DecentravellerRuleStatus
-            .PENDING_APPROVAL;
+            .APPROVED;
         emit DecentravellerRuleApproved(ruleId);
     }
 
@@ -176,7 +178,9 @@ contract Decentraveller {
         uint256 proposalId = proposeToGovernor(proposalCallData, ruleStatement);
         ruleById[currentRuleId] = DecentravellerRule({
             proposalId: proposalId,
-            status: DecentravellerDataTypes.DecentravellerRuleStatus.APPROVED,
+            status: DecentravellerDataTypes
+                .DecentravellerRuleStatus
+                .PENDING_APPROVAL,
             proposer: msg.sender,
             statement: ruleStatement
         });
@@ -187,5 +191,15 @@ contract Decentraveller {
             proposalId
         );
         return currentRuleId;
+    }
+
+    function getRuleById(
+        uint256 ruleId
+    ) external view returns (DecentravellerRule memory) {
+        DecentravellerRule memory rule = ruleById[ruleId];
+        if (rule.proposer == address(0)) {
+            revert Rule__NonExistent(ruleId);
+        }
+        return rule;
     }
 }
