@@ -1,6 +1,6 @@
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { DeployFunction, DeployResult } from "hardhat-deploy/types";
-import { TimelockController } from "../typechain-types";
+import { DecentravellerToken, TimelockController } from "../typechain-types";
 
 const deployFunction: DeployFunction = async function (
     hre: HardhatRuntimeEnvironment
@@ -12,8 +12,18 @@ const deployFunction: DeployFunction = async function (
     const tokenDeployment: DeployResult = await deploy("DecentravellerToken", {
         from: tokenOwner,
         log: true,
-        args: [1, 2, tokenOwner, [tokenMinter]],
+        args: [1, 2],
     });
+
+    const token: DecentravellerToken = await ethers.getContractAt(
+        "DecentravellerToken",
+        tokenDeployment.address,
+        tokenOwner
+    );
+
+    const addMintersTxResponse = await token.addMinters([tokenMinter]);
+
+    addMintersTxResponse.wait();
 
     const timeLockDeployment: DeployResult = await deploy(
         "TimelockController",

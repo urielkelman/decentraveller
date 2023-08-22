@@ -12,11 +12,13 @@ error Place__NonExistent(uint256 placeId);
 error Place__AlreadyExistent(uint256 placeId);
 error Profile__NicknameInUse(string nickname);
 error Address__Unregistered(address sender);
+error OnlyGovernance__Execution();
 
 contract Decentraveller {
     struct DecentravellerRule {
         uint256 proposalId;
-        bool haveBeenApproved;
+        DecentravellerDataTypes.DecentravellerRuleStatus status;
+        address proposer;
         string statement;
     }
 
@@ -29,8 +31,9 @@ contract Decentraveller {
 
     event DecentravellerRuleProposed(
         uint256 indexed ruleId,
-        uint256 proposalId,
-        string statement
+        address indexed proposer,
+        string statement,
+        uint256 proposalId
     );
 
     event DecentravellerRuleApproved(uint256 indexed ruleId);
@@ -54,7 +57,16 @@ contract Decentraveller {
     }
 
     modifier onlyGovernance() {
-        require(msg.sender == address(governance));
+        if (msg.sender != address(governance)) {
+            revert OnlyGovernance__Execution();
+        }
+        _;
+    }
+
+    modifier onlyRegisteredAddress() {
+        if (profilesByOwner[msg.sender].owner == address(0)) {
+            revert Address__Unregistered(msg.sender);
+        }
         _;
     }
 
@@ -90,11 +102,7 @@ contract Decentraveller {
         string memory _longitude,
         string memory _physicalAddress,
         DecentravellerDataTypes.DecentravellerPlaceCategory category
-    ) public returns (uint256 placeId) {
-        if (profilesByOwner[msg.sender].owner == address(0)) {
-            revert Address__Unregistered(msg.sender);
-        }
-
+    ) public onlyRegisteredAddress returns (uint256 placeId) {
         string memory locationIdentifier = string.concat(_latitude, _longitude);
         uint256 placeIdForLocation = placeIdByPlaceLocation[locationIdentifier];
         /* placeForLocation being zero means that there is not another place with the specified location */
@@ -130,7 +138,9 @@ contract Decentraveller {
     }
 
     function approveProposedRule(uint256 ruleId) external onlyGovernance {
-        ruleById[ruleId].haveBeenApproved = true;
+        ruleById[ruleId].status = DecentravellerDataTypes
+            .DecentravellerRuleStatus
+            .PENDING_APPROVAL;
         emit DecentravellerRuleApproved(ruleId);
     }
 
@@ -157,7 +167,7 @@ contract Decentraveller {
 
     function createNewRuleProposal(
         string memory ruleStatement
-    ) external returns (uint256) {
+    ) external onlyRegisteredAddress returns (uint256) {
         currentRuleId += 1;
         bytes memory proposalCallData = abi.encodeWithSelector(
             this.approveProposedRule.selector,
@@ -166,14 +176,16 @@ contract Decentraveller {
         uint256 proposalId = proposeToGovernor(proposalCallData, ruleStatement);
         ruleById[currentRuleId] = DecentravellerRule({
             proposalId: proposalId,
-            haveBeenApproved: false,
+            status: DecentravellerDataTypes.DecentravellerRuleStatus.APPROVED,
+            proposer: msg.sender,
             statement: ruleStatement
         });
         emit DecentravellerRuleProposed(
             currentRuleId,
-            proposalId,
-            ruleStatement
+            msg.sender,
+            ruleStatement,
+            proposalId
         );
-        return currentPlaceId;
+        return currentRuleId;
     }
 }

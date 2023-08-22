@@ -18,13 +18,16 @@ contract DecentravellerToken is ERC20Votes, AccessControl {
 
     constructor(
         uint8 _newReviewRewardAmount,
-        uint8 _newPlaceRewardAmount,
-        address admin,
-        address[] memory minters
+        uint8 _newPlaceRewardAmount
     ) ERC20("DecentravellerToken", "DECT") ERC20Permit("DecentravellerToken") {
         newReviewRewardAmount = _newReviewRewardAmount;
         newPlaceRewardAmount = _newPlaceRewardAmount;
-        _grantRole(ADMIN_ROLE, admin);
+        _grantRole(ADMIN_ROLE, msg.sender);
+    }
+
+    function addMinters(
+        address[] memory minters
+    ) external onlyRole(ADMIN_ROLE) {
         uint mintersLength = minters.length;
         for (uint i = 0; i < mintersLength; i++) {
             console.log(minters[i]);
@@ -39,6 +42,7 @@ contract DecentravellerToken is ERC20Votes, AccessControl {
 
     function rewardNewPlace(address to) external onlyRole(MINTER_ROLE) {
         reward(to, newPlaceRewardAmount);
+        _delegate(to, to);
     }
 
     function rewardNewReview(address to) external onlyRole(MINTER_ROLE) {

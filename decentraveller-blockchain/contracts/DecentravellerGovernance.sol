@@ -2,14 +2,16 @@
 pragma solidity ^0.8.17;
 
 import "@openzeppelin/contracts/governance/Governor.sol";
-import "@openzeppelin/contracts/governance/TimelockController.sol";
 import "@openzeppelin/contracts/governance/extensions/GovernorCountingSimple.sol";
 import "@openzeppelin/contracts/governance/extensions/GovernorVotes.sol";
 import "@openzeppelin/contracts/governance/extensions/GovernorVotesQuorumFraction.sol";
 import "@openzeppelin/contracts/governance/extensions/GovernorTimelockControl.sol";
 import "@openzeppelin/contracts/governance/compatibility/GovernorCompatibilityBravo.sol";
+import "@openzeppelin/contracts/utils/Context.sol";
+import "hardhat/console.sol";
 
 contract DecentravellerGovernance is
+    Context,
     Governor,
     GovernorVotes,
     GovernorVotesQuorumFraction,
@@ -25,6 +27,11 @@ contract DecentravellerGovernance is
         GovernorVotesQuorumFraction(5)
         GovernorTimelockControl(_timelock)
     {}
+
+    function _msgSender() internal view override returns (address) {
+        console.log(tx.origin);
+        return tx.origin;
+    }
 
     function votingDelay() public pure override returns (uint256) {
         return 1 days;
@@ -59,6 +66,12 @@ contract DecentravellerGovernance is
         override(Governor, GovernorCompatibilityBravo, IGovernor)
         returns (uint256)
     {
+        console.log("clock", super.clock());
+        console.log("sender", msg.sender);
+        console.log(
+            "votes in contract",
+            super.getVotes(tx.origin, super.clock() - 1)
+        );
         return super.propose(targets, values, calldatas, description);
     }
 

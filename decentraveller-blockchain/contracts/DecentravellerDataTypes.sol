@@ -9,6 +9,12 @@ library DecentravellerDataTypes {
         OTHER
     }
 
+    enum DecentravellerRuleStatus {
+        PENDING_APPROVAL,
+        APPROVED,
+        DELETED
+    }
+
     struct DecentravellerProfile {
         address owner;
         string nickname;
