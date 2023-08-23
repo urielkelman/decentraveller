@@ -1,13 +1,12 @@
 import { ethers, deployments, getNamedAccounts } from "hardhat";
 import { anyUint } from "@nomicfoundation/hardhat-chai-matchers/withArgs";
-import { mine, time } from "@nomicfoundation/hardhat-network-helpers";
+import { time } from "@nomicfoundation/hardhat-network-helpers";
 import {
     Decentraveller,
     DecentravellerGovernance,
     DecentravellerToken,
 } from "../typechain-types";
 import { expect, assert } from "chai";
-import { stat } from "fs";
 
 describe("Decentraveller governance", function () {
     let decentraveller: Decentraveller;
@@ -76,24 +75,12 @@ describe("Decentraveller governance", function () {
     });
 
     it("Should emit event when rule proposal is passed", async function () {
-        // Register proposal.
-        const newRuleTx = await decentraveller.createNewRuleProposal(
-            "New rule for Decentraveller!"
-        );
-        await newRuleTx.wait();
-        const rule = await decentraveller.getRuleById(1);
-        const proposalId = rule.proposalId;
-
-        // Increase the evm time to start voting.
-        const votingDelay = await decentravellerGovernance.votingDelay();
-        await time.increase(votingDelay);
-
-        // Register users and make them vote on proposal to be approved.
+        // Register users and fund their wallets.
         const participantsAmount = 100;
         const { faucet, tokenMinter } = await getNamedAccounts();
         const faucetSigner = await ethers.getSigner(faucet);
         const tokenMinterSigner = await ethers.getSigner(tokenMinter);
-        await mine(2, { interval: 15 });
+        const wallets: ethers.Wallet[] = [];
         for (let index = 0; index < participantsAmount; index++) {
             const wallet: ethers.Wallet = ethers.Wallet.createRandom().connect(
                 ethers.provider
@@ -114,7 +101,24 @@ describe("Decentraveller governance", function () {
                 .connect(tokenMinterSigner)
                 .rewardNewPlace(wallet.address);
             await mintDectTx.wait();
-            // Vote.
+            wallets.push(wallet);
+        }
+
+        // Register proposal.
+        const newRuleTx = await decentraveller.createNewRuleProposal(
+            "New rule for Decentraveller!"
+        );
+        await newRuleTx.wait();
+        const rule = await decentraveller.getRuleById(1);
+        const proposalId = rule.proposalId;
+
+        // Increase the evm time to start voting.
+        const votingDelay = await decentravellerGovernance.votingDelay();
+        await time.increase(votingDelay);
+
+        // Make the users vote.
+        for (let index = 0; index < participantsAmount; index++) {
+            const wallet = wallets[index];
             const vote = index % 10 < 7 ? 1 : 0;
             const voteTx = await decentravellerGovernance
                 .connect(wallet)
@@ -122,12 +126,9 @@ describe("Decentraveller governance", function () {
             await voteTx.wait();
         }
 
-        // Increase the evm time for the voting time.
+        // Increase the evm time for the voting period.
         const votingPeriod = await decentravellerGovernance.votingPeriod();
         await time.increase(votingPeriod);
-
-        const state = await decentravellerGovernance.state(proposalId);
-        console.log("state", state);
 
         // Queue approval rule transaction.
         const approveTxCalldata = (
@@ -140,5 +141,18 @@ describe("Decentraveller governance", function () {
         ]([decentraveller.address], [0], [approveTxCalldata], proposalHash);
 
         await queueProposalTx.wait();
+
+        // Increase evm time and execute.
+        await time.increase(1 * 24 * 60 * 60);
+
+        console.log("useraddress", userAddress);
+
+        await expect(
+            decentravellerGovernance[
+                "execute(address[],uint256[],bytes[],bytes32)"
+            ]([decentraveller.address], [0], [approveTxCalldata], proposalHash)
+        )
+            .to.emit(decentraveller, "DecentravellerRuleApproved")
+            .withArgs(1);
     });
 });

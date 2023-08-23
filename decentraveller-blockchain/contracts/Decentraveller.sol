@@ -45,6 +45,8 @@ contract Decentraveller {
     uint256 private currentPlaceId;
     uint256 private currentRuleId;
 
+    address timelockGovernanceAddress;
+
     mapping(uint256 => address) private placeAddressByPlaceId;
     mapping(string => uint) private placeIdByPlaceLocation;
     mapping(address => DecentravellerDataTypes.DecentravellerProfile) profilesByOwner;
@@ -53,13 +55,14 @@ contract Decentraveller {
 
     constructor(address _governance, address _placesFactory) {
         governance = DecentravellerGovernance(payable(_governance));
+        timelockGovernanceAddress = governance.timelock();
         placeFactory = DecentravellerPlaceCloneFactory(_placesFactory);
         currentPlaceId = 0;
         currentRuleId = 0;
     }
 
     modifier onlyGovernance() {
-        if (msg.sender != address(governance)) {
+        if (msg.sender != timelockGovernanceAddress) {
             revert OnlyGovernance__Execution();
         }
         _;
