@@ -41,7 +41,7 @@ const deployFunction: DeployFunction = async function (
 
     const governanceDeployment = await get("DecentravellerGovernance");
 
-    await deploy("Decentraveller", {
+    const decentraveller = await deploy("Decentraveller", {
         from: deployer,
         args: [
             governanceDeployment.address,

@@ -145,8 +145,6 @@ describe("Decentraveller governance", function () {
         // Increase evm time and execute.
         await time.increase(1 * 24 * 60 * 60);
 
-        console.log("useraddress", userAddress);
-
         await expect(
             decentravellerGovernance[
                 "execute(address[],uint256[],bytes[],bytes32)"
@@ -154,5 +152,15 @@ describe("Decentraveller governance", function () {
         )
             .to.emit(decentraveller, "DecentravellerRuleApproved")
             .withArgs(1);
+
+        const createdRule = await decentraveller.getRuleById(1);
+        // Assert proposal id
+        assert.equal(createdRule[0].toString(), proposalId.toString());
+        // Assert status
+        assert.equal(createdRule[1], 1);
+        // Assert proposer
+        assert.equal(createdRule[2], userAddress);
+        // Assert statement
+        assert.equal(createdRule[3], "New rule for Decentraveller!");
     });
 });

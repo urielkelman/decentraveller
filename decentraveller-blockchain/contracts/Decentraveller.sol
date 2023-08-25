@@ -14,12 +14,14 @@ error Profile__NicknameInUse(string nickname);
 error Address__Unregistered(address sender);
 error OnlyGovernance__Execution();
 error Rule__NonExistent(uint256 ruleId);
+error Rule__AlreadyDeleted(uint256 ruleId);
 
 contract Decentraveller {
     struct DecentravellerRule {
         uint256 proposalId;
         DecentravellerDataTypes.DecentravellerRuleStatus status;
         address proposer;
+        uint256 deleteProposalId;
         string statement;
     }
 
@@ -38,6 +40,10 @@ contract Decentraveller {
     );
 
     event DecentravellerRuleApproved(uint256 indexed ruleId);
+
+    event DecentravellerRuleDeletionProposed(uint256 ruleId);
+
+    event DecentravellerRuleDeleted(uint256 indexed ruleId);
 
     DecentravellerGovernance governance;
     DecentravellerPlaceCloneFactory placeFactory;
@@ -185,6 +191,7 @@ contract Decentraveller {
                 .DecentravellerRuleStatus
                 .PENDING_APPROVAL,
             proposer: msg.sender,
+            deleteProposalId: 0,
             statement: ruleStatement
         });
         emit DecentravellerRuleProposed(
@@ -196,12 +203,42 @@ contract Decentraveller {
         return currentRuleId;
     }
 
+    function deleteRule(uint256 ruleId) external onlyGovernance {
+        DecentravellerRule storage rule = ruleById[ruleId];
+        if (rule.proposer == address(0)) {
+            revert Rule__NonExistent(ruleId);
+        }
+        if (rule.deleteProposalId != 0) {
+            revert Rule__AlreadyDeleted(0);
+        }
+        rule.status = DecentravellerDataTypes.DecentravellerRuleStatus.DELETED;
+        emit DecentravellerRuleDeleted(ruleId);
+    }
+
+    function createRuleDeletionProposal(
+        uint256 ruleId
+    ) external onlyRegisteredAddress {
+        DecentravellerRule memory rule = getRuleById(ruleId);
+        bytes memory proposalCallData = abi.encodeWithSelector(
+            this.deleteRule.selector,
+            ruleId
+        );
+        proposeToGovernor(
+            proposalCallData,
+            string.concat("Delete rule: ", rule.statement)
+        );
+        emit DecentravellerRuleDeletionProposed(ruleId);
+    }
+
     function getRuleById(
         uint256 ruleId
-    ) external view returns (DecentravellerRule memory) {
+    ) public view returns (DecentravellerRule memory) {
         DecentravellerRule memory rule = ruleById[ruleId];
         if (rule.proposer == address(0)) {
             revert Rule__NonExistent(ruleId);
+        }
+        if (rule.deleteProposalId != 0) {
+            revert Rule__AlreadyDeleted(0);
         }
         return rule;
     }
