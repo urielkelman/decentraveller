@@ -22,4 +22,13 @@ library DecentravellerDataTypes {
         string country;
         DecentravellerPlaceCategory interest;
     }
+
+    struct DecentravellerRule {
+        uint256 proposalId;
+        DecentravellerDataTypes.DecentravellerRuleStatus status;
+        address proposer;
+        uint256 deleteProposalId;
+        address deletionProposer;
+        string statement;
+    }
 }
