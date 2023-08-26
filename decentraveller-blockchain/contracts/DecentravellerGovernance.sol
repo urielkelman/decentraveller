@@ -108,20 +108,6 @@ contract DecentravellerGovernance is
         return super._executor();
     }
 
-    /*function queue(
-        address[] memory targets,
-        uint256[] memory values,
-        bytes[] memory calldatas,
-        bytes32 descriptionHash
-    )
-        public
-        virtual
-        override(GovernorTimelockControl, IGovernorTimelock)
-        returns (uint256)
-    {
-        return super.queue(targets, values, calldatas, descriptionHash);
-    }*/
-
     function supportsInterface(
         bytes4 interfaceId
     )
