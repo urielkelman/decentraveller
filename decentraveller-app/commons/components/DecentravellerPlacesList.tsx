@@ -1,11 +1,7 @@
 import { PlaceResponse } from '../../api/response/places';
 import PlaceItem from '../../screens/home/place/PlaceItem';
-import { FlatList, TouchableOpacity, View } from 'react-native';
-import { addNewPlaceIconSize, homeStyle } from '../../styles/homeStyles';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { FlatList  } from 'react-native';
 import React from 'react';
-import { NavigationProp, useNavigation } from '@react-navigation/native';
-import { HomeStackScreens } from '../../screens/home/HomeNavigator';
 
 const renderPlaceItem = ({ item }: { item: PlaceResponse }) => (
     <PlaceItem

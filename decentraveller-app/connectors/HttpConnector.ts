@@ -1,4 +1,5 @@
 import axios from 'axios';
+import FormData from 'form-data'
 import { API_ENDPOINT } from '../api/config';
 
 interface HttpBaseRequest {
@@ -12,12 +13,7 @@ export interface HttpGetRequest extends HttpBaseRequest {
 }
 
 export interface HttpPostRequest extends HttpBaseRequest {
-    body: { [key: string]: string | number };
-}
-
-// Lo dejo como nueva interfaz inicialmente y despues vemos si alteramos la original
-export interface HttpPostImageRequest extends HttpBaseRequest {
-    body: FormData;
+    body: { [key: string]: string | number } | FormData;
     headers: { [key: string]: string };
 }
 
@@ -39,7 +35,6 @@ class HttpConnector {
         } else {
             httpRequest.onUnexpectedError(error);
         }
-        throw error
     }
 
     async get<T>(httpGetRequest: HttpGetRequest): Promise<T> {
@@ -54,11 +49,12 @@ class HttpConnector {
             HttpConnector.processError(httpGetRequest, error);
         }
     }
-    async post<T>(httpPostRequest: HttpPostRequest | HttpPostImageRequest): Promise<T> {
+    async post<T>(httpPostRequest: HttpPostRequest): Promise<T> {
         try {
             console.log('to post', httpPostRequest);
             const { data } = await axios.post<T>(httpPostRequest.url, httpPostRequest.body, {
                 baseURL: this.baseURL,
+                headers: httpPostRequest.headers
             });
 
             return data;

@@ -3,7 +3,6 @@ import {
     httpAPIConnector,
     HttpConnector,
     HttpGetRequest,
-    HttpPostImageRequest,
     HttpPostRequest,
 } from '../connectors/HttpConnector';
 import {
@@ -15,7 +14,7 @@ import {
     RECOMMENDED_PLACES_BY_LOCATION_ENDPOINT,
     RECOMMENDED_PLACES_BY_PROFILE_ENDPOINT,
     REVIEWS_PLACES_ENDPOINT,
-    UPLOAD_IMAGE,
+    UPLOAD_IMAGES,
 } from './config';
 import {UserResponse} from './response/user';
 import Adapter from './Adapter';
@@ -24,6 +23,7 @@ import {ReviewImageResponse, ReviewsResponse} from './response/reviews';
 import {PlaceResponse} from './response/places';
 import * as FileSystem from 'expo-file-system';
 import {EncodingType} from 'expo-file-system';
+import FormData from 'form-data'
 
 enum HTTPStatusCode {
     BAD_REQUEST = 400,
@@ -142,7 +142,7 @@ class ApiAdapter extends Adapter {
     async getPlaceReviews(placeId: string): Promise<ReviewsResponse> {
         const httpRequest: HttpGetRequest = {
             url: formatString(REVIEWS_PLACES_ENDPOINT, { placeId: placeId }),
-            queryParams: {},
+            queryParams: {"page": "0", "per_page": "100"},
             onUnexpectedError: (e) => console.log('Error'),
         };
 
@@ -156,6 +156,7 @@ class ApiAdapter extends Adapter {
                 owner: walletAddress,
                 pushToken: pushToken,
             },
+            headers: {},
             onUnexpectedError: (e) => console.log('Error', e),
         };
 
@@ -176,18 +177,14 @@ class ApiAdapter extends Adapter {
     }
 
     async sendProfileImage(walletAddress: string, imageUri: string): Promise<void> {
-        const FormData = require('form-data');
-
         try {
             const imageInfo = await FileSystem.getInfoAsync(imageUri);
 
             if (imageInfo.exists) {
-                const imageBase64 = await FileSystem.readAsStringAsync(imageUri, {'encoding': EncodingType.Base64});
-
-                const formData = new FormData();
+                var formData = new FormData();
                 formData.append("file", {uri: imageUri, name: 'image.jpg', type: 'image/jpeg'})
 
-                const httpPostRequest: HttpPostImageRequest = {
+                const httpPostRequest: HttpPostRequest = {
                     url: formatString(PROFILE_IMAGE, { owner: walletAddress }),
                     body: formData,
                     headers: {
@@ -217,14 +214,12 @@ class ApiAdapter extends Adapter {
                 const imageInfo = await FileSystem.getInfoAsync(imageUri);
 
                 if (imageInfo.exists) {
-                    const imageBase64 = await FileSystem.readAsStringAsync(imageUri);
-
-                    formData.append('file', imageBase64);
+                    formData.append("files", {uri: imageUri, name: 'image.jpg', type: 'image/jpeg'})
                 }
             }
 
-            const httpPostRequest: HttpPostImageRequest = {
-                url: formatString(UPLOAD_IMAGE, { owner: walletAddress }),
+            const httpPostRequest: HttpPostRequest = {
+                url: formatString(UPLOAD_IMAGES, { owner: walletAddress }),
                 body: formData,
                 headers: {
                     'Content-Type': 'multipart/form-data',
