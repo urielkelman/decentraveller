@@ -289,6 +289,8 @@ class RelationalDatabase:
         :param filehash: hash of ipfs
         :param pinned: if the file is pinned
         """
+        if self.session.query(ImageORM).get(filehash):
+            return
         image_orm = ImageORM(hash=filehash, pinned=pinned)
         self.session.add(image_orm)
         self.session.commit()
