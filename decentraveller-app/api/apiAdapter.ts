@@ -1,4 +1,4 @@
-import { GeocodingResponse } from './response/geocoding';
+import {GeocodingResponse} from './response/geocoding';
 import {
     httpAPIConnector,
     HttpConnector,
@@ -9,20 +9,21 @@ import {
 import {
     FORWARD_GEOCODING_ENDPOINT,
     GET_USER_ENDPOINT,
-    RECOMMENDED_PLACES_BY_LOCATION_ENDPOINT,
     OWNED_PLACES_ENDPOINT,
+    PROFILE_IMAGE,
+    PUSH_NOTIFICATION_TOKEN_ENDPOINT,
+    RECOMMENDED_PLACES_BY_LOCATION_ENDPOINT,
     RECOMMENDED_PLACES_BY_PROFILE_ENDPOINT,
     REVIEWS_PLACES_ENDPOINT,
-    PUSH_NOTIFICATION_TOKEN_ENDPOINT,
-    PROFILE_IMAGE,
     UPLOAD_IMAGE,
 } from './config';
-import { UserResponse } from './response/user';
+import {UserResponse} from './response/user';
 import Adapter from './Adapter';
-import { formatString } from '../commons/functions/utils';
-import { ReviewImageResponse, ReviewsResponse } from './response/reviews';
-import { PlaceResponse } from './response/places';
+import {formatString} from '../commons/functions/utils';
+import {ReviewImageResponse, ReviewsResponse} from './response/reviews';
+import {PlaceResponse} from './response/places';
 import * as FileSystem from 'expo-file-system';
+import {EncodingType} from 'expo-file-system';
 
 enum HTTPStatusCode {
     BAD_REQUEST = 400,
@@ -170,20 +171,21 @@ class ApiAdapter extends Adapter {
             },
         };
 
+        console.log("to get", httpRequest)
         return await httpAPIConnector.getBase64Bytes(httpRequest);
     }
 
     async sendProfileImage(walletAddress: string, imageUri: string): Promise<void> {
+        const FormData = require('form-data');
+
         try {
             const imageInfo = await FileSystem.getInfoAsync(imageUri);
 
             if (imageInfo.exists) {
-                const imageBase64 = await FileSystem.readAsStringAsync(imageUri, {
-                    encoding: FileSystem.EncodingType.Base64,
-                });
+                const imageBase64 = await FileSystem.readAsStringAsync(imageUri, {'encoding': EncodingType.Base64});
 
                 const formData = new FormData();
-                formData.append('profileImage', imageBase64);
+                formData.append("file", {uri: imageUri, name: 'image.jpg', type: 'image/jpeg'})
 
                 const httpPostRequest: HttpPostImageRequest = {
                     url: formatString(PROFILE_IMAGE, { owner: walletAddress }),
@@ -205,7 +207,7 @@ class ApiAdapter extends Adapter {
 
     async sendReviewImage(
         walletAddress: string,
-        imagesUriList: string,
+        imagesUriList: string[],
         onFailed: () => void,
     ): Promise<ReviewImageResponse> {
         try {
@@ -215,11 +217,9 @@ class ApiAdapter extends Adapter {
                 const imageInfo = await FileSystem.getInfoAsync(imageUri);
 
                 if (imageInfo.exists) {
-                    const imageBase64 = await FileSystem.readAsStringAsync(imageUri, {
-                        encoding: FileSystem.EncodingType.Base64,
-                    });
+                    const imageBase64 = await FileSystem.readAsStringAsync(imageUri);
 
-                    formData.append('files', imageBase64);
+                    formData.append('file', imageBase64);
                 }
             }
 

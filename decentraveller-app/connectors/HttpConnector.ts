@@ -37,9 +37,9 @@ class HttpConnector {
                 httpRequest.onStatusCodeError[error.response.status] &&
                 httpRequest.onStatusCodeError[error.response.status]();
         } else {
-            console.log('ahora en el else');
             httpRequest.onUnexpectedError(error);
         }
+        throw error
     }
 
     async get<T>(httpGetRequest: HttpGetRequest): Promise<T> {

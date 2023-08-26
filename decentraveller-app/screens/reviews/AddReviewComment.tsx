@@ -12,7 +12,7 @@ import { mockApiAdapter } from '../../api/mockApiAdapter';
 import DecentravellerInformativeModal from '../../commons/components/DecentravellerInformativeModal';
 
 const adapter = blockchainAdapter;
-const adapterApi = mockApiAdapter;
+const adapterApi = apiAdapter;
 
 type AddReviewCommentParams = {
     selectedImages: string[];

@@ -31,7 +31,8 @@ const UserProfileScreen = ({ navigation }) => {
             if (!result.canceled) {
                 const imageUri = result.assets[0].uri;
                 try {
-                    await apiAdapter.sendProfileImage(user.walletAddress, imageUri);
+                    //await apiAdapter.sendProfileImage(user.walletAddress, imageUri);
+                    await apiAdapter.getUserProfileImage(user.walletAddress, ()=> {} )
                     console.log('Avatar success updated.');
                 } catch (error) {
                     console.error('Error on avatar updating:', error);

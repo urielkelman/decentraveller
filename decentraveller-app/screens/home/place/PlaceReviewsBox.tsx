@@ -6,8 +6,9 @@ import { mockApiAdapter } from '../../../api/mockApiAdapter';
 import { NavigationProp, RouteProp, useNavigation } from '@react-navigation/native';
 import { HomeStackScreens } from '../HomeNavigator';
 import { AddReviewImagesScreenProp } from './types';
+import {apiAdapter} from "../../../api/apiAdapter";
 
-const adapter = mockApiAdapter;
+const adapter = apiAdapter;
 
 const PlaceReviewsBox = ({ placeId }) => {
     const navigation = useNavigation<AddReviewImagesScreenProp>();
