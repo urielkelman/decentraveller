@@ -32,7 +32,12 @@ const UserProfileScreen = ({ navigation }) => {
                 const imageUri = result.assets[0].uri;
                 try {
                     await apiAdapter.sendProfileImage(user.walletAddress, imageUri);
+                    await apiAdapter.getUserProfileImage(user.walletAddress, ()=> {} )
                     console.log('Avatar success updated.');
+                    const newImage =await apiAdapter.getUserProfileImage(user.walletAddress, () => {
+                        console.log('There was a problem fetching the image');
+                    });
+                    userProfileImage.setValue(newImage)
                 } catch (error) {
                     console.error('Error on avatar updating:', error);
                 }

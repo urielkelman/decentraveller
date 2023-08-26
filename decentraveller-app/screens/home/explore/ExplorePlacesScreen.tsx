@@ -22,7 +22,7 @@ import FilterModal from './FilterModal';
 import { FilterModalData } from './types';
 import DecentravellerInformativeModal from '../../../commons/components/DecentravellerInformativeModal';
 
-const adapter = mockApiAdapter;
+const adapter = apiAdapter;
 
 const ExplorePlacesScreen = ({ navigation }) => {
     const { userLocation } = useAppContext();
