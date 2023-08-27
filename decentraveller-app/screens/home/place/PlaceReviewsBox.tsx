@@ -7,7 +7,7 @@ import { mockApiAdapter } from '../../../api/mockApiAdapter';
 import { NavigationProp, RouteProp, useNavigation } from '@react-navigation/native';
 import { HomeStackScreens } from '../HomeNavigator';
 import { AddReviewImagesScreenProp } from './types';
-import {apiAdapter} from "../../../api/apiAdapter";
+import { apiAdapter } from '../../../api/apiAdapter';
 
 const adapter = apiAdapter;
 
@@ -19,9 +19,7 @@ const PlaceReviewsBox = ({ placeId }) => {
     useEffect(() => {
         (async () => {
             setLoadingReviews(true);
-            const reviewsResponse: ReviewsResponse = await adapter.getPlaceReviews(
-                placeId
-            );
+            const reviewsResponse: ReviewsResponse = await adapter.getPlaceReviews(placeId);
             setReviews(reviewsResponse.reviews);
             setLoadingReviews(false);
         })();
@@ -56,9 +54,7 @@ const PlaceReviewsBox = ({ placeId }) => {
                     </View>
                 </TouchableOpacity>
 
-                {hasReviews() ? (
-                    <DecentravellerReviewsList reviews={reviews} />
-                ) : null}
+                {hasReviews() ? <DecentravellerReviewsList reviews={reviews} /> : null}
                 {!hasReviews() ? (
                     <View style={placeReviewsBoxStyles.reviewItem}>
                         <View style={placeReviewsBoxStyles.commentContainer}>

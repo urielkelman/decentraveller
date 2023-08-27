@@ -4,7 +4,6 @@ import React from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { placeReviewsBoxStyles } from '../../styles/placeDetailStyles';
 
-
 export type ReviewItemProps = {
     id: number;
     placeId: number;
@@ -26,22 +25,21 @@ const ReviewItem: React.FC<ReviewItemProps> = ({
     ownerNickname,
     createdAt,
 }) => {
-
     return (
-            <View style={placeReviewsBoxStyles.reviewItem}>
-                <View style={placeReviewsBoxStyles.commentContainer}>
-                    <Text style={placeReviewsBoxStyles.commentText}>
-                        {text} - <Text style={placeReviewsBoxStyles.dateText}>{createdAt}</Text>
-                    </Text>
-                    <View style={placeReviewsBoxStyles.userContainer}>
-                        <Image
-                            source={require('../../assets/mock_images/cryptochica.png')}
-                            style={placeReviewsBoxStyles.avatarImage}
-                        />
-                        <Text style={placeReviewsBoxStyles.userNameText}>{ownerNickname}</Text>
-                    </View>
+        <View style={placeReviewsBoxStyles.reviewItem}>
+            <View style={placeReviewsBoxStyles.commentContainer}>
+                <Text style={placeReviewsBoxStyles.commentText}>
+                    {text} - <Text style={placeReviewsBoxStyles.dateText}>{createdAt}</Text>
+                </Text>
+                <View style={placeReviewsBoxStyles.userContainer}>
+                    <Image
+                        source={require('../../assets/mock_images/cryptochica.png')}
+                        style={placeReviewsBoxStyles.avatarImage}
+                    />
+                    <Text style={placeReviewsBoxStyles.userNameText}>{ownerNickname}</Text>
                 </View>
             </View>
+        </View>
     );
 };
 

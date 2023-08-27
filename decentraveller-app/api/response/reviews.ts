@@ -1,4 +1,4 @@
-import {UserResponse} from './user';
+import { UserResponse } from './user';
 
 export type ReviewImageResponse = {
     hashes: string[];

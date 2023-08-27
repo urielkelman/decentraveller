@@ -1,6 +1,6 @@
 import { PlaceResponse } from '../../api/response/places';
 import PlaceItem from '../../screens/home/place/PlaceItem';
-import { FlatList  } from 'react-native';
+import { FlatList } from 'react-native';
 import React from 'react';
 
 const renderPlaceItem = ({ item }: { item: PlaceResponse }) => (
