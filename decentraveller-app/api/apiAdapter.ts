@@ -1,10 +1,5 @@
-import {GeocodingResponse} from './response/geocoding';
-import {
-    httpAPIConnector,
-    HttpConnector,
-    HttpGetRequest,
-    HttpPostRequest,
-} from '../connectors/HttpConnector';
+import { GeocodingResponse } from './response/geocoding';
+import { httpAPIConnector, HttpConnector, HttpGetRequest, HttpPostRequest } from '../connectors/HttpConnector';
 import {
     FORWARD_GEOCODING_ENDPOINT,
     GET_USER_ENDPOINT,
@@ -16,14 +11,14 @@ import {
     REVIEWS_PLACES_ENDPOINT,
     UPLOAD_IMAGES,
 } from './config';
-import {UserResponse} from './response/user';
+import { UserResponse } from './response/user';
 import Adapter from './Adapter';
-import {formatString} from '../commons/functions/utils';
-import {ReviewImageResponse, ReviewsResponse} from './response/reviews';
-import {PlaceResponse} from './response/places';
+import { formatString } from '../commons/functions/utils';
+import { ReviewImageResponse, ReviewsResponse } from './response/reviews';
+import { PlaceResponse } from './response/places';
 import * as FileSystem from 'expo-file-system';
-import {EncodingType} from 'expo-file-system';
-import FormData from 'form-data'
+import { EncodingType } from 'expo-file-system';
+import FormData from 'form-data';
 
 enum HTTPStatusCode {
     BAD_REQUEST = 400,
@@ -142,7 +137,7 @@ class ApiAdapter extends Adapter {
     async getPlaceReviews(placeId: string): Promise<ReviewsResponse> {
         const httpRequest: HttpGetRequest = {
             url: formatString(REVIEWS_PLACES_ENDPOINT, { placeId: placeId }),
-            queryParams: {"page": "0", "per_page": "100"},
+            queryParams: { page: '0', per_page: '100' },
             onUnexpectedError: (e) => console.log('Error'),
         };
 
@@ -172,7 +167,7 @@ class ApiAdapter extends Adapter {
             },
         };
 
-        console.log("to get", httpRequest)
+        console.log('to get', httpRequest);
         return await httpAPIConnector.getBase64Bytes(httpRequest);
     }
 
@@ -182,7 +177,7 @@ class ApiAdapter extends Adapter {
 
             if (imageInfo.exists) {
                 var formData = new FormData();
-                formData.append("file", {uri: imageUri, name: 'image.jpg', type: 'image/jpeg'})
+                formData.append('file', { uri: imageUri, name: 'image.jpg', type: 'image/jpeg' });
 
                 const httpPostRequest: HttpPostRequest = {
                     url: formatString(PROFILE_IMAGE, { owner: walletAddress }),
@@ -214,7 +209,7 @@ class ApiAdapter extends Adapter {
                 const imageInfo = await FileSystem.getInfoAsync(imageUri);
 
                 if (imageInfo.exists) {
-                    formData.append("files", {uri: imageUri, name: 'image.jpg', type: 'image/jpeg'})
+                    formData.append('files', { uri: imageUri, name: 'image.jpg', type: 'image/jpeg' });
                 }
             }
 

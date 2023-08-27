@@ -57,7 +57,13 @@ const AddReviewComment = ({ navigation }) => {
         if (!response) return;
 
         const imageHashes = response.hashes;
-        const transactionHash = await adapter.addPlaceReviewTransaction(web3Provider, placeId, comment, rating, imageHashes);
+        const transactionHash = await adapter.addPlaceReviewTransaction(
+            web3Provider,
+            placeId,
+            comment,
+            rating,
+            imageHashes,
+        );
 
         if (!transactionHash) return;
 
