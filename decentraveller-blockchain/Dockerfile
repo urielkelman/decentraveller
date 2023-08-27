@@ -1,4 +1,4 @@
-FROM node:14-alpine3.16
+FROM node:16-alpine3.17
 COPY . /app
 WORKDIR /app
 RUN yarn install
