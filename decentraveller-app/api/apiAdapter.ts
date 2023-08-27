@@ -1,20 +1,15 @@
 import { GeocodingResponse } from './response/geocoding';
-import {
-    httpAPIConnector,
-    HttpConnector,
-    HttpGetRequest,
-    HttpPostImageRequest,
-    HttpPostRequest,
-} from '../connectors/HttpConnector';
+import { httpAPIConnector, HttpConnector, HttpGetRequest, HttpPostRequest } from '../connectors/HttpConnector';
 import {
     FORWARD_GEOCODING_ENDPOINT,
     GET_USER_ENDPOINT,
-    RECOMMENDED_PLACES_BY_LOCATION_ENDPOINT,
     OWNED_PLACES_ENDPOINT,
+    PROFILE_IMAGE,
+    PUSH_NOTIFICATION_TOKEN_ENDPOINT,
+    RECOMMENDED_PLACES_BY_LOCATION_ENDPOINT,
     RECOMMENDED_PLACES_BY_PROFILE_ENDPOINT,
     REVIEWS_PLACES_ENDPOINT,
-    PUSH_NOTIFICATION_TOKEN_ENDPOINT,
-    PROFILE_IMAGE, UPLOAD_IMAGE,
+    UPLOAD_IMAGES,
 } from './config';
 import { UserResponse } from './response/user';
 import Adapter from './Adapter';
@@ -22,6 +17,8 @@ import { formatString } from '../commons/functions/utils';
 import { ReviewImageResponse, ReviewsResponse } from './response/reviews';
 import { PlaceResponse } from './response/places';
 import * as FileSystem from 'expo-file-system';
+import { EncodingType } from 'expo-file-system';
+import FormData from 'form-data';
 
 enum HTTPStatusCode {
     BAD_REQUEST = 400,
@@ -140,7 +137,7 @@ class ApiAdapter extends Adapter {
     async getPlaceReviews(placeId: string): Promise<ReviewsResponse> {
         const httpRequest: HttpGetRequest = {
             url: formatString(REVIEWS_PLACES_ENDPOINT, { placeId: placeId }),
-            queryParams: {},
+            queryParams: { page: '0', per_page: '100' },
             onUnexpectedError: (e) => console.log('Error'),
         };
 
@@ -154,6 +151,7 @@ class ApiAdapter extends Adapter {
                 owner: walletAddress,
                 pushToken: pushToken,
             },
+            headers: {},
             onUnexpectedError: (e) => console.log('Error', e),
         };
 
@@ -169,6 +167,7 @@ class ApiAdapter extends Adapter {
             },
         };
 
+        console.log('to get', httpRequest);
         return await httpAPIConnector.getBase64Bytes(httpRequest);
     }
 
@@ -177,14 +176,10 @@ class ApiAdapter extends Adapter {
             const imageInfo = await FileSystem.getInfoAsync(imageUri);
 
             if (imageInfo.exists) {
-                const imageBase64 = await FileSystem.readAsStringAsync(imageUri, {
-                    encoding: FileSystem.EncodingType.Base64,
-                });
+                var formData = new FormData();
+                formData.append('file', { uri: imageUri, name: 'image.jpg', type: 'image/jpeg' });
 
-                const formData = new FormData();
-                formData.append('profileImage', imageBase64);
-
-                const httpPostRequest: HttpPostImageRequest = {
+                const httpPostRequest: HttpPostRequest = {
                     url: formatString(PROFILE_IMAGE, { owner: walletAddress }),
                     body: formData,
                     headers: {
@@ -202,34 +197,35 @@ class ApiAdapter extends Adapter {
         }
     }
 
-    async sendReviewImage(walletAddress: string, imageUri: string, onFailed: () => void): Promise<ReviewImageResponse> {
+    async sendReviewImage(
+        walletAddress: string,
+        imagesUriList: string[],
+        onFailed: () => void,
+    ): Promise<ReviewImageResponse> {
         try {
-            const imageInfo = await FileSystem.getInfoAsync(imageUri);
+            const formData = new FormData();
 
-            if (imageInfo.exists) {
-                const imageBase64 = await FileSystem.readAsStringAsync(imageUri, {
-                    encoding: FileSystem.EncodingType.Base64,
-                });
+            for (const imageUri of imagesUriList) {
+                const imageInfo = await FileSystem.getInfoAsync(imageUri);
 
-                const formData = new FormData();
-                formData.append('reviewImage', imageBase64);
-
-                const httpPostRequest: HttpPostImageRequest = {
-                    url: formatString(UPLOAD_IMAGE, { owner: walletAddress }),
-                    body: formData,
-                    headers: {
-                        'Content-Type': 'multipart/form-data',
-                    },
-                    onUnexpectedError: (e) => {
-                        console.log(e);
-                        onFailed();
-                    },
-                };
-
-                return await httpAPIConnector.post(httpPostRequest);
-            } else {
-                console.log('Image file does not exist.');
+                if (imageInfo.exists) {
+                    formData.append('files', { uri: imageUri, name: 'image.jpg', type: 'image/jpeg' });
+                }
             }
+
+            const httpPostRequest: HttpPostRequest = {
+                url: formatString(UPLOAD_IMAGES, { owner: walletAddress }),
+                body: formData,
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+                onUnexpectedError: (e) => {
+                    console.log(e);
+                    onFailed();
+                },
+            };
+
+            return await httpAPIConnector.post(httpPostRequest);
         } catch (error) {
             console.error(error);
         }

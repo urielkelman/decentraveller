@@ -29,23 +29,34 @@ const circleImage: React.FC<CircleImageItemProps> = ({ imagePath }) => {
 };
 
 const AddReviewImages: React.FC<AddReviewImagesProps> = ({ route }) => {
-    const [selectedImage, setSelectedImage] = useState(null);
+    const [selectedImages, setSelectedImages] = useState<string[]>([]);
     const navigation = useNavigation<AddReviewCommentScreenProp>();
     const { placeId } = route.params;
 
     const handleImageUpload = async () => {
         try {
             const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-            const result = await ImagePicker.launchImageLibraryAsync();
+
+            if (status !== 'granted') {
+                Alert.alert('Permission not granted');
+                return;
+            }
+
+            const result = await ImagePicker.launchImageLibraryAsync({
+                mediaTypes: ImagePicker.MediaTypeOptions.Images,
+                allowsMultipleSelection: true,
+            });
 
             if (!result.canceled) {
-                const imageUri = result.assets[0].uri;
-                setSelectedImage(imageUri);
+                const selectedImages = result.assets.map((asset) => asset.uri);
+                setSelectedImages(selectedImages);
             }
         } catch (error) {
             Alert.alert('Error', error.message);
         }
     };
+
+    const multiImageOffset = -150;
 
     return (
         <View style={addReviewImagesStyles.container}>
@@ -60,14 +71,27 @@ const AddReviewImages: React.FC<AddReviewImagesProps> = ({ route }) => {
             <Text style={addReviewImagesStyles.title}>{addReviewsScreenWordings.ADD_IMAGE_TITLE}</Text>
             <View style={addReviewImagesStyles.uploadContainer}>
                 <View style={addReviewImagesStyles.circleImage}>
-                    {selectedImage ? (
-                        <Image source={{ uri: selectedImage }} style={addReviewImagesStyles.imageUpload} />
-                    ) : (
-                        <Image
-                            source={require('../../assets/images/imageUpload.jpeg')}
-                            style={addReviewImagesStyles.imageUpload}
-                        />
-                    )}
+                    <View style={addReviewImagesStyles.horizontalImageContainer}>
+                        {selectedImages.length > 0 ? (
+                            selectedImages.map((uri, index) => (
+                                <Image
+                                    key={index}
+                                    source={{ uri }}
+                                    style={[
+                                        addReviewImagesStyles.imageUpload,
+                                        {
+                                            marginLeft: index > 0 ? multiImageOffset : 0,
+                                        },
+                                    ]}
+                                />
+                            ))
+                        ) : (
+                            <Image
+                                source={require('../../assets/images/imageUpload.jpeg')}
+                                style={addReviewImagesStyles.imageUpload}
+                            />
+                        )}
+                    </View>
                     <TouchableOpacity style={addReviewImagesStyles.smallCircleButton} onPress={handleImageUpload}>
                         <Image
                             source={require('../../assets/images/pencil.png')}
@@ -80,7 +104,7 @@ const AddReviewImages: React.FC<AddReviewImagesProps> = ({ route }) => {
                 text={'Next'}
                 loading={false}
                 onPress={() => {
-                    navigation.navigate('AddReviewComment', { selectedImage, placeId });
+                    navigation.navigate('AddReviewComment', { selectedImages, placeId });
                 }}
             />
         </View>

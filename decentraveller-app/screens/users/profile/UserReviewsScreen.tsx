@@ -5,13 +5,6 @@ import {
     subTitleTextStyle,
     WelcomeStyles,
 } from '../../../styles/registrationScreensStyles';
-import { registerUserScreenWordings } from '../registration/wording';
-import { createStackNavigator } from '@react-navigation/stack';
-import { HomeStackScreens } from '../../home/HomeNavigator';
-import CreatePlaceProvider from '../../home/place/CreatePlaceContext';
-import RootNavigator from '../../home/RootNavigator';
-import CreatePlaceNameScreen from '../../home/place/CreatePlaceNameScreen';
-import CreatePlaceLocationScreen from '../../home/place/CreatePlaceLocationScreen';
 
 const UserReviewsScreen = ({}) => {
     return (
