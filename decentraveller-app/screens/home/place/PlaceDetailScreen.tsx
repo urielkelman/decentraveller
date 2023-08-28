@@ -1,10 +1,9 @@
-import { View, Image, Text, StyleSheet, Dimensions } from 'react-native';
+import { View, Image, Text, ScrollView } from 'react-native';
 import PlaceReviewsBox from './PlaceReviewsBox';
 import { placeDetailStyles } from '../../../styles/placeDetailStyles';
-import { PlaceDetailParams, PlaceDetailScreenProps } from './types';
-import React, { useEffect } from 'react';
-import { RouteProp } from '@react-navigation/native';
-
+import { PlaceDetailScreenProps } from './types';
+import React from 'react';
+import PlaceSimilarsBox from './PlaceSimilarsBox';
 const path = '../../../assets/mock_images/eretz-inside.jpeg';
 const locationIconPath = '../../../assets/images/location.png';
 const rankingIconPath = require('../../../assets/images/estrellita.png');
@@ -103,28 +102,30 @@ const PlaceDetailScreen: React.FC<PlaceDetailScreenProps> = ({ route }) => {
             <View style={placeDetailStyles.imageContainer}>
                 <Image source={require(path)} style={placeDetailStyles.image} />
             </View>
-            <View style={placeDetailStyles.shadowContainer} />
-            <View style={placeDetailStyles.textContainer}>
-                {renderNameText(name)}
-                {renderLocationText(address)}
+            <View style={placeDetailStyles.headerContainer}>
+                <View style={placeDetailStyles.textContainer}>
+                    {renderNameText(name)}
+                    {renderLocationText(address)}
+                </View>
+                <View style={placeDetailStyles.bulletsContainer}>
+                    {bulletItemComponent({
+                        iconPath: rankingIconPath,
+                        title: 'Rating',
+                        value: formatScore(score),
+                        marginTop: 0,
+                    })}
+                    {bulletItemComponent({
+                        iconPath: distanceIconPath,
+                        title: 'Distance',
+                        value: '0.4 km',
+                        marginTop: -15,
+                    })}
+                </View>
             </View>
-            <View style={placeDetailStyles.bulletsContainer}>
-                {bulletItemComponent({
-                    iconPath: rankingIconPath,
-                    title: 'Rating',
-                    value: formatScore(score),
-                    marginTop: 0,
-                })}
-                {bulletItemComponent({
-                    iconPath: distanceIconPath,
-                    title: 'Distance',
-                    value: '0.4 km',
-                    marginTop: -15,
-                })}
+            <View style={placeDetailStyles.recommendationContainer}>
+                <PlaceSimilarsBox placeId={id} />
             </View>
-            <View style={placeDetailStyles.placeReviewsContainer}>
-                <PlaceReviewsBox placeId={id} />
-            </View>
+            <PlaceReviewsBox placeId={id} summarized={true} />
         </View>
     );
 };

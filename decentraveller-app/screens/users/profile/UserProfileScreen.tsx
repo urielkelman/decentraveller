@@ -32,12 +32,12 @@ const UserProfileScreen = ({ navigation }) => {
                 const imageUri = result.assets[0].uri;
                 try {
                     await apiAdapter.sendProfileImage(user.walletAddress, imageUri);
-                    await apiAdapter.getUserProfileImage(user.walletAddress, ()=> {} )
+                    await apiAdapter.getUserProfileImage(user.walletAddress, () => {});
                     console.log('Avatar success updated.');
-                    const newImage =await apiAdapter.getUserProfileImage(user.walletAddress, () => {
+                    const newImage = await apiAdapter.getUserProfileImage(user.walletAddress, () => {
                         console.log('There was a problem fetching the image');
                     });
-                    userProfileImage.setValue(newImage)
+                    userProfileImage.setValue(newImage);
                 } catch (error) {
                     console.error('Error on avatar updating:', error);
                 }
@@ -100,7 +100,7 @@ const UserProfileScreen = ({ navigation }) => {
                 </View>
             </View>
 
-            <TouchableOpacity onPress={() => navigation.navigate('UserPlacesScreen')}>
+            <TouchableOpacity onPress={() => navigation.navigate('UserPlacesScreen', { walletId: user.walletAddress })}>
                 <View style={userProfileMainStyles.informationContainer}>
                     <View style={userProfileMainStyles.spacedButtonBetweenView}>
                         <Text style={userProfileMainStyles.leftText}>My Places</Text>
@@ -109,7 +109,9 @@ const UserProfileScreen = ({ navigation }) => {
                 </View>
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={() => navigation.navigate('UserReviewsScreen')}>
+            <TouchableOpacity
+                onPress={() => navigation.navigate('UserReviewsScreen', { walletId: user.walletAddress })}
+            >
                 <View style={userProfileMainStyles.informationContainer}>
                     <View style={userProfileMainStyles.spacedButtonBetweenView}>
                         <Text style={userProfileMainStyles.leftText}>My Reviews</Text>

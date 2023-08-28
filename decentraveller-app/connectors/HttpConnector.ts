@@ -1,5 +1,5 @@
 import axios from 'axios';
-import FormData from 'form-data'
+import FormData from 'form-data';
 import { API_ENDPOINT } from '../api/config';
 
 interface HttpBaseRequest {
@@ -9,7 +9,7 @@ interface HttpBaseRequest {
 }
 
 export interface HttpGetRequest extends HttpBaseRequest {
-    queryParams: { [key: string]: string };
+    queryParams: { [key: string]: string | number };
 }
 
 export interface HttpPostRequest extends HttpBaseRequest {
@@ -54,7 +54,7 @@ class HttpConnector {
             console.log('to post', httpPostRequest);
             const { data } = await axios.post<T>(httpPostRequest.url, httpPostRequest.body, {
                 baseURL: this.baseURL,
-                headers: httpPostRequest.headers
+                headers: httpPostRequest.headers,
             });
 
             return data;

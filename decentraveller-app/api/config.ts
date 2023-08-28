@@ -19,7 +19,11 @@ export const GET_USER_ENDPOINT = '/profile';
 export const PUSH_NOTIFICATION_TOKEN_ENDPOINT = '/profile/push-token';
 export const RECOMMENDED_PLACES_BY_LOCATION_ENDPOINT = '/recommendations';
 export const RECOMMENDED_PLACES_BY_PROFILE_ENDPOINT = '/profile/{owner}/recommendations';
+export const RECOMMENDED_SIMILAR_PLACES = '/place/{placeId}/similars';
 export const OWNED_PLACES_ENDPOINT = '/place/owned';
 export const REVIEWS_PLACES_ENDPOINT = '/place/{placeId}/reviews';
+export const REVIEWS_PROFILE_ENDPOINT = '/profile/{walletId}/reviews';
+
 export const PROFILE_IMAGE = '/profile/{owner}/avatar.jpg';
+export const PLACE_IMAGE = '/place/{placeId}/image.jpg';
 export const UPLOAD_IMAGES = '/uploads';
