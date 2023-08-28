@@ -3,8 +3,18 @@
     "inputs": [
       {
         "internalType": "address",
+        "name": "_governance",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
         "name": "_placesFactory",
         "type": "address"
+      },
+      {
+        "internalType": "string[]",
+        "name": "initialRules",
+        "type": "string[]"
       }
     ],
     "stateMutability": "nonpayable",
@@ -19,6 +29,11 @@
       }
     ],
     "name": "Address__Unregistered",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "OnlyGovernance__Execution",
     "type": "error"
   },
   {
@@ -55,10 +70,108 @@
     "type": "error"
   },
   {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "ruleId",
+        "type": "uint256"
+      }
+    ],
+    "name": "Rule__AlreadyDeleted",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "ruleId",
+        "type": "uint256"
+      }
+    ],
+    "name": "Rule__NonExistent",
+    "type": "error"
+  },
+  {
     "anonymous": false,
     "inputs": [
       {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "ruleId",
+        "type": "uint256"
+      }
+    ],
+    "name": "DecentravellerRuleApproved",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "ruleId",
+        "type": "uint256"
+      }
+    ],
+    "name": "DecentravellerRuleDeleted",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "ruleId",
+        "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "proposer",
+        "type": "address"
+      }
+    ],
+    "name": "DecentravellerRuleDeletionProposed",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "ruleId",
+        "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "proposer",
+        "type": "address"
+      },
+      {
         "indexed": false,
+        "internalType": "string",
+        "name": "statement",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "proposalId",
+        "type": "uint256"
+      }
+    ],
+    "name": "DecentravellerRuleProposed",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
         "internalType": "address",
         "name": "owner",
         "type": "address"
@@ -125,6 +238,64 @@
     "type": "function"
   },
   {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "ruleId",
+        "type": "uint256"
+      }
+    ],
+    "name": "approveProposedRule",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "ruleStatement",
+        "type": "string"
+      }
+    ],
+    "name": "createNewRuleProposal",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "ruleId",
+        "type": "uint256"
+      }
+    ],
+    "name": "createRuleDeletionProposal",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "ruleId",
+        "type": "uint256"
+      }
+    ],
+    "name": "deleteRule",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
     "inputs": [],
     "name": "getCurrentPlaceId",
     "outputs": [
@@ -151,6 +322,57 @@
         "internalType": "address",
         "name": "",
         "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "ruleId",
+        "type": "uint256"
+      }
+    ],
+    "name": "getRuleById",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "proposalId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "enum DecentravellerDataTypes.DecentravellerRuleStatus",
+            "name": "status",
+            "type": "uint8"
+          },
+          {
+            "internalType": "address",
+            "name": "proposer",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "deleteProposalId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "deletionProposer",
+            "type": "address"
+          },
+          {
+            "internalType": "string",
+            "name": "statement",
+            "type": "string"
+          }
+        ],
+        "internalType": "struct DecentravellerDataTypes.DecentravellerRule",
+        "name": "",
+        "type": "tuple"
       }
     ],
     "stateMutability": "view",

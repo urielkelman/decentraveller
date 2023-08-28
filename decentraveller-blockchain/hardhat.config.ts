@@ -1,20 +1,29 @@
-import { HardhatUserConfig } from "hardhat/config";
+import "@nomiclabs/hardhat-ethers";
 import "@nomicfoundation/hardhat-toolbox";
 import "@nomiclabs/hardhat-etherscan";
-import "@nomiclabs/hardhat-ethers";
+import "@nomicfoundation/hardhat-chai-matchers";
 import "@typechain/hardhat";
 import * as dotenv from "dotenv";
 import "./tasks/block_number";
 import "hardhat-gas-reporter";
 import "solidity-coverage";
 import "hardhat-deploy";
+import { HardhatUserConfig } from "hardhat/types/config";
 
 dotenv.config();
 
 const localhostHost = process.env.LOCALHOST_HOST_ADDRESS || "localhost";
 
 const baseConfig: HardhatUserConfig = {
-    solidity: "0.8.17",
+    solidity: {
+        version: "0.8.17",
+        settings: {
+            optimizer: {
+                enabled: true,
+                runs: 200,
+            },
+        },
+    },
     defaultNetwork: "hardhat",
     networks: {
         localhost: {
@@ -38,6 +47,15 @@ const baseConfig: HardhatUserConfig = {
         },
         reviewer: {
             default: 2,
+        },
+        tokenOwner: {
+            default: 3,
+        },
+        tokenMinter: {
+            default: 4,
+        },
+        faucet: {
+            default: 5,
         },
     },
 };

@@ -10,14 +10,14 @@ const main = async () => {
             async (signer) =>
                 await ethers.getContractAt(
                     "Decentraveller",
-                    "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9",
+                    "0xb7f8bc63bbcad18155201308c8f3540b07f84f5e",
                     signer
                 )
         )
     );
     console.log("Registering profiles");
-    for (const [i, c] of decentravellerContracts.entries()){
-        const result = await c.registerProfile(`user${i}`, 'AR', 0);
+    for (const [i, c] of decentravellerContracts.entries()) {
+        const result = await c.registerProfile(`user${i}`, "AR", 0);
         if (await result.wait(1)) {
             console.log(
                 `Profile registered for signer ${await c.signer.getAddress()}`
@@ -66,13 +66,14 @@ const main = async () => {
         contractIndex = Math.floor(
             Math.random() * decentravellerContracts.length
         );
-        if (yelp2owner.has(reviewData['user_id'])){
+        if (yelp2owner.has(reviewData["user_id"])) {
             contractIndex = 0;
         } else {
-            while(owner2yelp.has(contractIndex)){
-                contractIndex = (contractIndex + 1) % decentravellerContracts.length
+            while (owner2yelp.has(contractIndex)) {
+                contractIndex =
+                    (contractIndex + 1) % decentravellerContracts.length;
             }
-            yelp2owner.set(reviewData['user_id'], contractIndex);
+            yelp2owner.set(reviewData["user_id"], contractIndex);
             owner2yelp.add(contractIndex);
         }
         const signerContract = decentravellerContracts[contractIndex];

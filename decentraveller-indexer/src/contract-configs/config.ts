@@ -17,22 +17,20 @@ export interface EventToListen<B extends EventRequestBody> {
 }
 
 const CONTRACT_ADDRESSES = {
-    DECENTRAVELLER:
-        "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9",
+    DECENTRAVELLER: "0xb7f8bc63bbcad18155201308c8f3540b07f84f5e",
     DECENTRAVELLER_PLACE_CLONE_FACTORY:
-        "0xcf7ed3acca5a467e9e704c703e8d87f634fb0fc9",
+        "0x610178da211fef7d417bc0e6fed39f05609ad788",
     DECENTRAVELLER_REVIEW_CLONE_FACTORY:
-        "0xe7f1725e7734ce288f8367e1bb143e90bb3f0512",
+        "0x2279b7a0a67db372996a5fab50d91eaa73d2ebe6",
 };
 
 export const provider = new ethers.providers.WebSocketProvider(blockchainUri);
 
-const decentraveller: ethers.Contract =
-    new ethers.Contract(
-        CONTRACT_ADDRESSES.DECENTRAVELLER,
-        decentravellerABI,
-        provider
-    );
+const decentraveller: ethers.Contract = new ethers.Contract(
+    CONTRACT_ADDRESSES.DECENTRAVELLER,
+    decentravellerABI,
+    provider
+);
 
 const decentravellerPlaceCloneFactoryContract: ethers.Contract =
     new ethers.Contract(

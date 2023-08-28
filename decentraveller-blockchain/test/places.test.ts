@@ -111,4 +111,23 @@ describe("Decentraveller and places ", function () {
                 "23.321"
             );
     });
+
+    it("Should revert with error when trying to register a place with a non-registered address", async function () {
+        const { deployer } = await getNamedAccounts();
+        const deployerSigner = await ethers.getSigner(deployer);
+        await expect(
+            decentraveller
+                .connect(deployerSigner)
+                .addPlace(
+                    "Shami shawarma",
+                    "25.3232",
+                    "23.321",
+                    "Sanfe Fe 3173",
+                    0
+                )
+        ).to.be.revertedWithCustomError(
+            decentraveller,
+            "Address__Unregistered"
+        );
+    });
 });
