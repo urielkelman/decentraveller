@@ -5,7 +5,7 @@ import { apiAdapter } from '../../api/apiAdapter';
 import { mockApiAdapter } from '../../api/mockApiAdapter';
 import { PlaceResponse } from '../../api/response/places';
 import * as Location from 'expo-location';
-import DecentravellerPlacesItems from '../../commons/components/DecentravellerPlacesList';
+import { DecentravellerPlacesList } from '../../commons/components/DecentravellerPlacesList';
 import { addNewPlaceIconSize, homeStyle } from '../../styles/homeStyles';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { DECENTRAVELLER_DEFAULT_BACKGROUND_COLOR } from '../../commons/global';
@@ -85,7 +85,7 @@ const HomeScreen = ({ navigation }) => {
     ) : showPlacesNotFound ? (
         <Text>We couldn't find any place for you. Try in the Explore Tab.</Text>
     ) : (
-        <DecentravellerPlacesItems places={recommendedPlaces} />
+        <DecentravellerPlacesList places={recommendedPlaces} minified={false} />
     );
 
     console.log(userLocation);

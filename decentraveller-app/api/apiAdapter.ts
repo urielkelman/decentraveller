@@ -4,11 +4,14 @@ import {
     FORWARD_GEOCODING_ENDPOINT,
     GET_USER_ENDPOINT,
     OWNED_PLACES_ENDPOINT,
+    PLACE_IMAGE,
     PROFILE_IMAGE,
     PUSH_NOTIFICATION_TOKEN_ENDPOINT,
     RECOMMENDED_PLACES_BY_LOCATION_ENDPOINT,
     RECOMMENDED_PLACES_BY_PROFILE_ENDPOINT,
+    RECOMMENDED_SIMILAR_PLACES,
     REVIEWS_PLACES_ENDPOINT,
+    REVIEWS_PROFILE_ENDPOINT,
     UPLOAD_IMAGES,
 } from './config';
 import { UserResponse } from './response/user';
@@ -112,6 +115,19 @@ class ApiAdapter extends Adapter {
         return await httpAPIConnector.get(httpRequest);
     }
 
+    async getRecommendedSimilarPlaces(placeId: number, onNotFound: () => void): Promise<PlaceResponse[]> {
+        const httpRequest: HttpGetRequest = {
+            url: formatString(RECOMMENDED_SIMILAR_PLACES, { placeId: placeId }),
+            queryParams: undefined,
+            onUnexpectedError: (e) => console.log('Error'),
+            onStatusCodeError: {
+                [HTTPStatusCode.NOT_FOUND]: onNotFound,
+            },
+        };
+
+        return await httpAPIConnector.get(httpRequest);
+    }
+
     async getUser(walletAddress: string, onFailed: () => void): Promise<UserResponse> {
         const httpRequest: HttpGetRequest = {
             url: `${GET_USER_ENDPOINT}/${walletAddress}`,
@@ -124,20 +140,32 @@ class ApiAdapter extends Adapter {
         return await httpAPIConnector.get(httpRequest);
     }
 
-    async getMyPlaces(walletAddress: string): Promise<PlaceResponse[]> {
+    async getPlacesByOwner(walletAddress: string, onFailed: () => void): Promise<PlaceResponse[]> {
         const httpRequest: HttpGetRequest = {
             url: `${OWNED_PLACES_ENDPOINT}/${walletAddress}`,
             queryParams: {},
+            onUnexpectedError: (e) => {
+                onFailed();
+            },
+        };
+
+        return await httpAPIConnector.get(httpRequest);
+    }
+
+    async getPlaceReviews(placeId: string, page: number, perPage: number): Promise<ReviewsResponse> {
+        const httpRequest: HttpGetRequest = {
+            url: formatString(REVIEWS_PLACES_ENDPOINT, { placeId: placeId }),
+            queryParams: { page: page, per_page: perPage },
             onUnexpectedError: (e) => console.log('Error'),
         };
 
         return await httpAPIConnector.get(httpRequest);
     }
 
-    async getPlaceReviews(placeId: string): Promise<ReviewsResponse> {
+    async getProfileReviews(walletId: string, page: number, perPage: number): Promise<ReviewsResponse> {
         const httpRequest: HttpGetRequest = {
-            url: formatString(REVIEWS_PLACES_ENDPOINT, { placeId: placeId }),
-            queryParams: { page: '0', per_page: '100' },
+            url: formatString(REVIEWS_PROFILE_ENDPOINT, { walletId: walletId }),
+            queryParams: { page: page, per_page: perPage },
             onUnexpectedError: (e) => console.log('Error'),
         };
 
@@ -161,6 +189,19 @@ class ApiAdapter extends Adapter {
     async getUserProfileImage(walletAddress: string, onFailed: () => void): Promise<string> {
         const httpRequest: HttpGetRequest = {
             url: formatString(PROFILE_IMAGE, { owner: walletAddress }),
+            queryParams: {},
+            onUnexpectedError: (e) => {
+                onFailed();
+            },
+        };
+
+        console.log('to get', httpRequest);
+        return await httpAPIConnector.getBase64Bytes(httpRequest);
+    }
+
+    async getPlaceImage(placeId: number, onFailed: () => void): Promise<string> {
+        const httpRequest: HttpGetRequest = {
+            url: formatString(PLACE_IMAGE, { placeId: placeId }),
             queryParams: {},
             onUnexpectedError: (e) => {
                 onFailed();

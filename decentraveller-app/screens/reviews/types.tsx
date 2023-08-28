@@ -1,12 +1,16 @@
 import { NavigationProp, RouteProp } from '@react-navigation/native';
 import { HomeStackScreens } from '../home/HomeNavigator';
 
-type AddReviewImagesParams = {
+type PlaceIdParams = {
     placeId: number;
 };
 
 export type AddReviewImagesProps = {
-    route: RouteProp<Record<string, AddReviewImagesParams>, string>;
+    route: RouteProp<Record<string, PlaceIdParams>, string>;
+};
+
+export type PlaceReviewsScreenProps = {
+    route: RouteProp<Record<string, PlaceIdParams>, string>;
 };
 
 type AddReviewCommentParams = {

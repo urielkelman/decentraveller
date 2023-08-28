@@ -3,16 +3,11 @@ import React from 'react';
 // @ts-ignore
 import { useNavigation } from '@react-navigation/native';
 import { placeReviewsBoxStyles } from '../../styles/placeDetailStyles';
+import StarComponent from '../../commons/components/StarComponent';
+import { ReviewShowProps } from '../../commons/components/DecentravellerReviewsList';
 
-export type ReviewItemProps = {
-    id: number;
-    placeId: number;
-    score: number;
-    text: string;
-    imageCount: number;
-    state: string;
-    ownerNickname: string;
-    createdAt: string;
+export type ReviewItemProps = ReviewShowProps & {
+    summarized: boolean;
 };
 
 const ReviewItem: React.FC<ReviewItemProps> = ({
@@ -23,23 +18,35 @@ const ReviewItem: React.FC<ReviewItemProps> = ({
     imageCount,
     state,
     ownerNickname,
+    avatarBase64,
     createdAt,
+    summarized,
 }) => {
+    const lines = summarized ? 3 : undefined;
+
     return (
-        <View style={placeReviewsBoxStyles.reviewItem}>
-            <View style={placeReviewsBoxStyles.commentContainer}>
-                <Text style={placeReviewsBoxStyles.commentText}>
-                    {text} - <Text style={placeReviewsBoxStyles.dateText}>{createdAt}</Text>
-                </Text>
+        <TouchableOpacity style={placeReviewsBoxStyles.reviewItem}>
+            <View style={placeReviewsBoxStyles.reviewHeader}>
+                <View style={placeReviewsBoxStyles.dataContainer}>
+                    <Text style={placeReviewsBoxStyles.dateText}>{createdAt}</Text>
+                    <StarComponent score={score} />
+                </View>
                 <View style={placeReviewsBoxStyles.userContainer}>
                     <Image
-                        source={require('../../assets/mock_images/cryptochica.png')}
+                        source={{
+                            uri: `data:image/jpeg;base64,${avatarBase64}`,
+                        }}
                         style={placeReviewsBoxStyles.avatarImage}
                     />
                     <Text style={placeReviewsBoxStyles.userNameText}>{ownerNickname}</Text>
                 </View>
             </View>
-        </View>
+            <View style={placeReviewsBoxStyles.commentContainer}>
+                <Text style={placeReviewsBoxStyles.commentText} numberOfLines={lines} ellipsizeMode="tail">
+                    {text}
+                </Text>
+            </View>
+        </TouchableOpacity>
     );
 };
 

@@ -9,7 +9,7 @@ interface HttpBaseRequest {
 }
 
 export interface HttpGetRequest extends HttpBaseRequest {
-    queryParams: { [key: string]: string };
+    queryParams: { [key: string]: string | number };
 }
 
 export interface HttpPostRequest extends HttpBaseRequest {

@@ -100,7 +100,7 @@ const UserProfileScreen = ({ navigation }) => {
                 </View>
             </View>
 
-            <TouchableOpacity onPress={() => navigation.navigate('UserPlacesScreen')}>
+            <TouchableOpacity onPress={() => navigation.navigate('UserPlacesScreen', { walletId: user.walletAddress })}>
                 <View style={userProfileMainStyles.informationContainer}>
                     <View style={userProfileMainStyles.spacedButtonBetweenView}>
                         <Text style={userProfileMainStyles.leftText}>My Places</Text>
@@ -109,7 +109,9 @@ const UserProfileScreen = ({ navigation }) => {
                 </View>
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={() => navigation.navigate('UserReviewsScreen')}>
+            <TouchableOpacity
+                onPress={() => navigation.navigate('UserReviewsScreen', { walletId: user.walletAddress })}
+            >
                 <View style={userProfileMainStyles.informationContainer}>
                     <View style={userProfileMainStyles.spacedButtonBetweenView}>
                         <Text style={userProfileMainStyles.leftText}>My Reviews</Text>
