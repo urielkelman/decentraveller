@@ -3,18 +3,25 @@ import { httpAPIConnector, HttpConnector, HttpGetRequest, HttpPostRequest } from
 import {
     FORWARD_GEOCODING_ENDPOINT,
     GET_USER_ENDPOINT,
-    RECOMMENDED_PLACES_BY_LOCATION_ENDPOINT,
     OWNED_PLACES_ENDPOINT,
-    RECOMMENDED_PLACES_BY_PROFILE_ENDPOINT,
-    REVIEWS_PLACES_ENDPOINT,
+    PLACE_IMAGE,
+    PROFILE_IMAGE,
     PUSH_NOTIFICATION_TOKEN_ENDPOINT,
-    GET_PROFILE_IMAGE,
+    RECOMMENDED_PLACES_BY_LOCATION_ENDPOINT,
+    RECOMMENDED_PLACES_BY_PROFILE_ENDPOINT,
+    RECOMMENDED_SIMILAR_PLACES,
+    REVIEWS_PLACES_ENDPOINT,
+    REVIEWS_PROFILE_ENDPOINT,
+    UPLOAD_IMAGES,
 } from './config';
 import { UserResponse } from './response/user';
 import Adapter from './Adapter';
 import { formatString } from '../commons/functions/utils';
-import { ReviewsResponse } from './response/reviews';
+import { ReviewImageResponse, ReviewsResponse } from './response/reviews';
 import { PlaceResponse } from './response/places';
+import * as FileSystem from 'expo-file-system';
+import { EncodingType } from 'expo-file-system';
+import FormData from 'form-data';
 
 enum HTTPStatusCode {
     BAD_REQUEST = 400,
@@ -49,7 +56,7 @@ class ApiAdapter extends Adapter {
         interest?: string,
         sort_by?: string | null,
         at_least_stars?: number | null,
-        maximum_distance?: number | null
+        maximum_distance?: number | null,
     ): Promise<PlaceResponse[]> {
         const queryParams: Record<string, string> = {
             latitude: latitude,
@@ -86,7 +93,7 @@ class ApiAdapter extends Adapter {
     async getRecommendedPlacesForAddress(
         walletAddress: string,
         [latitude, longitude]: [string?, string?],
-        onNotFound: () => void
+        onNotFound: () => void,
     ): Promise<PlaceResponse[]> {
         const [lat, long] = ['39.95', '-75.175'];
         const queryParams =
@@ -108,6 +115,19 @@ class ApiAdapter extends Adapter {
         return await httpAPIConnector.get(httpRequest);
     }
 
+    async getRecommendedSimilarPlaces(placeId: number, onNotFound: () => void): Promise<PlaceResponse[]> {
+        const httpRequest: HttpGetRequest = {
+            url: formatString(RECOMMENDED_SIMILAR_PLACES, { placeId: placeId }),
+            queryParams: undefined,
+            onUnexpectedError: (e) => console.log('Error'),
+            onStatusCodeError: {
+                [HTTPStatusCode.NOT_FOUND]: onNotFound,
+            },
+        };
+
+        return await httpAPIConnector.get(httpRequest);
+    }
+
     async getUser(walletAddress: string, onFailed: () => void): Promise<UserResponse> {
         const httpRequest: HttpGetRequest = {
             url: `${GET_USER_ENDPOINT}/${walletAddress}`,
@@ -120,20 +140,32 @@ class ApiAdapter extends Adapter {
         return await httpAPIConnector.get(httpRequest);
     }
 
-    async getMyPlaces(walletAddress: string): Promise<PlaceResponse[]> {
+    async getPlacesByOwner(walletAddress: string, onFailed: () => void): Promise<PlaceResponse[]> {
         const httpRequest: HttpGetRequest = {
             url: `${OWNED_PLACES_ENDPOINT}/${walletAddress}`,
             queryParams: {},
+            onUnexpectedError: (e) => {
+                onFailed();
+            },
+        };
+
+        return await httpAPIConnector.get(httpRequest);
+    }
+
+    async getPlaceReviews(placeId: string, page: number, perPage: number): Promise<ReviewsResponse> {
+        const httpRequest: HttpGetRequest = {
+            url: formatString(REVIEWS_PLACES_ENDPOINT, { placeId: placeId }),
+            queryParams: { page: page, per_page: perPage },
             onUnexpectedError: (e) => console.log('Error'),
         };
 
         return await httpAPIConnector.get(httpRequest);
     }
 
-    async getPlaceReviews(placeId: string): Promise<ReviewsResponse> {
+    async getProfileReviews(walletId: string, page: number, perPage: number): Promise<ReviewsResponse> {
         const httpRequest: HttpGetRequest = {
-            url: formatString(REVIEWS_PLACES_ENDPOINT, { placeId: placeId }),
-            queryParams: {},
+            url: formatString(REVIEWS_PROFILE_ENDPOINT, { walletId: walletId }),
+            queryParams: { page: page, per_page: perPage },
             onUnexpectedError: (e) => console.log('Error'),
         };
 
@@ -147,6 +179,7 @@ class ApiAdapter extends Adapter {
                 owner: walletAddress,
                 pushToken: pushToken,
             },
+            headers: {},
             onUnexpectedError: (e) => console.log('Error', e),
         };
 
@@ -155,14 +188,88 @@ class ApiAdapter extends Adapter {
 
     async getUserProfileImage(walletAddress: string, onFailed: () => void): Promise<string> {
         const httpRequest: HttpGetRequest = {
-            url: formatString(GET_PROFILE_IMAGE, { owner: walletAddress }),
+            url: formatString(PROFILE_IMAGE, { owner: walletAddress }),
             queryParams: {},
             onUnexpectedError: (e) => {
                 onFailed();
             },
         };
 
+        console.log('to get', httpRequest);
         return await httpAPIConnector.getBase64Bytes(httpRequest);
+    }
+
+    async getPlaceImage(placeId: number, onFailed: () => void): Promise<string> {
+        const httpRequest: HttpGetRequest = {
+            url: formatString(PLACE_IMAGE, { placeId: placeId }),
+            queryParams: {},
+            onUnexpectedError: (e) => {
+                onFailed();
+            },
+        };
+
+        console.log('to get', httpRequest);
+        return await httpAPIConnector.getBase64Bytes(httpRequest);
+    }
+
+    async sendProfileImage(walletAddress: string, imageUri: string): Promise<void> {
+        try {
+            const imageInfo = await FileSystem.getInfoAsync(imageUri);
+
+            if (imageInfo.exists) {
+                var formData = new FormData();
+                formData.append('file', { uri: imageUri, name: 'image.jpg', type: 'image/jpeg' });
+
+                const httpPostRequest: HttpPostRequest = {
+                    url: formatString(PROFILE_IMAGE, { owner: walletAddress }),
+                    body: formData,
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                    onUnexpectedError: (e) => console.log('Error', e),
+                };
+
+                await httpAPIConnector.post(httpPostRequest);
+            } else {
+                console.log('Image file does not exist.');
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    async sendReviewImage(
+        walletAddress: string,
+        imagesUriList: string[],
+        onFailed: () => void,
+    ): Promise<ReviewImageResponse> {
+        try {
+            const formData = new FormData();
+
+            for (const imageUri of imagesUriList) {
+                const imageInfo = await FileSystem.getInfoAsync(imageUri);
+
+                if (imageInfo.exists) {
+                    formData.append('files', { uri: imageUri, name: 'image.jpg', type: 'image/jpeg' });
+                }
+            }
+
+            const httpPostRequest: HttpPostRequest = {
+                url: formatString(UPLOAD_IMAGES, { owner: walletAddress }),
+                body: formData,
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+                onUnexpectedError: (e) => {
+                    console.log(e);
+                    onFailed();
+                },
+            };
+
+            return await httpAPIConnector.post(httpPostRequest);
+        } catch (error) {
+            console.error(error);
+        }
     }
 }
 

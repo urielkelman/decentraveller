@@ -1,4 +1,4 @@
-import { ethers, run, network } from "hardhat";
+import { ethers } from "hardhat";
 import { Decentraveller, DecentravellerPlace } from "../typechain-types";
 
 const WALLET_PRIVATE_KEY =

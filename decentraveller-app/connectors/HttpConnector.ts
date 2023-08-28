@@ -1,4 +1,5 @@
 import axios from 'axios';
+import FormData from 'form-data';
 import { API_ENDPOINT } from '../api/config';
 
 interface HttpBaseRequest {
@@ -8,11 +9,12 @@ interface HttpBaseRequest {
 }
 
 export interface HttpGetRequest extends HttpBaseRequest {
-    queryParams: { [key: string]: string };
+    queryParams: { [key: string]: string | number };
 }
 
 export interface HttpPostRequest extends HttpBaseRequest {
-    body: { [key: string]: string | number };
+    body: { [key: string]: string | number } | FormData;
+    headers: { [key: string]: string };
 }
 
 class HttpConnector {
@@ -31,7 +33,6 @@ class HttpConnector {
                 httpRequest.onStatusCodeError[error.response.status] &&
                 httpRequest.onStatusCodeError[error.response.status]();
         } else {
-            console.log('ahora en el else');
             httpRequest.onUnexpectedError(error);
         }
     }
@@ -53,6 +54,7 @@ class HttpConnector {
             console.log('to post', httpPostRequest);
             const { data } = await axios.post<T>(httpPostRequest.url, httpPostRequest.body, {
                 baseURL: this.baseURL,
+                headers: httpPostRequest.headers,
             });
 
             return data;
@@ -78,27 +80,6 @@ class HttpConnector {
                 console.log(error);
             }
             httpRequest.onUnexpectedError(error);
-        }
-    }
-
-    async getBase64Bytes(httpRequest: HttpGetRequest): Promise<string> {
-        try {
-            const base64String = await axios
-                .get(httpRequest.url, {
-                    baseURL: this.baseURL,
-                    params: httpRequest.queryParams,
-                    responseType: 'arraybuffer',
-                })
-                .then((response) => Buffer.from(response.data, 'binary').toString('base64'));
-            return base64String;
-        } catch (error) {
-            if (axios.isAxiosError(error)) {
-                console.log(error.status);
-                console.log(error.message);
-            } else {
-                console.log(error);
-            }
-            httpRequest.onError(error);
         }
     }
 }

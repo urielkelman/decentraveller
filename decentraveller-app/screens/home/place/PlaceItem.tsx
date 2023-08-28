@@ -2,15 +2,18 @@ import { Image, Text, View, StyleSheet, TouchableOpacity } from 'react-native';
 import CountryFlag from 'react-native-country-flag';
 import { DecentravellerPlaceCategory } from '../../../context/types';
 import React from 'react';
-import { countryFlagSize, placeItemStyle, rateReviewIcon, starComponentStyle } from '../../../styles/placeItemstyle';
+import {
+    countryFlagSize,
+    placeItemStyle,
+    rateReviewIcon,
+    placeItemMinifiedStyle,
+} from '../../../styles/placeItemstyle';
 // @ts-ignore
-import eretzMockImage from '../../../assets/mock_images/eretz-restaurant-in-buenos.jpg';
 import { ISOCodeByCountry } from './countriesConfig';
-import { Rating } from 'react-native-rating-element';
 import { MaterialIcons } from '@expo/vector-icons';
 import { PlaceDetailParams, PlaceDetailScreenProp } from './types';
 import { useNavigation } from '@react-navigation/native';
-import { HomeStackScreens } from '../HomeNavigator';
+import StarComponent from '../../../commons/components/StarComponent';
 
 export type PlaceItemProps = {
     id: number;
@@ -21,21 +24,8 @@ export type PlaceItemProps = {
     score: number;
     category: DecentravellerPlaceCategory;
     reviewCount: number;
-};
-
-const StarComponent = ({ score: number }) => {
-    return (
-        <Rating
-            rated={number}
-            totalCount={5}
-            ratingColor={starComponentStyle.ratingColor}
-            ratingBackgroundColor={starComponentStyle.ratingBackgroundColor}
-            size={starComponentStyle.size}
-            readonly
-            icon="star"
-            direction="row"
-        />
-    );
+    imageBase64: string | null;
+    minified: boolean;
 };
 
 const PlaceItem: React.FC<PlaceItemProps> = ({
@@ -47,6 +37,8 @@ const PlaceItem: React.FC<PlaceItemProps> = ({
     score,
     category,
     reviewCount,
+    imageBase64,
+    minified,
 }) => {
     const navigation = useNavigation<PlaceDetailScreenProp>();
     let countryISOCode: string | undefined;
@@ -71,42 +63,54 @@ const PlaceItem: React.FC<PlaceItemProps> = ({
         score: score,
         reviewCount: reviewCount,
     };
+    const itemStyle = minified ? placeItemMinifiedStyle : placeItemStyle;
+
+    const imageToUse =
+        imageBase64 != null
+            ? {
+                  uri: `data:image/jpeg;base64,${imageBase64}`,
+              }
+            : require('../../../assets/images/no_place_image.jpg');
 
     return (
         <TouchableOpacity onPress={() => navigation.navigate('PlaceDetailScreen', placeDetailParams)}>
-            <View style={placeItemStyle.container}>
-                <View style={placeItemStyle.leftContainer}>
-                    <Image style={placeItemStyle.image} source={eretzMockImage} />
+            <View style={itemStyle.container}>
+                <View style={itemStyle.leftContainer}>
+                    <Image style={itemStyle.image} source={imageToUse} />
                 </View>
-                <View style={placeItemStyle.rightSideContainer}>
-                    <View style={placeItemStyle.informationContainer}>
-                        <Text style={placeItemStyle.nameText}>{name}</Text>
+                <View style={itemStyle.rightSideContainer}>
+                    <View style={itemStyle.informationContainer}>
+                        <Text style={itemStyle.nameText}>{name}</Text>
                         {countryISOCode ? (
                             <CountryFlag
                                 isoCode={countryISOCode}
                                 size={countryFlagSize}
-                                style={placeItemStyle.countryFlag}
+                                style={itemStyle.countryFlag}
                             />
                         ) : (
                             <></>
                         )}
                     </View>
                     <View>
-                        <Text style={placeItemStyle.subtitleText}>{capitalizedCategory}</Text>
+                        <Text style={itemStyle.subtitleText}>{capitalizedCategory}</Text>
                     </View>
-                    <View style={placeItemStyle.informationContainer}>
-                        <Text style={placeItemStyle.informationText}>Score:</Text>
+                    <View style={itemStyle.informationContainer}>
+                        <Text style={itemStyle.informationText}>Score:</Text>
                         <StarComponent score={score} />
-                        <MaterialIcons
-                            name="rate-review"
-                            size={rateReviewIcon.size}
-                            color={rateReviewIcon.color}
-                            style={rateReviewIcon.style}
-                        />
-                        <Text style={placeItemStyle.informationText}>{reviewCount}</Text>
+                        {!minified ? (
+                            <View style={itemStyle.informationContainer}>
+                                <MaterialIcons
+                                    name="rate-review"
+                                    size={rateReviewIcon.size}
+                                    color={rateReviewIcon.color}
+                                    style={rateReviewIcon.style}
+                                />
+                                <Text style={itemStyle.informationText}>{reviewCount}</Text>
+                            </View>
+                        ) : null}
                     </View>
-                    <View style={placeItemStyle.informationContainer}>
-                        <Text style={placeItemStyle.informationText}>{addressToShow}</Text>
+                    <View style={itemStyle.informationContainer}>
+                        <Text style={itemStyle.informationText}>{addressToShow}</Text>
                     </View>
                 </View>
             </View>

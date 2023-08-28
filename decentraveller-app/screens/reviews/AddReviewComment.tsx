@@ -7,20 +7,25 @@ import { addReviewCommentStyles } from '../../styles/addReviewStyles';
 import { RouteProp, useRoute } from '@react-navigation/native';
 import { blockchainAdapter } from '../../blockchain/blockhainAdapter';
 import { useAppContext } from '../../context/AppContext';
+import { apiAdapter } from '../../api/apiAdapter';
+import { mockApiAdapter } from '../../api/mockApiAdapter';
+import DecentravellerInformativeModal from '../../commons/components/DecentravellerInformativeModal';
 
 const adapter = blockchainAdapter;
+const adapterApi = apiAdapter;
 
 type AddReviewCommentParams = {
-    selectedImage: string;
+    selectedImages: string[];
     placeId: number;
 };
 
 const AddReviewComment = ({ navigation }) => {
     const route = useRoute<RouteProp<Record<string, AddReviewCommentParams>, string>>();
-    const { selectedImage, placeId } = route.params;
+    const { selectedImages, placeId } = route.params;
     const [comment, setComment] = useState<string>('');
     const [rating, setRating] = useState<number>(0);
-    const { web3Provider } = useAppContext();
+    const { connectionContext, web3Provider } = useAppContext();
+    const [showErrorModal, setShowErrorModal] = React.useState<boolean>(false);
 
     const handleRating = (selectedRating) => {
         setRating(selectedRating);
@@ -38,16 +43,27 @@ const AddReviewComment = ({ navigation }) => {
                             color={i <= rating ? '#FFD700' : '#cc6060'}
                         />
                     </Text>
-                </TouchableOpacity>
+                </TouchableOpacity>,
             );
         }
         return stars;
     };
 
     const onClickFinish = async () => {
-        const transactionHash = await adapter.addPlaceReviewTransaction(web3Provider, placeId, comment, rating, [
-            selectedImage,
-        ]);
+        const response = await adapterApi.sendReviewImage(connectionContext.connectedAddress, selectedImages, () => {
+            setShowErrorModal(true);
+        });
+
+        if (!response) return;
+
+        const imageHashes = response.hashes;
+        const transactionHash = await adapter.addPlaceReviewTransaction(
+            web3Provider,
+            placeId,
+            comment,
+            rating,
+            imageHashes,
+        );
 
         if (!transactionHash) return;
 
@@ -88,6 +104,12 @@ const AddReviewComment = ({ navigation }) => {
             </View>
 
             <DecentravellerButton text={'Finish'} loading={false} onPress={onClickFinish} />
+            <DecentravellerInformativeModal
+                informativeText={'Error ocurred'}
+                visible={showErrorModal}
+                closeModalText={'Close'}
+                handleCloseModal={() => setShowErrorModal(false)}
+            />
         </KeyboardAvoidingView>
     );
 };

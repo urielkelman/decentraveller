@@ -71,7 +71,7 @@ const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
             width: Dimensions.get('window').width,
             height: Dimensions.get('window').height,
         }),
-        []
+        [],
     );
 
     const memoFactory = <T extends unknown>(arg: T, setArg: (T) => void): AppContextStateArg<T> => {
@@ -80,7 +80,7 @@ const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
                 value: arg,
                 setValue: setArg,
             }),
-            [arg]
+            [arg],
         );
     };
 

@@ -292,12 +292,11 @@ class RelationalDatabase:
         :param pinned: if the file is pinned
         :param score: image score
         """
-        try:
-            image_orm = ImageORM(hash=filehash, pinned=pinned, score=score)
-            self.session.add(image_orm)
-            self.session.commit()
-        except IntegrityError:
+        if self.session.query(ImageORM).get(filehash):
             return
+        image_orm = ImageORM(hash=filehash, pinned=pinned)
+        self.session.add(image_orm)
+        self.session.commit()
 
     def get_review_image_hash(self, review_id: ReviewID,
                               place_id: PlaceID, image_number: int) -> Optional[str]:

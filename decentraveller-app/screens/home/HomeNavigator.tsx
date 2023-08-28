@@ -6,24 +6,25 @@ import CreatePlaceProvider from './place/CreatePlaceContext';
 import LeftSideBar from './LeftSideBar';
 import UserPlacesScreen from '../users/profile/UserPlacesScreen';
 import PlaceDetailScreen from './place/PlaceDetailScreen';
+import PlaceReviewsScreen from './place/PlaceReviewsScreen';
 import UserProfileScreen from '../users/profile/UserProfileScreen';
 import UserReviewsScreen from '../users/profile/UserReviewsScreen';
 import AddReviewComment from '../reviews/AddReviewComment';
 import SuccessAddReviewScreen from '../reviews/SuccessAddReviewScreen';
 import AddReviewImages from '../reviews/AddReviewImages';
-import { PlaceDetailParams } from './place/types';
 import * as Linking from 'expo-linking';
 
 export type HomeStackScreens = {
     LeftSideBar: undefined;
     CreatePlaceNameScreen: undefined;
     CreatePlaceLocationScreen: undefined;
-    PlaceDetailScreen: PlaceDetailParams;
+    PlaceDetailScreen: { id: number; name: string; address: string; score: number; reviewCount: number };
+    PlaceReviewsScreen: { placeId: number };
     Profile: undefined;
-    UserPlacesScreen: undefined;
-    UserReviewsScreen: undefined;
+    UserPlacesScreen: { walletId: string };
+    UserReviewsScreen: { walletId: string };
     AddReviewImages: { placeId: number };
-    AddReviewComment: { selectedImage: any; placeId: number };
+    AddReviewComment: { selectedImages: string[]; placeId: number };
     SuccessAddReviewScreen: undefined;
 };
 
@@ -58,6 +59,14 @@ const HomeNavigator = () => {
                     options={{
                         title: 'Place',
                         headerMode: 'screen',
+                        headerShown: true,
+                    }}
+                />
+                <HomeStackNavigator.Screen
+                    name="PlaceReviewsScreen"
+                    component={PlaceReviewsScreen}
+                    options={{
+                        title: 'Place reviews',
                         headerShown: true,
                     }}
                 />

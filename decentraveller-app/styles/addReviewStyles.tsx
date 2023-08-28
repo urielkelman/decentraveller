@@ -114,9 +114,16 @@ const addReviewImagesStyles = StyleSheet.create({
         justifyContent: 'center',
     },
     imageUpload: {
+        position: 'relative',
         width: 180,
         height: 180,
         borderRadius: 90,
+        marginLeft: -150,
+    },
+    horizontalImageContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginTop: 10,
     },
     image: {
         width: 60,

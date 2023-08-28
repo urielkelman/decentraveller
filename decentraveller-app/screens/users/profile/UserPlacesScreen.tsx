@@ -1,30 +1,46 @@
 import React, { useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import DecentravellerPlacesItems from '../../../commons/components/DecentravellerPlacesList';
+import { DecentravellerPlacesList } from '../../../commons/components/DecentravellerPlacesList';
 import { PlaceResponse } from '../../../api/response/places';
 import { mockApiAdapter } from '../../../api/mockApiAdapter';
+import { apiAdapter } from '../../../api/apiAdapter';
 import { useAppContext } from '../../../context/AppContext';
 import { DECENTRAVELLER_DEFAULT_BACKGROUND_COLOR } from '../../../commons/global';
+import LoadingComponent from '../../../commons/components/DecentravellerLoading';
+import { WalletIdProps } from './types';
+import { ReviewResponse } from '../../../api/response/reviews';
+import { ReviewItemProps } from '../../reviews/ReviewItem';
 
-const adapter = mockApiAdapter;
+const adapter = apiAdapter;
 
-const UserPlacesScreen = ({}) => {
-    const appContext = useAppContext();
-    const [userPlaces, setUserPlaces] = React.useState<PlaceResponse[]>([]);
+const UserPlacesScreen: React.FC<WalletIdProps> = ({ route }) => {
+    const { walletId } = route.params;
+    const [userPlaces, setUserPlaces] = React.useState<PlaceResponse[]>(null);
+    const [loadingPlaces, setLoadingPlaces] = React.useState<boolean>(true);
 
     useEffect(() => {
         (async () => {
-            const placesResponse: PlaceResponse[] = await adapter.getMyPlacesPlaces(
-                // appContext.connectionContext.connectedAddress
-                ''
+            setLoadingPlaces(true);
+            const placesResponse: PlaceResponse[] = await adapter.getPlacesByOwner(walletId, () => {});
+            const images = await Promise.all(
+                placesResponse.map(async (p: PlaceResponse) => {
+                    return await adapter.getPlaceImage(p.id, () => {});
+                }),
             );
             setUserPlaces(placesResponse);
+            setLoadingPlaces(false);
         })();
     }, []);
 
-    const renderPlaces = DecentravellerPlacesItems({ places: userPlaces });
+    const componentToRender = loadingPlaces ? (
+        <LoadingComponent />
+    ) : userPlaces != null && userPlaces.length > 0 ? (
+        <DecentravellerPlacesList places={userPlaces} minified={false} horizontal={false} />
+    ) : (
+        <Text>This user has no places</Text>
+    );
 
-    return <View style={{ flex: 1, backgroundColor: DECENTRAVELLER_DEFAULT_BACKGROUND_COLOR }}>{renderPlaces}</View>;
+    return componentToRender;
 };
 
 export default UserPlacesScreen;

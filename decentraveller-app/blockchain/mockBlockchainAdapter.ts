@@ -6,12 +6,18 @@ class BlockchainAdapter {
         nickname: string,
         country: string,
         interest: string,
-        onError: () => void
+        onError: () => void,
     ): Promise<string> {
         return 'transactionHashConfirmed';
     }
 
-    async addPlaceReviewTransaction(connector, comment: string, rating: number, images: string[]): Promise<string> {
+    async addPlaceReviewTransaction(
+        connector,
+        placeId: number,
+        comment: string,
+        rating: number,
+        images: string[],
+    ): Promise<string> {
         return 'transactionHashConfirmed';
     }
 }

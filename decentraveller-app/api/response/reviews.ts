@@ -1,12 +1,23 @@
+import { UserResponse } from './user';
+
+export type ReviewImageResponse = {
+    hashes: string[];
+};
+
 export type ReviewResponse = {
+    id: number;
     placeId: number;
     score: number;
-    owner: string;
     text: string;
-    images: string[];
+    imageCount: number;
     state: string;
+    owner: UserResponse;
+    createdAt: string;
 };
 
 export type ReviewsResponse = {
-    results: ReviewResponse[];
+    reviews: ReviewResponse[];
+    total: number;
+    page: number;
+    perPage: number;
 };

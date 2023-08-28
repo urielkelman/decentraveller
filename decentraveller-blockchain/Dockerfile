@@ -1,4 +1,5 @@
-FROM node:14-alpine3.16
+FROM node:16-alpine3.18
+RUN apk add --no-cache git
 COPY . /app
 WORKDIR /app
 RUN yarn install --ignore-engines

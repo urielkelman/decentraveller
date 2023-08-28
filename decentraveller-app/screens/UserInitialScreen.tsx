@@ -41,7 +41,7 @@ const DecentravellerInitialScreen = () => {
                 return;
             }
 
-            const userProfileImage = await mockApiAdapter.getUserProfileImage('uri', () => {
+            const userProfileImage = await apiAdapter.getUserProfileImage(address, () => {
                 console.log('There was a problem fetching the image');
             });
 

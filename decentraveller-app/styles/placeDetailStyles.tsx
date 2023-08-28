@@ -9,7 +9,6 @@ const placeDetailStyles = StyleSheet.create({
         backgroundColor: '#FFE1E1',
     },
     image: {
-        flex: 1,
         width: '100%',
         height: '100%',
         resizeMode: 'cover',
@@ -17,46 +16,66 @@ const placeDetailStyles = StyleSheet.create({
     },
     imageContainer: {
         borderRadius: 45,
-        transform: [{ translateY: -60 }],
+        transform: [{ translateY: -100 }],
         marginTop: 10,
         justifyContent: 'flex-end',
         overflow: 'hidden',
-        height: windowHeight * 0.5,
+        height: windowHeight * 0.4,
         width: windowWidth,
-        shadowOffset: { width: 1.5, height: 1 },
-        shadowOpacity: 0.8,
-        shadowRadius: 5,
+        shadowOffset: { width: 0, height: 10 },
+        shadowOpacity: 1,
+        shadowRadius: 13,
         shadowColor: '#000',
-        elevation: 9,
+        elevation: 30,
+    },
+    headerContainer: {
+        flexDirection: 'row',
+        alignItems: 'flex-start',
+        marginTop: -90,
+        paddingHorizontal: 20,
+    },
+    recommendationContainer: {
+        marginTop: -15,
+        marginBottom: 10,
     },
     textContainer: {
-        position: 'absolute',
-        top: windowHeight * 0.45,
-        left: 20,
+        flexDirection: 'column',
+        alignItems: 'flex-start',
+    },
+    bulletsContainer: {
+        flexDirection: 'column',
+        marginLeft: 'auto',
     },
     titleText: {
-        fontSize: 35,
+        fontSize: 30,
         fontWeight: 'bold',
         marginTop: 1,
     },
     titleText2: {
-        fontSize: 35,
+        fontSize: 30,
         fontWeight: 'bold',
         marginTop: -15,
     },
     locationText: {
-        fontSize: 18,
+        fontSize: 15,
         fontWeight: '100',
         fontFamily: 'Montserrat_400Regular',
         width: 250,
         height: 50,
     },
-    bulletsContainer: {
-        position: 'absolute',
-        top: windowHeight * 0.45,
-        right: 30,
-        alignItems: 'flex-start',
-        marginTop: 10,
+    locationText2: {
+        fontSize: 12,
+        fontWeight: '100',
+        fontFamily: 'Montserrat_400Regular',
+        width: 250,
+        height: 50,
+    },
+    location2TextContainer: {
+        flexDirection: 'column',
+    },
+    location2TextMargin: {
+        marginBottom: -35,
+        marginRight: 20,
     },
     bulletItem: {
         flexDirection: 'row',
@@ -102,20 +121,24 @@ const placeDetailStyles = StyleSheet.create({
         shadowColor: '#000',
         elevation: 15,
     },
-    placeReviewsContainer: {
-        marginTop: 100,
-        marginHorizontal: 16,
-    },
 });
 
 const placeReviewsBoxStyles = StyleSheet.create({
     container: {
+        flex: 1,
+        flexDirection: 'column',
         backgroundColor: '#FFFFFF',
-        borderRadius: 10,
+        borderTopLeftRadius: 10,
+        borderTopRightRadius: 10,
+        borderBottomEndRadius: 0,
+        borderBottomStartRadius: 0,
         paddingHorizontal: 12,
-        paddingVertical: 8,
-        marginBottom: 10,
     },
+    reviewsHeader: {
+        paddingVertical: 8,
+        backgroundColor: '#FFFFFF',
+    },
+    reviewsFooter: {},
     titleContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -127,37 +150,51 @@ const placeReviewsBoxStyles = StyleSheet.create({
         fontSize: 16,
     },
     moreText: {
-        fontSize: 12,
+        fontSize: 16,
         color: 'blue',
         fontWeight: 'bold',
+        marginHorizontal: 'auto',
+        textAlign: 'center',
+        padding: 10,
+        backgroundColor: '#F0F0F0',
+        marginBottom: 6,
+        borderRadius: 10,
     },
     reviewItem: {
+        backgroundColor: '#F0F0F0',
+        marginTop: 6,
         marginBottom: 6,
+        borderRadius: 10,
     },
     commentContainer: {
-        backgroundColor: '#F0F0F0',
-        borderRadius: 10,
-        padding: 2,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        height: 53,
     },
     commentText: {
+        paddingHorizontal: 10,
         fontSize: 15,
-        flex: 1,
-        marginRight: 6,
+    },
+    reviewHeader: {
+        flexDirection: 'row',
+        alignItems: 'flex-start',
+        paddingLeft: 10,
+        paddingRight: 10,
+        paddingTop: 10,
+    },
+    dataContainer: {
+        flexDirection: 'column',
+        alignItems: 'flex-start',
     },
     userContainer: {
         flexDirection: 'column',
-        alignItems: 'flex-end',
+        marginLeft: 'auto',
     },
     avatarImage: {
         width: 30,
         height: 30,
         borderRadius: 15,
         marginBottom: 2,
-        marginRight: 10,
     },
     userNameText: {
         fontSize: 12,
@@ -197,4 +234,18 @@ const placeReviewsBoxStyles = StyleSheet.create({
     },
 });
 
-export { placeDetailStyles, placeReviewsBoxStyles };
+const placeSimilarsBoxStyles = StyleSheet.create({
+    container: {
+        flexDirection: 'column',
+        overflow: 'hidden',
+        paddingHorizontal: 10,
+        margin: 0,
+    },
+    titleText: {
+        fontWeight: 'bold',
+        fontSize: 16,
+        marginBottom: 5,
+    },
+});
+
+export { placeDetailStyles, placeReviewsBoxStyles, placeSimilarsBoxStyles };
