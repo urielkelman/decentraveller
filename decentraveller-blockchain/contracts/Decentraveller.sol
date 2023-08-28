@@ -6,6 +6,7 @@ import "./DecentravellerDataTypes.sol";
 import "./DecentravellerPlaceCloneFactory.sol";
 import "./DecentravellerGovernance.sol";
 import "./DecentravellerToken.sol";
+import "hardhat/console.sol";
 
 error Place__NonExistent(uint256 placeId);
 error Place__AlreadyExistent(uint256 placeId);
@@ -61,7 +62,6 @@ contract Decentraveller {
         governance = DecentravellerGovernance(payable(_governance));
         timelockGovernanceAddress = governance.timelock();
         placeFactory = DecentravellerPlaceCloneFactory(_placesFactory);
-        currentPlaceId = 0;
         uint256 initialRulesLength = initialRules.length;
         for (uint i = 1; i < initialRulesLength; i++) {
             DecentravellerDataTypes.DecentravellerRule
@@ -70,6 +70,7 @@ contract Decentraveller {
             initialRule.statement = initialRules[i - 1];
         }
         currentRuleId = initialRulesLength;
+        currentPlaceId = 0;
     }
 
     modifier onlyGovernance() {
@@ -121,6 +122,7 @@ contract Decentraveller {
     ) public onlyRegisteredAddress returns (uint256 placeId) {
         string memory locationIdentifier = string.concat(_latitude, _longitude);
         uint256 placeIdForLocation = placeIdByPlaceLocation[locationIdentifier];
+
         /* placeForLocation being zero means that there is not another place with the specified location */
         if (placeIdForLocation != 0) {
             revert Place__AlreadyExistent(placeIdForLocation);

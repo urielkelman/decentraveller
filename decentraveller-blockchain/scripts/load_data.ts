@@ -10,7 +10,7 @@ const main = async () => {
             async (signer) =>
                 await ethers.getContractAt(
                     "Decentraveller",
-                    "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9",
+                    "0xb7f8bc63bbcad18155201308c8f3540b07f84f5e",
                     signer
                 )
         )

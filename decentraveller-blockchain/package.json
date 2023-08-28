@@ -26,7 +26,7 @@
     "chai": "^4.2.0",
     "dotenv": "^16.0.3",
     "ethers": "^5.7.2",
-    "hardhat": "jian01/hardhat-fork#master",
+    "hardhat": "git+https://github.com/jian01/hardhat-fork.git#master",
     "hardhat-deploy": "^0.11.19",
     "hardhat-gas-reporter": "^1.0.9",
     "prettier": "^2.7.1",
