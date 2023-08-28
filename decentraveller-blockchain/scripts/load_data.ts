@@ -1,8 +1,23 @@
 import { ethers } from "hardhat";
 import { Decentraveller, DecentravellerPlace } from "../typechain-types";
-import { readFileSync } from "fs";
+import { readFileSync, createReadStream } from "fs";
+import axios from 'axios';
 
 const main = async () => {
+    var image_hashes = [];
+    const response1 = await axios.post('http://api:8000/upload', axios.toFormData({"file": createReadStream("data/place_image.jpg")}), {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+    })
+    image_hashes.push(response1.data['hash'])
+    const response2 = await axios.post('http://api:8000/upload', axios.toFormData({"file": createReadStream("data/place_image_bad.jpg")}), {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+    })
+    image_hashes.push(response2.data['hash'])
+
     const signers = await ethers.getSigners();
     /*Contracts are connected to different signers */
     let decentravellerContracts: Decentraveller[] = await Promise.all(
@@ -90,7 +105,7 @@ const main = async () => {
         );
         const result = await placeContract.addReview(
             reviewData["text"],
-            [],
+            image_hashes,
             Math.round(parseFloat(reviewData["stars"]))
         );
 

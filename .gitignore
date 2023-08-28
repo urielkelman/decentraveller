@@ -22,3 +22,4 @@ decentraveller-ipfs/*
 !decentraveller-ipfs/config
 !decentraveller-ipfs/datastore_spec
 !decentraveller-ipfs/version
+*.ipynb_checkpoints*

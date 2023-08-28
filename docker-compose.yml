@@ -32,12 +32,22 @@ services:
       - SQLALCHEMY_DATABASE_URL=postgresql://webapi:webapi@database:5432/webapi
       - WEAVIATE_DATABASE_URL=http://weaviate:8080
       - IPFS_NODE_URL=http://ipfs:5001
+      - ML_API_URL=http://ml-api:8000
       - PYTHONHASHSEED=0
       - INDEXER_API_KEY=asd123
     depends_on:
       - database
       - weaviate
       - ipfs
+      - ml-api
+
+  ml-api:
+    build: decentraveller-ml-api/
+    command: poetry run gunicorn -b 0.0.0.0:8000 -w 1 'main:app'
+    expose:
+      - 8000
+    ports:
+      - 8001:8000
   
   blockchain:
     build: decentraveller-blockchain/

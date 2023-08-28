@@ -18,6 +18,33 @@ else
   echo "Test review is created - OK"
 fi
 
+status_code=$(curl --write-out %{http_code} --silent --output /dev/null "http://localhost:8000/review/1.jpg?id=1&place_id=5")
+
+if [[ "$status_code" -ne 200 ]] ; then
+  echo "Test image #1 of review - FAILED"
+  exit 1
+else
+  echo "Test image #1 of review - OK"
+fi
+
+status_code=$(curl --write-out %{http_code} --silent --output /dev/null "http://localhost:8000/review/2.jpg?id=1&place_id=5")
+
+if [[ "$status_code" -ne 200 ]] ; then
+  echo "Test image #2 of review - FAILED"
+  exit 1
+else
+  echo "Test image #2 of review - OK"
+fi
+
+status_code=$(curl --write-out %{http_code} --silent --output /dev/null http://localhost:8000/place/1/image.jpg)
+
+if [[ "$status_code" -ne 200 ]] ; then
+  echo "Test place has image - FAILED"
+  exit 1
+else
+  echo "Test place has image - OK"
+fi
+
 status_code=$(curl --write-out %{http_code} --silent --output /dev/null http://localhost:8000/profile/0xcd3B766CCDd6AE721141F452C550Ca635964ce71)
 
 if [[ "$status_code" -ne 200 ]] ; then
