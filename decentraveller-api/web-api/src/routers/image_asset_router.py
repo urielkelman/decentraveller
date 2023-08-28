@@ -45,7 +45,7 @@ class ImageAssetCBV:
         """
         file = self.image_jpeg_compression(file.file.read())
         try:
-            filehash = self.ipfs_service.add_file(compressed_file)
+            filehash = self.ipfs_service.add_file(file)
         except MaximumUploadSizeExceeded:
             raise HTTPException(status_code=HTTP_400_BAD_REQUEST,
                                 detail="The file is too big.")
