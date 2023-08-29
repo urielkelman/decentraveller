@@ -4,6 +4,7 @@ import {
     Decentraveller,
     DecentravellerPlace,
     DecentravellerReviewCloneFactory,
+    DecentravellerToken,
 } from "../typechain-types";
 
 const DEFAULT_MOCK_HASHES = ["0xhash1", "0xhash2", "0xhash3"];
@@ -11,7 +12,10 @@ const DEFAULT_MOCK_HASHES = ["0xhash1", "0xhash2", "0xhash3"];
 describe("Places and Reviews", function () {
     let decentravellerPlace: DecentravellerPlace;
     let decentravellerReviewCloneFactory: DecentravellerReviewCloneFactory;
+    let decentravellerToken: DecentravellerToken;
     let reviewerUserAddress: string;
+
+    const rewardNewReviewTokensAmount = 1;
 
     beforeEach(async function () {
         await deployments.fixture(["all"]);
@@ -43,6 +47,11 @@ describe("Places and Reviews", function () {
         decentravellerReviewCloneFactory = await ethers.getContract(
             "DecentravellerReviewCloneFactory"
         );
+
+        decentravellerToken = await ethers.getContract(
+            "DecentravellerToken",
+            user
+        );
     });
 
     it("Should start with reviewId 0", async function () {
@@ -60,7 +69,7 @@ describe("Places and Reviews", function () {
         assert.equal(currentReviewId.toString(), "1");
     });
 
-    it("Should emit event when adding a new review", async function () {
+    it("Should emit event when adding a new review and reward user with tokens", async function () {
         const placeId = await decentravellerPlace.placeId();
         await expect(
             decentravellerPlace.addReview(
@@ -78,6 +87,14 @@ describe("Places and Reviews", function () {
                 DEFAULT_MOCK_HASHES,
                 3
             );
+
+        const tokenBalance = await decentravellerToken.balanceOf(
+            reviewerUserAddress
+        );
+        assert.equal(
+            tokenBalance.toString(),
+            rewardNewReviewTokensAmount.toString()
+        );
     });
 
     it("Should return review address of valid review id", async function () {
