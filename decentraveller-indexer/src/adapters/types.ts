@@ -34,3 +34,23 @@ export interface NewProfileRequestBody extends EventRequestBody {
     country: string;
     interest: string;
 }
+
+export interface RuleProposedRequestBody extends EventRequestBody {
+    ruleId: number;
+    proposer: string;
+    rule: string;
+    proposalId: string;
+}
+
+export interface RuleApprovedRequestBody extends EventRequestBody {
+    ruleId: number;
+}
+
+export interface RuleDeletionProposedRequestBody extends EventRequestBody {
+    ruleId: number;
+    proposer: string;
+}
+
+export interface RuleDeletedRequestBody extends EventRequestBody {
+    ruleId: string;
+}

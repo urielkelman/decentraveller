@@ -7,6 +7,10 @@ import { newPlaceTransformer } from "../transformers/NewPlaceTransformer";
 import { EventRequestBody } from "../adapters/types";
 import { newReviewTransformer } from "../transformers/NewReviewTransformer";
 import { updatedProfileTransformer } from "../transformers/UpdatedProfileTransformer";
+import { ruleProposedTransformer } from "../transformers/RuleProposedTransformer";
+import { ruleApprovedTransformer } from "../transformers/RuleApprovedTransformer";
+import { ruleDeletionProposedTransformer } from "../transformers/RuleDeletionProposedTransformer";
+import { ruleDeletedTransformer } from "../transformers/RuleDeletedTransformer";
 
 const blockchainUri = process.env.BLOCKCHAIN_URI || "http://127.0.0.1:8545";
 
@@ -61,5 +65,25 @@ export const eventsToListen: Array<EventToListen<any>> = [
         contract: decentraveller,
         eventName: "UpdatedProfile",
         transformer: updatedProfileTransformer,
+    },
+    {
+        contract: decentraveller,
+        eventName: "DecentravellerRuleProposed",
+        transformer: ruleProposedTransformer,
+    },
+    {
+        contract: decentraveller,
+        eventName: "DecentravellerRuleApproved",
+        transformer: ruleApprovedTransformer,
+    },
+    {
+        contract: decentraveller,
+        eventName: "DecentravellerRuleDeletionProposed",
+        transformer: ruleDeletionProposedTransformer,
+    },
+    {
+        contract: decentraveller,
+        eventName: "DecentravellerRuleDeleted",
+        transformer: ruleDeletedTransformer,
     },
 ];
