@@ -1,17 +1,11 @@
-// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.17;
-
-import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Votes.sol";
-import "@openzeppelin/contracts/governance/extensions/GovernorVotes.sol";
-import "@openzeppelin/contracts/token/ERC20/extensions/draft-ERC20Permit.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
 
 error Delegation__Fobidden();
+error Transfer__Forbidden();
 
 contract DecentravellerToken is ERC20Votes, AccessControl {
     uint8 private newReviewRewardAmount;
     uint8 private newPlaceRewardAmount;
-
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
     bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
 
@@ -49,6 +43,14 @@ contract DecentravellerToken is ERC20Votes, AccessControl {
 
     function delegate(address) public pure override {
         revert Delegation__Fobidden();
+    }
+
+    function transfer(address, uint256) public pure override returns (bool) {
+        revert Transfer__Forbidden();
+    }
+
+    function approve(address, uint256) public pure override returns (bool) {
+        revert Transfer__Forbidden();
     }
 
     function setNewReviewRewardAmount(
