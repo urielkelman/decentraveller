@@ -1,3 +1,5 @@
+import { BigNumber } from "ethers";
+import { HTTPMethod } from "../adapters/AxiosRequestBuilder";
 import {
     EventRequest,
     RuleDeletionProposedRequestBody,
@@ -8,7 +10,14 @@ class RuleDeletionProposedTransformer extends EventTransformer<RuleDeletionPropo
     public transformEvent(
         ...event: any[]
     ): EventRequest<RuleDeletionProposedRequestBody> {
-        throw new Error("Method not implemented.");
+        return {
+            endpoint: "/rule-deletion",
+            method: HTTPMethod.POST,
+            body: {
+                ruleId: (event[0] as BigNumber).toNumber(),
+                proposer: event[1],
+            },
+        };
     }
 }
 

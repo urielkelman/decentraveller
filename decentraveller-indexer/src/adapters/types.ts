@@ -38,8 +38,8 @@ export interface NewProfileRequestBody extends EventRequestBody {
 export interface RuleProposedRequestBody extends EventRequestBody {
     ruleId: number;
     proposer: string;
-    rule: string;
-    proposalId: string;
+    ruleStatement: string;
+    proposalId: number;
 }
 
 export interface RuleApprovedRequestBody extends EventRequestBody {
@@ -52,5 +52,5 @@ export interface RuleDeletionProposedRequestBody extends EventRequestBody {
 }
 
 export interface RuleDeletedRequestBody extends EventRequestBody {
-    ruleId: string;
+    ruleId: number;
 }
