@@ -9,6 +9,8 @@ const deployFunction: DeployFunction = async function (
     const { deploy, get } = deployments;
     const { deployer, tokenOwner } = await getNamedAccounts();
 
+    const tokenDeployment = await get("DecentravellerToken");
+
     const decentravellerReview = await deploy("DecentravellerReview", {
         from: deployer,
         log: true,
@@ -17,7 +19,7 @@ const deployFunction: DeployFunction = async function (
         "DecentravellerReviewCloneFactory",
         {
             from: deployer,
-            args: [decentravellerReview.address],
+            args: [decentravellerReview.address, tokenDeployment.address],
             log: true,
         }
     );
@@ -32,12 +34,11 @@ const deployFunction: DeployFunction = async function (
             args: [
                 decentravellerPlace.address,
                 decentravellerReviewFactory.address,
+                tokenDeployment.address,
             ],
             log: true,
         }
     );
-
-    const tokenDeployment = await get("DecentravellerGovernance");
 
     const token: DecentravellerToken = await ethers.getContractAt(
         "DecentravellerToken",
