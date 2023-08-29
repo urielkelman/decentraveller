@@ -7,6 +7,7 @@ import "@openzeppelin/contracts/token/ERC20/extensions/draft-ERC20Permit.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
 
 error Delegation__Fobidden();
+error Transfer__Forbidden();
 
 contract DecentravellerToken is ERC20Votes, AccessControl {
     uint8 private newReviewRewardAmount;
@@ -49,6 +50,14 @@ contract DecentravellerToken is ERC20Votes, AccessControl {
 
     function delegate(address) public pure override {
         revert Delegation__Fobidden();
+    }
+
+    function transfer(address, uint256) public pure override returns (bool) {
+        revert Transfer__Forbidden();
+    }
+
+    function approve(address, uint256) public pure override returns (bool) {
+        revert Transfer__Forbidden();
     }
 
     function setNewReviewRewardAmount(

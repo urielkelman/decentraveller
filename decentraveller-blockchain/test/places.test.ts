@@ -3,12 +3,16 @@ import { expect, assert } from "chai";
 import {
     Decentraveller,
     DecentravellerPlaceCloneFactory,
+    DecentravellerToken,
 } from "../typechain-types";
 
 describe("Decentraveller and places ", function () {
     let decentraveller: Decentraveller;
     let decentravellerPlaceCloneFactory: DecentravellerPlaceCloneFactory;
+    let decentravellerToken: DecentravellerToken;
     let userAddress: string;
+
+    const rewardNewPlaceTokensAmount = 2;
 
     beforeEach(async function () {
         await deployments.fixture(["all"]);
@@ -19,6 +23,10 @@ describe("Decentraveller and places ", function () {
             "DecentravellerPlaceCloneFactory"
         );
         await decentraveller.registerProfile("Messi", "AR", 0);
+        decentravellerToken = await ethers.getContract(
+            "DecentravellerToken",
+            user
+        );
     });
 
     it("Should start with placeId 0", async function () {
@@ -90,7 +98,7 @@ describe("Decentraveller and places ", function () {
             .withArgs(1);
     });
 
-    it("Should emit event on new place created", async function () {
+    it("Should emit event on new place create and reward the creator with tokens", async function () {
         await expect(
             decentraveller.addPlace(
                 "Shami shawarma",
@@ -110,6 +118,12 @@ describe("Decentraveller and places ", function () {
                 "25.3232",
                 "23.321"
             );
+
+        const tokenBalance = await decentravellerToken.balanceOf(userAddress);
+        assert.equal(
+            tokenBalance.toString(),
+            rewardNewPlaceTokensAmount.toString()
+        );
     });
 
     it("Should revert with error when trying to register a place with a non-registered address", async function () {

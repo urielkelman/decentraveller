@@ -8,6 +8,7 @@ describe("Decentraveller token", function () {
     let tokenOwnerAddress: string;
     let tokenMinterAddress: string;
     let userAddress: string;
+
     const rewardNewReviewTokensAmount = 1;
     const rewardNewPlaceTokensAmount = 2;
 
@@ -89,6 +90,24 @@ describe("Decentraveller token", function () {
         ).to.be.revertedWithCustomError(
             decentravellerToken,
             "Delegation__Fobidden"
+        );
+    });
+
+    it("Should revert if user try to approve other user to spend some balance", async function () {
+        await expect(
+            decentravellerToken.approve(tokenOwnerAddress, 10000)
+        ).to.be.revertedWithCustomError(
+            decentravellerToken,
+            "Transfer__Forbidden"
+        );
+    });
+
+    it("Should revert if user try to make a transfer of it own balance", async function () {
+        await expect(
+            decentravellerToken.transfer(tokenOwnerAddress, 10000)
+        ).to.be.revertedWithCustomError(
+            decentravellerToken,
+            "Transfer__Forbidden"
         );
     });
 });

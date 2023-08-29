@@ -1,7 +1,0 @@
-SQLAlchemy
-alembic==1.8.1
-psycopg2
-pillow
-pandas
-scikit-learn
-weaviate-client
