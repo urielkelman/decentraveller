@@ -1,116 +1,121 @@
 [
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_decentravellerPlaceImplementation",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "_decentravellerReviewCloneFactory",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "nonpayable",
-    "type": "constructor"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "uint256",
-        "name": "id",
-        "type": "uint256"
-      },
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "placeCreator",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "string",
-        "name": "placeName",
-        "type": "string"
-      },
-      {
-        "indexed": false,
-        "internalType": "string",
-        "name": "physicalAddress",
-        "type": "string"
-      },
-      {
-        "indexed": false,
-        "internalType": "enum DecentravellerDataTypes.DecentravellerPlaceCategory",
-        "name": "category",
-        "type": "uint8"
-      },
-      {
-        "indexed": false,
-        "internalType": "string",
-        "name": "latitude",
-        "type": "string"
-      },
-      {
-        "indexed": false,
-        "internalType": "string",
-        "name": "longitude",
-        "type": "string"
-      }
-    ],
-    "name": "NewPlace",
-    "type": "event"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_placeId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "string",
-        "name": "_name",
-        "type": "string"
-      },
-      {
-        "internalType": "string",
-        "name": "_latitude",
-        "type": "string"
-      },
-      {
-        "internalType": "string",
-        "name": "_longitude",
-        "type": "string"
-      },
-      {
-        "internalType": "string",
-        "name": "_physicalAddress",
-        "type": "string"
-      },
-      {
-        "internalType": "enum DecentravellerDataTypes.DecentravellerPlaceCategory",
-        "name": "_category",
-        "type": "uint8"
-      },
-      {
-        "internalType": "address",
-        "name": "_placeCreator",
-        "type": "address"
-      }
-    ],
-    "name": "createNewPlace",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  }
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_decentravellerPlaceImplementation",
+                "type": "address"
+            },
+            {
+                "internalType": "address",
+                "name": "_decentravellerReviewCloneFactory",
+                "type": "address"
+            },
+            {
+                "internalType": "address",
+                "name": "_token",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "constructor"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "internalType": "uint256",
+                "name": "id",
+                "type": "uint256"
+            },
+            {
+                "indexed": true,
+                "internalType": "address",
+                "name": "placeCreator",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "internalType": "string",
+                "name": "placeName",
+                "type": "string"
+            },
+            {
+                "indexed": false,
+                "internalType": "string",
+                "name": "physicalAddress",
+                "type": "string"
+            },
+            {
+                "indexed": false,
+                "internalType": "enum DecentravellerDataTypes.DecentravellerPlaceCategory",
+                "name": "category",
+                "type": "uint8"
+            },
+            {
+                "indexed": false,
+                "internalType": "string",
+                "name": "latitude",
+                "type": "string"
+            },
+            {
+                "indexed": false,
+                "internalType": "string",
+                "name": "longitude",
+                "type": "string"
+            }
+        ],
+        "name": "NewPlace",
+        "type": "event"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "_placeId",
+                "type": "uint256"
+            },
+            {
+                "internalType": "string",
+                "name": "_name",
+                "type": "string"
+            },
+            {
+                "internalType": "string",
+                "name": "_latitude",
+                "type": "string"
+            },
+            {
+                "internalType": "string",
+                "name": "_longitude",
+                "type": "string"
+            },
+            {
+                "internalType": "string",
+                "name": "_physicalAddress",
+                "type": "string"
+            },
+            {
+                "internalType": "enum DecentravellerDataTypes.DecentravellerPlaceCategory",
+                "name": "_category",
+                "type": "uint8"
+            },
+            {
+                "internalType": "address",
+                "name": "_placeCreator",
+                "type": "address"
+            }
+        ],
+        "name": "createNewPlace",
+        "outputs": [
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    }
 ]
