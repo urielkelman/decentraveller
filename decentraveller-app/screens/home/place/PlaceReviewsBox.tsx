@@ -24,7 +24,7 @@ const PlaceReviewsBox = ({ placeId, summarized }) => {
                 const avatars = await Promise.all(
                     reviewsResponse.reviews.map(async (r: ReviewResponse) => {
                         return await adapter.getUserProfileImage(r.owner.owner, () => {});
-                    })
+                    }),
                 );
                 const reviewsToShow: ReviewItemProps[] = reviewsResponse.reviews.map(function (r, i) {
                     return {
@@ -45,7 +45,7 @@ const PlaceReviewsBox = ({ placeId, summarized }) => {
                 setReviewsCount(reviewsResponse.total);
                 setLoadingReviews(false);
             })();
-        }, [placeId])
+        }, [placeId]),
     );
 
     const hasReviews = () => {
@@ -109,12 +109,12 @@ const PlaceReviewsBox = ({ placeId, summarized }) => {
             const reviewsResponse: ReviewsResponse = await adapter.getPlaceReviews(
                 placeId,
                 (reviews.length / 5) | 0,
-                5
+                5,
             );
             const avatars = await Promise.all(
                 reviewsResponse.reviews.map(async (r: ReviewResponse) => {
                     return await adapter.getUserProfileImage(r.owner.owner, () => {});
-                })
+                }),
             );
             const reviewsToShow: ReviewItemProps[] = reviewsResponse.reviews.map(function (r, i) {
                 return {

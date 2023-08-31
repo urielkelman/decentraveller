@@ -57,7 +57,7 @@ class ApiAdapter extends Adapter {
         interest?: string,
         sort_by?: string | null,
         at_least_stars?: number | null,
-        maximum_distance?: number | null
+        maximum_distance?: number | null,
     ): Promise<PlaceResponse[]> {
         const queryParams: Record<string, string> = {
             latitude: latitude,
@@ -94,7 +94,7 @@ class ApiAdapter extends Adapter {
     async getRecommendedPlacesForAddress(
         walletAddress: string,
         [latitude, longitude]: [string?, string?],
-        onNotFound: () => void
+        onNotFound: () => void,
     ): Promise<PlaceResponse[]> {
         const httpRequest: HttpGetRequest = {
             url: formatString(RECOMMENDED_PLACES_BY_PROFILE_ENDPOINT, { owner: walletAddress }),
@@ -137,7 +137,7 @@ class ApiAdapter extends Adapter {
         walletId: string,
         page: number,
         perPage: number,
-        onNotFound: () => void
+        onNotFound: () => void,
     ): Promise<PlaceResponse[]> {
         const httpRequest: HttpGetRequest = {
             url: formatString(OWNED_PLACES_ENDPOINT, { walletId: walletId }),
@@ -253,7 +253,7 @@ class ApiAdapter extends Adapter {
     async sendReviewImage(
         walletAddress: string,
         imagesUriList: string[],
-        onFailed: () => void
+        onFailed: () => void,
     ): Promise<ReviewImageResponse> {
         try {
             const formData = new FormData();

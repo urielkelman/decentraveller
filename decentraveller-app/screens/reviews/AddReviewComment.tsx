@@ -43,7 +43,7 @@ const AddReviewComment = ({ navigation }) => {
                             color={i <= rating ? '#FFD700' : '#cc6060'}
                         />
                     </Text>
-                </TouchableOpacity>
+                </TouchableOpacity>,
             );
         }
         return stars;
@@ -63,7 +63,7 @@ const AddReviewComment = ({ navigation }) => {
             placeId,
             comment,
             rating,
-            imageHashes
+            imageHashes,
         );
         console.log('asd 2');
 

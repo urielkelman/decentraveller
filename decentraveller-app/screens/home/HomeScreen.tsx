@@ -43,12 +43,12 @@ const HomeScreen = ({ navigation }) => {
         const placesResponse: PlaceResponse[] = await adapter.getRecommendedPlacesForAddress(
             address,
             [],
-            onNotFoundRecommendations
+            onNotFoundRecommendations,
         );
         const images = await Promise.all(
             placesResponse.map(async (p: PlaceResponse) => {
                 return await adapter.getPlaceImage(p.id, () => {});
-            })
+            }),
         );
         const placesToShow: PlaceShowProps[] = placesResponse.map(function (p, i) {
             return parsePlaceResponse(p, images[i]);
