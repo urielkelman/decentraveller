@@ -14,17 +14,9 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { PlaceDetailParams, PlaceDetailScreenProp } from './types';
 import { useNavigation } from '@react-navigation/native';
 import StarComponent from '../../../commons/components/StarComponent';
+import { PlaceShowProps } from '../../../commons/components/DecentravellerPlacesList';
 
-export type PlaceItemProps = {
-    id: number;
-    name: string;
-    address: string;
-    latitude: string;
-    longitude: string;
-    score: number;
-    category: DecentravellerPlaceCategory;
-    reviewCount: number;
-    imageBase64: string | null;
+export type PlaceItemProps = PlaceShowProps & {
     minified: boolean;
 };
 
@@ -60,8 +52,12 @@ const PlaceItem: React.FC<PlaceItemProps> = ({
         id: id,
         name: name,
         address: address,
+        latitude: latitude,
+        longitude: longitude,
+        category: category,
         score: score,
         reviewCount: reviewCount,
+        imageBase64: imageBase64,
     };
     const itemStyle = minified ? placeItemMinifiedStyle : placeItemStyle;
 

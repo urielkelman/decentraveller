@@ -37,7 +37,7 @@ function renderNameText(name: string): JSX.Element {
 
         return (
             <>
-                <Text style={placeDetailStyles.titleText2}>{name_1}</Text>
+                <Text style={placeDetailStyles.titleText}>{name_1}</Text>
                 <Text style={placeDetailStyles.titleText2}>{name_2}</Text>
             </>
         );
@@ -95,12 +95,19 @@ const bulletItemComponent: React.FC<BulletItemProps> = ({ iconPath, title, value
 };
 
 const PlaceDetailScreen: React.FC<PlaceDetailScreenProps> = ({ route }) => {
-    const { id, name, address, score, reviewCount } = route.params;
+    const { id, name, address, latitude, longitude, score, category, reviewCount, imageBase64 } = route.params;
+
+    const imageToUse =
+        imageBase64 != null
+            ? {
+                  uri: `data:image/jpeg;base64,${imageBase64}`,
+              }
+            : require('../../../assets/images/no_place_image.jpg');
 
     return (
         <View style={placeDetailStyles.container}>
             <View style={placeDetailStyles.imageContainer}>
-                <Image source={require(path)} style={placeDetailStyles.image} />
+                <Image source={imageToUse} style={placeDetailStyles.image} />
             </View>
             <View style={placeDetailStyles.headerContainer}>
                 <View style={placeDetailStyles.textContainer}>

@@ -28,6 +28,7 @@ const UserReviewsBox = ({ walletId }) => {
                     imageCount: r.imageCount,
                     state: r.state,
                     ownerNickname: r.owner.nickname,
+                    ownerWallet: r.owner.owner,
                     avatarBase64: avatar,
                     createdAt: r.createdAt,
                 };
@@ -93,6 +94,7 @@ const UserReviewsBox = ({ walletId }) => {
                     imageCount: r.imageCount,
                     state: r.state,
                     ownerNickname: r.owner.nickname,
+                    ownerWallet: r.owner.owner,
                     avatarBase64: avatars[i],
                     createdAt: r.createdAt,
                     summarized: false,

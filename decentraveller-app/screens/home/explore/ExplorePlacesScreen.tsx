@@ -6,7 +6,7 @@ import { explorePlacesScreenWording } from './wording';
 import { PlaceResponse } from '../../../api/response/places';
 import { mockApiAdapter } from '../../../api/mockApiAdapter';
 import { apiAdapter } from '../../../api/apiAdapter';
-import DecentravellerPlacesItems from '../../../commons/components/DecentravellerPlacesList';
+import { DecentravellerPlacesList, PlaceShowProps } from '../../../commons/components/DecentravellerPlacesList';
 import DecentravellerPicker from '../../../commons/components/DecentravellerPicker';
 import { PickerItem } from '../../../commons/types';
 import {
@@ -27,7 +27,7 @@ const adapter = apiAdapter;
 const ExplorePlacesScreen = ({ navigation }) => {
     const { userLocation } = useAppContext();
 
-    const [places, setPlaces] = React.useState<PlaceResponse[]>([]);
+    const [places, setPlaces] = React.useState<PlaceShowProps[]>([]);
     const [loadingPlaces, setLoadingPlaces] = React.useState<boolean>(false);
     const [lastSearchTextLength, setLastSearchTextLength] = React.useState<number>(0);
     const [loadingGeocodingResponse, setLoadingGeocodingResponse] = React.useState<boolean>(false);
@@ -94,14 +94,32 @@ const ExplorePlacesScreen = ({ navigation }) => {
     ): Promise<void> => {
         setLoadingPlaces(true);
         console.log('to fetch places', latitude, longitude, lastLocationLabelSearched);
-        const places = await adapter.getRecommendedPlaces(
+        const placesResponse = await adapter.getRecommendedPlaces(
             [latitude, longitude],
             interestPickerValue,
             sortBy,
             minStars !== 0 ? minStars : null,
             maxDistance !== 0 ? maxDistance : null,
         );
-        setPlaces(places);
+        const images = await Promise.all(
+            placesResponse.map(async (p: PlaceResponse) => {
+                return await adapter.getPlaceImage(p.id, () => {});
+            }),
+        );
+        const placesToShow: PlaceShowProps[] = placesResponse.map(function (p, i) {
+            return {
+                id: p.id,
+                name: p.name,
+                address: p.address,
+                latitude: p.latitude,
+                longitude: p.longitude,
+                score: p.score,
+                category: p.category,
+                reviewCount: p.reviews,
+                imageBase64: images[i],
+            };
+        });
+        setPlaces(placesToShow);
         setLoadingPlaces(false);
         setLastLocationLabelSearched(lastLocationLabelSearched);
         setLastLocationSearched([latitude, longitude]);
@@ -174,7 +192,11 @@ const ExplorePlacesScreen = ({ navigation }) => {
         setInterestPickerValue(null);
     };
 
-    const componentToRender = loadingPlaces ? <LoadingComponent /> : <DecentravellerPlacesItems places={places} />;
+    const componentToRender = loadingPlaces ? (
+        <LoadingComponent />
+    ) : (
+        <DecentravellerPlacesList places={places} minified={false} horizontal={false} />
+    );
 
     return (
         <View

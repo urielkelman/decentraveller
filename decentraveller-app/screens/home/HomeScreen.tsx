@@ -5,7 +5,7 @@ import { apiAdapter } from '../../api/apiAdapter';
 import { mockApiAdapter } from '../../api/mockApiAdapter';
 import { PlaceResponse } from '../../api/response/places';
 import * as Location from 'expo-location';
-import { DecentravellerPlacesList } from '../../commons/components/DecentravellerPlacesList';
+import { DecentravellerPlacesList, PlaceShowProps } from '../../commons/components/DecentravellerPlacesList';
 import { addNewPlaceIconSize, homeStyle } from '../../styles/homeStyles';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { DECENTRAVELLER_DEFAULT_BACKGROUND_COLOR } from '../../commons/global';
@@ -21,18 +21,36 @@ const HomeScreen = ({ navigation }) => {
     const { address, provider } = useWalletConnectModal();
     const { userLocation } = useAppContext();
     const [loadingRecommendedPlaces, setLoadingRecommendedPlaces] = React.useState<boolean>(false);
-    const [recommendedPlaces, setRecommendedPlaces] = React.useState<PlaceResponse[]>([]);
+    const [recommendedPlaces, setRecommendedPlaces] = React.useState<PlaceShowProps[]>([]);
     const [showPlacesNotFound, setShowPlacesNotFound] = React.useState<boolean>(false);
 
     const onNotFoundRecommendations = () => setShowPlacesNotFound(true);
 
     const getWithLocation = async ([latitude, longitude]: [string?, string?]) => {
-        const recommendedPlacesResponse: PlaceResponse[] = await adapter.getRecommendedPlacesForAddress(
+        const placesResponse: PlaceResponse[] = await adapter.getRecommendedPlacesForAddress(
             address,
             [],
             onNotFoundRecommendations,
         );
-        setRecommendedPlaces(recommendedPlacesResponse);
+        const images = await Promise.all(
+            placesResponse.map(async (p: PlaceResponse) => {
+                return await adapter.getPlaceImage(p.id, () => {});
+            }),
+        );
+        const placesToShow: PlaceShowProps[] = placesResponse.map(function (p, i) {
+            return {
+                id: p.id,
+                name: p.name,
+                address: p.address,
+                latitude: p.latitude,
+                longitude: p.longitude,
+                score: p.score,
+                category: p.category,
+                reviewCount: p.reviews,
+                imageBase64: images[i],
+            };
+        });
+        setRecommendedPlaces(placesToShow);
         setLoadingRecommendedPlaces(false);
     };
 
@@ -85,11 +103,10 @@ const HomeScreen = ({ navigation }) => {
     ) : showPlacesNotFound ? (
         <Text>We couldn't find any place for you. Try in the Explore Tab.</Text>
     ) : (
-        <DecentravellerPlacesList places={recommendedPlaces} minified={false} />
+        <DecentravellerPlacesList places={recommendedPlaces} minified={false} horizontal={false} />
     );
 
     console.log(userLocation);
-
     return (
         <View style={{ flex: 1, backgroundColor: DECENTRAVELLER_DEFAULT_BACKGROUND_COLOR }}>
             {componentToRender}

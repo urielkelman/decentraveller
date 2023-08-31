@@ -10,6 +10,7 @@ export type ReviewShowProps = {
     imageCount: number;
     state: string;
     ownerNickname: string;
+    ownerWallet: string;
     avatarBase64: string;
     createdAt: string;
 };
@@ -23,6 +24,7 @@ const renderReviewItem = ({ item, summarized }: { item: ReviewShowProps; summari
         imageCount={item.imageCount}
         state={item.state}
         ownerNickname={item.ownerNickname}
+        ownerWallet={item.ownerWallet}
         avatarBase64={item.avatarBase64}
         createdAt={item.createdAt}
         summarized={summarized}

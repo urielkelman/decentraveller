@@ -2,8 +2,21 @@ import { PlaceResponse } from '../../api/response/places';
 import PlaceItem from '../../screens/home/place/PlaceItem';
 import { FlatList } from 'react-native';
 import React from 'react';
+import { DecentravellerPlaceCategory } from '../../context/types';
 
-const renderPlaceItem = ({ item, minified }: { item: PlaceResponse; minified: boolean }) => (
+export type PlaceShowProps = {
+    id: number;
+    name: string;
+    address: string;
+    latitude: string;
+    longitude: string;
+    score: number;
+    category: DecentravellerPlaceCategory;
+    reviewCount: number;
+    imageBase64: string | null;
+};
+
+const renderPlaceItem = ({ item, minified }: { item: PlaceShowProps; minified: boolean }) => (
     <PlaceItem
         id={item.id}
         name={item.name}
@@ -12,20 +25,20 @@ const renderPlaceItem = ({ item, minified }: { item: PlaceResponse; minified: bo
         latitude={item.latitude}
         longitude={item.longitude}
         score={item.score}
-        reviewCount={item.reviews}
-        imageBase64={null}
+        reviewCount={item.reviewCount}
+        imageBase64={item.imageBase64}
         minified={minified}
     />
 );
 
 export type PlacesItemsProps = {
-    places: PlaceResponse[];
+    places: PlaceShowProps[];
     minified: boolean;
     horizontal: boolean;
 };
 
 const DecentravellerPlacesList: React.FC<PlacesItemsProps> = ({ places, minified, horizontal }) => {
-    const internalRenderPlaceItem = ({ item }: { item: PlaceResponse }) =>
+    const internalRenderPlaceItem = ({ item }: { item: PlaceShowProps }) =>
         renderPlaceItem({ item: item, minified: minified });
 
     return <FlatList data={places} renderItem={internalRenderPlaceItem} horizontal={horizontal} />;

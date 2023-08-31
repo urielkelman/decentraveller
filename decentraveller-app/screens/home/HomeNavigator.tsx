@@ -7,6 +7,7 @@ import LeftSideBar from './LeftSideBar';
 import UserPlacesScreen from '../users/profile/UserPlacesScreen';
 import PlaceDetailScreen from './place/PlaceDetailScreen';
 import PlaceReviewsScreen from './place/PlaceReviewsScreen';
+import MyProfileScreen from '../users/profile/MyProfileScreen';
 import UserProfileScreen from '../users/profile/UserProfileScreen';
 import UserReviewsScreen from '../users/profile/UserReviewsScreen';
 import AddReviewComment from '../reviews/AddReviewComment';
@@ -26,6 +27,7 @@ export type HomeStackScreens = {
     AddReviewImages: { placeId: number };
     AddReviewComment: { selectedImages: string[]; placeId: number };
     SuccessAddReviewScreen: undefined;
+    UserProfileScreen: { walletId: string };
 };
 
 const HomeStackNavigator = createStackNavigator<HomeStackScreens>();
@@ -70,16 +72,20 @@ const HomeNavigator = () => {
                         headerShown: true,
                     }}
                 />
+                <HomeStackNavigator.Screen name="Profile" component={MyProfileScreen} options={{ headerShown: true }} />
                 <HomeStackNavigator.Screen
-                    name="Profile"
+                    name="UserProfileScreen"
                     component={UserProfileScreen}
-                    options={{ headerShown: true }}
+                    options={{
+                        title: 'User',
+                        headerShown: true,
+                    }}
                 />
                 <HomeStackNavigator.Screen
                     name="UserPlacesScreen"
                     component={UserPlacesScreen}
                     options={{
-                        title: 'My places',
+                        title: 'User places',
                         headerMode: 'screen',
                         headerShown: true,
                     }}
@@ -88,7 +94,7 @@ const HomeNavigator = () => {
                     name="UserReviewsScreen"
                     component={UserReviewsScreen}
                     options={{
-                        title: 'My Reviews',
+                        title: 'User Reviews',
                         headerShown: true,
                     }}
                 />

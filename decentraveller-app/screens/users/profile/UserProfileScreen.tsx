@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity, Alert, Modal } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { userProfileMainStyles } from '../../../styles/userProfileStyles';
@@ -6,58 +6,59 @@ import { useAppContext } from '../../../context/AppContext';
 import { addReviewImagesStyles } from '../../../styles/addReviewStyles';
 import * as ImagePicker from 'expo-image-picker';
 import { apiAdapter } from '../../../api/apiAdapter';
+import { PlaceResponse } from '../../../api/response/places';
+import { DecentravellerPlacesList, PlaceShowProps } from '../../../commons/components/DecentravellerPlacesList';
+import LoadingComponent from '../../../commons/components/DecentravellerLoading';
+import { useNavigation } from '@react-navigation/native';
+import { PlaceDetailScreenProp, PlaceDetailScreenProps } from '../../home/place/types';
+import { UserProfileScreenProps } from './types';
 
 export type UserProfileScreens = {
     UserProfileScreen: undefined;
 };
 
-const HomeStackNavigator = createStackNavigator<UserProfileScreens>();
+export type UserShowProps = {
+    profileImage: string;
+    name: string;
+    walletAddress: string;
+    createdAt: string;
+    interest: string;
+    sharedLocation: string;
+    tokens: number;
+};
 
-const UserProfileScreen = ({ navigation }) => {
-    const { userNickname, connectionContext, userCreatedAt, userInterest, userProfileImage } = useAppContext();
-
-    const [selectedImage, setSelectedImage] = useState(null);
+const UserProfileScreen: React.FC<UserProfileScreenProps> = ({ route }) => {
     const [isModalVisible, setIsModalVisible] = useState(false);
+    const [loading, setLoading] = React.useState<boolean>(true);
+    const [user, setUser] = React.useState<UserShowProps>(null);
+    const { walletId } = route.params;
+    const navigation = useNavigation<UserProfileScreenProps>();
 
     const toggleModal = () => {
         setIsModalVisible(!isModalVisible);
     };
 
-    const handleImageUpload = async () => {
-        try {
-            const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-            const result = await ImagePicker.launchImageLibraryAsync();
+    useEffect(() => {
+        (async () => {
+            setLoading(true);
+            const userData = await apiAdapter.getUser(walletId, () => {});
+            const user = {
+                profileImage: await apiAdapter.getUserProfileImage(walletId, () => {}),
+                name: userData.nickname,
+                walletAddress: walletId,
+                createdAt: userData.createdAt,
+                interest: userData.interest,
+                sharedLocation: 'Yes',
+                tokens: 67,
+            };
+            setUser(user);
+            setLoading(false);
+        })();
+    }, []);
 
-            if (!result.canceled) {
-                const imageUri = result.assets[0].uri;
-                try {
-                    await apiAdapter.sendProfileImage(user.walletAddress, imageUri);
-                    await apiAdapter.getUserProfileImage(user.walletAddress, () => {});
-                    console.log('Avatar success updated.');
-                    const newImage = await apiAdapter.getUserProfileImage(user.walletAddress, () => {
-                        console.log('There was a problem fetching the image');
-                    });
-                    userProfileImage.setValue(newImage);
-                } catch (error) {
-                    console.error('Error on avatar updating:', error);
-                }
-            }
-        } catch (error) {
-            Alert.alert('Error', error.message);
-        }
-    };
-
-    const user = {
-        profileImage: userProfileImage.value,
-        name: userNickname.value,
-        walletAddress: connectionContext.connectedAddress,
-        createdAt: userCreatedAt.value,
-        interest: userInterest.value,
-        tokens: 67,
-        sharedLocation: 'Yes',
-    };
-
-    return (
+    const componentToRender = loading ? (
+        <LoadingComponent />
+    ) : (
         <View style={userProfileMainStyles.background}>
             <View style={userProfileMainStyles.mainContainer}>
                 <View style={userProfileMainStyles.imageContainer}>
@@ -69,12 +70,6 @@ const UserProfileScreen = ({ navigation }) => {
                             style={userProfileMainStyles.circleDimensions}
                         />
                     </View>
-                    <TouchableOpacity style={userProfileMainStyles.smallCircleButton} onPress={toggleModal}>
-                        <Image
-                            source={require('../../../assets/images/pencil.png')}
-                            style={userProfileMainStyles.smallCircleImage}
-                        />
-                    </TouchableOpacity>
                 </View>
                 <View style={userProfileMainStyles.titleContainer}>
                     <Text style={userProfileMainStyles.nicknameTitle}>{user.name}</Text>
@@ -103,7 +98,7 @@ const UserProfileScreen = ({ navigation }) => {
             <TouchableOpacity onPress={() => navigation.navigate('UserPlacesScreen', { walletId: user.walletAddress })}>
                 <View style={userProfileMainStyles.informationContainer}>
                     <View style={userProfileMainStyles.spacedButtonBetweenView}>
-                        <Text style={userProfileMainStyles.leftText}>My Places</Text>
+                        <Text style={userProfileMainStyles.leftText}>Places</Text>
                         <Text style={userProfileMainStyles.rightBlueText}>More</Text>
                     </View>
                 </View>
@@ -114,33 +109,15 @@ const UserProfileScreen = ({ navigation }) => {
             >
                 <View style={userProfileMainStyles.informationContainer}>
                     <View style={userProfileMainStyles.spacedButtonBetweenView}>
-                        <Text style={userProfileMainStyles.leftText}>My Reviews</Text>
+                        <Text style={userProfileMainStyles.leftText}>Reviews</Text>
                         <Text style={userProfileMainStyles.rightBlueText}>More </Text>
                     </View>
                 </View>
             </TouchableOpacity>
-            <Modal animationType="slide" transparent={true} visible={isModalVisible} onRequestClose={toggleModal}>
-                <View style={userProfileMainStyles.modalContainer}>
-                    <View style={userProfileMainStyles.modalContent}>
-                        <TouchableOpacity onPress={handleImageUpload}>
-                            <Text style={userProfileMainStyles.modalOption}>Select Image</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={toggleModal}>
-                            <Text style={userProfileMainStyles.modalOption}>Cancel</Text>
-                        </TouchableOpacity>
-                    </View>
-                </View>
-            </Modal>
         </View>
     );
+
+    return componentToRender;
 };
 
-const UserNavigator = () => {
-    return (
-        <HomeStackNavigator.Navigator initialRouteName="UserProfileScreen" screenOptions={{ headerShown: false }}>
-            <HomeStackNavigator.Screen name="UserProfileScreen" component={UserProfileScreen} />
-        </HomeStackNavigator.Navigator>
-    );
-};
-
-export default UserNavigator;
+export default UserProfileScreen;

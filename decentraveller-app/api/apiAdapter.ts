@@ -95,17 +95,9 @@ class ApiAdapter extends Adapter {
         [latitude, longitude]: [string?, string?],
         onNotFound: () => void,
     ): Promise<PlaceResponse[]> {
-        const [lat, long] = ['39.95', '-75.175'];
-        const queryParams =
-            latitude && longitude
-                ? {
-                      latitude: lat,
-                      longitude: long,
-                  }
-                : undefined;
         const httpRequest: HttpGetRequest = {
             url: formatString(RECOMMENDED_PLACES_BY_PROFILE_ENDPOINT, { owner: walletAddress }),
-            queryParams: queryParams,
+            queryParams: null,
             onUnexpectedError: (e) => console.log('Error'),
             onStatusCodeError: {
                 [HTTPStatusCode.NOT_FOUND]: onNotFound,
@@ -140,12 +132,18 @@ class ApiAdapter extends Adapter {
         return await httpAPIConnector.get(httpRequest);
     }
 
-    async getPlacesByOwner(walletAddress: string, onFailed: () => void): Promise<PlaceResponse[]> {
+    async getPlacesByOwner(
+        walletId: string,
+        page: number,
+        perPage: number,
+        onNotFound: () => void,
+    ): Promise<PlaceResponse[]> {
         const httpRequest: HttpGetRequest = {
-            url: `${OWNED_PLACES_ENDPOINT}/${walletAddress}`,
-            queryParams: {},
-            onUnexpectedError: (e) => {
-                onFailed();
+            url: formatString(OWNED_PLACES_ENDPOINT, { walletId: walletId }),
+            queryParams: { page: page, per_page: perPage },
+            onUnexpectedError: (e) => console.log('Error'),
+            onStatusCodeError: {
+                [HTTPStatusCode.NOT_FOUND]: onNotFound,
             },
         };
 
