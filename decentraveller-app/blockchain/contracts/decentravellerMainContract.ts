@@ -8,6 +8,7 @@ const decentravellerMainContract: DecentravellerContract = {
         LOCALHOST: '0xb7f8bc63bbcad18155201308c8f3540b07f84f5e',
         GOERLI: '0x86D8E6Fa6A84C866a6b84C9f14F6339F49DfF6a2',
     },
+    fullContractABI: mainContractStringfiedABI,
     functions: {
         addPlace: {
             functionName: 'addPlace',

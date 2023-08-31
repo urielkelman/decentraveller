@@ -1,7 +1,10 @@
 import { GeocodingElementResponse, GeocodingResponse } from '../../api/response/geocoding';
 import { mockApiAdapter } from '../../api/mockApiAdapter';
+import {apiAdapter} from "../../api/apiAdapter";
 import { PickerItem } from '../types';
 import React from 'react';
+
+const adapter = apiAdapter;
 
 const getAndParseGeocoding = async (
     addressText: string,
@@ -12,7 +15,7 @@ const getAndParseGeocoding = async (
     setLoading(true);
     try {
         // const geocodingResponse: GeocodingResponse = await apiAdapter.getGeocoding(addressText, country);
-        const geocodingResponse: GeocodingResponse = await mockApiAdapter.getGeocoding(addressText, country);
+        const geocodingResponse: GeocodingResponse = await adapter.getGeocoding(addressText, country);
         setItems(
             geocodingResponse.results.map((element: GeocodingElementResponse) => ({
                 label: element.fullAddress,

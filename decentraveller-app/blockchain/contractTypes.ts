@@ -12,5 +12,6 @@ export interface ContractFunction {
 
 export interface DecentravellerContract {
     addressesByBlockchain?: { [key in Blockchain]: string };
-    functions: { [key in string]: ContractFunction };
+    functions?: { [key in string]: ContractFunction };
+    fullContractABI: string;
 }

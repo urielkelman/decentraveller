@@ -35,6 +35,8 @@ services:
       - ML_API_URL=http://ml-api:8000
       - PYTHONHASHSEED=0
       - INDEXER_API_KEY=asd123
+    env_file:
+      - decentraveller-api/geocoding.env
     depends_on:
       - database
       - weaviate

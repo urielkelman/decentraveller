@@ -4,7 +4,7 @@ import Slider from '@react-native-community/slider';
 import { FilterModalProps } from './types';
 import { Ionicons } from '@expo/vector-icons';
 import { PickerItem } from '../../../commons/types';
-import { DECENTRAVELLER_DEFAULT_CONTRAST_COLOR, interestsItems } from '../../../commons/global';
+import { DECENTRAVELLER_DEFAULT_CONTRAST_COLOR, interestsItemsApi } from '../../../commons/global';
 import DecentravellerPicker from '../../../commons/components/DecentravellerPicker';
 
 const Bullet = ({ label, selected, onPress }) => {
@@ -27,7 +27,7 @@ const FilterModal: React.FC<FilterModalProps> = ({ route }) => {
     const { orderBy, setOrderBy, minStars, setMinStars, maxDistance, setMaxDistance, interest, setInterest } =
         filterModalData;
 
-    const [interestPickerItems, setInterestPickerItems] = React.useState<PickerItem[]>(interestsItems);
+    const [interestPickerItems, setInterestPickerItems] = React.useState<PickerItem[]>(interestsItemsApi);
     const [interestPickerOpen, setInterestPickerOpen] = React.useState<boolean>(false);
 
     const handleOrderByChange = (value) => {
@@ -50,17 +50,17 @@ const FilterModal: React.FC<FilterModalProps> = ({ route }) => {
                     <Bullet
                         label="Best rated"
                         selected={orderBy === 'Best rated'}
-                        onPress={() => handleOrderByChange('Best rated')}
+                        onPress={() => handleOrderByChange('score')}
                     />
                     <Bullet
-                        label="Amount of comments"
-                        selected={orderBy === 'Amount of comments'}
-                        onPress={() => handleOrderByChange('Amount of comments')}
+                        label="Amount of reviews"
+                        selected={orderBy === 'Amount of reviews'}
+                        onPress={() => handleOrderByChange('reviews')}
                     />
                     <Bullet
                         label="Distance"
                         selected={orderBy === 'Distance'}
-                        onPress={() => handleOrderByChange('Distance')}
+                        onPress={() => handleOrderByChange('distance')}
                     />
                 </View>
             </View>

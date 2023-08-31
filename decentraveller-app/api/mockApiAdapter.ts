@@ -8,7 +8,7 @@ import { ReviewImageResponse, ReviewsResponse } from './response/reviews';
 import { emptyReviewsResponse, imageReviewResponse, manyReviewsResponse, oneReviewsResponse } from './mocks/reviews';
 import { PlaceResponse } from './response/places';
 import { httpAPIConnector, HttpGetRequest } from '../connectors/HttpConnector';
-import { PROFILE_IMAGE, RECOMMENDED_PLACES_BY_LOCATION_ENDPOINT } from './config';
+import { PROFILE_IMAGE, PLACES_SEARCH } from './config';
 import * as FileSystem from 'expo-file-system';
 import { formatString } from '../commons/functions/utils';
 
@@ -104,7 +104,7 @@ class MockApiAdapter extends Adapter {
         }
 
         const httpRequest: HttpGetRequest = {
-            url: RECOMMENDED_PLACES_BY_LOCATION_ENDPOINT,
+            url: PLACES_SEARCH,
             queryParams,
             onUnexpectedError: (e) => console.log('Error'),
         };

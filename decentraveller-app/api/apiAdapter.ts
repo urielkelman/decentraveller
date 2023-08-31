@@ -7,7 +7,7 @@ import {
     PLACE_IMAGE,
     PROFILE_IMAGE,
     PUSH_NOTIFICATION_TOKEN_ENDPOINT,
-    RECOMMENDED_PLACES_BY_LOCATION_ENDPOINT,
+    PLACES_SEARCH,
     RECOMMENDED_PLACES_BY_PROFILE_ENDPOINT,
     RECOMMENDED_SIMILAR_PLACES,
     REVIEWS_PLACES_ENDPOINT,
@@ -18,7 +18,7 @@ import { UserResponse } from './response/user';
 import Adapter from './Adapter';
 import { formatString } from '../commons/functions/utils';
 import { ReviewImageResponse, ReviewsResponse } from './response/reviews';
-import { PlaceResponse } from './response/places';
+import {PlaceResponse, PlacesResponse} from './response/places';
 import * as FileSystem from 'expo-file-system';
 import { EncodingType } from 'expo-file-system';
 import FormData from 'form-data';
@@ -51,17 +51,18 @@ class ApiAdapter extends Adapter {
         return await httpAPIConnector.get(httpRequest);
     }
 
-    async getRecommendedPlaces(
+    async getPlacesSearch(
         [latitude, longitude]: [string, string],
-        interest?: string,
+        onNotFound: () => void,
+        interest?: string | null,
         sort_by?: string | null,
         at_least_stars?: number | null,
         maximum_distance?: number | null,
-    ): Promise<PlaceResponse[]> {
+    ): Promise<PlacesResponse> {
         const queryParams: Record<string, string> = {
             latitude: latitude,
             longitude: longitude,
-            page: '1',
+            page: '0',
             per_page: '500',
         };
 
@@ -82,7 +83,7 @@ class ApiAdapter extends Adapter {
         }
 
         const httpRequest: HttpGetRequest = {
-            url: RECOMMENDED_PLACES_BY_LOCATION_ENDPOINT,
+            url: PLACES_SEARCH,
             queryParams,
             onUnexpectedError: (e) => console.log('Error', e),
         };
@@ -95,9 +96,16 @@ class ApiAdapter extends Adapter {
         [latitude, longitude]: [string?, string?],
         onNotFound: () => void,
     ): Promise<PlaceResponse[]> {
+        const queryParams: Record<string, string> = {};
+
+        if (latitude != null && longitude != null) {
+            queryParams.latitude = latitude;
+            queryParams.longitude = longitude;
+        }
+
         const httpRequest: HttpGetRequest = {
             url: formatString(RECOMMENDED_PLACES_BY_PROFILE_ENDPOINT, { owner: walletAddress }),
-            queryParams: null,
+            queryParams,
             onUnexpectedError: (e) => console.log('Error'),
             onStatusCodeError: {
                 [HTTPStatusCode.NOT_FOUND]: onNotFound,
@@ -137,7 +145,7 @@ class ApiAdapter extends Adapter {
         page: number,
         perPage: number,
         onNotFound: () => void,
-    ): Promise<PlaceResponse[]> {
+    ): Promise<PlacesResponse> {
         const httpRequest: HttpGetRequest = {
             url: formatString(OWNED_PLACES_ENDPOINT, { walletId: walletId }),
             queryParams: { page: page, per_page: perPage },
