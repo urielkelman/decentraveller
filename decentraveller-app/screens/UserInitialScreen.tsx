@@ -67,7 +67,21 @@ const DecentravellerInitialScreen = () => {
         })();
     }, [isConnected]);
 
-    const onSuccessfulRegistration = () => {
+    const onSuccessfulRegistration = async () => {
+
+        const user = await adapter.getUser(address, () => () => {
+            console.log('There was a problem fetching user');
+        });
+
+        const userProfileImage = await apiAdapter.getUserProfileImage(address, () => {
+            console.log('There was a problem fetching the image');
+        });
+
+        setUserNickname(user.nickname);
+        setUserCreatedAt(user.createdAt);
+        setUserInterest(user.interest);
+        setUserProfileImage(userProfileImage);
+
         setStackToRender('Home');
     };
 
