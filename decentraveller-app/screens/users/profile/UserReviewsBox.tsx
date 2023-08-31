@@ -78,12 +78,12 @@ const UserReviewsBox = ({ walletId }) => {
             const reviewsResponse: ReviewsResponse = await adapter.getPlaceReviews(
                 walletId,
                 (reviews.length / 5) | 0,
-                5,
+                5
             );
             const avatars = await Promise.all(
                 reviewsResponse.reviews.map(async (r: ReviewResponse) => {
                     return await adapter.getUserProfileImage(r.owner.owner, () => {});
-                }),
+                })
             );
             const reviewsToShow: ReviewItemProps[] = reviewsResponse.reviews.map(function (r, i) {
                 return {

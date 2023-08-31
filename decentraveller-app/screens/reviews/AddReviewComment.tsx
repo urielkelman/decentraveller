@@ -24,7 +24,7 @@ const AddReviewComment = ({ navigation }) => {
     const { selectedImages, placeId } = route.params;
     const [comment, setComment] = useState<string>('');
     const [rating, setRating] = useState<number>(0);
-    const { connectionContext, web3Provider } = useAppContext();
+    const { connectionContext, web3Provider, shouldUpdateHomeRecommendations } = useAppContext();
     const [showErrorModal, setShowErrorModal] = React.useState<boolean>(false);
 
     const handleRating = (selectedRating) => {
@@ -43,7 +43,7 @@ const AddReviewComment = ({ navigation }) => {
                             color={i <= rating ? '#FFD700' : '#cc6060'}
                         />
                     </Text>
-                </TouchableOpacity>,
+                </TouchableOpacity>
             );
         }
         return stars;
@@ -57,17 +57,20 @@ const AddReviewComment = ({ navigation }) => {
         if (!response) return;
 
         const imageHashes = response.hashes;
+        console.log('asd');
         const transactionHash = await adapter.addPlaceReviewTransaction(
             web3Provider,
             placeId,
             comment,
             rating,
-            imageHashes,
+            imageHashes
         );
+        console.log('asd 2');
 
         if (!transactionHash) return;
 
         console.log('Transaction confirmed with hash', transactionHash);
+        shouldUpdateHomeRecommendations.setValue(true);
         navigation.navigate('SuccessAddReviewScreen');
     };
 

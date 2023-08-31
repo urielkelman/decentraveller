@@ -27,7 +27,7 @@ const DEFAULT_BOTTOM_TAB_ICONS_COLOR = '#983B46';
 const RootNavigator = () => {
     const getTabBarIcon = (
         route: Readonly<{ key: string; name: 'Home' | 'ExplorePlaces' | 'Community'; path?: string }>,
-        iconSize: number,
+        iconSize: number
     ) => {
         console.log(route.name);
         return ({ focused, color, size }: bottomTabElementProps): JSX.Element => {
@@ -45,12 +45,12 @@ const RootNavigator = () => {
     };
     const deviceDimensions = useDeviceDimensions();
     const getBottomTabNavigatorScreenOptions = (
-        route: Readonly<{ key: string; name: 'Home' | 'ExplorePlaces' | 'Community'; path?: string }>,
+        route: Readonly<{ key: string; name: 'Home' | 'ExplorePlaces' | 'Community'; path?: string }>
     ): BottomTabNavigationOptions => {
         return {
             tabBarIcon: getTabBarIcon(
                 route,
-                deviceDimensions.width / sizesConfig.bottomTabIconSizeWidthInverseFraction,
+                deviceDimensions.width / sizesConfig.bottomTabIconSizeWidthInverseFraction
             ),
             tabBarActiveTintColor: '#983B46',
             tabBarInactiveTintColor: 'gray',

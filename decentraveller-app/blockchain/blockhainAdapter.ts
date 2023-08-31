@@ -1,11 +1,12 @@
 import '@ethersproject/shims';
-import { ethers } from 'ethers';
+import { ethers, utils } from 'ethers';
 import { ContractFunction, DecentravellerContract } from './contractTypes';
 import { Blockchain, BlockchainByChainId, LOCAL_DEVELOPMENT_CHAIN_ID } from './config';
 import { withTimeout } from '../commons/functions/utils';
 import { DEFAULT_CHAIN_ID } from '../context/AppContext';
 import { decentravellerPlaceContract } from './contracts/decentravellerPlaceContract';
 import { decentravellerMainContract } from './contracts/decentravellerMainContract';
+import { decentravellerPlaceFactoryContract } from './contracts/decentravellerPlaceFactoryABI';
 
 const BLOCKCHAIN_TIMEOUT_IN_MILLIS = 100000;
 const BLOCKCHAIN_TRANSACTION_TASK_NAME = 'Blockchain transaction';
@@ -22,7 +23,7 @@ class BlockchainAdapter {
         const ethersContract: ethers.Contract = new ethers.Contract(
             contractAddress,
             contractFunction.fullContractABI,
-            web3Provider,
+            web3Provider
         );
         const populatedTransaction: ethers.PopulatedTransaction = await ethersContract.populateTransaction[
             contractFunction.functionName
@@ -45,7 +46,7 @@ class BlockchainAdapter {
                 return txResponse.hash;
             },
             BLOCKCHAIN_TIMEOUT_IN_MILLIS,
-            BLOCKCHAIN_TRANSACTION_TASK_NAME,
+            BLOCKCHAIN_TRANSACTION_TASK_NAME
         );
     }
 
@@ -67,10 +68,10 @@ class BlockchainAdapter {
         longitude: string,
         physicalAddress: string,
         placeCategory: number,
-        onErrorAddingPlace: () => void,
-    ): Promise<string> {
+        onErrorAddingPlace: () => void
+    ): Promise<number> {
         try {
-            return await this.populateAndSend(
+            const transactionHash: string = await this.populateAndSend(
                 web3Provider,
                 decentravellerMainContract,
                 'addPlace',
@@ -78,8 +79,28 @@ class BlockchainAdapter {
                 latitude,
                 longitude,
                 physicalAddress,
-                placeCategory,
+                placeCategory
             );
+
+            const txReceipt = await web3Provider.getTransactionReceipt(transactionHash);
+            const contract = new ethers.Contract(
+                decentravellerPlaceFactoryContract.addressesByBlockchain[BlockchainByChainId[DEFAULT_CHAIN_ID]],
+                decentravellerPlaceFactoryContract.fullContractABI,
+                web3Provider
+            );
+            txReceipt.logs.forEach((log) => {
+                try {
+                    const parsedLog = contract.interface.parseLog(log);
+                    console.log(parsedLog);
+                    if (parsedLog.name === 'NewPlace') {
+                        return parsedLog.args[0];
+                    }
+                } catch (error) {
+                    // This means the log didn't belong to the contract, skip
+                }
+            });
+            console.log(txReceipt);
+            return 1;
         } catch (e) {
             console.log(e);
             onErrorAddingPlace();
@@ -91,7 +112,7 @@ class BlockchainAdapter {
         nickname: string,
         country: string,
         interest: string,
-        onError: () => void,
+        onError: () => void
     ): Promise<string> {
         try {
             return await this.populateAndSend(
@@ -100,7 +121,7 @@ class BlockchainAdapter {
                 'registerProfile',
                 nickname,
                 country,
-                interest,
+                interest
             );
         } catch (e) {
             console.log(e);
@@ -113,7 +134,7 @@ class BlockchainAdapter {
         placeId: number,
         comment: string,
         rating: number,
-        images: string[],
+        images: string[]
     ): Promise<string> {
         const blockchain: Blockchain = BlockchainByChainId[DEFAULT_CHAIN_ID];
         const contractFunction: ContractFunction = decentravellerMainContract.functions['getPlaceAddress'];
@@ -121,7 +142,7 @@ class BlockchainAdapter {
         const decentravellerMain = new ethers.Contract(
             mainContractAddress,
             contractFunction.fullContractABI,
-            web3Provider,
+            web3Provider
         );
         const placeAddress = await decentravellerMain.getPlaceAddress(placeId);
         try {
@@ -132,7 +153,7 @@ class BlockchainAdapter {
                 placeAddress,
                 comment,
                 images,
-                rating,
+                rating
             );
         } catch (e) {
             console.log(e);

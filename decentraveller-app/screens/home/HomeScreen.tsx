@@ -2,7 +2,6 @@ import { Text, TouchableOpacity, View } from 'react-native';
 import { useAppContext } from '../../context/AppContext';
 import React, { useEffect } from 'react';
 import { apiAdapter } from '../../api/apiAdapter';
-import { mockApiAdapter } from '../../api/mockApiAdapter';
 import { PlaceResponse } from '../../api/response/places';
 import * as Location from 'expo-location';
 import { DecentravellerPlacesList, PlaceShowProps } from '../../commons/components/DecentravellerPlacesList';
@@ -19,36 +18,40 @@ const PERMISSION_GRANTED = 'granted';
 
 const HomeScreen = ({ navigation }) => {
     const { address, provider } = useWalletConnectModal();
-    const { userLocation } = useAppContext();
+    const { userLocation, shouldUpdateHomeRecommendations } = useAppContext();
     const [loadingRecommendedPlaces, setLoadingRecommendedPlaces] = React.useState<boolean>(false);
     const [recommendedPlaces, setRecommendedPlaces] = React.useState<PlaceShowProps[]>([]);
     const [showPlacesNotFound, setShowPlacesNotFound] = React.useState<boolean>(false);
 
     const onNotFoundRecommendations = () => setShowPlacesNotFound(true);
 
+    const parsePlaceResponse = (placeResponse: PlaceResponse, image: string): PlaceShowProps => {
+        return {
+            id: placeResponse.id,
+            name: placeResponse.name,
+            address: placeResponse.address,
+            latitude: placeResponse.latitude,
+            longitude: placeResponse.longitude,
+            score: placeResponse.score,
+            category: placeResponse.category,
+            reviewCount: placeResponse.reviews,
+            imageBase64: image,
+        };
+    };
+
     const getWithLocation = async ([latitude, longitude]: [string?, string?]) => {
         const placesResponse: PlaceResponse[] = await adapter.getRecommendedPlacesForAddress(
             address,
             [],
-            onNotFoundRecommendations,
+            onNotFoundRecommendations
         );
         const images = await Promise.all(
             placesResponse.map(async (p: PlaceResponse) => {
                 return await adapter.getPlaceImage(p.id, () => {});
-            }),
+            })
         );
         const placesToShow: PlaceShowProps[] = placesResponse.map(function (p, i) {
-            return {
-                id: p.id,
-                name: p.name,
-                address: p.address,
-                latitude: p.latitude,
-                longitude: p.longitude,
-                score: p.score,
-                category: p.category,
-                reviewCount: p.reviews,
-                imageBase64: images[i],
-            };
+            return parsePlaceResponse(p, images[i]);
         });
         setRecommendedPlaces(placesToShow);
         setLoadingRecommendedPlaces(false);
@@ -87,8 +90,7 @@ const HomeScreen = ({ navigation }) => {
         console.log('register');
         const pushNotificationToken = await registerForPushNotificationsAsync();
         console.log('push token');
-        await apiAdapter.sendPushNotificationToken('0x968C99f227a5D5015d3c50501C91353096AD7931', pushNotificationToken);
-        //        await apiAdapter.sendPushNotificationToken(address, pushNotificationToken);
+        await apiAdapter.sendPushNotificationToken(address, pushNotificationToken);
     };
 
     useEffect(() => {
@@ -98,6 +100,15 @@ const HomeScreen = ({ navigation }) => {
         })();
     }, []);
 
+    useEffect(() => {
+        (async () => {
+            if (shouldUpdateHomeRecommendations.value) {
+                await getAndSetRecommendedPlaces();
+                shouldUpdateHomeRecommendations.setValue(false);
+            }
+        })();
+    }, [shouldUpdateHomeRecommendations.value]);
+
     const componentToRender = loadingRecommendedPlaces ? (
         <LoadingComponent />
     ) : showPlacesNotFound ? (
@@ -106,7 +117,8 @@ const HomeScreen = ({ navigation }) => {
         <DecentravellerPlacesList places={recommendedPlaces} minified={false} horizontal={false} />
     );
 
-    console.log(userLocation);
+    console.log(recommendedPlaces);
+
     return (
         <View style={{ flex: 1, backgroundColor: DECENTRAVELLER_DEFAULT_BACKGROUND_COLOR }}>
             {componentToRender}

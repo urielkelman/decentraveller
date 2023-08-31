@@ -7,7 +7,7 @@ const getAndParseGeocoding = async (
     addressText: string,
     setItems: React.Dispatch<React.SetStateAction<PickerItem[]>>,
     setLoading: React.Dispatch<React.SetStateAction<boolean>>,
-    country?: string,
+    country?: string
 ) => {
     setLoading(true);
     try {
@@ -22,7 +22,7 @@ const getAndParseGeocoding = async (
                     latitude: element.latitude,
                     longitude: element.longitude,
                 }),
-            })),
+            }))
         );
     } catch (e) {
         console.error('An error happened when trying to get geocoding.', e);

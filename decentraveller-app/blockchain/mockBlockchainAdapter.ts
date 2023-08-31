@@ -6,7 +6,7 @@ class BlockchainAdapter {
         nickname: string,
         country: string,
         interest: string,
-        onError: () => void,
+        onError: () => void
     ): Promise<string> {
         return 'transactionHashConfirmed';
     }
@@ -16,7 +16,7 @@ class BlockchainAdapter {
         placeId: number,
         comment: string,
         rating: number,
-        images: string[],
+        images: string[]
     ): Promise<string> {
         return 'transactionHashConfirmed';
     }

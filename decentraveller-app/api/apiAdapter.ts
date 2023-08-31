@@ -2,6 +2,7 @@ import { GeocodingResponse } from './response/geocoding';
 import { httpAPIConnector, HttpConnector, HttpGetRequest, HttpPostRequest } from '../connectors/HttpConnector';
 import {
     FORWARD_GEOCODING_ENDPOINT,
+    GET_PLACE_ENDPOINT,
     GET_USER_ENDPOINT,
     OWNED_PLACES_ENDPOINT,
     PLACE_IMAGE,
@@ -56,7 +57,7 @@ class ApiAdapter extends Adapter {
         interest?: string,
         sort_by?: string | null,
         at_least_stars?: number | null,
-        maximum_distance?: number | null,
+        maximum_distance?: number | null
     ): Promise<PlaceResponse[]> {
         const queryParams: Record<string, string> = {
             latitude: latitude,
@@ -93,7 +94,7 @@ class ApiAdapter extends Adapter {
     async getRecommendedPlacesForAddress(
         walletAddress: string,
         [latitude, longitude]: [string?, string?],
-        onNotFound: () => void,
+        onNotFound: () => void
     ): Promise<PlaceResponse[]> {
         const httpRequest: HttpGetRequest = {
             url: formatString(RECOMMENDED_PLACES_BY_PROFILE_ENDPOINT, { owner: walletAddress }),
@@ -136,7 +137,7 @@ class ApiAdapter extends Adapter {
         walletId: string,
         page: number,
         perPage: number,
-        onNotFound: () => void,
+        onNotFound: () => void
     ): Promise<PlaceResponse[]> {
         const httpRequest: HttpGetRequest = {
             url: formatString(OWNED_PLACES_ENDPOINT, { walletId: walletId }),
@@ -197,6 +198,19 @@ class ApiAdapter extends Adapter {
         return await httpAPIConnector.getBase64Bytes(httpRequest);
     }
 
+    async getPlace(placeId: number, onFailed: () => void): Promise<PlaceResponse> {
+        const httpRequest: HttpGetRequest = {
+            url: formatString(GET_PLACE_ENDPOINT, { placeId: placeId }),
+            queryParams: {},
+            onUnexpectedError: (e) => {
+                onFailed();
+            },
+        };
+
+        console.log('to get', httpRequest);
+        return httpAPIConnector.get(httpRequest);
+    }
+
     async getPlaceImage(placeId: number, onFailed: () => void): Promise<string> {
         const httpRequest: HttpGetRequest = {
             url: formatString(PLACE_IMAGE, { placeId: placeId }),
@@ -239,7 +253,7 @@ class ApiAdapter extends Adapter {
     async sendReviewImage(
         walletAddress: string,
         imagesUriList: string[],
-        onFailed: () => void,
+        onFailed: () => void
     ): Promise<ReviewImageResponse> {
         try {
             const formData = new FormData();
