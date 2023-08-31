@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.17;
-
 import "./DecentravellerPlace.sol";
 import "./DecentravellerDataTypes.sol";
 import "@openzeppelin/contracts/proxy/Clones.sol";
@@ -8,6 +7,7 @@ import "@openzeppelin/contracts/proxy/Clones.sol";
 contract DecentravellerPlaceCloneFactory {
     address immutable decentravellerPlaceImplementation;
     address immutable decentravellerReviewCloneFactory;
+    DecentravellerToken decentravellerToken;
 
     event NewPlace(
         uint256 indexed id,
@@ -21,10 +21,12 @@ contract DecentravellerPlaceCloneFactory {
 
     constructor(
         address _decentravellerPlaceImplementation,
-        address _decentravellerReviewCloneFactory
+        address _decentravellerReviewCloneFactory,
+        address _token
     ) {
         decentravellerPlaceImplementation = _decentravellerPlaceImplementation;
         decentravellerReviewCloneFactory = _decentravellerReviewCloneFactory;
+        decentravellerToken = DecentravellerToken(_token);
     }
 
     function createNewPlace(
@@ -50,6 +52,8 @@ contract DecentravellerPlaceCloneFactory {
             decentravellerReviewCloneFactory
         );
 
+        decentravellerToken.rewardNewPlace(_placeCreator);
+
         emit NewPlace(
             _placeId,
             _placeCreator,
@@ -59,7 +63,6 @@ contract DecentravellerPlaceCloneFactory {
             _latitude,
             _longitude
         );
-
         return placeCloneAddress;
     }
 }
