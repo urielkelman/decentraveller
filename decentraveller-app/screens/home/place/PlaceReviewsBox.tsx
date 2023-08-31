@@ -1,9 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { View, Text, TouchableOpacity, FlatList, ActivityIndicator } from 'react-native';
 import { placeReviewsBoxStyles } from '../../../styles/placeDetailStyles';
 import { ReviewResponse, ReviewsResponse } from '../../../api/response/reviews';
 import { renderReviewItem } from '../../../commons/components/DecentravellerReviewsList';
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { AddReviewImagesScreenProp } from './types';
 import { apiAdapter } from '../../../api/apiAdapter';
 import ReviewItem, { ReviewItemProps } from '../../reviews/ReviewItem';
@@ -16,35 +16,37 @@ const PlaceReviewsBox = ({ placeId, summarized }) => {
     const [reviews, setReviews] = React.useState<ReviewItemProps[]>(null);
     const [reviewCount, setReviewsCount] = React.useState<number>(0);
 
-    useEffect(() => {
-        (async () => {
-            setLoadingReviews(true);
-            const reviewsResponse: ReviewsResponse = await adapter.getPlaceReviews(placeId, 0, 5);
-            const avatars = await Promise.all(
-                reviewsResponse.reviews.map(async (r: ReviewResponse) => {
-                    return await adapter.getUserProfileImage(r.owner.owner, () => {});
-                }),
-            );
-            const reviewsToShow: ReviewItemProps[] = reviewsResponse.reviews.map(function (r, i) {
-                return {
-                    id: r.id,
-                    placeId: r.placeId,
-                    score: r.score,
-                    text: r.text,
-                    imageCount: r.imageCount,
-                    state: r.state,
-                    ownerNickname: r.owner.nickname,
-                    ownerWallet: r.owner.owner,
-                    avatarBase64: avatars[i],
-                    createdAt: r.createdAt,
-                    summarized: summarized,
-                };
-            });
-            setReviews(reviewsToShow);
-            setReviewsCount(reviewsResponse.total);
-            setLoadingReviews(false);
-        })();
-    }, [placeId]);
+    useFocusEffect(
+        useCallback(() => {
+            (async () => {
+                setLoadingReviews(true);
+                const reviewsResponse: ReviewsResponse = await adapter.getPlaceReviews(placeId, 0, 5);
+                const avatars = await Promise.all(
+                    reviewsResponse.reviews.map(async (r: ReviewResponse) => {
+                        return await adapter.getUserProfileImage(r.owner.owner, () => {});
+                    }),
+                );
+                const reviewsToShow: ReviewItemProps[] = reviewsResponse.reviews.map(function (r, i) {
+                    return {
+                        id: r.id,
+                        placeId: r.placeId,
+                        score: r.score,
+                        text: r.text,
+                        imageCount: r.imageCount,
+                        state: r.state,
+                        ownerNickname: r.owner.nickname,
+                        ownerWallet: r.owner.owner,
+                        avatarBase64: avatars[i],
+                        createdAt: r.createdAt,
+                        summarized: summarized,
+                    };
+                });
+                setReviews(reviewsToShow);
+                setReviewsCount(reviewsResponse.total);
+                setLoadingReviews(false);
+            })();
+        }, [placeId]),
+    );
 
     const hasReviews = () => {
         return reviews != null && reviews.length > 0;

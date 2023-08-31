@@ -26,6 +26,7 @@ const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
     const [interest, setUserInterest] = React.useState<string>('');
     const [location, setLocation] = React.useState<[string, string] | undefined>(undefined);
     const [profileImage, setProfileImage] = React.useState<string>('');
+    const [shouldUpdateHomeRecs, setShouldUpdateHomeRecs] = React.useState<boolean>(false);
 
     const [web3Provider, setWeb3Provider] = React.useState<ethers.providers.Web3Provider | null>(null);
 
@@ -91,6 +92,11 @@ const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
     const userInterest: AppContextStateArg<string> = memoFactory(interest, setUserInterest);
 
     const userProfileImage: AppContextStateArg<string> = memoFactory(profileImage, setProfileImage);
+
+    const shouldUpdateHomeRecommendations: AppContextStateArg<boolean> = memoFactory(
+        shouldUpdateHomeRecs,
+        setShouldUpdateHomeRecs,
+    );
 
     const userLocation: AppContextStateArg<[string, string]> = memoFactory(location, setLocation);
 
@@ -161,6 +167,7 @@ const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
                 userInterest,
                 userLocation,
                 userProfileImage,
+                shouldUpdateHomeRecommendations,
                 pushChangeUpdate,
                 setConnectionContext,
                 cleanConnectionContext,

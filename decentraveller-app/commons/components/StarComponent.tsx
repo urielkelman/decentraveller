@@ -1,7 +1,6 @@
 import { Rating } from 'react-native-rating-element';
 import { starComponentStyle } from '../../styles/placeItemstyle';
 import React from 'react';
-import PlaceItem from '../../screens/home/place/PlaceItem';
 
 const StarComponent = ({ score: number }) => {
     return (
