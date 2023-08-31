@@ -166,6 +166,7 @@ const PlaceReviewsBox = ({ placeId, summarized }) => {
                         borderTopRightRadius: 0,
                     },
                 ]}
+                keyExtractor={(item, index) => String(index)}
                 ListHeaderComponent={headerComponent}
                 stickyHeaderIndices={[0]}
                 ListFooterComponent={footerComponent}

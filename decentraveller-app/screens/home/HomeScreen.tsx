@@ -29,7 +29,7 @@ const HomeScreen = ({ navigation }) => {
     const getWithLocation = async ([latitude, longitude]: [string?, string?]) => {
         const placesResponse: PlaceResponse[] = await adapter.getRecommendedPlacesForAddress(
             address,
-            [],
+            [latitude, longitude],
             onNotFoundRecommendations,
         );
         const images = await Promise.all(

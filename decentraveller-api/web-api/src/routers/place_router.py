@@ -98,7 +98,7 @@ class PlaceCBV:
         """
 
         places = self.database.query_places_by_profile(owner, page, per_page)
-        if not places:
+        if not places.places:
             raise HTTPException(status_code=HTTP_404_NOT_FOUND)
         return places
 
@@ -137,7 +137,8 @@ class PlaceCBV:
         else:
             places = self.database.session.query(PlaceORM, func.avg(ReviewORM.score).label("score"),
                                                  func.count(ReviewORM.id).label("reviews"))
-        places = places.join(ReviewORM, ReviewORM.place_id == PlaceORM.id, isouter=True).group_by(PlaceORM.id)
+        places = places.join(ReviewORM, ReviewORM.place_id == PlaceORM.id, isouter=True).\
+            group_by(PlaceORM.id)
         if place_category is not None:
             places = places.filter(PlaceORM.category == place_category)
         if at_least_stars:

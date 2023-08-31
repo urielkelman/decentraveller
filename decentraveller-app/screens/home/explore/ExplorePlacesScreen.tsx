@@ -47,6 +47,12 @@ const ExplorePlacesScreen = ({ navigation }) => {
     const [minStars, setMinStars] = useState<number>(0);
     const [maxDistance, setMaxDistance] = useState<number>(0);
     const [interestPickerValue, setInterestPickerValue] = useState<string>(null);
+    const [showNotFound, setNotFound] = React.useState<boolean>(false);
+
+    const onNotFound = () => {
+        setNotFound(true);
+        setLoadingPlaces(false);
+    };
 
     const filterModalDataProps: FilterModalData = {
         orderBy: sortBy,
@@ -94,32 +100,35 @@ const ExplorePlacesScreen = ({ navigation }) => {
     ): Promise<void> => {
         setLoadingPlaces(true);
         console.log('to fetch places', latitude, longitude, lastLocationLabelSearched);
-        const placesResponse = await adapter.getRecommendedPlaces(
+        const placesResponse = await adapter.getPlacesSearch(
             [latitude, longitude],
+            onNotFound,
             interestPickerValue,
             sortBy,
             minStars !== 0 ? minStars : null,
             maxDistance !== 0 ? maxDistance : null,
         );
-        const images = await Promise.all(
-            placesResponse.map(async (p: PlaceResponse) => {
-                return await adapter.getPlaceImage(p.id, () => {});
-            }),
-        );
-        const placesToShow: PlaceShowProps[] = placesResponse.map(function (p, i) {
-            return {
-                id: p.id,
-                name: p.name,
-                address: p.address,
-                latitude: p.latitude,
-                longitude: p.longitude,
-                score: p.score,
-                category: p.category,
-                reviewCount: p.reviews,
-                imageBase64: images[i],
-            };
-        });
-        setPlaces(placesToShow);
+        if (placesResponse != null){
+            const images = await Promise.all(
+                placesResponse.places.map(async (p: PlaceResponse) => {
+                    return await adapter.getPlaceImage(p.id, () => {});
+                }),
+            );
+            const placesToShow: PlaceShowProps[] = placesResponse.places.map(function (p, i) {
+                return {
+                    id: p.id,
+                    name: p.name,
+                    address: p.address,
+                    latitude: p.latitude,
+                    longitude: p.longitude,
+                    score: p.score,
+                    category: p.category,
+                    reviewCount: p.reviews,
+                    imageBase64: images[i],
+                };
+            });
+            setPlaces(placesToShow);
+        }
         setLoadingPlaces(false);
         setLastLocationLabelSearched(lastLocationLabelSearched);
         setLastLocationSearched([latitude, longitude]);
@@ -194,9 +203,9 @@ const ExplorePlacesScreen = ({ navigation }) => {
 
     const componentToRender = loadingPlaces ? (
         <LoadingComponent />
-    ) : (
+    ) : !showNotFound ? (
         <DecentravellerPlacesList places={places} minified={false} horizontal={false} />
-    );
+    ) : (<Text> No places where found </Text>);
 
     return (
         <View

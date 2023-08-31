@@ -75,7 +75,7 @@ const UserReviewsBox = ({ walletId }) => {
     const loadMoreReviews = async () => {
         if (hasReviews() && reviewCount > reviews.length) {
             setLoadingReviews(true);
-            const reviewsResponse: ReviewsResponse = await adapter.getPlaceReviews(
+            const reviewsResponse: ReviewsResponse = await adapter.getProfileReviews(
                 walletId,
                 (reviews.length / 5) | 0,
                 5,
@@ -108,7 +108,7 @@ const UserReviewsBox = ({ walletId }) => {
     const footerComponent = () => {
         return (
             <View style={placeReviewsBoxStyles.reviewsFooter}>
-                {!hasReviews() ? <Text>Be the first to review!</Text> : null}
+                {!hasReviews() ? <Text>No reviews found.</Text> : null}
                 {hasReviews() && reviewCount > reviews.length ? <ActivityIndicator size={'large'} /> : null}
             </View>
         );
@@ -130,6 +130,7 @@ const UserReviewsBox = ({ walletId }) => {
                         borderTopRightRadius: 0,
                     },
                 ]}
+                keyExtractor={(item, index) => String(index)}
                 ListHeaderComponent={headerComponent}
                 stickyHeaderIndices={[0]}
                 ListFooterComponent={footerComponent}
