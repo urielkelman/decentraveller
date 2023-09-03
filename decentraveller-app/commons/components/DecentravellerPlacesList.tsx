@@ -41,7 +41,8 @@ const DecentravellerPlacesList: React.FC<PlacesItemsProps> = ({ places, minified
     const internalRenderPlaceItem = ({ item }: { item: PlaceShowProps }) =>
         renderPlaceItem({ item: item, minified: minified });
 
-    return <FlatList data={places} renderItem={internalRenderPlaceItem} horizontal={horizontal} />;
+    return <FlatList data={places} renderItem={internalRenderPlaceItem} horizontal={horizontal}
+                     keyExtractor={(item, index) => String(index)}/>;
 };
 
 export { DecentravellerPlacesList };

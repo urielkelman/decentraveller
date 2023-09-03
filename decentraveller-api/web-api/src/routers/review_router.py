@@ -37,17 +37,14 @@ class ReviewCBV:
         except IntegrityError:
             raise HTTPException(status_code=HTTP_400_BAD_REQUEST,
                                 detail="Either the place or the profile does not exist")
-        try:
-            place_from_review = self.database.query_places(inserted_review.place_id)
-            place_owner = self.database.get_profile_orm(place_from_review.owner)
-            inserted_review_owner = inserted_review.owner
-            self.push_notification_adapter.send_new_review_on_place(
-                token=place_owner.push_token,
-                place = place_from_review,
-                writer_nickname = inserted_review_owner.nickname,
-            )
-        except Exception:
-            pass
+        place_from_review = self.database.query_places(inserted_review.place_id)
+        place_owner = self.database.get_profile_orm(place_from_review.owner)
+        inserted_review_owner = inserted_review.owner
+        self.push_notification_adapter.send_new_review_on_place(
+            token=place_owner.push_token,
+            place = place_from_review,
+            writer_nickname = inserted_review_owner.nickname,
+        )
         return inserted_review
 
     @review_router.get("/review")

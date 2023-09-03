@@ -192,7 +192,10 @@ class RecommendationCBV:
                                               for sims in place_similars):
                 for sims in place_similars:
                     if sims:
-                        result.append(sims.pop(0))
+                        p = sims.pop(0)
+                        if p.id not in places_to_avoid:
+                            result.append(p)
+                            places_to_avoid.add(p.id)
 
         if len(result) < limit and nearby:
             result += [p for p in nearby[:limit - len(result)]]
