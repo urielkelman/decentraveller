@@ -21,11 +21,9 @@ const PlaceReviewsBox = ({ placeId, summarized }) => {
             (async () => {
                 setLoadingReviews(true);
                 const reviewsResponse: ReviewsResponse = await adapter.getPlaceReviews(placeId, 0, 5);
-                const avatars = await Promise.all(
-                    reviewsResponse.reviews.map(async (r: ReviewResponse) => {
-                        return await adapter.getUserProfileImage(r.owner.owner, () => {});
-                    }),
-                );
+                const avatarUrls = reviewsResponse.reviews.map((r: ReviewResponse) => {
+                    return adapter.getProfileAvatarUrl(r.owner.owner);
+                });
                 const reviewsToShow: ReviewItemProps[] = reviewsResponse.reviews.map(function (r, i) {
                     return {
                         id: r.id,
@@ -36,7 +34,7 @@ const PlaceReviewsBox = ({ placeId, summarized }) => {
                         state: r.state,
                         ownerNickname: r.owner.nickname,
                         ownerWallet: r.owner.owner,
-                        avatarBase64: avatars[i],
+                        avatarUrl: avatarUrls[i],
                         createdAt: r.createdAt,
                         summarized: summarized,
                     };
@@ -111,11 +109,9 @@ const PlaceReviewsBox = ({ placeId, summarized }) => {
                 (reviews.length / 5) | 0,
                 5,
             );
-            const avatars = await Promise.all(
-                reviewsResponse.reviews.map(async (r: ReviewResponse) => {
-                    return await adapter.getUserProfileImage(r.owner.owner, () => {});
-                }),
-            );
+            const avatarUrls = reviewsResponse.reviews.map((r: ReviewResponse) => {
+                    return adapter.getProfileAvatarUrl(r.owner.owner);
+                });
             const reviewsToShow: ReviewItemProps[] = reviewsResponse.reviews.map(function (r, i) {
                 return {
                     id: r.id,
@@ -126,7 +122,7 @@ const PlaceReviewsBox = ({ placeId, summarized }) => {
                     state: r.state,
                     ownerNickname: r.owner.nickname,
                     ownerWallet: r.owner.owner,
-                    avatarBase64: avatars[i],
+                    avatarUrl: avatarUrls[i],
                     createdAt: r.createdAt,
                     summarized: summarized,
                 };

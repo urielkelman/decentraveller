@@ -1,6 +1,7 @@
 import { GeocodingResponse } from './response/geocoding';
 import { httpAPIConnector, HttpConnector, HttpGetRequest, HttpPostRequest } from '../connectors/HttpConnector';
 import {
+    API_ENDPOINT,
     FORWARD_GEOCODING_ENDPOINT,
     GET_USER_ENDPOINT,
     OWNED_PLACES_ENDPOINT,
@@ -51,19 +52,29 @@ class ApiAdapter extends Adapter {
         return await httpAPIConnector.get(httpRequest);
     }
 
+    getProfileAvatarUrl(owner: string, forceReload = false): string {
+        return API_ENDPOINT + formatString(PROFILE_IMAGE, {owner: owner}) + `?${forceReload ? Date.now() : ""}`;
+    }
+
+    getPlaceImageUrl(placeId: number): string {
+        return API_ENDPOINT + formatString(PLACE_IMAGE, { placeId: placeId })
+    }
+
     async getPlacesSearch(
         [latitude, longitude]: [string, string],
         onNotFound: () => void,
+        page: number,
+        perPage: number,
         interest?: string | null,
         sort_by?: string | null,
         at_least_stars?: number | null,
         maximum_distance?: number | null,
     ): Promise<PlacesResponse> {
-        const queryParams: Record<string, string> = {
+        const queryParams: Record<string, string | number> = {
             latitude: latitude,
             longitude: longitude,
-            page: '0',
-            per_page: '500',
+            page: page,
+            per_page: perPage,
         };
 
         if (sort_by !== null && sort_by !== undefined) {
@@ -85,6 +96,9 @@ class ApiAdapter extends Adapter {
         const httpRequest: HttpGetRequest = {
             url: PLACES_SEARCH,
             queryParams,
+            onStatusCodeError: {
+                [HTTPStatusCode.NOT_FOUND]: onNotFound,
+            },
             onUnexpectedError: (e) => console.log('Error', e),
         };
 
@@ -190,32 +204,6 @@ class ApiAdapter extends Adapter {
         };
 
         return await httpAPIConnector.post(httpPostRequest);
-    }
-
-    async getUserProfileImage(walletAddress: string, onFailed: () => void): Promise<string> {
-        const httpRequest: HttpGetRequest = {
-            url: formatString(PROFILE_IMAGE, { owner: walletAddress }),
-            queryParams: {},
-            onUnexpectedError: (e) => {
-                onFailed();
-            },
-        };
-
-        console.log('to get', httpRequest);
-        return await httpAPIConnector.getBase64Bytes(httpRequest);
-    }
-
-    async getPlaceImage(placeId: number, onFailed: () => void): Promise<string> {
-        const httpRequest: HttpGetRequest = {
-            url: formatString(PLACE_IMAGE, { placeId: placeId }),
-            queryParams: {},
-            onUnexpectedError: (e) => {
-                onFailed();
-            },
-        };
-
-        console.log('to get', httpRequest);
-        return await httpAPIConnector.getBase64Bytes(httpRequest);
     }
 
     async sendProfileImage(walletAddress: string, imageUri: string): Promise<void> {

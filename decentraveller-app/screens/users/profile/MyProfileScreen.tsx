@@ -16,7 +16,8 @@ export type UserProfileScreens = {
 const HomeStackNavigator = createStackNavigator<UserProfileScreens>();
 
 const MyProfileScreen = ({ navigation }) => {
-    const { userNickname, connectionContext, userCreatedAt, userInterest, userProfileImage } = useAppContext();
+    const { userNickname, connectionContext, userCreatedAt,
+        userInterest } = useAppContext();
 
     const [selectedImage, setSelectedImage] = useState(null);
     const [isModalVisible, setIsModalVisible] = useState(false);
@@ -34,12 +35,6 @@ const MyProfileScreen = ({ navigation }) => {
                 const imageUri = result.assets[0].uri;
                 try {
                     await apiAdapter.sendProfileImage(user.walletAddress, imageUri);
-                    await apiAdapter.getUserProfileImage(user.walletAddress, () => {});
-                    console.log('Avatar success updated.');
-                    const newImage = await apiAdapter.getUserProfileImage(user.walletAddress, () => {
-                        console.log('There was a problem fetching the image');
-                    });
-                    userProfileImage.setValue(newImage);
                 } catch (error) {
                     console.error('Error on avatar updating:', error);
                 }
@@ -50,13 +45,13 @@ const MyProfileScreen = ({ navigation }) => {
     };
 
     const user = {
-        profileImage: userProfileImage.value,
         name: userNickname.value,
         walletAddress: connectionContext.connectedAddress,
         createdAt: userCreatedAt.value,
         interest: userInterest.value,
         tokens: 67,
         sharedLocation: 'Yes',
+        profileImageUrl: apiAdapter.getProfileAvatarUrl(connectionContext.connectedAddress, true),
     };
 
     return (
@@ -65,8 +60,9 @@ const MyProfileScreen = ({ navigation }) => {
                 <View style={userProfileMainStyles.imageContainer}>
                     <View style={userProfileMainStyles.imageCircle}>
                         <Image
+                            key={Date.now()}
                             source={{
-                                uri: `data:image/jpeg;base64,${user.profileImage}`,
+                                uri: user.profileImageUrl
                             }}
                             style={userProfileMainStyles.circleDimensions}
                         />

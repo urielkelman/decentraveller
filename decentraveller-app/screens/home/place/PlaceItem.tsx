@@ -29,7 +29,7 @@ const PlaceItem: React.FC<PlaceItemProps> = ({
     score,
     category,
     reviewCount,
-    imageBase64,
+    imageUri,
     minified,
 }) => {
     const navigation = useNavigation<PlaceDetailScreenProp>();
@@ -57,22 +57,17 @@ const PlaceItem: React.FC<PlaceItemProps> = ({
         category: category,
         score: score,
         reviewCount: reviewCount,
-        imageBase64: imageBase64,
+        imageUri: imageUri,
     };
     const itemStyle = minified ? placeItemMinifiedStyle : placeItemStyle;
-
-    const imageToUse =
-        imageBase64 != null
-            ? {
-                  uri: `data:image/jpeg;base64,${imageBase64}`,
-              }
-            : require('../../../assets/images/no_place_image.jpg');
 
     return (
         <TouchableOpacity onPress={() => navigation.navigate('PlaceDetailScreen', placeDetailParams)}>
             <View style={itemStyle.container}>
                 <View style={itemStyle.leftContainer}>
-                    <Image style={itemStyle.image} source={imageToUse} />
+                    <Image style={itemStyle.image}
+                           defaultSource={require('../../../assets/images/no_place_image.jpg')}
+                           source={{uri: imageUri}} />
                 </View>
                 <View style={itemStyle.rightSideContainer}>
                     <View style={itemStyle.informationContainer}>

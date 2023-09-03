@@ -4,8 +4,6 @@ import { placeSimilarsBoxStyles } from '../../../styles/placeDetailStyles';
 import { useNavigation } from '@react-navigation/native';
 import { AddReviewImagesScreenProp } from './types';
 import { apiAdapter } from '../../../api/apiAdapter';
-import ReviewItem, { ReviewItemProps } from '../../reviews/ReviewItem';
-import PlaceItem, { PlaceItemProps } from './PlaceItem';
 import { PlaceResponse } from '../../../api/response/places';
 import { DecentravellerPlacesList, PlaceShowProps } from '../../../commons/components/DecentravellerPlacesList';
 import LoadingComponent from '../../../commons/components/DecentravellerLoading';
@@ -30,11 +28,9 @@ const PlaceSimilarsBox = ({ placeId }) => {
                 placeId,
                 onNotFoundRecommendations,
             );
-            const images = await Promise.all(
-                placesResponse.map(async (p: PlaceResponse) => {
-                    return await adapter.getPlaceImage(p.id, () => {});
-                }),
-            );
+            const imageUris = placesResponse.map((p: PlaceResponse) => {
+                return adapter.getPlaceImageUrl(p.id);
+            });
             const placesToShow: PlaceShowProps[] = placesResponse.map(function (p, i) {
                 return {
                     id: p.id,
@@ -45,7 +41,7 @@ const PlaceSimilarsBox = ({ placeId }) => {
                     score: p.score,
                     category: p.category,
                     reviewCount: p.reviews,
-                    imageBase64: images[i],
+                    imageUri: imageUris[i],
                 };
             });
             setPlaces(placesToShow);
@@ -69,7 +65,7 @@ const PlaceSimilarsBox = ({ placeId }) => {
             return (
                 <View style={placeSimilarsBoxStyles.container}>
                     <Text style={placeSimilarsBoxStyles.titleText}>You should also watch...</Text>
-                    <DecentravellerPlacesList places={places} minified={true} horizontal={true} />
+                    <DecentravellerPlacesList placeList={places} minified={true} horizontal={true} />
                 </View>
             );
         } else {

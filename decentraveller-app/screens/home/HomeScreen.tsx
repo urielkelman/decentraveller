@@ -25,7 +25,7 @@ const HomeScreen = ({ navigation }) => {
 
     const onNotFoundRecommendations = () => setShowPlacesNotFound(true);
 
-    const parsePlaceResponse = (placeResponse: PlaceResponse, image: string): PlaceShowProps => {
+    const parsePlaceResponse = (placeResponse: PlaceResponse, imageUri: string): PlaceShowProps => {
         return {
             id: placeResponse.id,
             name: placeResponse.name,
@@ -35,7 +35,7 @@ const HomeScreen = ({ navigation }) => {
             score: placeResponse.score,
             category: placeResponse.category,
             reviewCount: placeResponse.reviews,
-            imageBase64: image,
+            imageUri: imageUri,
         };
     };
 
@@ -45,13 +45,11 @@ const HomeScreen = ({ navigation }) => {
             [latitude, longitude],
             onNotFoundRecommendations,
         );
-        const images = await Promise.all(
-            placesResponse.map(async (p: PlaceResponse) => {
-                return await adapter.getPlaceImage(p.id, () => {});
-            }),
-        );
+        const imageUris = placesResponse.map((p: PlaceResponse) => {
+                return adapter.getPlaceImageUrl(p.id);
+            });
         const placesToShow: PlaceShowProps[] = placesResponse.map(function (p, i) {
-            return parsePlaceResponse(p, images[i]);
+            return parsePlaceResponse(p, imageUris[i]);
         });
         setRecommendedPlaces(placesToShow);
         setLoadingRecommendedPlaces(false);
@@ -114,10 +112,8 @@ const HomeScreen = ({ navigation }) => {
     ) : showPlacesNotFound ? (
         <Text>We couldn't find any place for you. Try in the Explore Tab.</Text>
     ) : (
-        <DecentravellerPlacesList places={recommendedPlaces} minified={false} horizontal={false} />
+        <DecentravellerPlacesList placeList={recommendedPlaces} minified={false} horizontal={false} />
     );
-
-    console.log(recommendedPlaces);
 
     return (
         <View style={{ flex: 1, backgroundColor: DECENTRAVELLER_DEFAULT_BACKGROUND_COLOR }}>

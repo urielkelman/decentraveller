@@ -22,10 +22,10 @@ const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
     const [subscriptionsDone, setSubscriptionsDone] = React.useState<boolean>(false);
 
     const [nickname, setUserNickname] = React.useState<string>('');
+    const [profileImageUrl, setProfileImageUrl] = React.useState<string>('');
     const [createdAt, setUserCreatedAt] = React.useState<string>('');
     const [interest, setUserInterest] = React.useState<string>('');
     const [location, setLocation] = React.useState<[string, string] | undefined>(undefined);
-    const [profileImage, setProfileImage] = React.useState<string>('');
     const [shouldUpdateHomeRecs, setShouldUpdateHomeRecs] = React.useState<boolean>(false);
 
     const [web3Provider, setWeb3Provider] = React.useState<ethers.providers.Web3Provider | null>(null);
@@ -90,8 +90,6 @@ const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
     const userCreatedAt: AppContextStateArg<string> = memoFactory(createdAt, setUserCreatedAt);
 
     const userInterest: AppContextStateArg<string> = memoFactory(interest, setUserInterest);
-
-    const userProfileImage: AppContextStateArg<string> = memoFactory(profileImage, setProfileImage);
 
     const shouldUpdateHomeRecommendations: AppContextStateArg<boolean> = memoFactory(
         shouldUpdateHomeRecs,
@@ -166,7 +164,6 @@ const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
                 userCreatedAt,
                 userInterest,
                 userLocation,
-                userProfileImage,
                 shouldUpdateHomeRecommendations,
                 pushChangeUpdate,
                 setConnectionContext,

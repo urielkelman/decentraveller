@@ -1,16 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity, Alert, Modal } from 'react-native';
-import { createStackNavigator } from '@react-navigation/stack';
+import { View, Text, Image, TouchableOpacity } from 'react-native';
 import { userProfileMainStyles } from '../../../styles/userProfileStyles';
-import { useAppContext } from '../../../context/AppContext';
-import { addReviewImagesStyles } from '../../../styles/addReviewStyles';
-import * as ImagePicker from 'expo-image-picker';
 import { apiAdapter } from '../../../api/apiAdapter';
-import { PlaceResponse } from '../../../api/response/places';
-import { DecentravellerPlacesList, PlaceShowProps } from '../../../commons/components/DecentravellerPlacesList';
 import LoadingComponent from '../../../commons/components/DecentravellerLoading';
 import { useNavigation } from '@react-navigation/native';
-import { PlaceDetailScreenProp, PlaceDetailScreenProps } from '../../home/place/types';
 import { UserProfileScreenProps } from './types';
 
 export type UserProfileScreens = {
@@ -18,7 +11,7 @@ export type UserProfileScreens = {
 };
 
 export type UserShowProps = {
-    profileImage: string;
+    profileImageUrl: string;
     name: string;
     walletAddress: string;
     createdAt: string;
@@ -43,7 +36,7 @@ const UserProfileScreen: React.FC<UserProfileScreenProps> = ({ route }) => {
             setLoading(true);
             const userData = await apiAdapter.getUser(walletId, () => {});
             const user = {
-                profileImage: await apiAdapter.getUserProfileImage(walletId, () => {}),
+                profileImageUrl: apiAdapter.getProfileAvatarUrl(walletId),
                 name: userData.nickname,
                 walletAddress: walletId,
                 createdAt: userData.createdAt,
@@ -65,7 +58,7 @@ const UserProfileScreen: React.FC<UserProfileScreenProps> = ({ route }) => {
                     <View style={userProfileMainStyles.imageCircle}>
                         <Image
                             source={{
-                                uri: `data:image/jpeg;base64,${user.profileImage}`,
+                                uri: user.profileImageUrl,
                             }}
                             style={userProfileMainStyles.circleDimensions}
                         />

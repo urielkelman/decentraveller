@@ -6,7 +6,12 @@ import { explorePlacesScreenWording } from './wording';
 import { PlaceResponse } from '../../../api/response/places';
 import { mockApiAdapter } from '../../../api/mockApiAdapter';
 import { apiAdapter } from '../../../api/apiAdapter';
-import { DecentravellerPlacesList, PlaceShowProps } from '../../../commons/components/DecentravellerPlacesList';
+import {
+    DecentravellerPlacesList,
+    LoadPlaceResponse,
+    PlaceShowProps,
+    PlaceLoadFunction
+} from '../../../commons/components/DecentravellerPlacesList';
 import DecentravellerPicker from '../../../commons/components/DecentravellerPicker';
 import { PickerItem } from '../../../commons/types';
 import {
@@ -103,17 +108,16 @@ const ExplorePlacesScreen = ({ navigation }) => {
         const placesResponse = await adapter.getPlacesSearch(
             [latitude, longitude],
             onNotFound,
+            0, 500,
             interestPickerValue,
             sortBy,
             minStars !== 0 ? minStars : null,
             maxDistance !== 0 ? maxDistance : null,
         );
         if (placesResponse != null){
-            const images = await Promise.all(
-                placesResponse.places.map(async (p: PlaceResponse) => {
-                    return await adapter.getPlaceImage(p.id, () => {});
-                }),
-            );
+            const imageUris = placesResponse.places.map((p: PlaceResponse) => {
+                return adapter.getPlaceImageUrl(p.id);
+            });
             const placesToShow: PlaceShowProps[] = placesResponse.places.map(function (p, i) {
                 return {
                     id: p.id,
@@ -124,7 +128,7 @@ const ExplorePlacesScreen = ({ navigation }) => {
                     score: p.score,
                     category: p.category,
                     reviewCount: p.reviews,
-                    imageBase64: images[i],
+                    imageUri: imageUris[i],
                 };
             });
             setPlaces(placesToShow);
@@ -204,7 +208,7 @@ const ExplorePlacesScreen = ({ navigation }) => {
     const componentToRender = loadingPlaces ? (
         <LoadingComponent />
     ) : !showNotFound ? (
-        <DecentravellerPlacesList places={places} minified={false} horizontal={false} />
+        <DecentravellerPlacesList placeList={places} minified={false} horizontal={false} />
     ) : (<Text> No places where found </Text>);
 
     return (

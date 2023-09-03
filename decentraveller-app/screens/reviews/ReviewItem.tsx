@@ -21,7 +21,7 @@ const ReviewItem: React.FC<ReviewItemProps> = ({
     state,
     ownerNickname,
     ownerWallet,
-    avatarBase64,
+    avatarUrl,
     createdAt,
     summarized,
 }) => {
@@ -49,7 +49,7 @@ const ReviewItem: React.FC<ReviewItemProps> = ({
                 >
                     <Image
                         source={{
-                            uri: `data:image/jpeg;base64,${avatarBase64}`,
+                            uri: avatarUrl,
                         }}
                         style={placeReviewsBoxStyles.avatarImage}
                     />
