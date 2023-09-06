@@ -35,6 +35,7 @@ services:
       - ML_API_URL=http://ml-api:8000
       - PYTHONHASHSEED=0
       - INDEXER_API_KEY=asd123
+      - BLOCKCHAIN_RPC_URL=http://blockchain:8545
     depends_on:
       - database
       - weaviate
