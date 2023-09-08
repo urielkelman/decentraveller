@@ -15,6 +15,7 @@ class RuleProposedTransformer extends EventTransformer<RuleProposedRequestBody> 
                 proposer: event[1],
                 ruleStatement: event[2],
                 proposalId: (event[3] as BigNumber).toNumber(),
+                timestamp: (event[4] as BigNumber).toNumber(),
             },
         };
     }

@@ -28,14 +28,16 @@ contract Decentraveller {
         uint256 indexed ruleId,
         address indexed proposer,
         string statement,
-        uint256 proposalId
+        uint256 proposalId,
+        uint256 proposalTimestamp
     );
 
     event DecentravellerRuleApproved(uint256 indexed ruleId);
 
     event DecentravellerRuleDeletionProposed(
         uint256 indexed ruleId,
-        address indexed proposer
+        address indexed proposer,
+        uint256 proposalTimestamp
     );
 
     event DecentravellerRuleDeleted(uint256 indexed ruleId);
@@ -68,6 +70,9 @@ contract Decentraveller {
                 storage initialRule = ruleById[i];
             initialRule.proposer = msg.sender;
             initialRule.statement = initialRules[i - 1];
+            initialRule.status = DecentravellerDataTypes
+                .DecentravellerRuleStatus
+                .APPROVED;
         }
         currentRuleId = initialRulesLength;
         currentPlaceId = 0;
@@ -206,7 +211,8 @@ contract Decentraveller {
             currentRuleId,
             msg.sender,
             ruleStatement,
-            proposalId
+            proposalId,
+            block.timestamp
         );
         return currentRuleId;
     }
@@ -233,7 +239,11 @@ contract Decentraveller {
         );
         rule.deleteProposalId = deletionProposalId;
         rule.deletionProposer = msg.sender;
-        emit DecentravellerRuleDeletionProposed(ruleId, msg.sender);
+        emit DecentravellerRuleDeletionProposed(
+            ruleId,
+            msg.sender,
+            block.timestamp
+        );
     }
 
     function getRuleById(

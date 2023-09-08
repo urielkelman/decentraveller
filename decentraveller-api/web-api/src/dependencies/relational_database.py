@@ -2,7 +2,6 @@ from typing import Optional, Dict, List, Union, Callable, Tuple
 
 from sqlalchemy import func, case, tuple_, and_
 from sqlalchemy.orm import Session
-from sqlalchemy.exc import IntegrityError
 
 from src.api_models.bulk_results import PaginatedReviews, PaginatedPlaces
 from src.api_models.place import PlaceID, PlaceInDB, PlaceWithStats

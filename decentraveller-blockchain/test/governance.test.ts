@@ -88,7 +88,13 @@ describe("Decentraveller governance", function () {
             decentraveller.createNewRuleProposal("New rule for Decentraveller!")
         )
             .to.emit(decentraveller, "DecentravellerRuleProposed")
-            .withArgs(3, userAddress, "New rule for Decentraveller!", anyUint);
+            .withArgs(
+                3,
+                userAddress,
+                "New rule for Decentraveller!",
+                anyUint,
+                anyUint
+            );
     });
 
     it("Should revert with error when trying to get non-existent rule", async function () {
@@ -193,7 +199,7 @@ describe("Decentraveller governance", function () {
     it("Should emit an event when deletion rule proposal is created", async function () {
         await expect(decentraveller.createRuleDeletionProposal(1))
             .to.emit(decentraveller, "DecentravellerRuleDeletionProposed")
-            .withArgs(1, userAddress);
+            .withArgs(1, userAddress, anyUint);
     });
 
     it("Should emit an event when deletion rule proposal is passed through governance", async function () {
