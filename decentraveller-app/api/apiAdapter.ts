@@ -1,13 +1,14 @@
 import { GeocodingResponse } from './response/geocoding';
 import { httpAPIConnector, HttpConnector, HttpGetRequest, HttpPostRequest } from '../connectors/HttpConnector';
 import {
+    API_ENDPOINT,
     FORWARD_GEOCODING_ENDPOINT,
     GET_USER_ENDPOINT,
     OWNED_PLACES_ENDPOINT,
     PLACE_IMAGE,
     PROFILE_IMAGE,
     PUSH_NOTIFICATION_TOKEN_ENDPOINT,
-    RECOMMENDED_PLACES_BY_LOCATION_ENDPOINT,
+    PLACES_SEARCH,
     RECOMMENDED_PLACES_BY_PROFILE_ENDPOINT,
     RECOMMENDED_SIMILAR_PLACES,
     REVIEWS_PLACES_ENDPOINT,
@@ -18,7 +19,7 @@ import { UserResponse } from './response/user';
 import Adapter from './Adapter';
 import { formatString } from '../commons/functions/utils';
 import { ReviewImageResponse, ReviewsResponse } from './response/reviews';
-import { PlaceResponse } from './response/places';
+import {PlaceResponse, PlacesResponse} from './response/places';
 import * as FileSystem from 'expo-file-system';
 import { EncodingType } from 'expo-file-system';
 import FormData from 'form-data';
@@ -51,18 +52,29 @@ class ApiAdapter extends Adapter {
         return await httpAPIConnector.get(httpRequest);
     }
 
-    async getRecommendedPlaces(
+    getProfileAvatarUrl(owner: string, forceReload = false): string {
+        return API_ENDPOINT + formatString(PROFILE_IMAGE, {owner: owner}) + `?${forceReload ? Date.now() : ""}`;
+    }
+
+    getPlaceImageUrl(placeId: number): string {
+        return API_ENDPOINT + formatString(PLACE_IMAGE, { placeId: placeId })
+    }
+
+    async getPlacesSearch(
         [latitude, longitude]: [string, string],
-        interest?: string,
+        onNotFound: () => void,
+        page: number,
+        perPage: number,
+        interest?: string | null,
         sort_by?: string | null,
         at_least_stars?: number | null,
         maximum_distance?: number | null,
-    ): Promise<PlaceResponse[]> {
-        const queryParams: Record<string, string> = {
+    ): Promise<PlacesResponse> {
+        const queryParams: Record<string, string | number> = {
             latitude: latitude,
             longitude: longitude,
-            page: '1',
-            per_page: '500',
+            page: page,
+            per_page: perPage,
         };
 
         if (sort_by !== null && sort_by !== undefined) {
@@ -82,8 +94,11 @@ class ApiAdapter extends Adapter {
         }
 
         const httpRequest: HttpGetRequest = {
-            url: RECOMMENDED_PLACES_BY_LOCATION_ENDPOINT,
+            url: PLACES_SEARCH,
             queryParams,
+            onStatusCodeError: {
+                [HTTPStatusCode.NOT_FOUND]: onNotFound,
+            },
             onUnexpectedError: (e) => console.log('Error', e),
         };
 
@@ -95,17 +110,16 @@ class ApiAdapter extends Adapter {
         [latitude, longitude]: [string?, string?],
         onNotFound: () => void,
     ): Promise<PlaceResponse[]> {
-        const [lat, long] = ['39.95', '-75.175'];
-        const queryParams =
-            latitude && longitude
-                ? {
-                      latitude: lat,
-                      longitude: long,
-                  }
-                : undefined;
+        const queryParams: Record<string, string> = {};
+
+        if (latitude != null && longitude != null) {
+            queryParams.latitude = latitude;
+            queryParams.longitude = longitude;
+        }
+
         const httpRequest: HttpGetRequest = {
             url: formatString(RECOMMENDED_PLACES_BY_PROFILE_ENDPOINT, { owner: walletAddress }),
-            queryParams: queryParams,
+            queryParams,
             onUnexpectedError: (e) => console.log('Error'),
             onStatusCodeError: {
                 [HTTPStatusCode.NOT_FOUND]: onNotFound,
@@ -140,12 +154,18 @@ class ApiAdapter extends Adapter {
         return await httpAPIConnector.get(httpRequest);
     }
 
-    async getPlacesByOwner(walletAddress: string, onFailed: () => void): Promise<PlaceResponse[]> {
+    async getPlacesByOwner(
+        walletId: string,
+        page: number,
+        perPage: number,
+        onNotFound: () => void,
+    ): Promise<PlacesResponse> {
         const httpRequest: HttpGetRequest = {
-            url: `${OWNED_PLACES_ENDPOINT}/${walletAddress}`,
-            queryParams: {},
-            onUnexpectedError: (e) => {
-                onFailed();
+            url: formatString(OWNED_PLACES_ENDPOINT, { walletId: walletId }),
+            queryParams: { page: page, per_page: perPage },
+            onUnexpectedError: (e) => console.log('Error'),
+            onStatusCodeError: {
+                [HTTPStatusCode.NOT_FOUND]: onNotFound,
             },
         };
 
@@ -184,32 +204,6 @@ class ApiAdapter extends Adapter {
         };
 
         return await httpAPIConnector.post(httpPostRequest);
-    }
-
-    async getUserProfileImage(walletAddress: string, onFailed: () => void): Promise<string> {
-        const httpRequest: HttpGetRequest = {
-            url: formatString(PROFILE_IMAGE, { owner: walletAddress }),
-            queryParams: {},
-            onUnexpectedError: (e) => {
-                onFailed();
-            },
-        };
-
-        console.log('to get', httpRequest);
-        return await httpAPIConnector.getBase64Bytes(httpRequest);
-    }
-
-    async getPlaceImage(placeId: number, onFailed: () => void): Promise<string> {
-        const httpRequest: HttpGetRequest = {
-            url: formatString(PLACE_IMAGE, { placeId: placeId }),
-            queryParams: {},
-            onUnexpectedError: (e) => {
-                onFailed();
-            },
-        };
-
-        console.log('to get', httpRequest);
-        return await httpAPIConnector.getBase64Bytes(httpRequest);
     }
 
     async sendProfileImage(walletAddress: string, imageUri: string): Promise<void> {

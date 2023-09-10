@@ -49,7 +49,7 @@ const placeDetailStyles = StyleSheet.create({
     titleText: {
         fontSize: 30,
         fontWeight: 'bold',
-        marginTop: 1,
+        marginTop: -5,
     },
     titleText2: {
         fontSize: 30,
@@ -195,6 +195,7 @@ const placeReviewsBoxStyles = StyleSheet.create({
         height: 30,
         borderRadius: 15,
         marginBottom: 2,
+        marginLeft: 'auto',
     },
     userNameText: {
         fontSize: 12,

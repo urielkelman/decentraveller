@@ -42,7 +42,7 @@ class PushNotificationAdapter:
     ):
         self.__send_push_message__(
             token=token,
-            heading="There is a new review in {name}!".format(name=place_name),
+            heading="There is a new review in {name}!".format(name=place.name),
             content="{writer} left a new comment and scoring.".format(writer=writer_nickname),
             deep_link_path="place/{id}/{name}/{address}/{score}/{reviewCount}".format(
                 id=str(place.id),

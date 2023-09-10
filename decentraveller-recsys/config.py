@@ -4,7 +4,7 @@ SQLALCHEMY_DATABASE_URL = os.getenv("SQLALCHEMY_DATABASE_URL")
 WEAVIATE_DATABASE_URL = os.getenv("WEAVIATE_DATABASE_URL")
 
 RECOMMENDATION_MATRIX_QUERY = """SELECT place_id, owner FROM reviews
-WHERE score >= 3 AND place_id IN (SELECT place_id FROM reviews GROUP BY 1 HAVING COUNT(*) > 5)
+WHERE score >= 3 AND place_id IN (SELECT place_id FROM reviews GROUP BY 1 HAVING COUNT(*) >= 3)
 ORDER BY place_id"""
 
 PLACE_ID_AND_LOCATIONS = "SELECT id, latitude, longitude FROM places"

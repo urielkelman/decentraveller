@@ -1,4 +1,6 @@
-from fastapi import Depends, HTTPException
+from typing import Optional
+
+from fastapi import Depends, HTTPException, Query
 from fastapi_utils.cbv import cbv
 from fastapi_utils.inferring_router import InferringRouter
 from starlette.status import HTTP_500_INTERNAL_SERVER_ERROR, HTTP_404_NOT_FOUND
@@ -14,7 +16,8 @@ class GeocodingCBV:
     geocoding_api: GeoCodingAPI = Depends(GeoCodingAPI)
 
     @geocoding_router.get("/geocoding/forward")
-    def forward_geocoding(self, address: str, country: str) -> ForwardGeoCodingResults:
+    def forward_geocoding(self, address: str,
+                          country: Optional[str] = Query(default=None)) -> ForwardGeoCodingResults:
         """
         Forward geocoding
 

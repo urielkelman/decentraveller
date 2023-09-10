@@ -2,22 +2,38 @@ import { ethers } from "hardhat";
 import { Decentraveller, DecentravellerPlace } from "../typechain-types";
 import { readFileSync, createReadStream } from "fs";
 import axios from 'axios';
+import fs from 'fs';
+import FormData from 'form-data'
+import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 
 const main = async () => {
-    var image_hashes = [];
-    const response1 = await axios.post('http://api:8000/upload', axios.toFormData({"file": createReadStream("data/place_image.jpg")}), {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-    })
-    image_hashes.push(response1.data['hash'])
-    const response2 = await axios.post('http://api:8000/upload', axios.toFormData({"file": createReadStream("data/place_image_bad.jpg")}), {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-    })
-    image_hashes.push(response2.data['hash'])
+    const httpClient = axios.create();
+    httpClient.defaults.timeout = 30000;
 
+    console.log("Uploading business images");
+    const files = fs.readdirSync('data/place_images/')
+    const formData = new FormData();
+    files.forEach(file => {
+        formData.append("files", createReadStream("data/place_images/"+file));
+    });
+    const imageHashes = await httpClient.post('http://api:8000/uploads', formData, 
+    {
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
+    }).then(
+        function (response) {
+            var imageHashes = new Map<string, string>();
+            for(let i=0; i<files.length; i++){
+                imageHashes.set(files[i].split(".")[0], response.data['hashes'][i]);
+            }
+            return imageHashes;
+    }).catch(function (error) {
+        var imageHashes = new Map<string, string>();
+        console.log(`Error uploading place images: ${error}`)
+        return imageHashes;
+    });
+    
     const signers = await ethers.getSigners();
     /*Contracts are connected to different signers */
     let decentravellerContracts: Decentraveller[] = await Promise.all(
@@ -31,25 +47,34 @@ const main = async () => {
         )
     );
     console.log("Registering profiles");
-    for (const [i, c] of decentravellerContracts.entries()) {
-        const result = await c.registerProfile(`user${i}`, "AR", 0);
+    const usersData = readFileSync("data/ba_users.json", "utf-8").split(/\r?\n/);
+    var userId2Contract = new Map<string, Decentraveller>();
+    var userId2Signer = new Map<string, SignerWithAddress>();
+    var registeredContracts = [];
+    for(let i=0; i<usersData.length; i++){
+        const userData = JSON.parse(usersData[i]);
+        const c = decentravellerContracts[i];
+        const result = await c.registerProfile(userData['name'], "AR", 0);
         if (await result.wait(1)) {
             console.log(
                 `Profile registered for signer ${await c.signer.getAddress()}`
             );
+            userId2Contract.set(userData['user_id'], c);
+            userId2Signer.set(userData['user_id'], signers[i]);
+            registeredContracts.push(c)
         } else {
             throw Error("Error registering profile");
         }
     }
 
     console.log("Starting business load");
-    const businessFile = readFileSync("data/places_sample.json", "utf-8");
+    const businessFile = readFileSync("data/ba_places.json", "utf-8");
     var yelp2id = new Map<string, bigint>();
     for (const line of businessFile.split(/\r?\n/)) {
         const businessData = JSON.parse(line);
         const randomContract =
-            decentravellerContracts[
-                Math.floor(Math.random() * decentravellerContracts.length)
+            registeredContracts[
+                Math.floor(Math.random() * registeredContracts.length)
             ];
         const placeId =
             (await randomContract.getCurrentPlaceId()).toBigInt() + BigInt(1);
@@ -58,7 +83,7 @@ const main = async () => {
             businessData["latitude"].toString(),
             businessData["longitude"].toString(),
             businessData["address"],
-            3
+            0
         );
 
         if (await result.wait(1)) {
@@ -72,27 +97,11 @@ const main = async () => {
     }
 
     console.log("Starting review load");
-    const reviewFile = readFileSync("data/reviews_sample.json", "utf-8");
-    var yelp2owner = new Map<string, number>();
-    var owner2yelp = new Set<number>();
-    var contractIndex = 0;
+    const reviewFile = readFileSync("data/ba_reviews.json", "utf-8");
     for (const line of reviewFile.split(/\r?\n/)) {
         const reviewData = JSON.parse(line);
-        contractIndex = Math.floor(
-            Math.random() * decentravellerContracts.length
-        );
-        if (yelp2owner.has(reviewData["user_id"])) {
-            contractIndex = 0;
-        } else {
-            while (owner2yelp.has(contractIndex)) {
-                contractIndex =
-                    (contractIndex + 1) % decentravellerContracts.length;
-            }
-            yelp2owner.set(reviewData["user_id"], contractIndex);
-            owner2yelp.add(contractIndex);
-        }
-        const signerContract = decentravellerContracts[contractIndex];
-        const signerConnectedToContract = signers[contractIndex];
+        const signerContract = userId2Contract.get(reviewData["user_id"])!;
+        const signerConnectedToContract = userId2Signer.get(reviewData["user_id"])!;
         const blockchainBusId = yelp2id.get(reviewData["business_id"])!;
         const placeContractAddress = await signerContract.getPlaceAddress(
             blockchainBusId
@@ -103,9 +112,14 @@ const main = async () => {
             placeContractAddress,
             signerConnectedToContract
         );
+        let reviewImages: string[] = [];
+        if (imageHashes.has(reviewData['business_id'])){
+            reviewImages = [imageHashes.get(reviewData['business_id'])!];
+            imageHashes.delete(reviewData['business_id']);
+        }
         const result = await placeContract.addReview(
             reviewData["text"],
-            image_hashes,
+            reviewImages,
             Math.round(parseFloat(reviewData["stars"]))
         );
 
@@ -119,6 +133,21 @@ const main = async () => {
                 resp.blockHash
             } with signer ${await signerContract.signer.getAddress()}`
         );
+    }
+
+    console.log("Uploading avatars");
+    const avatarFiles = fs.readdirSync('data/user_images/')
+    for (const file of avatarFiles) {
+        const userId = file.split(".")[0];
+        const c = userId2Contract.get(userId)!
+        const address = await c.signer.getAddress();
+        await axios.post(`http://api:8000/profile/${address}/avatar.jpg`, axios.toFormData({"file": createReadStream("data/user_images/"+file)}), {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        }).catch(function (error) {
+            console.log(`Error uploading ${file}`)
+        });
     }
 };
 

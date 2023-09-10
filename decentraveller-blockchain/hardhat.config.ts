@@ -30,6 +30,11 @@ const baseConfig: HardhatUserConfig = {
             url: `http://${localhostHost}:8545/`,
             chainId: 31337,
         },
+        hardhat: {
+            accounts: {
+                count: 200
+            },
+        }
     },
     gasReporter: {
         enabled: true,

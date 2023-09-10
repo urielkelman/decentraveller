@@ -11,6 +11,8 @@ import DecentravellerInformativeModal from '../../../commons/components/Decentra
 import { getAndParseGeocoding } from '../../../commons/functions/geocoding';
 import { MINIMUM_ADDRESS_LENGTH_TO_SHOW_PICKER } from '../../../commons/global';
 import { useAppContext } from '../../../context/AppContext';
+import { useNavigation } from '@react-navigation/native';
+import { CreatePlaceLocationScreenProp } from './types';
 
 const CreatePlaceLocationScreen = () => {
     const { placeName, placeTypePicker, countryPicker, addressPicker } = useCreatePlaceContext();
@@ -19,7 +21,8 @@ const CreatePlaceLocationScreen = () => {
     const [loadingAddPlaceResponse, setLoadingAddPlaceResponse] = React.useState<boolean>(false);
     const [showErrorModal, setShowErrorModal] = React.useState<boolean>(false);
     const { web3Provider } = useAppContext();
-
+    const [showSuccessAndBackToHomeModal, setShowSuccessAndBackToHomeModal] = React.useState<boolean>(false);
+    const navigation = useNavigation<CreatePlaceLocationScreenProp>();
     const onChangeSearchAddressText = async (text: string) => {
         addressPicker.setValue(text);
         if (
@@ -41,7 +44,7 @@ const CreatePlaceLocationScreen = () => {
     const onFinish = async () => {
         setLoadingAddPlaceResponse(true);
         const selectedGeocodingElement: GeocodingElement = JSON.parse(addressPicker.value);
-        const transactionHash = await blockchainAdapter.createAddNewPlaceTransaction(
+        const placeId = await blockchainAdapter.createAddNewPlaceTransaction(
             web3Provider,
             placeName,
             selectedGeocodingElement.latitude,
@@ -51,10 +54,16 @@ const CreatePlaceLocationScreen = () => {
             onErrorAddingPlace,
         );
         setLoadingAddPlaceResponse(false);
-        console.log('Transaction confirmed with hash', transactionHash);
+        console.log('Transaction confirmed with place Id', placeId);
+        setShowSuccessAndBackToHomeModal(true);
     };
 
-    const backgroundOpacity = showErrorModal ? 0.5 : 1;
+    const onGoBackHome = () => {
+        setShowSuccessAndBackToHomeModal(false);
+        navigation.popToTop();
+    };
+
+    const backgroundOpacity = showErrorModal || showSuccessAndBackToHomeModal ? 0.5 : 1;
 
     return (
         <KeyboardAvoidingView
@@ -100,6 +109,12 @@ const CreatePlaceLocationScreen = () => {
                 visible={showErrorModal}
                 closeModalText={'Close'}
                 handleCloseModal={() => setShowErrorModal(false)}
+            />
+            <DecentravellerInformativeModal
+                informativeText={`${placeName} was created successfully`}
+                visible={showSuccessAndBackToHomeModal}
+                closeModalText={'Go back to home'}
+                handleCloseModal={() => onGoBackHome()}
             />
         </KeyboardAvoidingView>
     );

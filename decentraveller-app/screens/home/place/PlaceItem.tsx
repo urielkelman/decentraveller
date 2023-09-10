@@ -14,17 +14,9 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { PlaceDetailParams, PlaceDetailScreenProp } from './types';
 import { useNavigation } from '@react-navigation/native';
 import StarComponent from '../../../commons/components/StarComponent';
+import { PlaceShowProps } from '../../../commons/components/DecentravellerPlacesList';
 
-export type PlaceItemProps = {
-    id: number;
-    name: string;
-    address: string;
-    latitude: string;
-    longitude: string;
-    score: number;
-    category: DecentravellerPlaceCategory;
-    reviewCount: number;
-    imageBase64: string | null;
+export type PlaceItemProps = PlaceShowProps & {
     minified: boolean;
 };
 
@@ -37,7 +29,7 @@ const PlaceItem: React.FC<PlaceItemProps> = ({
     score,
     category,
     reviewCount,
-    imageBase64,
+    imageUri,
     minified,
 }) => {
     const navigation = useNavigation<PlaceDetailScreenProp>();
@@ -60,23 +52,22 @@ const PlaceItem: React.FC<PlaceItemProps> = ({
         id: id,
         name: name,
         address: address,
+        latitude: latitude,
+        longitude: longitude,
+        category: category,
         score: score,
         reviewCount: reviewCount,
+        imageUri: imageUri,
     };
     const itemStyle = minified ? placeItemMinifiedStyle : placeItemStyle;
-
-    const imageToUse =
-        imageBase64 != null
-            ? {
-                  uri: `data:image/jpeg;base64,${imageBase64}`,
-              }
-            : require('../../../assets/images/no_place_image.jpg');
 
     return (
         <TouchableOpacity onPress={() => navigation.navigate('PlaceDetailScreen', placeDetailParams)}>
             <View style={itemStyle.container}>
                 <View style={itemStyle.leftContainer}>
-                    <Image style={itemStyle.image} source={imageToUse} />
+                    <Image style={itemStyle.image}
+                           defaultSource={require('../../../assets/images/no_place_image.jpg')}
+                           source={{uri: imageUri}} />
                 </View>
                 <View style={itemStyle.rightSideContainer}>
                     <View style={itemStyle.informationContainer}>

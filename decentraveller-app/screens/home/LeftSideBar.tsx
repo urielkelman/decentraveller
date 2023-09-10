@@ -9,14 +9,16 @@ import {
 import { drawerStyles } from '../../styles/drawerStyles';
 import { useAppContext } from '../../context/AppContext';
 import { obfuscateAddress } from '../../commons/functions/utils';
+import { apiAdapter} from "../../api/apiAdapter";
 import RootNavigator from './RootNavigator';
 
 const Drawer = createDrawerNavigator();
 
 const CustomDrawerContent = (props: DrawerContentComponentProps) => {
-    const { userNickname, connectionContext, userProfileImage } = useAppContext();
+    const { userNickname, connectionContext } = useAppContext();
     const user = {
-        profileImage: userProfileImage.value,
+        profileImageUrl: apiAdapter.getProfileAvatarUrl(connectionContext?.connectedAddress ?
+            connectionContext.connectedAddress : '', true),
         name: userNickname.value,
         walletAddress: connectionContext?.connectedAddress ? obfuscateAddress(connectionContext.connectedAddress) : '',
     };
@@ -27,8 +29,9 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
                 <View style={drawerStyles.userContainer}>
                     <View style={drawerStyles.profileImageContainer}>
                         <Image
+                            key={Date.now()}
                             source={{
-                                uri: `data:image/jpeg;base64,${user.profileImage}`,
+                                uri: user.profileImageUrl,
                             }}
                             style={drawerStyles.profileImage}
                         />

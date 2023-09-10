@@ -6,7 +6,12 @@ import { explorePlacesScreenWording } from './wording';
 import { PlaceResponse } from '../../../api/response/places';
 import { mockApiAdapter } from '../../../api/mockApiAdapter';
 import { apiAdapter } from '../../../api/apiAdapter';
-import DecentravellerPlacesItems from '../../../commons/components/DecentravellerPlacesList';
+import {
+    DecentravellerPlacesList,
+    LoadPlaceResponse,
+    PlaceShowProps,
+    PlaceLoadFunction
+} from '../../../commons/components/DecentravellerPlacesList';
 import DecentravellerPicker from '../../../commons/components/DecentravellerPicker';
 import { PickerItem } from '../../../commons/types';
 import {
@@ -27,7 +32,7 @@ const adapter = apiAdapter;
 const ExplorePlacesScreen = ({ navigation }) => {
     const { userLocation } = useAppContext();
 
-    const [places, setPlaces] = React.useState<PlaceResponse[]>([]);
+    const [places, setPlaces] = React.useState<PlaceShowProps[]>([]);
     const [loadingPlaces, setLoadingPlaces] = React.useState<boolean>(false);
     const [lastSearchTextLength, setLastSearchTextLength] = React.useState<number>(0);
     const [loadingGeocodingResponse, setLoadingGeocodingResponse] = React.useState<boolean>(false);
@@ -47,6 +52,12 @@ const ExplorePlacesScreen = ({ navigation }) => {
     const [minStars, setMinStars] = useState<number>(0);
     const [maxDistance, setMaxDistance] = useState<number>(0);
     const [interestPickerValue, setInterestPickerValue] = useState<string>(null);
+    const [showNotFound, setNotFound] = React.useState<boolean>(false);
+
+    const onNotFound = () => {
+        setNotFound(true);
+        setLoadingPlaces(false);
+    };
 
     const filterModalDataProps: FilterModalData = {
         orderBy: sortBy,
@@ -94,14 +105,34 @@ const ExplorePlacesScreen = ({ navigation }) => {
     ): Promise<void> => {
         setLoadingPlaces(true);
         console.log('to fetch places', latitude, longitude, lastLocationLabelSearched);
-        const places = await adapter.getRecommendedPlaces(
+        const placesResponse = await adapter.getPlacesSearch(
             [latitude, longitude],
+            onNotFound,
+            0, 500,
             interestPickerValue,
             sortBy,
             minStars !== 0 ? minStars : null,
             maxDistance !== 0 ? maxDistance : null,
         );
-        setPlaces(places);
+        if (placesResponse != null){
+            const imageUris = placesResponse.places.map((p: PlaceResponse) => {
+                return adapter.getPlaceImageUrl(p.id);
+            });
+            const placesToShow: PlaceShowProps[] = placesResponse.places.map(function (p, i) {
+                return {
+                    id: p.id,
+                    name: p.name,
+                    address: p.address,
+                    latitude: p.latitude,
+                    longitude: p.longitude,
+                    score: p.score,
+                    category: p.category,
+                    reviewCount: p.reviews,
+                    imageUri: imageUris[i],
+                };
+            });
+            setPlaces(placesToShow);
+        }
         setLoadingPlaces(false);
         setLastLocationLabelSearched(lastLocationLabelSearched);
         setLastLocationSearched([latitude, longitude]);
@@ -174,7 +205,11 @@ const ExplorePlacesScreen = ({ navigation }) => {
         setInterestPickerValue(null);
     };
 
-    const componentToRender = loadingPlaces ? <LoadingComponent /> : <DecentravellerPlacesItems places={places} />;
+    const componentToRender = loadingPlaces ? (
+        <LoadingComponent />
+    ) : !showNotFound ? (
+        <DecentravellerPlacesList placeList={places} minified={false} horizontal={false} />
+    ) : (<Text> No places where found </Text>);
 
     return (
         <View
