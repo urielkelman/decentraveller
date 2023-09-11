@@ -55,7 +55,7 @@ const deployFunction: DeployFunction = async function (
 
     const governanceDeployment = await get("DecentravellerGovernance");
 
-    const decentravellerDeployment = await deploy("Decentraveller", {
+    await deploy("Decentraveller", {
         from: deployer,
         args: [
             governanceDeployment.address,
@@ -67,20 +67,6 @@ const deployFunction: DeployFunction = async function (
         ],
         log: true,
     });
-
-    const decentraveller: Decentraveller = await ethers.getContractAt(
-        "Decentraveller",
-        decentravellerDeployment.address,
-        deployer
-    );
-
-    const registerDeployerProfileTx = await decentraveller.registerProfile(
-        "Deployer",
-        "AR",
-        0
-    );
-
-    await registerDeployerProfileTx.wait();
 };
 deployFunction.tags = ["all"];
 export default deployFunction;
