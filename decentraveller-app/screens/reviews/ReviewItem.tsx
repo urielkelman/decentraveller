@@ -5,8 +5,8 @@ import { useNavigation } from '@react-navigation/native';
 import { placeReviewsBoxStyles } from '../../styles/placeDetailStyles';
 import StarComponent from '../../commons/components/StarComponent';
 import { ReviewShowProps } from '../../commons/components/DecentravellerReviewsList';
-import { PlaceDetailScreenProp } from '../home/place/types';
 import { UserProfileScreenProps } from '../users/profile/types';
+import ReviewImageContainer from "./ReviewImageContainer";
 
 export type ReviewItemProps = ReviewShowProps & {
     summarized: boolean;
@@ -65,6 +65,7 @@ const ReviewItem: React.FC<ReviewItemProps> = ({
                     {text}
                 </Text>
             </View>
+            <ReviewImageContainer placeId={placeId} reviewId={id} imageCount={imageCount}/>
         </TouchableOpacity>
     );
 };

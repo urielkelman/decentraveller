@@ -166,6 +166,33 @@ const placeReviewsBoxStyles = StyleSheet.create({
         marginBottom: 6,
         borderRadius: 10,
     },
+    imagesContainer: {
+        paddingHorizontal: 10,
+        overflow: 'hidden',
+        justifyContent: 'flex-start',
+        alignItems: 'flex-start',
+    },
+    imageContainer: {
+        marginRight: 10,
+        flex: 1,
+    },
+    imageFlatList: {
+        flex: 1,
+        paddingVertical: 10,
+        overflow: 'scroll',
+    },
+    image: {
+        borderRadius: 10,
+        height: 60,
+        width: 80,
+    },
+    moreImages: {
+        paddingRight: 10,
+        height:80,
+        position: "absolute",
+        width: 40,
+        alignSelf: "flex-end",
+    },
     commentContainer: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -199,7 +226,7 @@ const placeReviewsBoxStyles = StyleSheet.create({
     },
     userNameText: {
         fontSize: 12,
-        color: 'red',
+        color: 'rgb(80,80,80)',
         fontWeight: 'bold',
     },
     dateText: {

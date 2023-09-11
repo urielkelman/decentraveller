@@ -1,6 +1,6 @@
 import PlaceItem from '../../screens/home/place/PlaceItem';
 import {FlatList, Text, View} from 'react-native';
-import React, {useEffect} from 'react';
+import React, {useEffect, useCallback} from 'react';
 import {DecentravellerPlaceCategory} from '../../context/types';
 import {placeReviewsBoxStyles} from "../../styles/placeDetailStyles";
 import LoadingComponent from "./DecentravellerLoading";
@@ -69,7 +69,7 @@ const DecentravellerPlacesList: React.FC<PlacesItemsProps> = ({ placeList,
                 setPlaces(placeList);
                 setPlacesCount(total);
             } else if (loadPlaces != undefined) {
-                const {total, placesToShow} = await loadPlaces(0, 5);
+                const {total, placesToShow} = await loadPlaces(0, 10);
                 setPlaces(placesToShow);
                 setPlacesCount(total);
             }
@@ -78,11 +78,10 @@ const DecentravellerPlacesList: React.FC<PlacesItemsProps> = ({ placeList,
     }, []);
 
 
-
     const loadMore = async () => {
         if (hasPlaces() && placeCount > places.length) {
             setLoading(true);
-            const {total, placesToShow} = await loadPlaces((places.length / 5) | 0, 5);
+            const {total, placesToShow} = await loadPlaces((places.length / 10) | 0, 10);
             places.push.apply(places, placesToShow);
             setLoading(false);
         }

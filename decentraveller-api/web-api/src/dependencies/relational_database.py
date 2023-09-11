@@ -111,22 +111,18 @@ class RelationalDatabase:
         :param ids: list of reviews and place ids
         :return: the reviews
         """
-        result = self.session.query(ReviewORM, ProfileORM). \
-            join(ProfileORM, ProfileORM.owner == ReviewORM.owner). \
-            filter(tuple_(ReviewORM.id, ReviewORM.place_id).in_(tuple(ids))).all()
         image_counts = self.session.query(ReviewImageORM.review_id,
                                           ReviewImageORM.place_id,
-                                          func.count(ReviewImageORM.hash)). \
-            filter(tuple_(ReviewImageORM.review_id, ReviewORM.place_id).in_(tuple(ids))). \
-            group_by(ReviewImageORM.review_id, ReviewImageORM.place_id). \
-            all()
-        image_counts = {(c[0], c[1]): c[2] for c in image_counts}
+                                          func.count(ReviewImageORM.review_id).label("image_count")). \
+            group_by(tuple_(ReviewImageORM.review_id, ReviewImageORM.place_id)).subquery()
+        result = self.session.query(ReviewORM, ProfileORM, func.coalesce(image_counts.c.image_count, 0)). \
+            join(ProfileORM, ProfileORM.owner == ReviewORM.owner). \
+            join(image_counts, tuple_(image_counts.c.review_id, image_counts.c.place_id) ==
+                 tuple_(ReviewORM.id, ReviewORM.place_id), isouter=True). \
+            filter(tuple_(ReviewORM.id, ReviewORM.place_id).in_(ids)).all()
         parsed_result = []
         for p in result:
-            count = 0
-            if (p[0].id, p[0].place_id) in image_counts:
-                count = image_counts[(p[0].id, p[0].place_id)]
-            review = ReviewInDB(**p[0].__dict__, image_count=count).dict()
+            review = ReviewInDB(**p[0].__dict__, image_count=p[2]).dict()
             review['owner'] = ProfileInDB.from_orm(p[1])
             parsed_result.append(review)
         return [ReviewWithProfile(**p)

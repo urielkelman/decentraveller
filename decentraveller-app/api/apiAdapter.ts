@@ -13,7 +13,7 @@ import {
     RECOMMENDED_SIMILAR_PLACES,
     REVIEWS_PLACES_ENDPOINT,
     REVIEWS_PROFILE_ENDPOINT,
-    UPLOAD_IMAGES,
+    UPLOAD_IMAGES, REVIEW_IMAGE,
 } from './config';
 import { UserResponse } from './response/user';
 import Adapter from './Adapter';
@@ -60,6 +60,11 @@ class ApiAdapter extends Adapter {
         return API_ENDPOINT + formatString(PLACE_IMAGE, { placeId: placeId })
     }
 
+    getReviewImageUrl(placeId: number, reviewId: number, imageNumber: number): string {
+        return API_ENDPOINT + formatString(REVIEW_IMAGE,
+            { placeId: placeId, reviewId: reviewId, imageNumber: imageNumber })
+    }
+
     async getPlacesSearch(
         [latitude, longitude]: [string, string],
         onNotFound: () => void,
@@ -92,6 +97,7 @@ class ApiAdapter extends Adapter {
         if (maximum_distance !== null && maximum_distance !== undefined) {
             queryParams.maximum_distance = maximum_distance.toString();
         }
+        console.log(queryParams);
 
         const httpRequest: HttpGetRequest = {
             url: PLACES_SEARCH,

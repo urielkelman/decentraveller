@@ -148,6 +148,7 @@ class PlaceCBV:
                 raise HTTPException(status_code=HTTP_400_BAD_REQUEST,
                                     detail=f"Can't filter by distance if latitude and longitude is not provided")
             places = places.filter(text(f"distance <={maximum_distance}"))
+        places = places.order_by(asc(PlaceORM.id))
         if sort_by == "relevancy":
             places = places.order_by((self.database.relevancy_score(
                 func.avg(ReviewORM.score), func.count(distinct(ReviewORM.owner)))).desc())
