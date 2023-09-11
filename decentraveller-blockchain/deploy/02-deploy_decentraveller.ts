@@ -1,6 +1,6 @@
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { DeployFunction } from "hardhat-deploy/types";
-import { DecentravellerToken } from "../typechain-types";
+import { Decentraveller, DecentravellerToken } from "../typechain-types";
 
 const deployFunction: DeployFunction = async function (
     hre: HardhatRuntimeEnvironment
@@ -55,7 +55,7 @@ const deployFunction: DeployFunction = async function (
 
     const governanceDeployment = await get("DecentravellerGovernance");
 
-    await deploy("Decentraveller", {
+    const decentravellerDeployment = await deploy("Decentraveller", {
         from: deployer,
         args: [
             governanceDeployment.address,
@@ -67,6 +67,20 @@ const deployFunction: DeployFunction = async function (
         ],
         log: true,
     });
+
+    const decentraveller: Decentraveller = await ethers.getContractAt(
+        "Decentraveller",
+        decentravellerDeployment.address,
+        deployer
+    );
+
+    const registerDeployerProfileTx = await decentraveller.registerProfile(
+        "Deployer",
+        "AR",
+        0
+    );
+
+    await registerDeployerProfileTx.wait();
 };
 deployFunction.tags = ["all"];
 export default deployFunction;

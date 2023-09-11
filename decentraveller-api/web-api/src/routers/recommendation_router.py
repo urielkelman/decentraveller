@@ -16,7 +16,7 @@ from src.orms.review import ReviewORM
 recommendation_router = InferringRouter()
 
 NEAR_PLACE_DISTANCE_KM = 3.5
-MINIMUM_REVIEWS_TO_RECOMMEND = 4
+MINIMUM_REVIEWS_TO_RECOMMEND = 3
 LAST_VISITED_PLACES_TO_QUERY_SIMILARS = 5
 LAST_VISITED_PLACES_TO_CONSIDER = 1000
 
@@ -192,7 +192,10 @@ class RecommendationCBV:
                                               for sims in place_similars):
                 for sims in place_similars:
                     if sims:
-                        result.append(sims.pop(0))
+                        p = sims.pop(0)
+                        if p.id not in places_to_avoid:
+                            result.append(p)
+                            places_to_avoid.add(p.id)
 
         if len(result) < limit and nearby:
             result += [p for p in nearby[:limit - len(result)]]

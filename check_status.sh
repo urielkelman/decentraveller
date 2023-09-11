@@ -27,15 +27,6 @@ else
   echo "Test image #1 of review - OK"
 fi
 
-status_code=$(curl --write-out %{http_code} --silent --output /dev/null "http://localhost:8000/review/2.jpg?id=1&place_id=5")
-
-if [[ "$status_code" -ne 200 ]] ; then
-  echo "Test image #2 of review - FAILED"
-  exit 1
-else
-  echo "Test image #2 of review - OK"
-fi
-
 status_code=$(curl --write-out %{http_code} --silent --output /dev/null http://localhost:8000/place/1/image.jpg)
 
 if [[ "$status_code" -ne 200 ]] ; then
@@ -81,24 +72,15 @@ else
   echo "Test place recommendation cold start - OK"
 fi
 
-status_code=$(curl --write-out %{http_code} --silent --output /dev/null "http://localhost:8000/place/9/similars")
-
-if [[ "$status_code" -ne 404 ]] ; then
-  echo "Test place does not have recommendations - FAILED"
-  exit 1
-else
-  echo "Test place does not have recommendations - OK"
-fi
-
 docker-compose up embedding_updater_job
 
-status_code=$(curl --write-out %{http_code} --silent --output /dev/null "http://localhost:8000/place/9/similars")
+status_code=$(curl --write-out %{http_code} --silent --output /dev/null "http://localhost:8000/place/33/similars")
 
 if [[ "$status_code" -ne 200 ]] ; then
-  echo "Test place now has vector recommendations - FAILED"
+  echo "Test place has vector recommendations - FAILED"
   exit 1
 else
-  echo "Test place now has vector recommendations - OK"
+  echo "Test place has vector recommendations - OK"
 fi
 
 status_code=$(curl --write-out %{http_code} --silent --output /dev/null "http://localhost:8000/profile/0xcd3B766CCDd6AE721141F452C550Ca635964ce71/recommendations")

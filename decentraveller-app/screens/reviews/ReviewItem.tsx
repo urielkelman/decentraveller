@@ -5,6 +5,8 @@ import { useNavigation } from '@react-navigation/native';
 import { placeReviewsBoxStyles } from '../../styles/placeDetailStyles';
 import StarComponent from '../../commons/components/StarComponent';
 import { ReviewShowProps } from '../../commons/components/DecentravellerReviewsList';
+import { PlaceDetailScreenProp } from '../home/place/types';
+import { UserProfileScreenProps } from '../users/profile/types';
 
 export type ReviewItemProps = ReviewShowProps & {
     summarized: boolean;
@@ -18,31 +20,48 @@ const ReviewItem: React.FC<ReviewItemProps> = ({
     imageCount,
     state,
     ownerNickname,
-    avatarBase64,
+    ownerWallet,
+    avatarUrl,
     createdAt,
     summarized,
 }) => {
-    const lines = summarized ? 3 : undefined;
+    const [showMore, setshowMore] = React.useState<boolean>(!summarized);
+    const navigation = useNavigation<UserProfileScreenProps>();
+
+    const onPress = () => {
+        setshowMore(true);
+    };
+
+    const showCreatedAt = (createdAt) => {
+        return createdAt.split('T')[0];
+    };
 
     return (
-        <TouchableOpacity style={placeReviewsBoxStyles.reviewItem}>
+        <TouchableOpacity style={placeReviewsBoxStyles.reviewItem} onPress={onPress}>
             <View style={placeReviewsBoxStyles.reviewHeader}>
                 <View style={placeReviewsBoxStyles.dataContainer}>
-                    <Text style={placeReviewsBoxStyles.dateText}>{createdAt}</Text>
+                    <Text style={placeReviewsBoxStyles.dateText}>{showCreatedAt(createdAt)}</Text>
                     <StarComponent score={score} />
                 </View>
-                <View style={placeReviewsBoxStyles.userContainer}>
+                <TouchableOpacity
+                    style={placeReviewsBoxStyles.userContainer}
+                    onPress={() => navigation.navigate('UserProfileScreen', { walletId: ownerWallet })}
+                >
                     <Image
                         source={{
-                            uri: `data:image/jpeg;base64,${avatarBase64}`,
+                            uri: avatarUrl,
                         }}
                         style={placeReviewsBoxStyles.avatarImage}
                     />
                     <Text style={placeReviewsBoxStyles.userNameText}>{ownerNickname}</Text>
-                </View>
+                </TouchableOpacity>
             </View>
             <View style={placeReviewsBoxStyles.commentContainer}>
-                <Text style={placeReviewsBoxStyles.commentText} numberOfLines={lines} ellipsizeMode="tail">
+                <Text
+                    style={placeReviewsBoxStyles.commentText}
+                    numberOfLines={showMore ? null : 3}
+                    ellipsizeMode="tail"
+                >
                     {text}
                 </Text>
             </View>

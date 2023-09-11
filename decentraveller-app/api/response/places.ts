@@ -1,4 +1,5 @@
 import { DecentravellerPlaceCategory } from '../../context/types';
+import {ReviewResponse} from "./reviews";
 
 export type PlaceResponse = {
     id: number;
@@ -9,4 +10,11 @@ export type PlaceResponse = {
     category: DecentravellerPlaceCategory;
     score: number;
     reviews: number;
+};
+
+export type PlacesResponse = {
+    places: PlaceResponse[];
+    total: number;
+    page: number;
+    perPage: number;
 };

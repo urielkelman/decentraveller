@@ -22,7 +22,6 @@ const DecentravellerInitialScreen = () => {
     const [stackToRender, setStackToRender] = React.useState<'Login' | 'Home' | 'Registration'>('Login');
     const [loadingUserProfile, setLoadingUserProfile] = React.useState<boolean>(false);
     const appContext = useAppContext();
-    const setUserProfileImage = appContext.userProfileImage.setValue;
     const setUserNickname = appContext.userNickname.setValue;
     const setUserCreatedAt = appContext.userCreatedAt.setValue;
     const setUserInterest = appContext.userInterest.setValue;
@@ -41,16 +40,9 @@ const DecentravellerInitialScreen = () => {
                 return;
             }
 
-            const userProfileImage = await apiAdapter.getUserProfileImage(address, () => {
-                console.log('There was a problem fetching the image');
-            });
-
-            console.log(userProfileImage);
-
             setUserNickname(user.nickname);
             setUserCreatedAt(user.createdAt);
             setUserInterest(user.interest);
-            setUserProfileImage(userProfileImage);
             setStackToRender('Home');
         } finally {
             setLoadingUserProfile(false);

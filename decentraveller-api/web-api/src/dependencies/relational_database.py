@@ -1,4 +1,5 @@
 from typing import Optional, Dict, List, Union, Callable, Tuple
+from datetime import datetime
 
 from sqlalchemy import func, case, tuple_, and_
 from sqlalchemy.orm import Session
@@ -7,11 +8,16 @@ from src.api_models.bulk_results import PaginatedReviews, PaginatedPlaces
 from src.api_models.place import PlaceID, PlaceInDB, PlaceWithStats
 from src.api_models.profile import ProfileInDB, WalletID
 from src.api_models.review import ReviewID, ReviewInDB, ReviewWithProfile, ReviewInput
+from src.api_models.rule import RuleInput
 from src.orms.image import ImageORM
 from src.orms.place import PlaceORM
 from src.orms.profile import ProfileORM
 from src.orms.review import ReviewORM
 from src.orms.review_image import ReviewImageORM
+from src.orms.rule import RuleORM, RuleStatus
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 def build_relational_database():
@@ -328,3 +334,18 @@ class RelationalDatabase:
         if not image_query:
             return None
         return image_query[0][0]
+
+    def add_rule(self, rule: RuleInput, is_initial_rule: bool = False):
+        """
+        Adds a rule to the database initializing it with the first state
+        :param rule: the rule to insert
+        :param is_initial_rule: if is the rule was originated in the deployment or not.
+        :return:
+        """
+        proposed_at = datetime.utcfromtimestamp(rule.timestamp)
+        rule_orm = RuleORM(rule_id=rule.rule_id, proposal_id=rule.proposal_id, proposer=rule.proposer,
+                           rule_statement=rule.rule_statement, proposed_at=proposed_at,
+                           rule_status=RuleStatus.EXECUTED, is_initial=is_initial_rule)
+        self.session.add(rule_orm)
+        self.session.commit()
+

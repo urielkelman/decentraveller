@@ -1,11 +1,12 @@
 import '@ethersproject/shims';
-import { ethers } from 'ethers';
+import { ethers, utils } from 'ethers';
 import { ContractFunction, DecentravellerContract } from './contractTypes';
 import { Blockchain, BlockchainByChainId, LOCAL_DEVELOPMENT_CHAIN_ID } from './config';
 import { withTimeout } from '../commons/functions/utils';
 import { DEFAULT_CHAIN_ID } from '../context/AppContext';
 import { decentravellerPlaceContract } from './contracts/decentravellerPlaceContract';
 import { decentravellerMainContract } from './contracts/decentravellerMainContract';
+import { decentravellerPlaceFactoryContract } from './contracts/decentravellerPlaceFactoryABI';
 
 const BLOCKCHAIN_TIMEOUT_IN_MILLIS = 100000;
 const BLOCKCHAIN_TRANSACTION_TASK_NAME = 'Blockchain transaction';
@@ -68,9 +69,9 @@ class BlockchainAdapter {
         physicalAddress: string,
         placeCategory: number,
         onErrorAddingPlace: () => void,
-    ): Promise<string> {
+    ): Promise<number> {
         try {
-            return await this.populateAndSend(
+            const transactionHash: string = await this.populateAndSend(
                 web3Provider,
                 decentravellerMainContract,
                 'addPlace',
@@ -80,6 +81,26 @@ class BlockchainAdapter {
                 physicalAddress,
                 placeCategory,
             );
+
+            const txReceipt = await web3Provider.getTransactionReceipt(transactionHash);
+            const contract = new ethers.Contract(
+                decentravellerPlaceFactoryContract.addressesByBlockchain[BlockchainByChainId[DEFAULT_CHAIN_ID]],
+                decentravellerPlaceFactoryContract.fullContractABI,
+                web3Provider,
+            );
+            txReceipt.logs.forEach((log) => {
+                try {
+                    const parsedLog = contract.interface.parseLog(log);
+                    console.log(parsedLog);
+                    if (parsedLog.name === 'NewPlace') {
+                        return parsedLog.args[0];
+                    }
+                } catch (error) {
+                    // This means the log didn't belong to the contract, skip
+                }
+            });
+            console.log(txReceipt);
+            return 1;
         } catch (e) {
             console.log(e);
             onErrorAddingPlace();

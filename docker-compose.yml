@@ -36,17 +36,15 @@ services:
       - PYTHONHASHSEED=0
       - INDEXER_API_KEY=asd123
       - BLOCKCHAIN_RPC_URL=http://blockchain:8545
+    env_file:
+      - decentraveller-api/geocoding.env
     depends_on:
       - database
       - weaviate
       - ipfs
       - blockchain
       #- ml-api
-    deploy:
-      restart_policy:
-        condition: on-failure
-        delay: 5s
-        max_attempts: 2
+    restart: on-failure:3
 
   #ml-api:
   #  build: decentraveller-ml-api/
@@ -73,11 +71,7 @@ services:
       - INDEXER_API_KEY=asd123
     depends_on:
       - blockchain
-    deploy:
-      restart_policy:
-        condition: on-failure
-        delay: 5s
-        max_attempts: 2
+    restart: on-failure:3
   
   weaviate:
     image: semitechnologies/weaviate:1.19.2

@@ -65,7 +65,7 @@ contract Decentraveller {
         timelockGovernanceAddress = governance.timelock();
         placeFactory = DecentravellerPlaceCloneFactory(_placesFactory);
         uint256 initialRulesLength = initialRules.length;
-        for (uint i = 1; i < initialRulesLength; i++) {
+        for (uint i = 1; i <= initialRulesLength; i++) {
             DecentravellerDataTypes.DecentravellerRule
                 storage initialRule = ruleById[i];
             initialRule.proposer = msg.sender;
