@@ -2,10 +2,10 @@ import { HTTPMethod } from "./AxiosRequestBuilder";
 
 export type EventRequestBody = { [key: string]: string | number | string[] };
 
-export interface EventRequest<T extends EventRequestBody> {
+export interface EventRequest<T extends EventRequestBody | undefined> {
     endpoint: string;
     method: HTTPMethod;
-    body: T;
+    body?: T;
 }
 
 export interface NewPlaceRequestBody extends EventRequestBody {

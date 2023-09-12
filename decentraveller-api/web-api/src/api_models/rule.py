@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from fastapi_utils.api_model import APIModel
 
 from typing import NewType, Optional
@@ -26,4 +28,9 @@ class RuleInDB(RuleBody):
     """
     Rule API model
     """
-    status: str
+    rule_status: str
+    proposed_at: datetime
+    is_initial: bool
+
+class RuleApprovedInput(APIModel):
+    rule_id: RuleId

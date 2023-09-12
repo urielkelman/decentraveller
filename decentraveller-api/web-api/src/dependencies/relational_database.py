@@ -8,7 +8,7 @@ from src.api_models.bulk_results import PaginatedReviews, PaginatedPlaces
 from src.api_models.place import PlaceID, PlaceInDB, PlaceWithStats
 from src.api_models.profile import ProfileInDB, WalletID
 from src.api_models.review import ReviewID, ReviewInDB, ReviewWithProfile, ReviewInput
-from src.api_models.rule import RuleInput
+from src.api_models.rule import RuleInput, RuleInDB, RuleId
 from src.orms.image import ImageORM
 from src.orms.place import PlaceORM
 from src.orms.profile import ProfileORM
@@ -335,17 +335,58 @@ class RelationalDatabase:
             return None
         return image_query[0][0]
 
-    def add_rule(self, rule: RuleInput, is_initial_rule: bool = False):
+    def add_rule(self, rule: RuleInput, is_initial_rule: bool = False) -> RuleInDB:
         """
         Adds a rule to the database initializing it with the first state
         :param rule: the rule to insert
         :param is_initial_rule: if is the rule was originated in the deployment or not.
         :return:
         """
+        rule_status = RuleStatus.EXECUTED if is_initial_rule else RuleStatus.PENDING_VOTE
         proposed_at = datetime.utcfromtimestamp(rule.timestamp)
         rule_orm = RuleORM(rule_id=rule.rule_id, proposal_id=rule.proposal_id, proposer=rule.proposer,
                            rule_statement=rule.rule_statement, proposed_at=proposed_at,
-                           rule_status=RuleStatus.EXECUTED, is_initial=is_initial_rule)
+                           rule_status=rule_status, is_initial=is_initial_rule)
         self.session.add(rule_orm)
         self.session.commit()
+        return RuleInDB.from_orm(rule_orm)
+
+    def get_rule_by_id(self, rule_id: RuleId) -> Optional[RuleInDB]:
+        """
+        Get a rule matching the id.
+        :param rule_id: the rule id to match.
+        :return: the matched rule.
+        """
+        rule = self.session.query(RuleORM).filter(RuleORM.rule_id == rule_id).first()
+        if rule is None:
+            return None
+
+        return RuleInDB.from_orm(rule)
+
+    def get_rules_by_id(self, rules_id: List[RuleId]) -> List[RuleInDB]:
+        """
+        Get rules matching ids.
+        :param rules_id: the list containing the rules id to match.
+        :return: a list with the matched rules.
+        """
+        results = self.session.query(RuleORM).filter(RuleORM.rule_id1.in_(tuple(rules_id)))
+        return [RuleInDB.from_orm(r) for r in results]
+
+    def update_rule_status(self, rule_id: RuleId, rule_status: RuleStatus) -> Optional[RuleInDB]:
+        """
+        Update the status of the rule matching the id .
+        :param rule_id: the id of the rule to update.
+        :param rule_status: the new status to set to the rule.
+        :return: the modified rule.
+        """
+        rule = self.session.query(RuleORM).filter(RuleORM.rule_id == rule_id).first()
+        if rule is None:
+            return None
+
+        rule.rule_status = rule_status
+        self.session.commit()
+        self.session.refresh(rule)
+        return RuleInDB.from_orm(rule)
+
+
 
