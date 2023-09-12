@@ -10,7 +10,7 @@ class RuleBody(APIModel):
     Rule API Model
     """
     rule_id: RuleId
-    proposal_id: int
+    proposal_id: Optional[int]
     rule_statement: str
     proposer: Optional[str]
 

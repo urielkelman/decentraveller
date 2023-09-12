@@ -26,7 +26,6 @@ logging.config.fileConfig('logging.conf', disable_existing_loggers=False)
 
 @app.on_event("startup")
 async def load_rules():
-    logging.info("Loadddd")
     await load_initial_rules()
 
 

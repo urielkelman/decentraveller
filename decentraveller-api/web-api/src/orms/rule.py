@@ -20,7 +20,7 @@ class RuleORM(Base):
     """
     __tablename__ = "rules"
     rule_id = Column(Integer, primary_key=True)
-    proposal_id = Column(Integer, unique=True)
+    proposal_id = Column(Integer, unique=True, nullable=True)
     proposer = Column(ForeignKey("profiles.owner"), nullable=True)
     rule_statement = Column(String)
     proposed_at = Column(DateTime)
