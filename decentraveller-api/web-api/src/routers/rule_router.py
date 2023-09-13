@@ -56,3 +56,4 @@ class RuleCBV:
             raise HTTPException(status_code=HTTP_404_NOT_FOUND)
 
         return rule
+

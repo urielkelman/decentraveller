@@ -1,5 +1,5 @@
-import { ethers } from "hardhat";
-import { Decentraveller, DecentravellerPlace } from "../typechain-types";
+import { ethers, getNamedAccounts } from "hardhat";
+import { Decentraveller } from "../typechain-types";
 
 const WALLET_PRIVATE_KEY =
     "0x5787c71b828644eaf04241e5627f5cb58e197e2fd348f865c5cc25c4de2bdcb1";

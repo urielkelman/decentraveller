@@ -4,16 +4,18 @@ from fastapi_utils.api_model import APIModel
 
 from typing import NewType, Optional
 
-RuleId = NewType("ReviewId", int)
+from pydantic import Field
+
+RuleId = NewType("RuleId", int)
 
 
 class RuleBody(APIModel):
     """
     Rule API Model
     """
-    rule_id: RuleId
-    proposal_id: Optional[int]
-    rule_statement: str
+    rule_id: RuleId = Field(alias="ruleId")
+    proposal_id: Optional[str] = Field(alias="proposalId")
+    rule_statement: str = Field(alias="ruleStatement")
     proposer: Optional[str]
 
 

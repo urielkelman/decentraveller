@@ -8,7 +8,7 @@ import EventTransformer from "./EventTransformer";
 
 class RuleDeletionProposedTransformer extends EventTransformer<RuleDeletionProposedRequestBody> {
     public transformEvent(
-        ...event: any[]
+        event: any[]
     ): EventRequest<RuleDeletionProposedRequestBody> {
         return {
             endpoint: "/rule-deletion",

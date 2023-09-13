@@ -20,7 +20,7 @@ def test_missing_rule(cleanup):
 def test_create_rule_no_profile(cleanup):
     response = client.post("/rule", json={
         "rule_id": 1,
-        "proposal_id": 101,
+        "proposal_id": "101",
         "rule_statement": "You should not insult other users.",
         "proposer": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
         "timestamp": 1694493442
@@ -40,7 +40,7 @@ def test_create_rule_correctly(cleanup):
     response = client.post("/rule",
                            json={
                                "rule_id": 1,
-                               "proposal_id": 101,
+                               "proposal_id": "101",
                                "rule_statement": "You should not insult other users.",
                                "proposer": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                "timestamp": 1694493442
@@ -78,7 +78,7 @@ def test_approved_rule_correctly(cleanup):
     client.post("/rule",
                 json={
                     "rule_id": 1,
-                    "proposal_id": 101,
+                    "proposal_id": "101",
                     "rule_statement": "You should not insult other users.",
                     "proposer": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                     "timestamp": 1694493442
@@ -97,7 +97,7 @@ def test_approved_rule_correctly(cleanup):
 
     assert rule_response.json() == {
         "ruleId": 1,
-        "proposalId": 101,
+        "proposalId": "101",
         "ruleStatement": "You should not insult other users.",
         "proposer": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
         "ruleStatus": "EXECUTED",
