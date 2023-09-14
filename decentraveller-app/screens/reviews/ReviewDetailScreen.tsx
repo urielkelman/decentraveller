@@ -9,6 +9,8 @@ import { ReviewShowProps } from '../../commons/components/DecentravellerReviewsL
 import PlaceItem from '../home/place/PlaceItem';
 import { reviewDetailStyles } from '../../styles/reviewDetailStyles';
 import ReviewItem from './ReviewItem';
+import { placeDetailStyles } from '../../styles/placeDetailStyles';
+import ReviewImageContainer from './ReviewImageContainer';
 
 const adapter = apiAdapter;
 
@@ -77,7 +79,6 @@ const ReviewDetailScreen: React.FC<ReviewScreenProps> = ({ route }) => {
                 />
             </View>
             <View style={reviewDetailStyles.reviewContainer}>
-                <Text style={reviewDetailStyles.title}>Review:</Text>
                 <ReviewItem
                     id={review.id}
                     placeId={review.placeId}
@@ -91,6 +92,14 @@ const ReviewDetailScreen: React.FC<ReviewScreenProps> = ({ route }) => {
                     createdAt={review.createdAt}
                     summarized={false}
                 />
+            </View>
+            <View style={reviewDetailStyles.optionsContainer}>
+                <TouchableOpacity>
+                    <View style={reviewDetailStyles.optionDenounce}>
+                        <Text style={reviewDetailStyles.denounceIcon}>⚑ </Text>
+                        <Text style={reviewDetailStyles.denounceText}>Report</Text>
+                    </View>
+                </TouchableOpacity>
             </View>
         </View>
     );

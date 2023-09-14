@@ -61,6 +61,16 @@ const PlaceItem: React.FC<PlaceItemProps> = ({
     };
     const itemStyle = minified ? placeItemMinifiedStyle : placeItemStyle;
 
+    const placeTitle = minified ? (
+        <Text style={itemStyle.nameText} numberOfLines={1} adjustsFontSizeToFit>
+            {name}
+        </Text>
+    ) : (
+        <Text style={itemStyle.nameText} numberOfLines={2} adjustsFontSizeToFit>
+            {name}
+        </Text>
+    );
+
     return (
         <TouchableOpacity onPress={() => navigation.navigate('PlaceDetailScreen', placeDetailParams)}>
             <View style={itemStyle.container}>
@@ -69,7 +79,7 @@ const PlaceItem: React.FC<PlaceItemProps> = ({
                 </View>
                 <View style={itemStyle.rightSideContainer}>
                     <View style={itemStyle.informationContainer}>
-                        <Text style={itemStyle.nameText}>{name}</Text>
+                        {placeTitle}
                         {countryISOCode ? (
                             <CountryFlag
                                 isoCode={countryISOCode}

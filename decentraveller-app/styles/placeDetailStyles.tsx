@@ -42,9 +42,15 @@ const placeDetailStyles = StyleSheet.create({
         flexDirection: 'column',
         alignItems: 'flex-start',
     },
+    placeTitleContainer: {
+        flexDirection: 'column',
+        alignItems: 'flex-start',
+        maxWidth: windowWidth - 140,
+    },
     bulletsContainer: {
         flexDirection: 'column',
         marginLeft: 'auto',
+        minWidth: 100,
     },
     titleText: {
         fontSize: 30,
@@ -171,6 +177,7 @@ const placeReviewsBoxStyles = StyleSheet.create({
         overflow: 'hidden',
         justifyContent: 'flex-start',
         alignItems: 'flex-start',
+        height: 80,
     },
     imageContainer: {
         marginRight: 10,

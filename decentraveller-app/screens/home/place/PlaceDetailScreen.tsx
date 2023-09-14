@@ -1,10 +1,12 @@
-import { View, Image, Text, ScrollView, TouchableOpacity } from 'react-native';
+import { Image, Text, TouchableOpacity, View } from 'react-native';
 import PlaceReviewsBox from './PlaceReviewsBox';
 import { placeDetailStyles } from '../../../styles/placeDetailStyles';
 import { PlaceDetailScreenProps } from './types';
 import React, { useState } from 'react';
 import PlaceSimilarsBox from './PlaceSimilarsBox';
 import { ImageGallery } from '@georstat/react-native-image-gallery';
+import { useAppContext } from '../../../context/AppContext';
+
 const path = '../../../assets/mock_images/eretz-inside.jpeg';
 const locationIconPath = '../../../assets/images/location.png';
 const rankingIconPath = require('../../../assets/images/estrellita.png');
@@ -25,26 +27,6 @@ function formatScore(number) {
 function needsMultipleLines(str: string, lines: number): boolean {
     const words = str.trim().split(/\s+/);
     return str.length > lines && words.length > 1;
-}
-
-function renderNameText(name: string): JSX.Element {
-    const shouldShowInTwoLines = needsMultipleLines(name, 14);
-
-    if (shouldShowInTwoLines) {
-        const words = name.trim().split(/\s+/);
-        const halfIndex = Math.ceil(words.length / 2);
-        const name_1 = words.slice(0, halfIndex).join(' ');
-        const name_2 = words.slice(halfIndex).join(' ');
-
-        return (
-            <>
-                <Text style={placeDetailStyles.titleText}>{name_1}</Text>
-                <Text style={placeDetailStyles.titleText2}>{name_2}</Text>
-            </>
-        );
-    } else {
-        return <Text style={placeDetailStyles.titleText}>{name}</Text>;
-    }
 }
 
 function renderLocationText(location: string): JSX.Element {
@@ -96,6 +78,7 @@ const bulletItemComponent: React.FC<BulletItemProps> = ({ iconPath, title, value
 };
 
 const PlaceDetailScreen: React.FC<PlaceDetailScreenProps> = ({ route }) => {
+    const { userLocation } = useAppContext();
     const { id, name, address, latitude, longitude, score, category, reviewCount, imageUri } = route.params;
     const [isOpen, setIsOpen] = useState(false);
 
@@ -103,14 +86,43 @@ const PlaceDetailScreen: React.FC<PlaceDetailScreenProps> = ({ route }) => {
 
     const closeGallery = () => setIsOpen(false);
 
+    const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number): number => {
+        const earthRadius = 6371; // Radius of the Earth in kilometers
+
+        // Convert latitude and longitude from degrees to radians
+        const lat1Rad = (lat1 * Math.PI) / 180;
+        const lon1Rad = (lon1 * Math.PI) / 180;
+        const lat2Rad = (lat2 * Math.PI) / 180;
+        const lon2Rad = (lon2 * Math.PI) / 180;
+
+        // Haversine formula
+        const dLat = lat2Rad - lat1Rad;
+        const dLon = lon2Rad - lon1Rad;
+
+        const a = Math.sin(dLat / 2) ** 2 + Math.cos(lat1Rad) * Math.cos(lat2Rad) * Math.sin(dLon / 2) ** 2;
+
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+        return earthRadius * c;
+    };
+
+    const userLatitude: number = +userLocation.value[0];
+    const userLongitude: number = +userLocation.value[1];
+    const placeLatitude: number = +latitude;
+    const placeLongitude: number = +longitude;
+
+    const distanceToPlace = calculateDistance(userLatitude, userLongitude, placeLatitude, placeLongitude);
+
     return (
         <View style={placeDetailStyles.container}>
             <TouchableOpacity style={placeDetailStyles.imageContainer} onPress={openGallery}>
                 <Image style={placeDetailStyles.image} source={{ uri: imageUri }} />
             </TouchableOpacity>
             <View style={placeDetailStyles.headerContainer}>
-                <View style={placeDetailStyles.textContainer}>
-                    {renderNameText(name)}
+                <View style={placeDetailStyles.placeTitleContainer}>
+                    <Text style={placeDetailStyles.titleText} numberOfLines={2} adjustsFontSizeToFit>
+                        {name}
+                    </Text>
                     {renderLocationText(address)}
                 </View>
                 <View style={placeDetailStyles.bulletsContainer}>
@@ -123,7 +135,7 @@ const PlaceDetailScreen: React.FC<PlaceDetailScreenProps> = ({ route }) => {
                     {bulletItemComponent({
                         iconPath: distanceIconPath,
                         title: 'Distance',
-                        value: '0.4 km',
+                        value: Number(distanceToPlace).toFixed(2) + ' km',
                         marginTop: -15,
                     })}
                 </View>

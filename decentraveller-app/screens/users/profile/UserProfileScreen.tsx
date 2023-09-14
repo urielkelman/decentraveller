@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image, TouchableOpacity } from 'react-native';
+import { Image, Text, TouchableOpacity, View } from 'react-native';
 import { userProfileMainStyles } from '../../../styles/userProfileStyles';
 import { apiAdapter } from '../../../api/apiAdapter';
 import LoadingComponent from '../../../commons/components/DecentravellerLoading';
@@ -57,7 +57,7 @@ const UserProfileScreen: React.FC<UserProfileScreenProps> = ({ route }) => {
         })();
     }, []);
 
-    const componentToRender = loading ? (
+    return loading ? (
         <LoadingComponent />
     ) : (
         <View style={userProfileMainStyles.background}>
@@ -123,8 +123,6 @@ const UserProfileScreen: React.FC<UserProfileScreenProps> = ({ route }) => {
             />
         </View>
     );
-
-    return componentToRender;
 };
 
 export default UserProfileScreen;
