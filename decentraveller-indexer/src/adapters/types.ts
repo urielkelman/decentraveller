@@ -41,6 +41,7 @@ export interface RuleProposedRequestBody extends EventRequestBody {
     proposer: string;
     ruleStatement: string;
     proposalId: string;
+    timestamp: number;
 }
 
 export interface RuleApprovedRequestBody extends EventRequestBody {
@@ -49,7 +50,9 @@ export interface RuleApprovedRequestBody extends EventRequestBody {
 
 export interface RuleDeletionProposedRequestBody extends EventRequestBody {
     ruleId: number;
-    proposer: string;
+    deletionProposer: string;
+    deleteProposalId: string;
+    timestamp: number;
 }
 
 export interface RuleDeletedRequestBody extends EventRequestBody {

@@ -1,14 +1,16 @@
 from typing import Optional, Dict, List, Union, Callable, Tuple
 from datetime import datetime
 
+from fastapi import HTTPException
 from sqlalchemy import func, case, tuple_, and_
 from sqlalchemy.orm import Session
+from starlette.status import HTTP_400_BAD_REQUEST
 
 from src.api_models.bulk_results import PaginatedReviews, PaginatedPlaces
 from src.api_models.place import PlaceID, PlaceInDB, PlaceWithStats
 from src.api_models.profile import ProfileInDB, WalletID
 from src.api_models.review import ReviewID, ReviewInDB, ReviewWithProfile, ReviewInput
-from src.api_models.rule import RuleInput, RuleInDB, RuleId
+from src.api_models.rule import RuleInput, RuleInDB, RuleId, RuleProposedDeletionInput
 from src.orms.image import ImageORM
 from src.orms.place import PlaceORM
 from src.orms.profile import ProfileORM
@@ -372,21 +374,45 @@ class RelationalDatabase:
         results = self.session.query(RuleORM).filter(RuleORM.rule_id1.in_(tuple(rules_id)))
         return [RuleInDB.from_orm(r) for r in results]
 
-    def update_rule_status(self, rule_id: RuleId, rule_status: RuleStatus) -> Optional[RuleInDB]:
+    def update_rule_to_approved(self, rule_id: RuleId) -> Optional[RuleInDB]:
         """
-        Update the status of the rule matching the id .
+        Update the status of the rule matching the id to approved status.
         :param rule_id: the id of the rule to update.
-        :param rule_status: the new status to set to the rule.
         :return: the modified rule.
         """
         rule = self.session.query(RuleORM).filter(RuleORM.rule_id == rule_id).first()
         if rule is None:
             return None
 
-        rule.rule_status = rule_status
+        if rule.rule_status != RuleStatus.PENDING_APPROVAL:
+            # This is awful, but I really want to finish this.
+            raise HTTPException(status_code=HTTP_400_BAD_REQUEST)
+
+        rule.rule_status = RuleStatus.APPROVED
         self.session.commit()
         self.session.refresh(rule)
         return RuleInDB.from_orm(rule)
 
+    def update_rule_to_propose_deletion(self, rule_deletion_proposal: RuleProposedDeletionInput):
+        """
+        Update the status of the rule matching the id to pending deletion status.
+        :param rule_deletion_proposal: the data to update the rule.
+        :return: the modified rule.
+        """
+        rule = self.session.query(RuleORM).filter(RuleORM.rule_id == rule_deletion_proposal.rule_id).first()
+        if rule is None:
+            return None
+
+        if rule.rule_status != RuleStatus.APPROVED and rule.rule_status != RuleStatus.PENDING_DELETED:
+            # This is awful, but I really want to finish this.
+            raise HTTPException(status_code=HTTP_400_BAD_REQUEST)
+
+        rule.rule_status = RuleStatus.PENDING_DELETED
+        rule.deletion_proposer = rule_deletion_proposal.deletion_proposer
+        rule.deletion_proposal_id = rule_deletion_proposal.delete_proposal_id
+        rule.deletion_proposed_at = datetime.utcfromtimestamp(rule_deletion_proposal.timestamp)
+        self.session.commit()
+        self.session.refresh(rule)
+        return RuleInDB.from_orm(rule)
 
 

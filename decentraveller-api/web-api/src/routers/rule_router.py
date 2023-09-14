@@ -5,7 +5,7 @@ from fastapi_utils.inferring_router import InferringRouter
 from sqlalchemy.exc import IntegrityError
 from starlette.status import HTTP_400_BAD_REQUEST, HTTP_404_NOT_FOUND
 
-from src.api_models.rule import RuleInput, RuleInDB, RuleApprovedInput, RuleId
+from src.api_models.rule import RuleInput, RuleInDB, RuleActionInput, RuleId, RuleProposedDeletionInput
 from src.dependencies.indexer_auth import indexer_auth
 from src.dependencies.push_notification_adapter import PushNotificationAdapter
 from src.dependencies.relational_database import RelationalDatabase, build_relational_database
@@ -36,14 +36,28 @@ class RuleCBV:
         return inserted_rule
 
     @rule_router.post("/rule/approve", status_code=201, dependencies=[Depends(indexer_auth)])
-    def approve_rule(self, rule_approved: RuleApprovedInput) -> RuleInDB:
+    def approve_rule(self, rule_approved: RuleActionInput) -> RuleInDB:
         """
         Updates a rule to be approved.
 
         :param rule_approved: the rule that was approved.
         :return: the rule data.
         """
-        rule = self.database.update_rule_status(rule_approved.rule_id, RuleStatus.APPROVED)
+        rule = self.database.update_rule_to_approved(rule_approved.rule_id)
+        if rule is None:
+            raise HTTPException(status_code=HTTP_404_NOT_FOUND)
+
+        return rule
+
+    @rule_router.post("/rule-deletion", status_code=201, dependencies=[Depends(indexer_auth)])
+    def propose_rule_deletion(self, rule_proposed_deletion: RuleProposedDeletionInput) -> RuleInDB:
+        """
+        Updates a rule to be proposed for deletion.
+
+        :param rule_proposed_deletion: the rule that was proposed for deletion.
+        :return: the rule data.
+        """
+        rule = self.database.update_rule_to_propose_deletion(rule_proposed_deletion)
         if rule is None:
             raise HTTPException(status_code=HTTP_404_NOT_FOUND)
 

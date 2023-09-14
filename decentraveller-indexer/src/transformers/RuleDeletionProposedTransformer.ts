@@ -1,4 +1,4 @@
-import { BigNumber } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import { HTTPMethod } from "../adapters/AxiosRequestBuilder";
 import {
     EventRequest,
@@ -15,8 +15,9 @@ class RuleDeletionProposedTransformer extends EventTransformer<RuleDeletionPropo
             method: HTTPMethod.POST,
             body: {
                 ruleId: (event[0] as BigNumber).toNumber(),
-                proposer: event[1],
-                timestamp: (event[2] as BigNumber).toNumber(),
+                deletionProposer: event[1],
+                deleteProposalId: ethers.BigNumber.from(event[3]).toString(),
+                timestamp: (event[3] as BigNumber).toNumber(),
             },
         };
     }

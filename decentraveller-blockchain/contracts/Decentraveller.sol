@@ -37,6 +37,7 @@ contract Decentraveller {
     event DecentravellerRuleDeletionProposed(
         uint256 indexed ruleId,
         address indexed proposer,
+        uint256 proposalId,
         uint256 proposalTimestamp
     );
 
@@ -245,6 +246,7 @@ contract Decentraveller {
         emit DecentravellerRuleDeletionProposed(
             ruleId,
             msg.sender,
+            deletionProposalId,
             block.timestamp
         );
     }

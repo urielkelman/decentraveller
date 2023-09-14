@@ -24,6 +24,7 @@ class RuleBody(APIModel):
             return None
         return value.lower()
 
+
 class RuleInput(RuleBody):
     """
     Rule input API
@@ -38,6 +39,23 @@ class RuleInDB(RuleBody):
     rule_status: str
     proposed_at: datetime
     is_initial: bool
+    deletion_proposer: Optional[str]
+    deletion_proposal_id: Optional[str]
+    deletion_proposed_at: Optional[datetime]
 
-class RuleApprovedInput(APIModel):
+
+class RuleActionInput(APIModel):
     rule_id: RuleId
+
+
+class RuleProposedDeletionInput(APIModel):
+    rule_id: RuleId
+    deletion_proposer: str
+    delete_proposal_id: str
+    timestamp: int
+
+    @validator("deletion_proposer")
+    def check_lower(cls, value):
+        if value is None:
+            return None
+        return value.lower()
