@@ -188,10 +188,10 @@ const placeReviewsBoxStyles = StyleSheet.create({
     },
     moreImages: {
         paddingRight: 10,
-        height:80,
-        position: "absolute",
+        height: 80,
+        position: 'absolute',
         width: 40,
-        alignSelf: "flex-end",
+        alignSelf: 'flex-end',
     },
     commentContainer: {
         flexDirection: 'row',

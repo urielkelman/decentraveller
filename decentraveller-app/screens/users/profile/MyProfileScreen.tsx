@@ -3,11 +3,9 @@ import { View, Text, Image, StyleSheet, TouchableOpacity, Alert, Modal } from 'r
 import { createStackNavigator } from '@react-navigation/stack';
 import { userProfileMainStyles } from '../../../styles/userProfileStyles';
 import { useAppContext } from '../../../context/AppContext';
-import { addReviewImagesStyles } from '../../../styles/addReviewStyles';
 import * as ImagePicker from 'expo-image-picker';
 import { apiAdapter } from '../../../api/apiAdapter';
-import { PlaceResponse } from '../../../api/response/places';
-import { PlaceShowProps } from '../../../commons/components/DecentravellerPlacesList';
+import { ImageGallery } from '@georstat/react-native-image-gallery';
 
 export type UserProfileScreens = {
     UserProfileScreen: undefined;
@@ -16,11 +14,13 @@ export type UserProfileScreens = {
 const HomeStackNavigator = createStackNavigator<UserProfileScreens>();
 
 const MyProfileScreen = ({ navigation }) => {
-    const { userNickname, connectionContext, userCreatedAt,
-        userInterest } = useAppContext();
+    const { userNickname, connectionContext, userCreatedAt, userInterest } = useAppContext();
 
     const [selectedImage, setSelectedImage] = useState(null);
     const [isModalVisible, setIsModalVisible] = useState(false);
+    const [isOpen, setIsOpen] = useState(false);
+    const openGallery = () => setIsOpen(true);
+    const closeGallery = () => setIsOpen(false);
 
     const toggleModal = () => {
         setIsModalVisible(!isModalVisible);
@@ -58,15 +58,15 @@ const MyProfileScreen = ({ navigation }) => {
         <View style={userProfileMainStyles.background}>
             <View style={userProfileMainStyles.mainContainer}>
                 <View style={userProfileMainStyles.imageContainer}>
-                    <View style={userProfileMainStyles.imageCircle}>
+                    <TouchableOpacity style={userProfileMainStyles.imageCircle} onPress={openGallery}>
                         <Image
                             key={Date.now()}
                             source={{
-                                uri: user.profileImageUrl
+                                uri: user.profileImageUrl,
                             }}
                             style={userProfileMainStyles.circleDimensions}
                         />
-                    </View>
+                    </TouchableOpacity>
                     <TouchableOpacity style={userProfileMainStyles.smallCircleButton} onPress={toggleModal}>
                         <Image
                             source={require('../../../assets/images/pencil.png')}
@@ -129,6 +129,12 @@ const MyProfileScreen = ({ navigation }) => {
                     </View>
                 </View>
             </Modal>
+            <ImageGallery
+                close={closeGallery}
+                isOpen={isOpen}
+                images={[{ id: 1, url: user.profileImageUrl }]}
+                hideThumbs={true}
+            />
         </View>
     );
 };

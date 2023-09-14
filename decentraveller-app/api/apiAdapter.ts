@@ -13,13 +13,16 @@ import {
     RECOMMENDED_SIMILAR_PLACES,
     REVIEWS_PLACES_ENDPOINT,
     REVIEWS_PROFILE_ENDPOINT,
-    UPLOAD_IMAGES, REVIEW_IMAGE,
+    UPLOAD_IMAGES,
+    REVIEW_IMAGE,
+    GET_PLACE_ENDPOINT,
+    GET_REVIEW_ENDPOINT,
 } from './config';
 import { UserResponse } from './response/user';
 import Adapter from './Adapter';
 import { formatString } from '../commons/functions/utils';
-import { ReviewImageResponse, ReviewsResponse } from './response/reviews';
-import {PlaceResponse, PlacesResponse} from './response/places';
+import { ReviewImageResponse, ReviewResponse, ReviewsResponse } from './response/reviews';
+import { PlaceResponse, PlacesResponse } from './response/places';
 import * as FileSystem from 'expo-file-system';
 import { EncodingType } from 'expo-file-system';
 import FormData from 'form-data';
@@ -53,16 +56,18 @@ class ApiAdapter extends Adapter {
     }
 
     getProfileAvatarUrl(owner: string, forceReload = false): string {
-        return API_ENDPOINT + formatString(PROFILE_IMAGE, {owner: owner}) + `?${forceReload ? Date.now() : ""}`;
+        return API_ENDPOINT + formatString(PROFILE_IMAGE, { owner: owner }) + `?${forceReload ? Date.now() : ''}`;
     }
 
     getPlaceImageUrl(placeId: number): string {
-        return API_ENDPOINT + formatString(PLACE_IMAGE, { placeId: placeId })
+        return API_ENDPOINT + formatString(PLACE_IMAGE, { placeId: placeId });
     }
 
     getReviewImageUrl(placeId: number, reviewId: number, imageNumber: number): string {
-        return API_ENDPOINT + formatString(REVIEW_IMAGE,
-            { placeId: placeId, reviewId: reviewId, imageNumber: imageNumber })
+        return (
+            API_ENDPOINT +
+            formatString(REVIEW_IMAGE, { placeId: placeId, reviewId: reviewId, imageNumber: imageNumber })
+        );
     }
 
     async getPlacesSearch(
@@ -152,6 +157,30 @@ class ApiAdapter extends Adapter {
         const httpRequest: HttpGetRequest = {
             url: `${GET_USER_ENDPOINT}/${walletAddress}`,
             queryParams: {},
+            onUnexpectedError: (e) => {
+                onFailed();
+            },
+        };
+
+        return await httpAPIConnector.get(httpRequest);
+    }
+
+    async getPlace(placeId: number, onFailed: () => void): Promise<PlaceResponse> {
+        const httpRequest: HttpGetRequest = {
+            url: `${GET_PLACE_ENDPOINT}/${placeId}`,
+            queryParams: {},
+            onUnexpectedError: (e) => {
+                onFailed();
+            },
+        };
+
+        return await httpAPIConnector.get(httpRequest);
+    }
+
+    async getReview(placeId: number, reviewId: number, onFailed: () => void): Promise<ReviewResponse> {
+        const httpRequest: HttpGetRequest = {
+            url: `${GET_REVIEW_ENDPOINT}`,
+            queryParams: { id: reviewId, place_id: placeId },
             onUnexpectedError: (e) => {
                 onFailed();
             },

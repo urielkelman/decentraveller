@@ -16,6 +16,8 @@ if (Constants.deviceName === 'Simulator' || Constants.deviceName.includes('Emula
 
 export const FORWARD_GEOCODING_ENDPOINT = '/geocoding/forward';
 export const GET_USER_ENDPOINT = '/profile';
+export const GET_PLACE_ENDPOINT = '/place';
+export const GET_REVIEW_ENDPOINT = '/review';
 export const PUSH_NOTIFICATION_TOKEN_ENDPOINT = '/profile/push-token';
 export const PLACES_SEARCH = '/places/search';
 export const RECOMMENDED_PLACES_BY_PROFILE_ENDPOINT = '/profile/{owner}/recommendations';

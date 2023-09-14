@@ -20,6 +20,9 @@ from src.orms.review import ReviewORM
 
 place_router = InferringRouter()
 
+with open('src/assets/no_place_image.jpg', 'rb') as file:
+    DEFAULT_PLACE_IMAGE = file.read()
+
 
 @cbv(place_router)
 class PlaceCBV:
@@ -148,7 +151,6 @@ class PlaceCBV:
                 raise HTTPException(status_code=HTTP_400_BAD_REQUEST,
                                     detail=f"Can't filter by distance if latitude and longitude is not provided")
             places = places.filter(text(f"distance <={maximum_distance}"))
-        places = places.order_by(asc(PlaceORM.id))
         if sort_by == "relevancy":
             places = places.order_by((self.database.relevancy_score(
                 func.avg(ReviewORM.score), func.count(distinct(ReviewORM.owner)))).desc())
@@ -164,7 +166,7 @@ class PlaceCBV:
         else:
             raise HTTPException(status_code=HTTP_400_BAD_REQUEST,
                                 detail=f"sort_by parameter does not accept the value: {sort_by}")
-
+        places.order_by(PlaceORM.id.desc())
         total_count = places.count()
         places = places.limit(per_page).offset(page * per_page).all()
 
@@ -188,7 +190,8 @@ class PlaceCBV:
         """
         image_hash = self.database.get_place_image_hash(place_id)
         if image_hash is None:
-            raise HTTPException(status_code=HTTP_404_NOT_FOUND)
+            return Response(content=DEFAULT_PLACE_IMAGE,
+                            media_type="image/jpeg")
         image_bytes = self.ipfs_service.get_file(image_hash)
         return Response(content=image_bytes,
                         media_type="image/jpeg")

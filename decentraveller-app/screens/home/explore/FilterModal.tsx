@@ -6,8 +6,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { PickerItem } from '../../../commons/types';
 import { DECENTRAVELLER_DEFAULT_CONTRAST_COLOR, interestsItemsApi } from '../../../commons/global';
 import DecentravellerPicker from '../../../commons/components/DecentravellerPicker';
-import {Picker} from '@react-native-picker/picker';
-import {bottomTabIndicationTextStyles} from "../../../styles/bottomTabScreensStyles";
+import { Picker } from '@react-native-picker/picker';
+import { bottomTabIndicationTextStyles } from '../../../styles/bottomTabScreensStyles';
 
 const Bullet = ({ label, selected, onPress }) => {
     return (
@@ -43,34 +43,30 @@ const FilterModal: React.FC<FilterModalProps> = ({ route }) => {
 
     const interestOnValueChange = (interestValue, pos) => {
         setInterest(interestValue);
-    }
+    };
 
     const orderByOnValueChange = (orderValue, pos) => {
         setOrderBy(orderValue);
-    }
+    };
 
     return (
         <View style={styles.container}>
             <Text style={styles.label}>Order by:</Text>
             <View style={styles.pickerContainer}>
                 <Picker style={styles.picker} selectedValue={orderBy} onValueChange={orderByOnValueChange}>
-                    <Picker.Item label="Relevancy" value={null}/>
-                    <Picker.Item label="Best rated" value="score"/>
-                    <Picker.Item label="Amount of reviews" value="reviews"/>
-                    <Picker.Item label="Distance" value="distance"/>
+                    <Picker.Item label="Relevancy" value={null} />
+                    <Picker.Item label="Best rated" value="score" />
+                    <Picker.Item label="Amount of reviews" value="reviews" />
+                    <Picker.Item label="Distance" value="distance" />
                 </Picker>
             </View>
             <Text style={styles.label}>Interest:</Text>
             <View style={styles.pickerContainer}>
                 <Picker selectedValue={interest} onValueChange={interestOnValueChange}>
-                    <Picker.Item label="Any" value={null}/>
-                    {
-                        interestsItemsApi.map((item) => {
-                            return (
-                                <Picker.Item key={item['value']} label={item['label']} value={item['value']} />
-                            )
-                        })
-                    }
+                    <Picker.Item label="Any" value={null} />
+                    {interestsItemsApi.map((item) => {
+                        return <Picker.Item key={item['value']} label={item['label']} value={item['value']} />;
+                    })}
                 </Picker>
             </View>
             <Text style={styles.label}>Min stars:</Text>
@@ -106,28 +102,26 @@ const FilterModal: React.FC<FilterModalProps> = ({ route }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        flexDirection: "column",
+        flexDirection: 'column',
         paddingHorizontal: 30,
         paddingTop: 10,
     },
     pickerContainer: {
         backgroundColor: 'white',
         borderRadius: 10,
-        marginBottom: 10
+        marginBottom: 10,
     },
-    picker: {
-
-    },
+    picker: {},
     optionContainer: {
-        flex:1,
-        marginBottom: 10
+        flex: 1,
+        marginBottom: 10,
     },
     label: {
         paddingRight: 70,
         fontSize: 20,
         fontWeight: 'bold',
         fontFamily: 'Montserrat_400Regular',
-        marginBottom: 5
+        marginBottom: 5,
     },
     bulletContainer: {
         flexDirection: 'column',

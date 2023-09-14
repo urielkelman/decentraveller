@@ -1,10 +1,10 @@
-import {View, Image, Text, ScrollView, TouchableOpacity} from 'react-native';
+import { View, Image, Text, ScrollView, TouchableOpacity } from 'react-native';
 import PlaceReviewsBox from './PlaceReviewsBox';
 import { placeDetailStyles } from '../../../styles/placeDetailStyles';
 import { PlaceDetailScreenProps } from './types';
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import PlaceSimilarsBox from './PlaceSimilarsBox';
-import {ImageGallery} from "@georstat/react-native-image-gallery";
+import { ImageGallery } from '@georstat/react-native-image-gallery';
 const path = '../../../assets/mock_images/eretz-inside.jpeg';
 const locationIconPath = '../../../assets/images/location.png';
 const rankingIconPath = require('../../../assets/images/estrellita.png');
@@ -106,9 +106,7 @@ const PlaceDetailScreen: React.FC<PlaceDetailScreenProps> = ({ route }) => {
     return (
         <View style={placeDetailStyles.container}>
             <TouchableOpacity style={placeDetailStyles.imageContainer} onPress={openGallery}>
-                <Image style={placeDetailStyles.image}
-                       defaultSource={require('../../../assets/images/no_place_image.jpg')}
-                       source={{uri: imageUri}} />
+                <Image style={placeDetailStyles.image} source={{ uri: imageUri }} />
             </TouchableOpacity>
             <View style={placeDetailStyles.headerContainer}>
                 <View style={placeDetailStyles.textContainer}>
@@ -134,8 +132,7 @@ const PlaceDetailScreen: React.FC<PlaceDetailScreenProps> = ({ route }) => {
                 <PlaceSimilarsBox placeId={id} />
             </View>
             <PlaceReviewsBox placeId={id} summarized={true} />
-            <ImageGallery close={closeGallery} isOpen={isOpen}
-                          images={[{id: 1, url: imageUri}]}  hideThumbs={true}/>
+            <ImageGallery close={closeGallery} isOpen={isOpen} images={[{ id: 1, url: imageUri }]} hideThumbs={true} />
         </View>
     );
 };

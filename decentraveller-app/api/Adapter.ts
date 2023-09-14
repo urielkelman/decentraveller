@@ -1,5 +1,3 @@
 import { PlaceResponse } from './response/places';
 
-export default abstract class Adapter {
-
-}
+export default abstract class Adapter {}

@@ -10,7 +10,7 @@ import {
     DecentravellerPlacesList,
     LoadPlaceResponse,
     PlaceShowProps,
-    PlaceLoadFunction
+    PlaceLoadFunction,
 } from '../../../commons/components/DecentravellerPlacesList';
 import DecentravellerPicker from '../../../commons/components/DecentravellerPicker';
 import { PickerItem } from '../../../commons/types';
@@ -92,20 +92,21 @@ const ExplorePlacesScreen = ({ navigation }) => {
         }
     };
 
-    const loadPlaces = async (limit: number, offset: number):  Promise<LoadPlaceResponse> => {
-        if(lastLocationSearched == null){
-            return {total: 0, placesToShow: []};
+    const loadPlaces = async (limit: number, offset: number): Promise<LoadPlaceResponse> => {
+        if (lastLocationSearched == null) {
+            return { total: 0, placesToShow: [] };
         }
         const placesResponse = await adapter.getPlacesSearch(
             lastLocationSearched,
             () => {},
-            limit, offset,
+            limit,
+            offset,
             interestPickerValue,
             sortBy,
             minStars !== 0 ? minStars : null,
             maxDistance !== 0 ? maxDistance : null,
         );
-        if (placesResponse != null){
+        if (placesResponse != null) {
             const imageUris = placesResponse.places.map((p: PlaceResponse) => {
                 return adapter.getPlaceImageUrl(p.id);
             });
@@ -122,16 +123,12 @@ const ExplorePlacesScreen = ({ navigation }) => {
                     imageUri: imageUris[i],
                 };
             });
-            return {total: placesResponse.total, placesToShow: placesToShow}
+            return { total: placesResponse.total, placesToShow: placesToShow };
         }
-        return {total: 0, placesToShow: []};
-    }
+        return { total: 0, placesToShow: [] };
+    };
 
-    const fetchPlaces = (
-        latitude: string,
-        longitude: string,
-        lastLocationLabelSearched: string,
-    ): void => {
+    const fetchPlaces = (latitude: string, longitude: string, lastLocationLabelSearched: string): void => {
         setLoadingPlaces(true);
         setLastLocationLabelSearched(lastLocationLabelSearched);
         setLastLocationSearched([latitude, longitude]);
@@ -206,27 +203,27 @@ const ExplorePlacesScreen = ({ navigation }) => {
     };
 
     const placesListKey = () => {
-        var k = "";
-        if(lastLocationSearched != null){
-            k += lastLocationSearched[0]
-            k += lastLocationSearched[1]
+        var k = '';
+        if (lastLocationSearched != null) {
+            k += lastLocationSearched[0];
+            k += lastLocationSearched[1];
         }
-        if(interestPickerValue != null){
-            k += interestPickerValue
+        if (interestPickerValue != null) {
+            k += interestPickerValue;
         }
-        if(sortBy != null){
-            k += sortBy
+        if (sortBy != null) {
+            k += sortBy;
         }
-        k += `minStars:${minStars}`
-        k += `maxDistance:${maxDistance}`
-        return k
-    }
+        k += `minStars:${minStars}`;
+        k += `maxDistance:${maxDistance}`;
+        return k;
+    };
 
     const componentToRender = loadingPlaces ? (
         <LoadingComponent />
     ) : (
         <DecentravellerPlacesList key={placesListKey()} loadPlaces={loadPlaces} minified={false} horizontal={false} />
-    )
+    );
 
     return (
         <View
@@ -271,12 +268,9 @@ const ExplorePlacesScreen = ({ navigation }) => {
                     <Ionicons name="funnel" size={25} color={DECENTRAVELLER_DEFAULT_CONTRAST_COLOR} />
                 </TouchableOpacity>
                 <Modal visible={modalVisible} transparent={true} animationType="fade">
-                    <View style={ [styles.filterModalContainer, {marginTop: useHeaderHeight()}] }>
+                    <View style={[styles.filterModalContainer, { marginTop: useHeaderHeight() }]}>
                         <View style={styles.filterModal}>
-                            <TouchableOpacity
-                                style={[styles.closeButton]}
-                                onPress={toggleModal}
-                            >
+                            <TouchableOpacity style={[styles.closeButton]} onPress={toggleModal}>
                                 <Text style={styles.closeButtonText}>╳</Text>
                             </TouchableOpacity>
                             <FilterModal route={{ params: { filterModalData: filterModalDataProps } }} />
@@ -331,7 +325,7 @@ const styles = StyleSheet.create({
     },
     filterModalContainer: {
         flex: 0.75,
-        flexDirection: "row",
+        flexDirection: 'row',
         backgroundColor: 'rgba(255, 225, 225, 0)',
         justifyContent: 'center',
         alignItems: 'center',
@@ -376,7 +370,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         backgroundColor: null,
         margin: 0,
-        justifyContent: "flex-end"
+        justifyContent: 'flex-end',
     },
 });
 

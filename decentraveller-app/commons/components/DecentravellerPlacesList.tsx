@@ -1,10 +1,10 @@
 import PlaceItem from '../../screens/home/place/PlaceItem';
-import {FlatList, Text, View} from 'react-native';
-import React, {useEffect, useCallback} from 'react';
-import {DecentravellerPlaceCategory} from '../../context/types';
-import {placeReviewsBoxStyles} from "../../styles/placeDetailStyles";
-import LoadingComponent from "./DecentravellerLoading";
-import {ReviewShowProps} from "./DecentravellerReviewsList";
+import { FlatList, Text, View } from 'react-native';
+import React, { useEffect, useCallback } from 'react';
+import { DecentravellerPlaceCategory } from '../../context/types';
+import { placeReviewsBoxStyles } from '../../styles/placeDetailStyles';
+import LoadingComponent from './DecentravellerLoading';
+import { ReviewShowProps } from './DecentravellerReviewsList';
 
 export type PlaceShowProps = {
     id: number;
@@ -40,7 +40,6 @@ interface LoadPlaceResponse {
 
 type PlaceLoadFunction = (offset: number, limit: number) => Promise<LoadPlaceResponse>;
 
-
 export type PlacesItemsProps = {
     placeList?: PlaceShowProps[] | null | undefined;
     loadPlaces?: PlaceLoadFunction | null | undefined;
@@ -48,9 +47,7 @@ export type PlacesItemsProps = {
     horizontal: boolean;
 };
 
-const DecentravellerPlacesList: React.FC<PlacesItemsProps> = ({ placeList,
-                                                                  loadPlaces, minified,
-                                                                  horizontal }) => {
+const DecentravellerPlacesList: React.FC<PlacesItemsProps> = ({ placeList, loadPlaces, minified, horizontal }) => {
     const [loading, setLoading] = React.useState<boolean>(false);
     const [places, setPlaces] = React.useState<PlaceShowProps[]>(null);
     const [placeCount, setPlacesCount] = React.useState<number>(0);
@@ -59,17 +56,16 @@ const DecentravellerPlacesList: React.FC<PlacesItemsProps> = ({ placeList,
         return places != null && places.length > 0;
     };
 
-
     useEffect(() => {
         (async () => {
             setLoading(true);
             console.log(loadPlaces);
-            if( placeList != undefined) {
+            if (placeList != undefined) {
                 const total = placeList.length;
                 setPlaces(placeList);
                 setPlacesCount(total);
             } else if (loadPlaces != undefined) {
-                const {total, placesToShow} = await loadPlaces(0, 10);
+                const { total, placesToShow } = await loadPlaces(0, 10);
                 setPlaces(placesToShow);
                 setPlacesCount(total);
             }
@@ -77,11 +73,10 @@ const DecentravellerPlacesList: React.FC<PlacesItemsProps> = ({ placeList,
         })();
     }, []);
 
-
     const loadMore = async () => {
         if (hasPlaces() && placeCount > places.length) {
             setLoading(true);
-            const {total, placesToShow} = await loadPlaces((places.length / 10) | 0, 10);
+            const { total, placesToShow } = await loadPlaces((places.length / 10) | 0, 10);
             places.push.apply(places, placesToShow);
             setLoading(false);
         }
@@ -91,7 +86,7 @@ const DecentravellerPlacesList: React.FC<PlacesItemsProps> = ({ placeList,
         return (
             <View style={placeReviewsBoxStyles.reviewsFooter}>
                 {!hasPlaces() ? <Text>No places found.</Text> : null}
-                {hasPlaces() && placeCount > places.length ? <LoadingComponent/> : null}
+                {hasPlaces() && placeCount > places.length ? <LoadingComponent /> : null}
             </View>
         );
     };
@@ -101,15 +96,19 @@ const DecentravellerPlacesList: React.FC<PlacesItemsProps> = ({ placeList,
             renderPlaceItem({ item: item, minified: minified });
 
         return (
-            <FlatList data={places} renderItem={internalRenderPlaceItem} horizontal={horizontal}
-                      keyExtractor={(item, index) => String(index)}
-                      ListFooterComponent={footerComponent}
-                      onEndReached={loadMore}
-                      onEndReachedThreshold={0.1}/>
+            <FlatList
+                data={places}
+                renderItem={internalRenderPlaceItem}
+                horizontal={horizontal}
+                keyExtractor={(item, index) => String(index)}
+                ListFooterComponent={footerComponent}
+                onEndReached={loadMore}
+                onEndReachedThreshold={0.1}
+            />
         );
     };
 
-    return loading && !hasPlaces() ? (<LoadingComponent/>) : placesBoxComponent();
+    return loading && !hasPlaces() ? <LoadingComponent /> : placesBoxComponent();
 };
 
-export { DecentravellerPlacesList, LoadPlaceResponse, PlaceLoadFunction};
+export { DecentravellerPlacesList, LoadPlaceResponse, PlaceLoadFunction };

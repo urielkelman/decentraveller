@@ -114,7 +114,7 @@ class RelationalDatabase:
         image_counts = self.session.query(ReviewImageORM.review_id,
                                           ReviewImageORM.place_id,
                                           func.count(ReviewImageORM.review_id).label("image_count")). \
-            group_by(tuple_(ReviewImageORM.review_id, ReviewImageORM.place_id)).subquery()
+            group_by(ReviewImageORM.review_id, ReviewImageORM.place_id).subquery()
         result = self.session.query(ReviewORM, ProfileORM, func.coalesce(image_counts.c.image_count, 0)). \
             join(ProfileORM, ProfileORM.owner == ReviewORM.owner). \
             join(image_counts, tuple_(image_counts.c.review_id, image_counts.c.place_id) ==

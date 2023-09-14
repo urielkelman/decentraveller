@@ -65,9 +65,7 @@ const PlaceItem: React.FC<PlaceItemProps> = ({
         <TouchableOpacity onPress={() => navigation.navigate('PlaceDetailScreen', placeDetailParams)}>
             <View style={itemStyle.container}>
                 <View style={itemStyle.leftContainer}>
-                    <Image style={itemStyle.image}
-                           defaultSource={require('../../../assets/images/no_place_image.jpg')}
-                           source={{uri: imageUri}} />
+                    <Image style={itemStyle.image} source={{ uri: imageUri }} />
                 </View>
                 <View style={itemStyle.rightSideContainer}>
                     <View style={itemStyle.informationContainer}>
