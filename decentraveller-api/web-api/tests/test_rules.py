@@ -50,7 +50,7 @@ def test_create_rule_correctly(cleanup):
 
     assert response.json() == {
         "ruleId": 1,
-        "proposalId": 101,
+        "proposalId": '101',
         "ruleStatement": "You should not insult other users.",
         "proposer": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
         "ruleStatus": "PENDING_VOTE",

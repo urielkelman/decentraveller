@@ -4,7 +4,7 @@ from fastapi_utils.api_model import APIModel
 
 from typing import NewType, Optional
 
-from pydantic import Field
+from pydantic import Field, validator
 
 RuleId = NewType("RuleId", int)
 
@@ -13,11 +13,16 @@ class RuleBody(APIModel):
     """
     Rule API Model
     """
-    rule_id: RuleId = Field(alias="ruleId")
-    proposal_id: Optional[str] = Field(alias="proposalId")
-    rule_statement: str = Field(alias="ruleStatement")
+    rule_id: RuleId
+    proposal_id: Optional[str]
+    rule_statement: str
     proposer: Optional[str]
 
+    @validator("proposer")
+    def check_lower(cls, value):
+        if value is None:
+            return None
+        return value.lower()
 
 class RuleInput(RuleBody):
     """

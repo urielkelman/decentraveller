@@ -10,7 +10,7 @@ class RuleProposedTransformer extends EventTransformer<RuleProposedRequestBody> 
         console.log(event);
         try {
             return {
-                endpoint: eventEndpoints.NEW_PLACE_ENDPOINT,
+                endpoint: eventEndpoints.NEW_RULE_ENDPOINT,
                 method: HTTPMethod.POST,
                 body: {
                     ruleId: (event[0] as BigNumber).toNumber(),
