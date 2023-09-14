@@ -342,7 +342,7 @@ class RelationalDatabase:
         :param is_initial_rule: if is the rule was originated in the deployment or not.
         :return:
         """
-        rule_status = RuleStatus.EXECUTED if is_initial_rule else RuleStatus.PENDING_VOTE
+        rule_status = RuleStatus.APPROVED if is_initial_rule else RuleStatus.PENDING_APPROVAL
         proposed_at = datetime.utcfromtimestamp(rule.timestamp)
         rule_orm = RuleORM(rule_id=rule.rule_id, proposal_id=rule.proposal_id, proposer=rule.proposer,
                            rule_statement=rule.rule_statement, proposed_at=proposed_at,

@@ -5,13 +5,20 @@ from sqlalchemy import Column, ForeignKey, Boolean, Integer, String, DateTime, E
 from src.orms import Base
 
 
-class RuleStatus(str, Enum):
+class RuleStatus2(str, Enum):
     PENDING_VOTE = "PENDING_VOTE"
     ACTIVE_VOTE = "ACTIVE_VOTE"
     DEFEATED = "DEFEATED"
     SUCCEEDED = "SUCCEEDED"
     QUEUED = "QUEUED"
     EXECUTED = "EXECUTED"
+
+
+class RuleStatus(str, Enum):
+    PENDING_APPROVAL = "PENDING_APPROVAL"
+    APPROVED = "APPROVED"
+    PENDING_DELETED = "PENDING_DELETED"
+    DELETED = "DELETED"
 
 
 class RuleORM(Base):

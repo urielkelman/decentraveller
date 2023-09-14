@@ -43,7 +43,7 @@ class RuleCBV:
         :param rule_approved: the rule that was approved.
         :return: the rule data.
         """
-        rule = self.database.update_rule_status(rule_approved.rule_id, RuleStatus.EXECUTED)
+        rule = self.database.update_rule_status(rule_approved.rule_id, RuleStatus.APPROVED)
         if rule is None:
             raise HTTPException(status_code=HTTP_404_NOT_FOUND)
 

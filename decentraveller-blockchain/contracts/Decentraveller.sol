@@ -239,6 +239,9 @@ contract Decentraveller {
         );
         rule.deleteProposalId = deletionProposalId;
         rule.deletionProposer = msg.sender;
+        rule.status = DecentravellerDataTypes
+            .DecentravellerRuleStatus
+            .PENDING_DELETED;
         emit DecentravellerRuleDeletionProposed(
             ruleId,
             msg.sender,
