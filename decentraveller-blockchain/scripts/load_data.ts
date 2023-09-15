@@ -88,7 +88,7 @@ const main = async () => {
             businessData["name"],
             businessData["latitude"].toString(),
             businessData["longitude"].toString(),
-            businessData["address"],
+            businessData["address"] + ", Argentina",
             0
         );
 

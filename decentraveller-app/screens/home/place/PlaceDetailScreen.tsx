@@ -28,43 +28,6 @@ function needsMultipleLines(str: string, lines: number): boolean {
     const words = str.trim().split(/\s+/);
     return str.length > lines && words.length > 1;
 }
-
-function renderLocationText(location: string): JSX.Element {
-    const shouldShowInTwoLines = needsMultipleLines(location, 20);
-
-    if (shouldShowInTwoLines) {
-        const words = location.trim().split(/\s+/);
-        const halfIndex = Math.ceil(words.length / 3);
-        const location_1 = words.slice(0, halfIndex).join(' ');
-        const location_2 = words.slice(halfIndex, 2 * halfIndex).join(' ');
-        const location_3 = words.slice(2 * halfIndex).join(' ');
-
-        return (
-            <View style={placeDetailStyles.bulletItem}>
-                <Image source={require(locationIconPath)} style={placeDetailStyles.bulletLocationImage} />
-                <View style={placeDetailStyles.location2TextContainer}>
-                    <Text style={[placeDetailStyles.locationText2, placeDetailStyles.location2TextMargin]}>
-                        {location_1}
-                    </Text>
-                    <Text style={[placeDetailStyles.locationText2, placeDetailStyles.location2TextMargin]}>
-                        {location_2}
-                    </Text>
-                    <Text style={[placeDetailStyles.locationText2, placeDetailStyles.location2TextMargin]}>
-                        {location_3}
-                    </Text>
-                </View>
-            </View>
-        );
-    } else {
-        return (
-            <View style={placeDetailStyles.bulletItem}>
-                <Image source={require(locationIconPath)} style={placeDetailStyles.bulletLocationImage} />
-                <Text style={placeDetailStyles.locationText}>{location}</Text>
-            </View>
-        );
-    }
-}
-
 const bulletItemComponent: React.FC<BulletItemProps> = ({ iconPath, title, value, marginTop }) => {
     return (
         <View style={[placeDetailStyles.bulletItem, { marginTop: marginTop }]}>
@@ -106,12 +69,22 @@ const PlaceDetailScreen: React.FC<PlaceDetailScreenProps> = ({ route }) => {
         return earthRadius * c;
     };
 
-    const userLatitude: number = +userLocation.value[0];
-    const userLongitude: number = +userLocation.value[1];
-    const placeLatitude: number = +latitude;
-    const placeLongitude: number = +longitude;
 
-    const distanceToPlace = calculateDistance(userLatitude, userLongitude, placeLatitude, placeLongitude);
+    var locationComponent = null
+    if(userLocation.value){
+        const placeLatitude: number = +latitude;
+        const placeLongitude: number = +longitude;
+        const userLatitude: number = +userLocation.value[0];
+        const userLongitude: number = +userLocation.value[1];
+        const distanceToPlace = calculateDistance(userLatitude, userLongitude, placeLatitude, placeLongitude);
+        locationComponent = bulletItemComponent({
+            iconPath: distanceIconPath,
+            title: 'Distance',
+            value: Number(distanceToPlace).toFixed(2) + ' km',
+            marginTop: -15,
+        })
+    }
+
 
     return (
         <View style={placeDetailStyles.container}>
@@ -123,7 +96,10 @@ const PlaceDetailScreen: React.FC<PlaceDetailScreenProps> = ({ route }) => {
                     <Text style={placeDetailStyles.titleText} numberOfLines={2} adjustsFontSizeToFit>
                         {name}
                     </Text>
-                    {renderLocationText(address)}
+                    <View style={placeDetailStyles.bulletItem}>
+                        <Image source={require(locationIconPath)} style={placeDetailStyles.bulletLocationImage} />
+                        <Text style={placeDetailStyles.locationText} numberOfLines={2} adjustsFontSizeToFit>{address}</Text>
+                    </View>
                 </View>
                 <View style={placeDetailStyles.bulletsContainer}>
                     {bulletItemComponent({
@@ -132,12 +108,7 @@ const PlaceDetailScreen: React.FC<PlaceDetailScreenProps> = ({ route }) => {
                         value: formatScore(score),
                         marginTop: 0,
                     })}
-                    {bulletItemComponent({
-                        iconPath: distanceIconPath,
-                        title: 'Distance',
-                        value: Number(distanceToPlace).toFixed(2) + ' km',
-                        marginTop: -15,
-                    })}
+                    {locationComponent}
                 </View>
             </View>
             <View style={placeDetailStyles.recommendationContainer}>

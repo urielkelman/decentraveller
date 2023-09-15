@@ -80,15 +80,6 @@ const PlaceItem: React.FC<PlaceItemProps> = ({
                 <View style={itemStyle.rightSideContainer}>
                     <View style={itemStyle.informationContainer}>
                         {placeTitle}
-                        {countryISOCode ? (
-                            <CountryFlag
-                                isoCode={countryISOCode}
-                                size={countryFlagSize}
-                                style={itemStyle.countryFlag}
-                            />
-                        ) : (
-                            <></>
-                        )}
                     </View>
                     <View>
                         <Text style={itemStyle.subtitleText}>{capitalizedCategory}</Text>
@@ -109,7 +100,16 @@ const PlaceItem: React.FC<PlaceItemProps> = ({
                         ) : null}
                     </View>
                     <View style={itemStyle.informationContainer}>
-                        <Text style={itemStyle.informationText}>{addressToShow}</Text>
+                        {countryISOCode ? (
+                            <CountryFlag
+                                isoCode={countryISOCode}
+                                size={countryFlagSize}
+                                style={itemStyle.countryFlag}
+                            />
+                        ) : (
+                            <></>
+                        )}
+                        <Text style={itemStyle.addressText} numberOfLines={minified ? 1 : 2} adjustsFontSizeToFit={!minified}>{addressToShow}</Text>
                     </View>
                 </View>
             </View>

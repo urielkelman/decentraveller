@@ -50,14 +50,17 @@ const AddReviewComment = ({ navigation }) => {
     };
 
     const onClickFinish = async () => {
-        const response = await adapterApi.sendReviewImage(connectionContext.connectedAddress, selectedImages, () => {
-            setShowErrorModal(true);
-        });
 
-        if (!response) return;
+        var imageHashes = [];
 
-        const imageHashes = response.hashes;
-        console.log('asd');
+        if(selectedImages.length > 0){
+            const response = await adapterApi.sendReviewImage(connectionContext.connectedAddress, selectedImages, () => {
+                setShowErrorModal(true);
+            });
+            if (!response) return;
+            imageHashes = response.hashes;
+        }
+
         const transactionHash = await adapter.addPlaceReviewTransaction(
             web3Provider,
             placeId,
@@ -65,7 +68,6 @@ const AddReviewComment = ({ navigation }) => {
             rating,
             imageHashes,
         );
-        console.log('asd 2');
 
         if (!transactionHash) return;
 

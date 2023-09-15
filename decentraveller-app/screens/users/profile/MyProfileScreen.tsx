@@ -42,6 +42,7 @@ const MyProfileScreen = ({ navigation }) => {
                 const imageUri = result.assets[0].uri;
                 try {
                     await apiAdapter.sendProfileImage(user.walletAddress, imageUri);
+                    setIsModalVisible(!isModalVisible);
                 } catch (error) {
                     console.error('Error on avatar updating:', error);
                 }

@@ -32,7 +32,7 @@ const placeItemStyle = StyleSheet.create({
         fontSize: height * 0.025,
     },
     countryFlag: {
-        marginLeft: width * 0.04,
+        marginRight: width * 0.03,
         marginTop: height * 0.005,
     },
     subtitleText: {
@@ -46,6 +46,12 @@ const placeItemStyle = StyleSheet.create({
         fontFamily: 'Montserrat_500Medium',
         fontSize: height * 0.018,
         paddingRight: width * 0.01,
+    },
+    addressText: {
+        color: 'black',
+        fontFamily: 'Montserrat_500Medium',
+        fontSize: height * 0.018,
+        maxWidth: (width - height * 0.04) * 0.7 - width * 0.12 - height * 0.005
     },
 });
 
@@ -93,6 +99,12 @@ const placeItemMinifiedStyle = StyleSheet.create({
         color: 'black',
         fontFamily: 'Montserrat_500Medium',
         fontSize: height * 0.015,
+    },
+    addressText: {
+        color: 'black',
+        fontFamily: 'Montserrat_500Medium',
+        fontSize: height * 0.015,
+        width: "100%"
     },
 });
 
