@@ -7,7 +7,6 @@ import axios from "axios";
 
 class RuleProposedTransformer extends EventTransformer<RuleProposedRequestBody> {
     public transformEvent(event: any[]): EventRequest<RuleProposedRequestBody> {
-        console.log(event);
         try {
             return {
                 endpoint: eventEndpoints.NEW_RULE_ENDPOINT,
