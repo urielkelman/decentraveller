@@ -1,11 +1,14 @@
-from fastapi import Depends, HTTPException, Response
+from typing import Optional
+
+from fastapi import Depends, HTTPException, Response, Query
 from fastapi_utils.cbv import cbv
 from fastapi_utils.inferring_router import InferringRouter
 
 from sqlalchemy.exc import IntegrityError
 from starlette.status import HTTP_400_BAD_REQUEST, HTTP_404_NOT_FOUND
 
-from src.api_models.rule import RuleInput, RuleInDB, RuleActionInput, RuleId, RuleProposedDeletionInput
+from src.api_models.rule import RuleInput, RuleInDB, RuleActionInput, RuleId, RuleProposedDeletionInput, \
+    GetRulesResponse
 from src.dependencies.indexer_auth import indexer_auth
 from src.dependencies.push_notification_adapter import PushNotificationAdapter
 from src.dependencies.relational_database import RelationalDatabase, build_relational_database
@@ -63,6 +66,27 @@ class RuleCBV:
 
         return rule
 
+    @rule_router.post("/rule-deletion/delete", status_code=201, dependencies=[Depends(indexer_auth)])
+    def delete_rule(self, rule_deleted: RuleActionInput):
+        """
+        Updates a rule to be deleted.
+
+        :param rule_deleted: the rule that was deleted.
+        :return: the rule data.
+        """
+        rule = self.database.update_rule_to_deleted(rule_deleted.rule_id)
+
+        if rule is None:
+            raise HTTPException(status_code=HTTP_404_NOT_FOUND)
+
+        return rule
+
+    @rule_router.get("/rule", status_code=200)
+    def get_rules(self, rule_status: Optional[RuleStatus] = Query(default=None)):
+        rules = self.database.get_rule_by_status(rule_status)
+
+        return GetRulesResponse(rules=rules)
+
     @rule_router.get("/rule/{rule_id}", status_code=200)
     def get_rule(self, rule_id: RuleId):
         rule = self.database.get_rule_by_id(rule_id)
@@ -70,4 +94,3 @@ class RuleCBV:
             raise HTTPException(status_code=HTTP_404_NOT_FOUND)
 
         return rule
-

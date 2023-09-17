@@ -374,6 +374,15 @@ class RelationalDatabase:
         results = self.session.query(RuleORM).filter(RuleORM.rule_id1.in_(tuple(rules_id)))
         return [RuleInDB.from_orm(r) for r in results]
 
+    def get_rule_by_status(self, rule_status: RuleStatus) -> List[RuleInDB]:
+        """
+        Get rules matching the provided status.
+        :param rule_status: the status to match.
+        :return: a list with the matched rules.
+        """
+        results = self.session.query(RuleORM).filter(RuleORM.rule_status == rule_status)
+        return [RuleInDB.from_orm(r) for r in results]
+
     def update_rule_to_approved(self, rule_id: RuleId) -> Optional[RuleInDB]:
         """
         Update the status of the rule matching the id to approved status.
@@ -414,5 +423,25 @@ class RelationalDatabase:
         self.session.commit()
         self.session.refresh(rule)
         return RuleInDB.from_orm(rule)
+
+    def update_rule_to_deleted(self, rule_id: RuleId):
+        """
+        Update the status of the rule matching the id to pending deletion status.
+        :param rule_id: the id if the rule to match and update.
+        :return: the modified rule.
+        """
+        rule = self.session.query(RuleORM).filter(RuleORM.rule_id == rule_id).first()
+        if rule is None:
+            return None
+
+        if rule.rule_status != RuleStatus.PENDING_DELETED:
+            raise HTTPException(status_code=HTTP_400_BAD_REQUEST)
+
+        rule.rule_status = RuleStatus.DELETED
+
+        self.session.commit()
+        self.session.refresh(rule)
+        return RuleInDB.from_orm(rule)
+
 
 

@@ -2,9 +2,9 @@ from datetime import datetime
 
 from fastapi_utils.api_model import APIModel
 
-from typing import NewType, Optional
+from typing import NewType, Optional, List
 
-from pydantic import Field, validator
+from pydantic import validator
 
 RuleId = NewType("RuleId", int)
 
@@ -59,3 +59,7 @@ class RuleProposedDeletionInput(APIModel):
         if value is None:
             return None
         return value.lower()
+
+
+class GetRulesResponse(APIModel):
+    rules: List[RuleInDB]
