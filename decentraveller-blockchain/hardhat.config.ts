@@ -32,9 +32,9 @@ const baseConfig: HardhatUserConfig = {
         },
         hardhat: {
             accounts: {
-                count: 200
+                count: 200,
             },
-        }
+        },
     },
     gasReporter: {
         enabled: true,

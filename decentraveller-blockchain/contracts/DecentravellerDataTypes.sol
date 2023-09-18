@@ -12,6 +12,7 @@ library DecentravellerDataTypes {
     enum DecentravellerRuleStatus {
         PENDING_APPROVAL,
         APPROVED,
+        PENDING_DELETED,
         DELETED
     }
 

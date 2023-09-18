@@ -4,9 +4,7 @@ import { EventRequest, RuleApprovedRequestBody } from "../adapters/types";
 import EventTransformer from "./EventTransformer";
 
 class RuleApprovedTransformer extends EventTransformer<RuleApprovedRequestBody> {
-    public transformEvent(
-        ...event: any[]
-    ): EventRequest<RuleApprovedRequestBody> {
+    public transformEvent(event: any[]): EventRequest<RuleApprovedRequestBody> {
         return {
             endpoint: "/rule/approve",
             method: HTTPMethod.POST,

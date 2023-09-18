@@ -8,9 +8,7 @@ import {
 import EventTransformer from "./EventTransformer";
 
 class RuleDeletedTransformer extends EventTransformer<RuleDeletedRequestBody> {
-    public transformEvent(
-        ...event: any[]
-    ): EventRequest<RuleDeletedRequestBody> {
+    public transformEvent(event: any[]): EventRequest<RuleDeletedRequestBody> {
         return {
             endpoint: "/rule-deletion/delete",
             method: HTTPMethod.POST,
