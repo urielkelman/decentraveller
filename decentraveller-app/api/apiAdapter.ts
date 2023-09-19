@@ -13,27 +13,25 @@ import {
     RECOMMENDED_SIMILAR_PLACES,
     REVIEWS_PLACES_ENDPOINT,
     REVIEWS_PROFILE_ENDPOINT,
-    UPLOAD_IMAGES,
+    UPLOAD_IMAGES, RULES_ENDPOINT
 } from './config';
 import { UserResponse } from './response/user';
-import Adapter from './Adapter';
 import { formatString } from '../commons/functions/utils';
 import { ReviewImageResponse, ReviewsResponse } from './response/reviews';
-import {PlaceResponse, PlacesResponse} from './response/places';
+import { PlaceResponse, PlacesResponse } from './response/places';
 import * as FileSystem from 'expo-file-system';
-import { EncodingType } from 'expo-file-system';
 import FormData from 'form-data';
+import { RulesResponse, RuleStatus } from './response/rules';
 
 enum HTTPStatusCode {
     BAD_REQUEST = 400,
     NOT_FOUND = 404,
 }
 
-class ApiAdapter extends Adapter {
+class ApiAdapter {
     private httpConnector: HttpConnector;
 
     constructor(httpConnector: HttpConnector) {
-        super();
         this.httpConnector = httpConnector;
     }
 
@@ -53,11 +51,11 @@ class ApiAdapter extends Adapter {
     }
 
     getProfileAvatarUrl(owner: string, forceReload = false): string {
-        return API_ENDPOINT + formatString(PROFILE_IMAGE, {owner: owner}) + `?${forceReload ? Date.now() : ""}`;
+        return API_ENDPOINT + formatString(PROFILE_IMAGE, { owner: owner }) + `?${forceReload ? Date.now() : ''}`;
     }
 
     getPlaceImageUrl(placeId: number): string {
-        return API_ENDPOINT + formatString(PLACE_IMAGE, { placeId: placeId })
+        return API_ENDPOINT + formatString(PLACE_IMAGE, { placeId: placeId });
     }
 
     async getPlacesSearch(
@@ -265,8 +263,18 @@ class ApiAdapter extends Adapter {
             console.error(error);
         }
     }
+
+    async getRules(ruleStatus: RuleStatus): Promise<RulesResponse> {
+        const httpRequest: HttpGetRequest = {
+            url: RULES_ENDPOINT,
+            queryParams: { rule_status: ruleStatus },
+            onUnexpectedError: (e) => console.log('Error'),
+        };
+
+        return await httpAPIConnector.get(httpRequest);
+    }
 }
 
 const apiAdapter = new ApiAdapter(httpAPIConnector);
 
-export { apiAdapter };
+export { apiAdapter, ApiAdapter };

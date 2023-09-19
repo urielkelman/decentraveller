@@ -2,19 +2,16 @@ import { GeocodingResponse } from './response/geocoding';
 import { Honduras4709GeocodingResponse, HondurasGeocodingResponse } from './mocks/geocoding';
 import { UserResponse } from './response/user';
 import { GianUserResponse, MatiUserResponse, UriUserResponse } from './mocks/user';
-import Adapter from './Adapter';
 import { alternativePlacesMock, defaultPlacesMock } from './mocks/places';
 import { ReviewImageResponse, ReviewsResponse } from './response/reviews';
 import { emptyReviewsResponse, imageReviewResponse, manyReviewsResponse, oneReviewsResponse } from './mocks/reviews';
 import { PlaceResponse } from './response/places';
-import { httpAPIConnector, HttpGetRequest } from '../connectors/HttpConnector';
-import { PROFILE_IMAGE, PLACES_SEARCH } from './config';
-import * as FileSystem from 'expo-file-system';
-import { formatString } from '../commons/functions/utils';
+import { HttpGetRequest } from '../connectors/HttpConnector';
+import { PLACES_SEARCH } from './config';
 
 const searchTextHondurasResponse = ['Honduras', 'Honduras ', 'Honduras 4', 'Honduras 47', 'Honduras 470'];
 
-class MockApiAdapter extends Adapter {
+class MockApiAdapter {
     async getGeocoding(physicalAddress: string, _: string): Promise<GeocodingResponse> {
         switch (true) {
             case searchTextHondurasResponse.includes(physicalAddress): {

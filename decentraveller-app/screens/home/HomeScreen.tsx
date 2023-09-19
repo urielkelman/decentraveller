@@ -79,9 +79,7 @@ const HomeScreen = ({ navigation }) => {
         const latitude = location.coords.latitude.toString();
         const longitude = location.coords.longitude.toString();
         userLocation.setValue([latitude, longitude]);
-        console.log('to get');
         await getWithLocation([latitude, longitude]);
-        console.log('geted');
     };
 
     const obtainAndSetPushNotificationToken = async (): Promise<void> => {

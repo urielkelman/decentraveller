@@ -1,12 +1,14 @@
 import '@ethersproject/shims';
-import { ethers, utils } from 'ethers';
+import { ethers } from 'ethers';
 import { ContractFunction, DecentravellerContract } from './contractTypes';
-import { Blockchain, BlockchainByChainId, LOCAL_DEVELOPMENT_CHAIN_ID } from './config';
+import { Blockchain, BlockchainByChainId } from './config';
 import { withTimeout } from '../commons/functions/utils';
 import { DEFAULT_CHAIN_ID } from '../context/AppContext';
 import { decentravellerPlaceContract } from './contracts/decentravellerPlaceContract';
 import { decentravellerMainContract } from './contracts/decentravellerMainContract';
 import { decentravellerPlaceFactoryContract } from './contracts/decentravellerPlaceFactoryABI';
+import { BlockchainProposalStatus } from './types';
+import { decentravellerGovernanceContract } from './contracts/decentravellerGovernanceContract';
 
 const BLOCKCHAIN_TIMEOUT_IN_MILLIS = 100000;
 const BLOCKCHAIN_TRANSACTION_TASK_NAME = 'Blockchain transaction';
@@ -159,8 +161,24 @@ class BlockchainAdapter {
             console.log(e);
         }
     }
+
+    async getProposalState(web3Provider: ethers.providers.Web3Provider, proposalId: string): Promise<BlockchainProposalStatus> {
+        try {
+            const blockchain: Blockchain = BlockchainByChainId[DEFAULT_CHAIN_ID];
+            const contractFunction: ContractFunction = decentravellerGovernanceContract.functions['state'];
+            const governanceAddress: string = decentravellerGovernanceContract.addressesByBlockchain[blockchain]
+            const decentravellerGovernance = new ethers.Contract(governanceAddress, contractFunction.fullContractABI, web3Provider);
+            console.log(governanceAddress)
+            console.log(contractFunction)
+            console.log(decentravellerGovernance)
+            return await decentravellerGovernance.state(proposalId)
+        } catch (e) {
+            console.log(e);
+        }
+
+    }
 }
 
 const blockchainAdapter = new BlockchainAdapter();
 
-export { blockchainAdapter };
+export { blockchainAdapter, BlockchainAdapter };
