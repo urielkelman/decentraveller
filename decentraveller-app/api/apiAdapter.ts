@@ -23,6 +23,7 @@ import {PlaceResponse, PlacesResponse} from './response/places';
 import * as FileSystem from 'expo-file-system';
 import { EncodingType } from 'expo-file-system';
 import FormData from 'form-data';
+import {RulesResponse} from "./response/rules";
 
 enum HTTPStatusCode {
     BAD_REQUEST = 400,
@@ -264,6 +265,28 @@ class ApiAdapter extends Adapter {
         } catch (error) {
             console.error(error);
         }
+    }
+
+    async getRules(
+    ): Promise<RulesResponse> {
+        const rules: string[] = [];
+
+        for (let i = 1; i <= 10; i++) {
+            rules.push(`Rule ${i}: This is an invented rule.`);
+        }
+
+        return { rules };
+    }
+
+    async getRulesInVotation(
+    ): Promise<RulesResponse> {
+        const rules: string[] = [];
+
+        for (let i = 10; i <= 20; i++) {
+            rules.push(`Rule ${i}: This is an invented rule in votation.`);
+        }
+
+        return { rules };
     }
 }
 

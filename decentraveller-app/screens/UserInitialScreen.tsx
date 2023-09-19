@@ -9,7 +9,7 @@ import { mockApiAdapter } from '../api/mockApiAdapter';
 import HomeNavigator from './home/HomeNavigator';
 import { useWalletConnectModal } from '@walletconnect/modal-react-native';
 
-const adapter = apiAdapter;
+const adapter = mockApiAdapter;
 
 import * as Linking from 'expo-linking';
 import LoadingComponent from '../commons/components/DecentravellerLoading';

@@ -14,6 +14,7 @@ import AddReviewComment from '../reviews/AddReviewComment';
 import SuccessAddReviewScreen from '../reviews/SuccessAddReviewScreen';
 import AddReviewImages from '../reviews/AddReviewImages';
 import * as Linking from 'expo-linking';
+import FullRulesList from "./community/FullRulesList";
 
 export type HomeStackScreens = {
     LeftSideBar: undefined;
@@ -28,6 +29,7 @@ export type HomeStackScreens = {
     AddReviewComment: { selectedImages: string[]; placeId: number };
     SuccessAddReviewScreen: undefined;
     UserProfileScreen: { walletId: string };
+    FullRulesList: undefined;
 };
 
 const HomeStackNavigator = createStackNavigator<HomeStackScreens>();
@@ -119,6 +121,14 @@ const HomeNavigator = () => {
                     component={SuccessAddReviewScreen}
                     options={{
                         title: 'Thank you!',
+                        headerShown: true,
+                    }}
+                />
+                <HomeStackNavigator.Screen
+                    name="FullRulesList"
+                    component={FullRulesList}
+                    options={{
+                        title: 'Rules list',
                         headerShown: true,
                     }}
                 />
