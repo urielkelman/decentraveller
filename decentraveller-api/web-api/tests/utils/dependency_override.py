@@ -78,7 +78,6 @@ class MockMLServices(MLServices):
         return 0.0
 
 
-
 app.dependency_overrides[build_relational_database] = build_test_relational_database
 app.dependency_overrides[PushNotificationAdapter] = MockNotificationAdapter
 app.dependency_overrides[indexer_auth] = mock_indexer_auth
