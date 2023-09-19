@@ -1,8 +1,8 @@
 import ReviewItem from '../../screens/reviews/ReviewItem';
-import {ActivityIndicator, FlatList, Text, View} from 'react-native';
-import React, {useEffect} from 'react';
-import {placeReviewsBoxStyles} from "../../styles/placeDetailStyles";
-import LoadingComponent from "./DecentravellerLoading";
+import { ActivityIndicator, FlatList, Text, View } from 'react-native';
+import React, { useEffect } from 'react';
+import { placeReviewsBoxStyles } from '../../styles/placeDetailStyles';
+import LoadingComponent from './DecentravellerLoading';
 
 export type ReviewShowProps = {
     id: number;
@@ -47,22 +47,20 @@ export type ReviewItemsProps = {
     footer?: React.ComponentType<any> | React.ReactElement<unknown> | null;
 };
 
-const DecentravellerReviewsItems: React.FC<ReviewItemsProps> = ({ reviewList, loadReviews, summarized,
-                                                                footer}) => {
+const DecentravellerReviewsItems: React.FC<ReviewItemsProps> = ({ reviewList, loadReviews, summarized, footer }) => {
     const [loadingReviews, setLoadingReviews] = React.useState<boolean>(false);
     const [reviews, setReviews] = React.useState<ReviewShowProps[]>(null);
     const [reviewCount, setReviewsCount] = React.useState<number>(0);
 
-
     useEffect(() => {
         (async () => {
             setLoadingReviews(true);
-            if( reviewList != null) {
+            if (reviewList != null) {
                 const total = reviewList.length;
                 setReviews(reviewList);
                 setReviewsCount(total);
             } else if (loadReviews != undefined) {
-                const {total, reviewsToShow} = await loadReviews(0, 5);
+                const { total, reviewsToShow } = await loadReviews(0, 5);
                 setReviews(reviewsToShow);
                 setReviewsCount(total);
             }
@@ -70,12 +68,10 @@ const DecentravellerReviewsItems: React.FC<ReviewItemsProps> = ({ reviewList, lo
         })();
     }, []);
 
-
-
     const loadMoreReviews = async () => {
         if (hasReviews() && reviewCount > reviews.length) {
             setLoadingReviews(true);
-            const {total, reviewsToShow} = await loadReviews((reviews.length / 5) | 0, 5);
+            const { total, reviewsToShow } = await loadReviews((reviews.length / 5) | 0, 5);
             reviews.push.apply(reviews, reviewsToShow);
             setLoadingReviews(false);
         }
@@ -95,7 +91,7 @@ const DecentravellerReviewsItems: React.FC<ReviewItemsProps> = ({ reviewList, lo
                 <View style={placeReviewsBoxStyles.titleContainer}>
                     <Text style={placeReviewsBoxStyles.titleText}>Reviews</Text>
                 </View>
-                <ActivityIndicator size={'large'}/>
+                <ActivityIndicator size={'large'} />
             </View>
         </View>
     );
@@ -106,16 +102,12 @@ const DecentravellerReviewsItems: React.FC<ReviewItemsProps> = ({ reviewList, lo
 
     const footerComponent = () => {
         if (footer != null) {
-            return (
-                <View style={placeReviewsBoxStyles.reviewsFooter}>
-                    {footer}
-                </View>
-            )
+            return <View style={placeReviewsBoxStyles.reviewsFooter}>{footer}</View>;
         }
         return (
             <View style={placeReviewsBoxStyles.reviewsFooter}>
                 {!hasReviews() ? <Text>No reviews found.</Text> : null}
-                {hasReviews() && reviewCount > reviews.length ? <LoadingComponent/> : null}
+                {hasReviews() && reviewCount > reviews.length ? <LoadingComponent /> : null}
             </View>
         );
     };
@@ -131,8 +123,8 @@ const DecentravellerReviewsItems: React.FC<ReviewItemsProps> = ({ reviewList, lo
     };
 
     const reviewsBoxComponent = () => {
-        const internalRenderReviewItem = ({item}: { item: ReviewShowProps }) =>
-            renderReviewItem({item: item, summarized: false});
+        const internalRenderReviewItem = ({ item }: { item: ReviewShowProps }) =>
+            renderReviewItem({ item: item, summarized: false });
 
         return (
             <FlatList
@@ -159,4 +151,4 @@ const DecentravellerReviewsItems: React.FC<ReviewItemsProps> = ({ reviewList, lo
     return loadingReviews && !hasReviews() ? loadingReviewsComponent() : reviewsBoxComponent();
 };
 
-export { DecentravellerReviewsItems, renderReviewItem, LoadReviewResponse, ReviewLoadFunction};
+export { DecentravellerReviewsItems, renderReviewItem, LoadReviewResponse, ReviewLoadFunction };

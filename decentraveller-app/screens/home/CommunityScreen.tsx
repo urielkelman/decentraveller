@@ -10,7 +10,6 @@ const CommunityScreen = ({ navigation }) => {
     const appContext = useAppContext();
     const { web3Provider } = useAppContext();
 
-
     const killSession = async () => {
         appContext.cleanConnectionContext();
         await provider.disconnect();
@@ -21,15 +20,13 @@ const CommunityScreen = ({ navigation }) => {
         React.useCallback(() => {
             const loadRules = async () => {
                 const rulesResponse = await rulesService.getAllPendingToVote(web3Provider);
-                console.log(JSON.stringify(rulesResponse))
+                console.log(JSON.stringify(rulesResponse));
             };
             loadRules();
-        }, [])
+        }, []),
     );
 
-    useEffect(() => {
-
-    }, []);
+    useEffect(() => {}, []);
 
     return (
         <View style={{ flex: 1 }}>

@@ -16,8 +16,7 @@ export type UserProfileScreens = {
 const HomeStackNavigator = createStackNavigator<UserProfileScreens>();
 
 const MyProfileScreen = ({ navigation }) => {
-    const { userNickname, connectionContext, userCreatedAt,
-        userInterest } = useAppContext();
+    const { userNickname, connectionContext, userCreatedAt, userInterest } = useAppContext();
 
     const [selectedImage, setSelectedImage] = useState(null);
     const [isModalVisible, setIsModalVisible] = useState(false);
@@ -62,7 +61,7 @@ const MyProfileScreen = ({ navigation }) => {
                         <Image
                             key={Date.now()}
                             source={{
-                                uri: user.profileImageUrl
+                                uri: user.profileImageUrl,
                             }}
                             style={userProfileMainStyles.circleDimensions}
                         />

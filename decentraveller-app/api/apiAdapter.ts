@@ -13,7 +13,8 @@ import {
     RECOMMENDED_SIMILAR_PLACES,
     REVIEWS_PLACES_ENDPOINT,
     REVIEWS_PROFILE_ENDPOINT,
-    UPLOAD_IMAGES, RULES_ENDPOINT
+    UPLOAD_IMAGES,
+    RULES_ENDPOINT,
 } from './config';
 import { UserResponse } from './response/user';
 import { formatString } from '../commons/functions/utils';

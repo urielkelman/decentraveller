@@ -46,8 +46,8 @@ const HomeScreen = ({ navigation }) => {
             onNotFoundRecommendations,
         );
         const imageUris = placesResponse.map((p: PlaceResponse) => {
-                return adapter.getPlaceImageUrl(p.id);
-            });
+            return adapter.getPlaceImageUrl(p.id);
+        });
         const placesToShow: PlaceShowProps[] = placesResponse.map(function (p, i) {
             return parsePlaceResponse(p, imageUris[i]);
         });

@@ -100,9 +100,11 @@ const PlaceDetailScreen: React.FC<PlaceDetailScreenProps> = ({ route }) => {
     return (
         <View style={placeDetailStyles.container}>
             <View style={placeDetailStyles.imageContainer}>
-                <Image style={placeDetailStyles.image}
-                       defaultSource={require('../../../assets/images/no_place_image.jpg')}
-                       source={{uri: imageUri}} />
+                <Image
+                    style={placeDetailStyles.image}
+                    defaultSource={require('../../../assets/images/no_place_image.jpg')}
+                    source={{ uri: imageUri }}
+                />
             </View>
             <View style={placeDetailStyles.headerContainer}>
                 <View style={placeDetailStyles.textContainer}>

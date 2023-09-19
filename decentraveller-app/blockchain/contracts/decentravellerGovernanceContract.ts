@@ -1,7 +1,7 @@
-import decentravellerGovernanceABI from "../abis/governanceABI.json";
+import decentravellerGovernanceABI from '../abis/governanceABI.json';
 import { DecentravellerContract } from '../contractTypes';
 
-const governanceStringifiedABI = JSON.stringify(decentravellerGovernanceABI)
+const governanceStringifiedABI = JSON.stringify(decentravellerGovernanceABI);
 
 const decentravellerGovernanceContract: DecentravellerContract = {
     addressesByBlockchain: {
@@ -12,9 +12,9 @@ const decentravellerGovernanceContract: DecentravellerContract = {
     functions: {
         state: {
             functionName: 'state',
-            fullContractABI: governanceStringifiedABI
-        }
-    }
-}
+            fullContractABI: governanceStringifiedABI,
+        },
+    },
+};
 
 export { decentravellerGovernanceContract };

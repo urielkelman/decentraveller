@@ -162,20 +162,26 @@ class BlockchainAdapter {
         }
     }
 
-    async getProposalState(web3Provider: ethers.providers.Web3Provider, proposalId: string): Promise<BlockchainProposalStatus> {
+    async getProposalState(
+        web3Provider: ethers.providers.Web3Provider,
+        proposalId: string,
+    ): Promise<BlockchainProposalStatus> {
         try {
             const blockchain: Blockchain = BlockchainByChainId[DEFAULT_CHAIN_ID];
             const contractFunction: ContractFunction = decentravellerGovernanceContract.functions['state'];
-            const governanceAddress: string = decentravellerGovernanceContract.addressesByBlockchain[blockchain]
-            const decentravellerGovernance = new ethers.Contract(governanceAddress, contractFunction.fullContractABI, web3Provider);
-            console.log(governanceAddress)
-            console.log(contractFunction)
-            console.log(decentravellerGovernance)
-            return await decentravellerGovernance.state(proposalId)
+            const governanceAddress: string = decentravellerGovernanceContract.addressesByBlockchain[blockchain];
+            const decentravellerGovernance = new ethers.Contract(
+                governanceAddress,
+                contractFunction.fullContractABI,
+                web3Provider,
+            );
+            console.log(governanceAddress);
+            console.log(contractFunction);
+            console.log(decentravellerGovernance);
+            return await decentravellerGovernance.state(proposalId);
         } catch (e) {
             console.log(e);
         }
-
     }
 }
 

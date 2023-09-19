@@ -1,8 +1,8 @@
 export enum RuleStatus {
-    PENDING_APPROVAL = "PENDING_APPROVAL",
-    APPROVED = "APPROVED",
-    PENDING_DELETED = "PENDING_DELETED",
-    DELETED = "DELETED",
+    PENDING_APPROVAL = 'PENDING_APPROVAL',
+    APPROVED = 'APPROVED',
+    PENDING_DELETED = 'PENDING_DELETED',
+    DELETED = 'DELETED',
 }
 
 export type RuleResponse = {
@@ -15,9 +15,9 @@ export type RuleResponse = {
     proposedAt: string;
     deletionProposalId?: string | undefined;
     deletionProposedAt?: string | undefined;
-    deletionProposer: string
-}
+    deletionProposer: string;
+};
 
 export type RulesResponse = {
-    rules: RuleResponse[]
-}
+    rules: RuleResponse[];
+};

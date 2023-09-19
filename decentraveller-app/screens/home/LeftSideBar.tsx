@@ -9,7 +9,7 @@ import {
 import { drawerStyles } from '../../styles/drawerStyles';
 import { useAppContext } from '../../context/AppContext';
 import { obfuscateAddress } from '../../commons/functions/utils';
-import { apiAdapter} from "../../api/apiAdapter";
+import { apiAdapter } from '../../api/apiAdapter';
 import RootNavigator from './RootNavigator';
 
 const Drawer = createDrawerNavigator();
@@ -17,8 +17,10 @@ const Drawer = createDrawerNavigator();
 const CustomDrawerContent = (props: DrawerContentComponentProps) => {
     const { userNickname, connectionContext } = useAppContext();
     const user = {
-        profileImageUrl: apiAdapter.getProfileAvatarUrl(connectionContext?.connectedAddress ?
-            connectionContext.connectedAddress : '', true),
+        profileImageUrl: apiAdapter.getProfileAvatarUrl(
+            connectionContext?.connectedAddress ? connectionContext.connectedAddress : '',
+            true,
+        ),
         name: userNickname.value,
         walletAddress: connectionContext?.connectedAddress ? obfuscateAddress(connectionContext.connectedAddress) : '',
     };

@@ -6,5 +6,5 @@ export enum BlockchainProposalStatus {
     SUCCEEDED = 4,
     QUEUED = 5,
     EXPIRED = 6,
-    EXECUTED = 7
+    EXECUTED = 7,
 }
