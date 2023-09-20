@@ -5,21 +5,38 @@ import { View, Text, Button, ScrollView, StyleSheet } from 'react-native';
 import {apiAdapter} from "../../../api/apiAdapter";
 import RulesList from './RulesList';
 import DecentravellerButton from "../../../commons/components/DecentravellerButton";
+import {Rule} from "./DecentravellerRulesList";
+
+
 const CommunityScreen = ({ navigation }) => {
     const adapter = apiAdapter;
-    const { provider } = useWalletConnectModal();
-    const appContext = useAppContext();
     const [communityRules, setCommunityRules] = useState([]);
     const [rulesInVotation, setRulesInVotation] = useState([]);
 
     const fetchCommunityRules = async () => {
         const communityRulesData = await adapter.getRules();
-        setCommunityRules(communityRulesData.rules);
+        const rules = mapStringsToRules(communityRulesData.rules);
+        setCommunityRules(rules);
     };
+
+    function mapStringsToRules(strings: string[]): Rule[] {
+        return strings.map((description, index) => ({
+            id: index + 1,
+            description,
+            status: 'approved',
+        }));
+    }
+
+    function mapRulesToString(rules: Rule[]): string[] {
+        return rules.map((rule, index) => (
+            rule.description
+        ));
+    }
 
     const fetchRulesInVotation = async () => {
         const rulesInVotationData = await adapter.getRulesInVotation();
-        setRulesInVotation(rulesInVotationData.rules);
+        const rules = mapStringsToRules(rulesInVotationData.rules);
+        setRulesInVotation(rules);
     };
 
     useEffect(() => {
@@ -35,16 +52,20 @@ const CommunityScreen = ({ navigation }) => {
                     <Text style={styles.subtitle}>Those rules are accepted by the community and all members should keep them.</Text>
                 </View>
                 <RulesList
-                    rules={communityRules.slice(0, 4)}
-                    onPress={() => navigation.navigate('FullRulesList', { rules: communityRules, title: 'Community Rules' })}
+                    rules={mapRulesToString(communityRules).slice(0, 4)}
+                    onPress={() => navigation.navigate('DecentravellerRulesList', {
+                        ruleList: communityRules,
+                        minified: false,
+                        horizontal: false,
+                    })}
                 />
                 <View style={styles.section}>
                     <Text style={styles.title}>Rules in Votation</Text>
                     <Text style={styles.subtitle}>Vote to agree or disagree with any of these rule proposals.</Text>
                 </View>
                 <RulesList
-                    rules={rulesInVotation.slice(0, 4)}
-                    onPress={() => navigation.navigate('FullRulesList', { rules: rulesInVotation, title: 'Rules in Votation' })}
+                    rules={mapRulesToString(rulesInVotation).slice(0, 4)}
+                    onPress={() => navigation.navigate('DecentravellerRulesList', { ruleList: rulesInVotation, minified: false, horizontal: false })}
                 />
             </View>
             <View style={styles.buttonContainer}>

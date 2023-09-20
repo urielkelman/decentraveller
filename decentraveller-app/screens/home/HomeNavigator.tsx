@@ -15,6 +15,7 @@ import SuccessAddReviewScreen from '../reviews/SuccessAddReviewScreen';
 import AddReviewImages from '../reviews/AddReviewImages';
 import * as Linking from 'expo-linking';
 import FullRulesList from "./community/FullRulesList";
+import DecentravellerRulesList from "./community/DecentravellerRulesList";
 
 export type HomeStackScreens = {
     LeftSideBar: undefined;
@@ -29,7 +30,7 @@ export type HomeStackScreens = {
     AddReviewComment: { selectedImages: string[]; placeId: number };
     SuccessAddReviewScreen: undefined;
     UserProfileScreen: { walletId: string };
-    FullRulesList: undefined;
+    DecentravellerRulesList: undefined;
 };
 
 const HomeStackNavigator = createStackNavigator<HomeStackScreens>();
@@ -125,8 +126,8 @@ const HomeNavigator = () => {
                     }}
                 />
                 <HomeStackNavigator.Screen
-                    name="FullRulesList"
-                    component={FullRulesList}
+                    name="DecentravellerRulesList"
+                    component={DecentravellerRulesList}
                     options={{
                         title: 'Rules list',
                         headerShown: true,
