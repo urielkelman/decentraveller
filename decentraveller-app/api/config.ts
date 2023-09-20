@@ -27,5 +27,6 @@ export const REVIEWS_PLACES_ENDPOINT = '/place/{placeId}/reviews';
 export const REVIEWS_PROFILE_ENDPOINT = '/profile/{walletId}/reviews';
 export const PROFILE_IMAGE = '/profile/{owner}/avatar.jpg';
 export const PLACE_IMAGE = '/place/{placeId}/image.jpg';
+export const PLACE_THUMBNAIL = '/place/{placeId}/thumbnail.jpg';
 export const REVIEW_IMAGE = '/review/{imageNumber}.jpg?place_id={placeId}&id={reviewId}';
 export const UPLOAD_IMAGES = '/uploads';

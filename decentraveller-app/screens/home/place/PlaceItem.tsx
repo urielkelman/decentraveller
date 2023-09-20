@@ -15,6 +15,9 @@ import { PlaceDetailParams, PlaceDetailScreenProp } from './types';
 import { useNavigation } from '@react-navigation/native';
 import StarComponent from '../../../commons/components/StarComponent';
 import { PlaceShowProps } from '../../../commons/components/DecentravellerPlacesList';
+import {apiAdapter} from '../../../api/apiAdapter';
+
+const adapter = apiAdapter
 
 export type PlaceItemProps = PlaceShowProps & {
     minified: boolean;
@@ -29,7 +32,6 @@ const PlaceItem: React.FC<PlaceItemProps> = ({
     score,
     category,
     reviewCount,
-    imageUri,
     minified,
 }) => {
     const navigation = useNavigation<PlaceDetailScreenProp>();
@@ -40,6 +42,8 @@ const PlaceItem: React.FC<PlaceItemProps> = ({
     } catch (_) {}
 
     const addressToShow = address.split(',').slice(0, 3).join(',');
+
+    const imageToShow = !minified ? apiAdapter.getPlaceImageUrl(id) : apiAdapter.getPlaceThumbailUrl(id)
 
     const capitalizeCategory = (category: DecentravellerPlaceCategory): string => {
         const lowercaseStr = category.toLowerCase();
@@ -57,7 +61,6 @@ const PlaceItem: React.FC<PlaceItemProps> = ({
         category: category,
         score: score,
         reviewCount: reviewCount,
-        imageUri: imageUri,
     };
     const itemStyle = minified ? placeItemMinifiedStyle : placeItemStyle;
 
@@ -75,7 +78,7 @@ const PlaceItem: React.FC<PlaceItemProps> = ({
         <TouchableOpacity onPress={() => navigation.navigate('PlaceDetailScreen', placeDetailParams)}>
             <View style={itemStyle.container}>
                 <View style={itemStyle.leftContainer}>
-                    <Image style={itemStyle.image} source={{ uri: imageUri }} />
+                    <Image style={itemStyle.image} source={{ uri: adapter.getPlaceThumbailUrl(id) }} />
                 </View>
                 <View style={itemStyle.rightSideContainer}>
                     <View style={itemStyle.informationContainer}>

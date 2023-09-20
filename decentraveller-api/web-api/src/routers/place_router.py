@@ -17,6 +17,8 @@ from src.dependencies.vector_database import VectorDatabase
 from src.dependencies.ipfs_service import IPFSService
 from src.orms.place import PlaceORM
 from src.orms.review import ReviewORM
+from io import BytesIO
+from PIL import Image
 
 place_router = InferringRouter()
 
@@ -180,6 +182,28 @@ class PlaceCBV:
         else:
             raise HTTPException(status_code=HTTP_404_NOT_FOUND)
 
+    @staticmethod
+    def resize_image(image: bytes, maxsize: int) -> bytes:
+        """
+        Resizes an image keeping relative size
+        :param image: the image bytes
+        :param maxsize: new size of the image
+        :return: the new image bytes
+        """
+        image = Image.open(BytesIO(image))
+        if image.size[0] >= image.size[1]:
+            ratio = image.size[1]/image.size[0]
+            image = image.resize((maxsize, int(ratio * maxsize))).convert('RGBA')
+        else:
+            ratio = image.size[0] / image.size[1]
+            image = image.resize((int(ratio * maxsize), maxsize)).convert('RGBA')
+        final = Image.new("RGB", image.size, (255, 255, 255))
+        final.paste(image, (0, 0), image)
+
+        bytesfile = BytesIO()
+        final.save(bytesfile, format='jpeg', optimize=True, quality=95)
+        return bytesfile.getvalue()
+
     @place_router.get("/place/{place_id}/image.jpg")
     def get_place_image(self, place_id: PlaceID):
         """
@@ -193,5 +217,23 @@ class PlaceCBV:
             return Response(content=DEFAULT_PLACE_IMAGE,
                             media_type="image/jpeg")
         image_bytes = self.ipfs_service.get_file(image_hash)
+        return Response(content=image_bytes,
+                        media_type="image/jpeg")
+
+    @place_router.get("/place/{place_id}/thumbnail.jpg")
+    def get_place_thumbail(self, place_id: PlaceID):
+        """
+        Get a place image by its id
+
+        :param place_id: the place id
+        :return: the image or 404 if there is no image
+        """
+        image_hash = self.database.get_place_image_hash(place_id)
+        if image_hash is None:
+            image_bytes = self.resize_image(DEFAULT_PLACE_IMAGE, 256)
+            return Response(content=image_bytes,
+                            media_type="image/jpeg")
+        image_bytes = self.ipfs_service.get_file(image_hash)
+        image_bytes = self.resize_image(image_bytes, 256)
         return Response(content=image_bytes,
                         media_type="image/jpeg")

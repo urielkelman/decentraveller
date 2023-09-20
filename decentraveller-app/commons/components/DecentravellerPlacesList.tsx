@@ -15,7 +15,6 @@ export type PlaceShowProps = {
     score: number;
     category: DecentravellerPlaceCategory;
     reviewCount: number;
-    imageUri: string | null;
 };
 
 const renderPlaceItem = ({ item, minified }: { item: PlaceShowProps; minified: boolean }) => (
@@ -28,7 +27,6 @@ const renderPlaceItem = ({ item, minified }: { item: PlaceShowProps; minified: b
         longitude={item.longitude}
         score={item.score}
         reviewCount={item.reviewCount}
-        imageUri={item.imageUri}
         minified={minified}
     />
 );
@@ -100,7 +98,7 @@ const DecentravellerPlacesList: React.FC<PlacesItemsProps> = ({ placeList, loadP
                 data={places}
                 renderItem={internalRenderPlaceItem}
                 horizontal={horizontal}
-                keyExtractor={(item, index) => String(index)}
+                keyExtractor={(item, index) => String(item.id)}
                 ListFooterComponent={footerComponent}
                 onEndReached={loadMore}
                 onEndReachedThreshold={0.1}

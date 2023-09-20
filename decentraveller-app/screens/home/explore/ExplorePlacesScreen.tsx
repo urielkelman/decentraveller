@@ -107,10 +107,7 @@ const ExplorePlacesScreen = ({ navigation }) => {
             maxDistance !== 0 ? maxDistance : null,
         );
         if (placesResponse != null) {
-            const imageUris = placesResponse.places.map((p: PlaceResponse) => {
-                return adapter.getPlaceImageUrl(p.id);
-            });
-            const placesToShow: PlaceShowProps[] = placesResponse.places.map(function (p, i) {
+            const placesToShow: PlaceShowProps[] = placesResponse.places.map(function (p) {
                 return {
                     id: p.id,
                     name: p.name,
@@ -120,7 +117,6 @@ const ExplorePlacesScreen = ({ navigation }) => {
                     score: p.score,
                     category: p.category,
                     reviewCount: p.reviews,
-                    imageUri: imageUris[i],
                 };
             });
             return { total: placesResponse.total, placesToShow: placesToShow };

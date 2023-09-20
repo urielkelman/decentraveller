@@ -6,11 +6,13 @@ import React, { useState } from 'react';
 import PlaceSimilarsBox from './PlaceSimilarsBox';
 import { ImageGallery } from '@georstat/react-native-image-gallery';
 import { useAppContext } from '../../../context/AppContext';
+import {apiAdapter} from "../../../api/apiAdapter";
 
-const path = '../../../assets/mock_images/eretz-inside.jpeg';
 const locationIconPath = '../../../assets/images/location.png';
 const rankingIconPath = require('../../../assets/images/estrellita.png');
 const distanceIconPath = require('../../../assets/images/caminito.png');
+
+const adapter = apiAdapter
 
 type BulletItemProps = {
     iconPath: any;
@@ -42,7 +44,7 @@ const bulletItemComponent: React.FC<BulletItemProps> = ({ iconPath, title, value
 
 const PlaceDetailScreen: React.FC<PlaceDetailScreenProps> = ({ route }) => {
     const { userLocation } = useAppContext();
-    const { id, name, address, latitude, longitude, score, category, reviewCount, imageUri } = route.params;
+    const { id, name, address, latitude, longitude, score, category, reviewCount } = route.params;
     const [isOpen, setIsOpen] = useState(false);
 
     const openGallery = () => setIsOpen(true);
@@ -89,7 +91,7 @@ const PlaceDetailScreen: React.FC<PlaceDetailScreenProps> = ({ route }) => {
     return (
         <View style={placeDetailStyles.container}>
             <TouchableOpacity style={placeDetailStyles.imageContainer} onPress={openGallery}>
-                <Image style={placeDetailStyles.image} source={{ uri: imageUri }} />
+                <Image style={placeDetailStyles.image} source={{ uri: apiAdapter.getPlaceImageUrl(id) }} />
             </TouchableOpacity>
             <View style={placeDetailStyles.headerContainer}>
                 <View style={placeDetailStyles.placeTitleContainer}>
@@ -115,7 +117,8 @@ const PlaceDetailScreen: React.FC<PlaceDetailScreenProps> = ({ route }) => {
                 <PlaceSimilarsBox placeId={id} />
             </View>
             <PlaceReviewsBox placeId={id} summarized={true} />
-            <ImageGallery close={closeGallery} isOpen={isOpen} images={[{ id: 1, url: imageUri }]} hideThumbs={true} />
+            <ImageGallery close={closeGallery} isOpen={isOpen} images={[{ id: 1,
+                url: apiAdapter.getPlaceImageUrl(id) }]} hideThumbs={true} />
         </View>
     );
 };

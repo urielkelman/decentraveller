@@ -16,7 +16,7 @@ import {
     UPLOAD_IMAGES,
     REVIEW_IMAGE,
     GET_PLACE_ENDPOINT,
-    GET_REVIEW_ENDPOINT,
+    GET_REVIEW_ENDPOINT, PLACE_THUMBNAIL,
 } from './config';
 import { UserResponse } from './response/user';
 import Adapter from './Adapter';
@@ -61,6 +61,10 @@ class ApiAdapter extends Adapter {
 
     getPlaceImageUrl(placeId: number): string {
         return API_ENDPOINT + formatString(PLACE_IMAGE, { placeId: placeId });
+    }
+
+    getPlaceThumbailUrl(placeId: number, maxResolution?: number): string {
+        return API_ENDPOINT + formatString(PLACE_THUMBNAIL, { placeId: placeId });
     }
 
     getReviewImageUrl(placeId: number, reviewId: number, imageNumber: number): string {

@@ -1,4 +1,5 @@
 import { Dimensions, StyleSheet } from 'react-native';
+import {DECENTRAVELLER_DEFAULT_BACKGROUND_COLOR} from "../commons/global";
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
@@ -6,7 +7,7 @@ const windowWidth = Dimensions.get('window').width;
 const placeDetailStyles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#FFE1E1',
+        backgroundColor: DECENTRAVELLER_DEFAULT_BACKGROUND_COLOR,
     },
     image: {
         width: '100%',

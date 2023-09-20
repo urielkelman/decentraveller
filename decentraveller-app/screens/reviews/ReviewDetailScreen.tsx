@@ -20,7 +20,7 @@ const ReviewDetailScreen: React.FC<ReviewScreenProps> = ({ route }) => {
     const [review, setReview] = React.useState<ReviewShowProps>(null);
     const [place, setPlace] = React.useState<PlaceShowProps>(null);
 
-    const parsePlaceResponse = (placeResponse: PlaceResponse, imageUri: string): PlaceShowProps => {
+    const parsePlaceResponse = (placeResponse: PlaceResponse): PlaceShowProps => {
         return {
             id: placeResponse.id,
             name: placeResponse.name,
@@ -30,7 +30,8 @@ const ReviewDetailScreen: React.FC<ReviewScreenProps> = ({ route }) => {
             score: placeResponse.score,
             category: placeResponse.category,
             reviewCount: placeResponse.reviews,
-            imageUri: imageUri,
+            imageUri: adapter.getPlaceImageUrl(placeResponse.id),
+            thumbnailUri: adapter.getPlaceThumbailUrl(placeResponse.id),
         };
     };
 
@@ -38,7 +39,7 @@ const ReviewDetailScreen: React.FC<ReviewScreenProps> = ({ route }) => {
         (async () => {
             setLoading(true);
             const placeData = await adapter.getPlace(placeId, () => {});
-            const placeToShow = parsePlaceResponse(placeData, adapter.getPlaceImageUrl(placeId));
+            const placeToShow = parsePlaceResponse(placeData);
             const reviewData = await adapter.getReview(placeId, reviewId, () => {});
             const avatarUrl = await adapter.getProfileAvatarUrl(reviewData.owner.owner);
             const reviewToShow: ReviewShowProps = {
@@ -75,6 +76,7 @@ const ReviewDetailScreen: React.FC<ReviewScreenProps> = ({ route }) => {
                     category={place.category}
                     reviewCount={place.reviewCount}
                     imageUri={place.imageUri}
+                    thumbnailUri={place.thumbnailUri}
                     minified={true}
                 />
             </View>
