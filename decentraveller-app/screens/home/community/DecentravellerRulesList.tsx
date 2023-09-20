@@ -1,14 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, TouchableOpacity } from 'react-native';
 import LoadingComponent from "../../../commons/components/DecentravellerLoading";
-import {RouteProp} from "@react-navigation/native";
-import rulesList from "./RulesList";
-
-export type Rule = {
-    id: number;
-    description: string;
-    status: string;
-};
+import {RouteProp, useNavigation} from "@react-navigation/native";
+import {Rule, RuleScreenProps} from "./types";
 
 type LoadRulesResponse = {
     total: number;
@@ -30,6 +24,7 @@ type RuleListProps = {
 
 const DecentravellerRulesList: React.FC<RuleListProps> = ({ route}) => {
     const { ruleList, minified, horizontal, loadRules } = route.params
+    const navigation = useNavigation<RuleScreenProps>()
     const [loading, setLoading] = useState<boolean>(false);
     const [rules, setRules] = useState<Rule[]>([]);
     const [ruleCount, setRuleCount] = useState<number>(0);
@@ -73,25 +68,46 @@ const DecentravellerRulesList: React.FC<RuleListProps> = ({ route}) => {
     };
 
     const rulesListComponent = () => {
-        const internalRenderRuleItem = ({ item }: { item: Rule }) => (
-            <TouchableOpacity
-                style={{
-                    backgroundColor: 'white',
-                    borderRadius: 10,
-                    padding: 16,
-                    marginVertical: 8,
-                    shadowColor: '#000',
-                    shadowOffset: { width: 0, height: 2 },
-                    shadowOpacity: 0.2,
-                    shadowRadius: 2,
-                    elevation: 2,
-                }}
-                onPress={() => {}}
-            >
-                <Text style={{ fontSize: 18, fontWeight: 'bold' }}>{item.description}</Text>
-                <Text style={{ fontSize: 12, fontStyle: 'italic' }}>{item.status}</Text>
-            </TouchableOpacity>
-        );
+        const internalRenderRuleItem = ({ item }: { item: Rule }) => {
+            const navigateToScreen = () => {
+                switch (item.status) {
+                    case 'PENDING_APPROVAL':
+                        navigation.navigate('PendingApprovalRuleScreen', { rule: item });
+                        break;
+                    case 'APPROVED':
+                        navigation.navigate('ApprovedScreen', { rule: item });
+                        break;
+                    case 'PENDING_DELETED':
+                        navigation.navigate('PendingDeletedScreen', { rule: item });
+                        break;
+                    case 'DELETED':
+                        navigation.navigate('DeletedScreen', { rule: item });
+                        break;
+                    default:
+                        break;
+                }
+            };
+
+            return (
+                <TouchableOpacity
+                    style={{
+                        backgroundColor: 'white',
+                        borderRadius: 10,
+                        padding: 16,
+                        marginVertical: 8,
+                        shadowColor: '#000',
+                        shadowOffset: { width: 0, height: 2 },
+                        shadowOpacity: 0.2,
+                        shadowRadius: 2,
+                        elevation: 2,
+                    }}
+                    onPress={navigateToScreen} // Llamar a la función de navegación en onPress
+                >
+                    <Text style={{ fontSize: 18, fontWeight: 'bold' }}>{item.description}</Text>
+                    <Text style={{ fontSize: 12, fontStyle: 'italic' }}>{item.status}</Text>
+                </TouchableOpacity>
+            );
+        };
 
         return (
             <FlatList

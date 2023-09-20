@@ -1,4 +1,5 @@
+import {Rule} from "../../screens/home/community/types";
 
 export type RulesResponse = {
-    rules: string[];
+    rules: Rule[];
 };

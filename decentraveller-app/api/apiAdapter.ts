@@ -269,24 +269,13 @@ class ApiAdapter extends Adapter {
 
     async getRules(
     ): Promise<RulesResponse> {
-        const rules: string[] = [];
-
-        for (let i = 1; i <= 10; i++) {
-            rules.push(`Rule ${i}: This is an invented rule.`);
-        }
-
-        return { rules };
+        return null
     }
 
     async getRulesInVotation(
     ): Promise<RulesResponse> {
-        const rules: string[] = [];
+        return null
 
-        for (let i = 10; i <= 20; i++) {
-            rules.push(`Rule ${i}: This is an invented rule in votation.`);
-        }
-
-        return { rules };
     }
 }
 

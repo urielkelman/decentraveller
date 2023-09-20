@@ -11,6 +11,8 @@ import { httpAPIConnector, HttpGetRequest } from '../connectors/HttpConnector';
 import { PROFILE_IMAGE, PLACES_SEARCH } from './config';
 import * as FileSystem from 'expo-file-system';
 import { formatString } from '../commons/functions/utils';
+import {RulesResponse} from "./response/rules";
+import {Rule} from "../screens/home/community/types";
 
 const searchTextHondurasResponse = ['Honduras', 'Honduras ', 'Honduras 4', 'Honduras 47', 'Honduras 470'];
 
@@ -140,6 +142,42 @@ class MockApiAdapter extends Adapter {
         onFailed: () => void,
     ): Promise<ReviewImageResponse> {
         return imageReviewResponse;
+    }
+
+    async getRules(): Promise<RulesResponse> {
+        const rules: Rule[] = [];
+
+        for (let i = 1; i <= 10; i++) {
+            const statusIndex = Math.floor(Math.random() * 2);
+            const status = statusIndex === 0 ? 'APPROVED' : 'DELETED';
+
+            rules.push({
+                id: i,
+                description: `Rule ${i}: This is an invented rule.`,
+                status,
+            });
+        }
+
+        return { rules };
+    }
+
+
+    async getRulesInVotation(
+    ): Promise<RulesResponse> {
+        const rules: Rule[] = [];
+
+        for (let i = 10; i <= 20; i++) {
+            const statusIndex = Math.floor(Math.random() * 2);
+            const status = statusIndex === 0 ? 'PENDING_APPROVAL' : 'PENDING_DELETED';
+
+            rules.push({
+                id: i,
+                description: `Rule ${i}: This is an invented rule in votation.`,
+                status,
+            });
+        }
+
+        return { rules };
     }
 }
 
