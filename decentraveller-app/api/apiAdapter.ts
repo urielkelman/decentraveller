@@ -16,7 +16,8 @@ import {
     UPLOAD_IMAGES,
     REVIEW_IMAGE,
     GET_PLACE_ENDPOINT,
-    GET_REVIEW_ENDPOINT, PLACE_THUMBNAIL,
+    GET_REVIEW_ENDPOINT,
+    PLACE_THUMBNAIL,
 } from './config';
 import { UserResponse } from './response/user';
 import Adapter from './Adapter';

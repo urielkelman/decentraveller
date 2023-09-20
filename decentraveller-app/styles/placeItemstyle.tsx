@@ -51,7 +51,7 @@ const placeItemStyle = StyleSheet.create({
         color: 'black',
         fontFamily: 'Montserrat_500Medium',
         fontSize: height * 0.018,
-        maxWidth: (width - height * 0.04) * 0.7 - width * 0.12 - height * 0.005
+        maxWidth: (width - height * 0.04) * 0.7 - width * 0.12 - height * 0.005,
     },
 });
 
@@ -104,7 +104,7 @@ const placeItemMinifiedStyle = StyleSheet.create({
         color: 'black',
         fontFamily: 'Montserrat_500Medium',
         fontSize: height * 0.015,
-        width: "100%"
+        width: '100%',
     },
 });
 

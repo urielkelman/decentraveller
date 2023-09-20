@@ -50,13 +50,16 @@ const AddReviewComment = ({ navigation }) => {
     };
 
     const onClickFinish = async () => {
-
         var imageHashes = [];
 
-        if(selectedImages.length > 0){
-            const response = await adapterApi.sendReviewImage(connectionContext.connectedAddress, selectedImages, () => {
-                setShowErrorModal(true);
-            });
+        if (selectedImages.length > 0) {
+            const response = await adapterApi.sendReviewImage(
+                connectionContext.connectedAddress,
+                selectedImages,
+                () => {
+                    setShowErrorModal(true);
+                },
+            );
             if (!response) return;
             imageHashes = response.hashes;
         }

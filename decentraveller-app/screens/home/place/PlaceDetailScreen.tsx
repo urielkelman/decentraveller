@@ -6,13 +6,13 @@ import React, { useState } from 'react';
 import PlaceSimilarsBox from './PlaceSimilarsBox';
 import { ImageGallery } from '@georstat/react-native-image-gallery';
 import { useAppContext } from '../../../context/AppContext';
-import {apiAdapter} from "../../../api/apiAdapter";
+import { apiAdapter } from '../../../api/apiAdapter';
 
 const locationIconPath = '../../../assets/images/location.png';
 const rankingIconPath = require('../../../assets/images/estrellita.png');
 const distanceIconPath = require('../../../assets/images/caminito.png');
 
-const adapter = apiAdapter
+const adapter = apiAdapter;
 
 type BulletItemProps = {
     iconPath: any;
@@ -71,9 +71,8 @@ const PlaceDetailScreen: React.FC<PlaceDetailScreenProps> = ({ route }) => {
         return earthRadius * c;
     };
 
-
-    var locationComponent = null
-    if(userLocation.value){
+    var locationComponent = null;
+    if (userLocation.value) {
         const placeLatitude: number = +latitude;
         const placeLongitude: number = +longitude;
         const userLatitude: number = +userLocation.value[0];
@@ -84,9 +83,8 @@ const PlaceDetailScreen: React.FC<PlaceDetailScreenProps> = ({ route }) => {
             title: 'Distance',
             value: Number(distanceToPlace).toFixed(2) + ' km',
             marginTop: -15,
-        })
+        });
     }
-
 
     return (
         <View style={placeDetailStyles.container}>
@@ -100,7 +98,9 @@ const PlaceDetailScreen: React.FC<PlaceDetailScreenProps> = ({ route }) => {
                     </Text>
                     <View style={placeDetailStyles.bulletItem}>
                         <Image source={require(locationIconPath)} style={placeDetailStyles.bulletLocationImage} />
-                        <Text style={placeDetailStyles.locationText} numberOfLines={2} adjustsFontSizeToFit>{address}</Text>
+                        <Text style={placeDetailStyles.locationText} numberOfLines={2} adjustsFontSizeToFit>
+                            {address}
+                        </Text>
                     </View>
                 </View>
                 <View style={placeDetailStyles.bulletsContainer}>
@@ -117,8 +117,12 @@ const PlaceDetailScreen: React.FC<PlaceDetailScreenProps> = ({ route }) => {
                 <PlaceSimilarsBox placeId={id} />
             </View>
             <PlaceReviewsBox placeId={id} summarized={true} />
-            <ImageGallery close={closeGallery} isOpen={isOpen} images={[{ id: 1,
-                url: apiAdapter.getPlaceImageUrl(id) }]} hideThumbs={true} />
+            <ImageGallery
+                close={closeGallery}
+                isOpen={isOpen}
+                images={[{ id: 1, url: apiAdapter.getPlaceImageUrl(id) }]}
+                hideThumbs={true}
+            />
         </View>
     );
 };

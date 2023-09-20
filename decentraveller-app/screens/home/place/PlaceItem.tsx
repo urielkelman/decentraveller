@@ -15,9 +15,9 @@ import { PlaceDetailParams, PlaceDetailScreenProp } from './types';
 import { useNavigation } from '@react-navigation/native';
 import StarComponent from '../../../commons/components/StarComponent';
 import { PlaceShowProps } from '../../../commons/components/DecentravellerPlacesList';
-import {apiAdapter} from '../../../api/apiAdapter';
+import { apiAdapter } from '../../../api/apiAdapter';
 
-const adapter = apiAdapter
+const adapter = apiAdapter;
 
 export type PlaceItemProps = PlaceShowProps & {
     minified: boolean;
@@ -43,7 +43,7 @@ const PlaceItem: React.FC<PlaceItemProps> = ({
 
     const addressToShow = address.split(',').slice(0, 3).join(',');
 
-    const imageToShow = !minified ? apiAdapter.getPlaceImageUrl(id) : apiAdapter.getPlaceThumbailUrl(id)
+    const imageToShow = !minified ? apiAdapter.getPlaceImageUrl(id) : apiAdapter.getPlaceThumbailUrl(id);
 
     const capitalizeCategory = (category: DecentravellerPlaceCategory): string => {
         const lowercaseStr = category.toLowerCase();
@@ -81,9 +81,7 @@ const PlaceItem: React.FC<PlaceItemProps> = ({
                     <Image style={itemStyle.image} source={{ uri: adapter.getPlaceThumbailUrl(id) }} />
                 </View>
                 <View style={itemStyle.rightSideContainer}>
-                    <View style={itemStyle.informationContainer}>
-                        {placeTitle}
-                    </View>
+                    <View style={itemStyle.informationContainer}>{placeTitle}</View>
                     <View>
                         <Text style={itemStyle.subtitleText}>{capitalizedCategory}</Text>
                     </View>
@@ -112,7 +110,13 @@ const PlaceItem: React.FC<PlaceItemProps> = ({
                         ) : (
                             <></>
                         )}
-                        <Text style={itemStyle.addressText} numberOfLines={minified ? 1 : 2} adjustsFontSizeToFit={!minified}>{addressToShow}</Text>
+                        <Text
+                            style={itemStyle.addressText}
+                            numberOfLines={minified ? 1 : 2}
+                            adjustsFontSizeToFit={!minified}
+                        >
+                            {addressToShow}
+                        </Text>
                     </View>
                 </View>
             </View>

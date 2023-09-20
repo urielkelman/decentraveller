@@ -1,5 +1,5 @@
 import { Dimensions, StyleSheet } from 'react-native';
-import {DECENTRAVELLER_DEFAULT_BACKGROUND_COLOR, DECENTRAVELLER_DEFAULT_CONTRAST_COLOR} from "../commons/global";
+import { DECENTRAVELLER_DEFAULT_BACKGROUND_COLOR, DECENTRAVELLER_DEFAULT_CONTRAST_COLOR } from '../commons/global';
 
 const { height, width } = Dimensions.get('window');
 
@@ -20,7 +20,7 @@ const homeStyle = StyleSheet.create({
     },
     homeContainer: {
         backgroundColor: DECENTRAVELLER_DEFAULT_BACKGROUND_COLOR,
-        flex: 1
+        flex: 1,
     },
     title: {
         fontSize: 18,
@@ -34,11 +34,11 @@ const homeStyle = StyleSheet.create({
         shadowOpacity: 1,
         shadowRadius: 13,
         shadowColor: '#000',
-        elevation: 30
+        elevation: 30,
     },
     map: {
         width: '100%',
-        height: height*0.3
+        height: height * 0.3,
     },
     mapMarker: {
         padding: 4,
@@ -47,7 +47,7 @@ const homeStyle = StyleSheet.create({
         height: 38,
     },
     bubbleImage: {
-        position: "absolute",
+        position: 'absolute',
         width: 38,
         height: 38,
     },
