@@ -92,7 +92,7 @@ const FilterModal: React.FC<FilterModalProps> = ({ route }) => {
                     onValueChange={handleMaxDistanceChange}
                 />
                 <Text style={styles.sliderValue}>
-                    {maxDistance !== 0 ? maxDistance.toString() + 'km' : 'No maximum distance'}
+                    {maxDistance !== 0 ? maxDistance.toFixed(2) + ' km' : 'No maximum distance'}
                 </Text>
             </View>
         </View>

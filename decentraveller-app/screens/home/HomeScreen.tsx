@@ -49,9 +49,27 @@ const HomeScreen = ({navigation}) => {
         const placesToShow: PlaceShowProps[] = placesResponse.map(function (p, i) {
             return parsePlaceResponse(p);
         });
-        setRecommendedPlaces(placesToShow);
-        setLoadingRecommendedPlaces(false);
+        await setRecommendedPlaces(placesToShow);
+        setMapCentroid(placesToShow, [latitude, longitude]);
     };
+
+    const setMapCentroid = (placesToShow: PlaceShowProps[], [latitude, longitude]: [string?, string?]) => {
+        if(latitude!=null && longitude!=null){
+            setCentroid([Number(latitude), Number(longitude)])
+        } else {
+            const sumLat = placesToShow.map(x =>
+                Number(x.latitude)).reduce((a, b) => a + b, 0);
+            const sumLon = placesToShow.map(x =>
+                Number(x.longitude)).reduce((a, b) => a + b, 0);
+            if(placesToShow.length > 0) {
+                setCentroid([sumLat / placesToShow.length, sumLon / placesToShow.length])
+            } else {
+                setCentroid([sumLat, sumLon])
+            }
+        }
+    };
+
+
 
     const getAndSetRecommendedPlaces = async (): Promise<void> => {
         setLoadingRecommendedPlaces(true);
@@ -61,6 +79,7 @@ const HomeScreen = ({navigation}) => {
             if (statusRequest !== PERMISSION_GRANTED) {
                 console.log('Permission not granted');
                 await getWithLocation([]);
+                setLoadingRecommendedPlaces(false);
                 return;
             }
         }
@@ -70,11 +89,7 @@ const HomeScreen = ({navigation}) => {
         if (!location) {
             console.log('Could not retrieve last location.');
             await getWithLocation([]);
-            const sumLat = recommendedPlaces.map(x =>
-                Number(x.latitude)).reduce((a, b) => a + b, 0);
-            const sumLon = recommendedPlaces.map(x =>
-                Number(x.longitude)).reduce((a, b) => a + b, 0);
-            setCentroid([sumLat / recommendedPlaces.length, sumLon / recommendedPlaces.length])
+            setLoadingRecommendedPlaces(false);
             return;
         }
 
@@ -86,6 +101,7 @@ const HomeScreen = ({navigation}) => {
         console.log('to get');
         await getWithLocation([latitude, longitude]);
         console.log('geted');
+        setLoadingRecommendedPlaces(false);
     };
 
     const obtainAndSetPushNotificationToken = async (): Promise<void> => {

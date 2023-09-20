@@ -26,7 +26,7 @@ const main = async () => {
             var imageHashes = new Map<string, string[]>();
             for(let i=0; i<files.length; i++){
                 const fileHeader = files[i].split(".")[0];
-                const filePlace = fileHeader.split("_")[1];
+                const filePlace = fileHeader.split("_").slice(1).join("_");
                 if(imageHashes.has(filePlace)){
                     imageHashes.set(filePlace, imageHashes.get(filePlace)!.concat([response.data['hashes'][i]]));
                 } else {
@@ -35,9 +35,8 @@ const main = async () => {
             }
             return imageHashes;
     }).catch(function (error) {
-        var imageHashes = new Map<string, string[]>();
         console.log(`Error uploading place images: ${error}`)
-        return imageHashes;
+        return new Map<string, string[]>();;
     });
     
     const signers = await ethers.getSigners();

@@ -1,5 +1,7 @@
+from io import BytesIO
 from typing import Optional
 
+from PIL import Image
 from fastapi import Depends, HTTPException, Query, Response
 from fastapi_utils.cbv import cbv
 from fastapi_utils.inferring_router import InferringRouter
@@ -12,13 +14,11 @@ from src.api_models.place import PlaceID, PlaceUpdate, PlaceInDB, PlaceBody, \
     PlaceWithStats, PlaceWithDistance, PlaceCategory
 from src.api_models.profile import WalletID, wallet_id_validator
 from src.dependencies.indexer_auth import indexer_auth
+from src.dependencies.ipfs_service import IPFSService
 from src.dependencies.relational_database import build_relational_database, RelationalDatabase
 from src.dependencies.vector_database import VectorDatabase
-from src.dependencies.ipfs_service import IPFSService
 from src.orms.place import PlaceORM
 from src.orms.review import ReviewORM
-from io import BytesIO
-from PIL import Image
 
 place_router = InferringRouter()
 
@@ -142,7 +142,7 @@ class PlaceCBV:
         else:
             places = self.database.session.query(PlaceORM, func.avg(ReviewORM.score).label("score"),
                                                  func.count(ReviewORM.id).label("reviews"))
-        places = places.join(ReviewORM, ReviewORM.place_id == PlaceORM.id, isouter=True).\
+        places = places.join(ReviewORM, ReviewORM.place_id == PlaceORM.id, isouter=True). \
             group_by(PlaceORM.id)
         if place_category is not None:
             places = places.filter(PlaceORM.category == place_category)
@@ -152,7 +152,9 @@ class PlaceCBV:
             if not located_query:
                 raise HTTPException(status_code=HTTP_400_BAD_REQUEST,
                                     detail=f"Can't filter by distance if latitude and longitude is not provided")
-            places = places.filter(text(f"distance <={maximum_distance}"))
+            places = places.filter(RelationalDatabase.km_distance_query_func(PlaceORM.latitude,
+                                                                             PlaceORM.longitude,
+                                                                             latitude, longitude) <= maximum_distance)
         if sort_by == "relevancy":
             places = places.order_by((self.database.relevancy_score(
                 func.avg(ReviewORM.score), func.count(distinct(ReviewORM.owner)))).desc())
@@ -192,7 +194,7 @@ class PlaceCBV:
         """
         image = Image.open(BytesIO(image))
         if image.size[0] >= image.size[1]:
-            ratio = image.size[1]/image.size[0]
+            ratio = image.size[1] / image.size[0]
             image = image.resize((maxsize, int(ratio * maxsize))).convert('RGBA')
         else:
             ratio = image.size[0] / image.size[1]
