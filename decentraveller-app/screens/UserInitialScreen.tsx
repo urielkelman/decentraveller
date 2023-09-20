@@ -9,7 +9,7 @@ import { mockApiAdapter } from '../api/mockApiAdapter';
 import HomeNavigator from './home/HomeNavigator';
 import { useWalletConnectModal } from '@walletconnect/modal-react-native';
 
-const adapter = mockApiAdapter;
+const adapter = apiAdapter;
 
 import * as Linking from 'expo-linking';
 import LoadingComponent from '../commons/components/DecentravellerLoading';
@@ -82,7 +82,7 @@ const DecentravellerInitialScreen = () => {
             case 'Home':
                 return <HomeNavigator />;
             case 'Login':
-                return <HomeNavigator />;
+                return <LoginNavigator />;
             case 'Registration':
                 return <RegistrationNavigator onSuccess={onSuccessfulRegistration} />;
         }
