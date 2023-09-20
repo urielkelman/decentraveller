@@ -6,11 +6,12 @@ import {
     RuleProposedRequestBody,
 } from "../adapters/types";
 import EventTransformer from "./EventTransformer";
+import { eventEndpoints } from "../adapters/config";
 
 class RuleDeletedTransformer extends EventTransformer<RuleDeletedRequestBody> {
     public transformEvent(event: any[]): EventRequest<RuleDeletedRequestBody> {
         return {
-            endpoint: "/rule-deletion/delete",
+            endpoint: eventEndpoints.RULE_DELETION_ENDPOINT,
             method: HTTPMethod.POST,
             body: {
                 ruleId: (event[0] as BigNumber).toNumber(),

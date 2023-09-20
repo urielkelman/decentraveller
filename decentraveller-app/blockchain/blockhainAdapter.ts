@@ -175,9 +175,6 @@ class BlockchainAdapter {
                 contractFunction.fullContractABI,
                 web3Provider,
             );
-            console.log(governanceAddress);
-            console.log(contractFunction);
-            console.log(decentravellerGovernance);
             return await decentravellerGovernance.state(proposalId);
         } catch (e) {
             console.log(e);

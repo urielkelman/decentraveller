@@ -58,3 +58,8 @@ export interface RuleDeletionProposedRequestBody extends EventRequestBody {
 export interface RuleDeletedRequestBody extends EventRequestBody {
     ruleId: number;
 }
+
+export interface RuleProposalQueuedBody extends EventRequestBody {
+    proposalId: string;
+    executionTimestamp: number;
+}
