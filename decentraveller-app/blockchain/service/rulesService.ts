@@ -69,18 +69,24 @@ class RulesService {
     }
 
     async getAllNewToExecute(web3Provider: ethers.providers.Web3Provider): Promise<RuleResponse[]> {
-        return this.getAllWithRuleStatusAndBlockchainProposalStatus(
+        const rulesWithQueuedProposal = await this.getAllWithRuleStatusAndBlockchainProposalStatus(
             web3Provider,
             RuleStatus.PENDING_APPROVAL,
             BlockchainProposalStatus.QUEUED,
         );
+
+        // const now = new Date("2023-09-24T08:44:09");
+        const now = new Date();
+        return rulesWithQueuedProposal.filter((queuedRule) => now > new Date(queuedRule.executionTimeAt));
+    }
+
+    async getFormerRules(): Promise<RuleResponse[]> {
+        return (await apiAdapter.getRules(RuleStatus.APPROVED)).rules;
     }
 
     async getCurrentCommunityRules(): Promise<RuleResponse[]> {
         return this.getRulesWithStatus(RuleStatus.APPROVED);
     }
-
-    getAll;
 }
 
 const rulesService = new RulesService(blockchainAdapter, apiAdapter);

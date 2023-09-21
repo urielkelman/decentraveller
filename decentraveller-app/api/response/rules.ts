@@ -16,6 +16,8 @@ export type RuleResponse = {
     deletionProposalId?: string | undefined;
     deletionProposedAt?: string | undefined;
     deletionProposer: string;
+    executionTimeAt: string | undefined;
+    deletionExecutionTimestampAt: string | undefined;
 };
 
 export type RulesResponse = {

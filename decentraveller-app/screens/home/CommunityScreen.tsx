@@ -19,8 +19,23 @@ const CommunityScreen = ({ navigation }) => {
     useFocusEffect(
         React.useCallback(() => {
             const loadRules = async () => {
-                const rulesResponse = await rulesService.getAllPendingToVote(web3Provider);
-                console.log(JSON.stringify(rulesResponse));
+                const pendingToVote = await rulesService.getAllPendingToVote(web3Provider);
+                console.log('pendingToVote', JSON.stringify(pendingToVote));
+
+                const inVotingProcess = await rulesService.getAllInVotingProcess(web3Provider);
+                console.log('inVotingProcess', JSON.stringify(inVotingProcess));
+
+                const allNewDefeated = await rulesService.getAllNewDefeated(web3Provider);
+                console.log('allNewDefeated', JSON.stringify(allNewDefeated));
+
+                const allNewToQueue = await rulesService.getAllNewToQueue(web3Provider);
+                console.log('allNewToQueue', JSON.stringify(allNewToQueue));
+
+                const allNewToExecute = await rulesService.getAllNewToExecute(web3Provider);
+                console.log('allNewToExecute', JSON.stringify(allNewToExecute));
+
+                const formerRules = await rulesService.getFormerRules();
+                console.log('formerRules', JSON.stringify(formerRules));
             };
             loadRules();
         }, []),

@@ -12,6 +12,7 @@ import { ruleProposedTransformer } from "../transformers/RuleProposedTransformer
 import { ruleApprovedTransformer } from "../transformers/RuleApprovedTransformer";
 import { ruleDeletionProposedTransformer } from "../transformers/RuleDeletionProposedTransformer";
 import { ruleDeletedTransformer } from "../transformers/RuleDeletedTransformer";
+import { proposalQueuedTransformer } from "../transformers/ProposalQueuedTransformer";
 
 const blockchainUri = process.env.BLOCKCHAIN_URI || "http://127.0.0.1:8545";
 
@@ -97,6 +98,6 @@ export const eventsToListen: Array<EventToListen<any>> = [
     {
         contract: decentravellerGovernanceContract,
         eventName: "ProposalQueued",
-        transformer,
+        transformer: proposalQueuedTransformer,
     },
 ];

@@ -11,8 +11,12 @@ class ProposalQueuedTransformer extends EventTransformer<RuleProposalQueuedBody>
             method: HTTPMethod.POST,
             body: {
                 proposalId: ethers.BigNumber.from(event[0]).toString(),
-                executionTimestamp: (event[2] as BigNumber).toNumber(),
+                executionTimestamp: (event[1] as BigNumber).toNumber(),
             },
         };
     }
 }
+
+const proposalQueuedTransformer = new ProposalQueuedTransformer();
+
+export { proposalQueuedTransformer };

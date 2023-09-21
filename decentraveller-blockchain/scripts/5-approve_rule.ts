@@ -73,9 +73,9 @@ const main = async () => {
     // Increase evm time and execute.
     await time.increase(1 * 24 * 60 * 60);
 
-    await decentravellerGovernance[
-        "execute(address[],uint256[],bytes[],bytes32)"
-    ]([decentraveller.address], [0], [approveTxCalldata], proposalHash);
+    // await decentravellerGovernance[
+    //     "execute(address[],uint256[],bytes[],bytes32)"
+    // ]([decentraveller.address], [0], [approveTxCalldata], proposalHash);
 };
 
 main()
