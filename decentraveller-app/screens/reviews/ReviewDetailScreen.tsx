@@ -30,8 +30,6 @@ const ReviewDetailScreen: React.FC<ReviewScreenProps> = ({ route }) => {
             score: placeResponse.score,
             category: placeResponse.category,
             reviewCount: placeResponse.reviews,
-            imageUri: adapter.getPlaceImageUrl(placeResponse.id),
-            thumbnailUri: adapter.getPlaceThumbailUrl(placeResponse.id),
         };
     };
 
@@ -75,8 +73,6 @@ const ReviewDetailScreen: React.FC<ReviewScreenProps> = ({ route }) => {
                     score={place.score}
                     category={place.category}
                     reviewCount={place.reviewCount}
-                    imageUri={place.imageUri}
-                    thumbnailUri={place.thumbnailUri}
                     minified={true}
                 />
             </View>
