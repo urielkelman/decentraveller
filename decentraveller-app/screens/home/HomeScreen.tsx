@@ -46,7 +46,7 @@ const HomeScreen = ({ navigation }) => {
             [latitude, longitude],
             onNotFoundRecommendations,
         );
-        if(placesResponse == null) {
+        if (placesResponse == null) {
             setMapCentroid([], [latitude, longitude]);
             setRecommendedPlaces([]);
             return;

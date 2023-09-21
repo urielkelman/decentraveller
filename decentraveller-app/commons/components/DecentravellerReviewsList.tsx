@@ -106,7 +106,7 @@ const DecentravellerReviewsItems: React.FC<ReviewItemsProps> = ({ reviewList, lo
         }
         return (
             <View>
-                {!hasReviews() ? <Text style={{padding: 5, fontSize: 18}}>No reviews found.</Text> : null}
+                {!hasReviews() ? <Text style={{ padding: 5, fontSize: 18 }}>No reviews found.</Text> : null}
                 {hasReviews() && reviewCount > reviews.length ? <LoadingComponent /> : null}
             </View>
         );

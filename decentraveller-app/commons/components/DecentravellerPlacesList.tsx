@@ -82,7 +82,7 @@ const DecentravellerPlacesList: React.FC<PlacesItemsProps> = ({ placeList, loadP
     const footerComponent = () => {
         return (
             <View>
-                {!hasPlaces() ? <Text style={{padding: 5, fontSize: 18}}>No places found.</Text> : null}
+                {!hasPlaces() ? <Text style={{ padding: 5, fontSize: 18 }}>No places found.</Text> : null}
                 {hasPlaces() && placeCount > places.length ? <LoadingComponent /> : null}
             </View>
         );
