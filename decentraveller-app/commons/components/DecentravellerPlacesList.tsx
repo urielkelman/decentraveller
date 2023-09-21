@@ -2,7 +2,6 @@ import PlaceItem from '../../screens/home/place/PlaceItem';
 import { FlatList, Text, View } from 'react-native';
 import React, { useEffect, useCallback } from 'react';
 import { DecentravellerPlaceCategory } from '../../context/types';
-import { placeReviewsBoxStyles } from '../../styles/placeDetailStyles';
 import LoadingComponent from './DecentravellerLoading';
 import { ReviewShowProps } from './DecentravellerReviewsList';
 
@@ -82,8 +81,8 @@ const DecentravellerPlacesList: React.FC<PlacesItemsProps> = ({ placeList, loadP
 
     const footerComponent = () => {
         return (
-            <View style={placeReviewsBoxStyles.reviewsFooter}>
-                {!hasPlaces() ? <Text>No places found.</Text> : null}
+            <View>
+                {!hasPlaces() ? <Text style={{padding: 5, fontSize: 18}}>No places found.</Text> : null}
                 {hasPlaces() && placeCount > places.length ? <LoadingComponent /> : null}
             </View>
         );

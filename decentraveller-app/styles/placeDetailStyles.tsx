@@ -145,7 +145,6 @@ const placeReviewsBoxStyles = StyleSheet.create({
         paddingVertical: 8,
         backgroundColor: '#FFFFFF',
     },
-    reviewsFooter: {},
     titleContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',

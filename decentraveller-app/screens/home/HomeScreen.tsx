@@ -46,10 +46,15 @@ const HomeScreen = ({ navigation }) => {
             [latitude, longitude],
             onNotFoundRecommendations,
         );
+        if(placesResponse == null) {
+            setMapCentroid([], [latitude, longitude]);
+            setRecommendedPlaces([]);
+            return;
+        }
         const placesToShow: PlaceShowProps[] = placesResponse.map(function (p, i) {
             return parsePlaceResponse(p);
         });
-        await setRecommendedPlaces(placesToShow);
+        setRecommendedPlaces(placesToShow);
         setMapCentroid(placesToShow, [latitude, longitude]);
     };
 
@@ -126,7 +131,7 @@ const HomeScreen = ({ navigation }) => {
     const placesToRender = loadingRecommendedPlaces ? (
         <LoadingComponent />
     ) : showPlacesNotFound ? (
-        <Text>We couldn't find any place for you. Try in the Explore Tab.</Text>
+        <Text style={homeStyle.title}>We couldn't find any place for you. Try in the Explore Tab.</Text>
     ) : (
         <DecentravellerPlacesList placeList={recommendedPlaces} minified={false} horizontal={false} />
     );
