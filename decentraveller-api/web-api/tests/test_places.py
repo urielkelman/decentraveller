@@ -9,9 +9,9 @@ def cleanup():
     restart_database()
     yield None
 
+
 @pytest.fixture
 def setup_dataset():
-
     for i in range(20):
         response = client.post("/profile",
                                json={"owner": '0x{:040X}'.format(i),
@@ -263,7 +263,8 @@ def test_get_paginated_places(cleanup):
                            )
     assert response.status_code == 201
 
-    response = client.get("/profile/0xeB7C917821796eb627C0719A23a139ce51226CD2/places", params={"page": 0, "per_page": 3})
+    response = client.get("/profile/0xeB7C917821796eb627C0719A23a139ce51226CD2/places",
+                          params={"page": 0, "per_page": 3})
     assert response.status_code == 200
     assert len(response.json()['places']) == 3
     assert response.json()['total'] == 5
@@ -295,7 +296,8 @@ def test_get_paginated_places(cleanup):
                                             "score": None,
                                             "reviews": 0}
 
-    response = client.get("/profile/0xeB7C917821796eb627C0719A23a139ce51226CD2/places", params={"page": 1, "per_page": 3})
+    response = client.get("/profile/0xeB7C917821796eb627C0719A23a139ce51226CD2/places",
+                          params={"page": 1, "per_page": 3})
     assert response.status_code == 200
     assert len(response.json()['places']) == 2
     assert response.json()['total'] == 5
@@ -317,6 +319,7 @@ def test_get_paginated_places(cleanup):
                                             "category": "GASTRONOMY",
                                             "score": None,
                                             "reviews": 0}
+
 
 def test_create_place_no_image(cleanup):
     response = client.post("/profile",

@@ -12,7 +12,7 @@ class UpdatedProfileTransformer extends EventTransformer<NewProfileRequestBody> 
                 owner: event[0],
                 nickname: event[1],
                 country: event[2],
-                interest: this.interestNumberToString(event[3])
+                interest: this.interestNumberToString(event[3]),
             },
         };
     }
@@ -26,7 +26,7 @@ class UpdatedProfileTransformer extends EventTransformer<NewProfileRequestBody> 
             case 2:
                 return "ENTERTAINMENT";
             case 3:
-                return "OTHER"
+                return "OTHER";
             default:
                 return "UNKNOWN";
         }

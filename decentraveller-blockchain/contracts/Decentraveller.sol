@@ -28,14 +28,17 @@ contract Decentraveller {
         uint256 indexed ruleId,
         address indexed proposer,
         string statement,
-        uint256 proposalId
+        uint256 proposalId,
+        uint256 proposalTimestamp
     );
 
     event DecentravellerRuleApproved(uint256 indexed ruleId);
 
     event DecentravellerRuleDeletionProposed(
         uint256 indexed ruleId,
-        address indexed proposer
+        address indexed proposer,
+        uint256 proposalId,
+        uint256 proposalTimestamp
     );
 
     event DecentravellerRuleDeleted(uint256 indexed ruleId);
@@ -63,11 +66,14 @@ contract Decentraveller {
         timelockGovernanceAddress = governance.timelock();
         placeFactory = DecentravellerPlaceCloneFactory(_placesFactory);
         uint256 initialRulesLength = initialRules.length;
-        for (uint i = 1; i < initialRulesLength; i++) {
+        for (uint i = 1; i <= initialRulesLength; i++) {
             DecentravellerDataTypes.DecentravellerRule
                 storage initialRule = ruleById[i];
             initialRule.proposer = msg.sender;
             initialRule.statement = initialRules[i - 1];
+            initialRule.status = DecentravellerDataTypes
+                .DecentravellerRuleStatus
+                .APPROVED;
         }
         currentRuleId = initialRulesLength;
         currentPlaceId = 0;
@@ -206,7 +212,8 @@ contract Decentraveller {
             currentRuleId,
             msg.sender,
             ruleStatement,
-            proposalId
+            proposalId,
+            block.timestamp
         );
         return currentRuleId;
     }
@@ -233,7 +240,15 @@ contract Decentraveller {
         );
         rule.deleteProposalId = deletionProposalId;
         rule.deletionProposer = msg.sender;
-        emit DecentravellerRuleDeletionProposed(ruleId, msg.sender);
+        rule.status = DecentravellerDataTypes
+            .DecentravellerRuleStatus
+            .PENDING_DELETED;
+        emit DecentravellerRuleDeletionProposed(
+            ruleId,
+            msg.sender,
+            deletionProposalId,
+            block.timestamp
+        );
     }
 
     function getRuleById(

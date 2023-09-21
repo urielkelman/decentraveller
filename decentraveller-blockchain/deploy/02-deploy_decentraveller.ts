@@ -1,6 +1,6 @@
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { DeployFunction } from "hardhat-deploy/types";
-import { DecentravellerToken } from "../typechain-types";
+import { Decentraveller, DecentravellerToken } from "../typechain-types";
 
 const deployFunction: DeployFunction = async function (
     hre: HardhatRuntimeEnvironment

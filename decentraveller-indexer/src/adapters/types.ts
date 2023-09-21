@@ -1,3 +1,4 @@
+import { ethers } from "ethers";
 import { HTTPMethod } from "./AxiosRequestBuilder";
 
 export type EventRequestBody = { [key: string]: string | number | string[] };
@@ -33,4 +34,27 @@ export interface NewProfileRequestBody extends EventRequestBody {
     nickname: string;
     country: string;
     interest: string;
+}
+
+export interface RuleProposedRequestBody extends EventRequestBody {
+    ruleId: number;
+    proposer: string;
+    ruleStatement: string;
+    proposalId: string;
+    timestamp: number;
+}
+
+export interface RuleApprovedRequestBody extends EventRequestBody {
+    ruleId: number;
+}
+
+export interface RuleDeletionProposedRequestBody extends EventRequestBody {
+    ruleId: number;
+    deletionProposer: string;
+    deleteProposalId: string;
+    timestamp: number;
+}
+
+export interface RuleDeletedRequestBody extends EventRequestBody {
+    ruleId: number;
 }

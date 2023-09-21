@@ -5,6 +5,11 @@
                 "internalType": "address",
                 "name": "_decentravellerReviewImplementation",
                 "type": "address"
+            },
+            {
+                "internalType": "address",
+                "name": "_token",
+                "type": "address"
             }
         ],
         "stateMutability": "nonpayable",
@@ -28,25 +33,25 @@
             {
                 "indexed": false,
                 "internalType": "address",
-                "name": "_owner",
+                "name": "owner",
                 "type": "address"
             },
             {
                 "indexed": false,
                 "internalType": "string",
-                "name": "_reviewText",
+                "name": "reviewText",
                 "type": "string"
             },
             {
                 "indexed": false,
                 "internalType": "string[]",
-                "name": "_imagesHashes",
+                "name": "imagesHashes",
                 "type": "string[]"
             },
             {
                 "indexed": false,
                 "internalType": "uint8",
-                "name": "_score",
+                "name": "score",
                 "type": "uint8"
             }
         ],

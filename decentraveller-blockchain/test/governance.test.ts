@@ -88,7 +88,13 @@ describe("Decentraveller governance", function () {
             decentraveller.createNewRuleProposal("New rule for Decentraveller!")
         )
             .to.emit(decentraveller, "DecentravellerRuleProposed")
-            .withArgs(3, userAddress, "New rule for Decentraveller!", anyUint);
+            .withArgs(
+                3,
+                userAddress,
+                "New rule for Decentraveller!",
+                anyUint,
+                anyUint
+            );
     });
 
     it("Should revert with error when trying to get non-existent rule", async function () {
@@ -193,7 +199,7 @@ describe("Decentraveller governance", function () {
     it("Should emit an event when deletion rule proposal is created", async function () {
         await expect(decentraveller.createRuleDeletionProposal(1))
             .to.emit(decentraveller, "DecentravellerRuleDeletionProposed")
-            .withArgs(1, userAddress);
+            .withArgs(1, userAddress, anyUint, anyUint);
     });
 
     it("Should emit an event when deletion rule proposal is passed through governance", async function () {
@@ -207,6 +213,8 @@ describe("Decentraveller governance", function () {
         await deleteRuleTx.wait();
         const rule = await decentraveller.getRuleById(1);
         const deleteProposalId = rule.deleteProposalId;
+
+        assert.equal(rule[1], 2);
 
         // Increase the evm time to start voting.
         const votingDelay = await decentravellerGovernance.votingDelay();
@@ -254,7 +262,7 @@ describe("Decentraveller governance", function () {
         const createdRule = await decentraveller.getRuleById(1);
 
         // Assert status
-        assert.equal(createdRule[1], 2);
+        assert.equal(createdRule[1], 3);
         // Assert deletion proposal id
         assert.equal(createdRule[3].toString(), deleteProposalId.toString());
         // Assert delete proposer
