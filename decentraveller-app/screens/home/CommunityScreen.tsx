@@ -62,6 +62,10 @@ const CommunityScreen = ({ navigation }) => {
 
                 const formerRules = await rulesService.getFormerRules();
                 console.log('formerRules', JSON.stringify(formerRules));
+
+                if (formerRules.length < 4 && pendingToVote.length == 0) {
+                    await rulesService.proposeNewRule(web3Provider, 'La reglita del uri.');
+                }
             };
             loadRules();
         }, []),

@@ -22,6 +22,10 @@ const decentravellerMainContract: DecentravellerContract = {
             functionName: 'getPlaceAddress',
             fullContractABI: mainContractStringfiedABI,
         },
+        createNewRuleProposal: {
+            functionName: 'createNewRuleProposal',
+            fullContractABI: mainContractStringfiedABI,
+        },
     },
 };
 

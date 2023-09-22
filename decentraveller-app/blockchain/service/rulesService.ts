@@ -14,34 +14,6 @@ class RulesService {
         this.blockchainAdapter = blockchainAdapter;
         this.apiAdapter = apiAdapter;
     }
-
-    private async getRulesWithStatus(ruleStatus: RuleStatus): Promise<RuleResponse[]> {
-        const allRulesWithStatus = await this.apiAdapter.getRules(ruleStatus);
-        return allRulesWithStatus.rules;
-    }
-
-    private async getAllWithRuleStatusAndBlockchainProposalStatus(
-        web3Provider: ethers.providers.Web3Provider,
-        ruleStatus: RuleStatus,
-        blockchainProposalStatus: BlockchainProposalStatus,
-    ): Promise<RuleResponse[]> {
-        const allRulesWithStatus = await this.getRulesWithStatus(ruleStatus);
-        try {
-            const allRulesWithProposals = await Promise.all(
-                allRulesWithStatus.map(async (rule) => {
-                    const proposalStatus = await blockchainAdapter.getProposalState(web3Provider, rule.proposalId);
-                    return { proposalStatus, rule };
-                }),
-            );
-
-            return allRulesWithProposals
-                .filter((ruleWithProposal) => ruleWithProposal.proposalStatus === blockchainProposalStatus)
-                .map((ruleWithProposal) => ruleWithProposal.rule);
-        } catch (e) {
-            console.log(e);
-        }
-    }
-
     async getAllPendingToVote(web3Provider: ethers.providers.Web3Provider): Promise<RuleResponse[]> {
         return this.getAllWithRuleStatusAndBlockchainProposalStatus(
             web3Provider,
@@ -106,6 +78,10 @@ class RulesService {
         return blockchainAdapter.hasVotedInProposal(web3Provider, proposalId, address);
     }
 
+    async proposeNewRule(web3Provider: ethers.providers.Web3Provider, ruleStatement: string): Promise<string> {
+        return blockchainAdapter.proposeNewRule(web3Provider, ruleStatement);
+    }
+
     async voteAgainstProposal(web3Provider: ethers.providers.Web3Provider, proposalId: string): Promise<string> {
         return blockchainAdapter.voteInProposal(web3Provider, proposalId, 0);
     }
@@ -124,6 +100,33 @@ class RulesService {
         return this.callNewRuleApproveAction(web3Provider, rule, (web3Provider, address, calldata, hash) =>
             blockchainAdapter.executeProposal(web3Provider, address, calldata, hash),
         );
+    }
+
+    private async getRulesWithStatus(ruleStatus: RuleStatus): Promise<RuleResponse[]> {
+        const allRulesWithStatus = await this.apiAdapter.getRules(ruleStatus);
+        return allRulesWithStatus.rules;
+    }
+
+    private async getAllWithRuleStatusAndBlockchainProposalStatus(
+        web3Provider: ethers.providers.Web3Provider,
+        ruleStatus: RuleStatus,
+        blockchainProposalStatus: BlockchainProposalStatus,
+    ): Promise<RuleResponse[]> {
+        const allRulesWithStatus = await this.getRulesWithStatus(ruleStatus);
+        try {
+            const allRulesWithProposals = await Promise.all(
+                allRulesWithStatus.map(async (rule) => {
+                    const proposalStatus = await blockchainAdapter.getProposalState(web3Provider, rule.proposalId);
+                    return { proposalStatus, rule };
+                }),
+            );
+
+            return allRulesWithProposals
+                .filter((ruleWithProposal) => ruleWithProposal.proposalStatus === blockchainProposalStatus)
+                .map((ruleWithProposal) => ruleWithProposal.rule);
+        } catch (e) {
+            console.log(e);
+        }
     }
 
     private async callNewRuleApproveAction(
