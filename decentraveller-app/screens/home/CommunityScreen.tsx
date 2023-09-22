@@ -6,7 +6,7 @@ import { rulesService } from '../../blockchain/service/rulesService';
 import { useFocusEffect } from '@react-navigation/native';
 
 const CommunityScreen = ({ navigation }) => {
-    const { provider } = useWalletConnectModal();
+    const { provider, address } = useWalletConnectModal();
     const appContext = useAppContext();
     const { web3Provider } = useAppContext();
 
@@ -25,14 +25,40 @@ const CommunityScreen = ({ navigation }) => {
                 const inVotingProcess = await rulesService.getAllInVotingProcess(web3Provider);
                 console.log('inVotingProcess', JSON.stringify(inVotingProcess));
 
+                for (const rule of inVotingProcess) {
+                    const hasVotedInProposal = await rulesService.hasVotedInProposal(
+                        web3Provider,
+                        rule.proposalId,
+                        address,
+                    );
+                    console.log('hasVotedInProposal', hasVotedInProposal);
+                    if (!hasVotedInProposal) {
+                        const voteTxHash = await rulesService.voteInFavorOfProposal(web3Provider, rule.proposalId);
+                        console.log('voteTxHash', voteTxHash);
+                    }
+                }
+
                 const allNewDefeated = await rulesService.getAllNewDefeated(web3Provider);
                 console.log('allNewDefeated', JSON.stringify(allNewDefeated));
 
                 const allNewToQueue = await rulesService.getAllNewToQueue(web3Provider);
                 console.log('allNewToQueue', JSON.stringify(allNewToQueue));
 
+                for (const rule of allNewToQueue) {
+                    const queueTxHash = await rulesService.queueNewRule(web3Provider, rule);
+                    console.log('queueTxHash', queueTxHash);
+                }
+
+                const allNewQueued = await rulesService.getAllQueued(web3Provider);
+                console.log('allNewQueued', JSON.stringify(allNewQueued));
+
                 const allNewToExecute = await rulesService.getAllNewToExecute(web3Provider);
                 console.log('allNewToExecute', JSON.stringify(allNewToExecute));
+
+                for (const rule of allNewToExecute) {
+                    const executeTxHash = await rulesService.executeNewRule(web3Provider, rule);
+                    console.log('executeTxHash', executeTxHash);
+                }
 
                 const formerRules = await rulesService.getFormerRules();
                 console.log('formerRules', JSON.stringify(formerRules));

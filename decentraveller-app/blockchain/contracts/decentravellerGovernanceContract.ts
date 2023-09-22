@@ -10,8 +10,16 @@ const decentravellerGovernanceContract: DecentravellerContract = {
     },
     fullContractABI: governanceStringifiedABI,
     functions: {
+        castVote: {
+            functionName: 'castVote',
+            fullContractABI: governanceStringifiedABI,
+        },
         state: {
             functionName: 'state',
+            fullContractABI: governanceStringifiedABI,
+        },
+        queue: {
+            functionName: 'queue',
             fullContractABI: governanceStringifiedABI,
         },
     },

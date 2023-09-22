@@ -4,6 +4,7 @@ import { DecentravellerContract } from '../contractTypes';
 const placeContractStringifiedABI = JSON.stringify(placeContractABI);
 
 const decentravellerPlaceContract: DecentravellerContract = {
+    fullContractABI: placeContractStringifiedABI,
     functions: {
         addReview: {
             functionName: 'addReview',
