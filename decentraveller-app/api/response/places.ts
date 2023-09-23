@@ -1,5 +1,5 @@
 import { DecentravellerPlaceCategory } from '../../context/types';
-import {ReviewResponse} from "./reviews";
+import { ReviewResponse } from './reviews';
 
 export type PlaceResponse = {
     id: number;

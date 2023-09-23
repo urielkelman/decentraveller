@@ -110,8 +110,8 @@ const PlaceReviewsBox = ({ placeId, summarized }) => {
                 5,
             );
             const avatarUrls = reviewsResponse.reviews.map((r: ReviewResponse) => {
-                    return adapter.getProfileAvatarUrl(r.owner.owner);
-                });
+                return adapter.getProfileAvatarUrl(r.owner.owner);
+            });
             const reviewsToShow: ReviewItemProps[] = reviewsResponse.reviews.map(function (r, i) {
                 return {
                     id: r.id,

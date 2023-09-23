@@ -1,17 +1,20 @@
-import React, {useEffect} from 'react';
-import {View, Text, TouchableOpacity, FlatList, ActivityIndicator} from 'react-native';
-import {placeReviewsBoxStyles} from '../../../styles/placeDetailStyles';
-import {ReviewResponse, ReviewsResponse} from '../../../api/response/reviews';
-import {DecentravellerReviewsItems, LoadReviewResponse, ReviewShowProps} from '../../../commons/components/DecentravellerReviewsList';
-import {useNavigation} from '@react-navigation/native';
-import {apiAdapter} from '../../../api/apiAdapter';
-import ReviewItem, {ReviewItemProps} from '../../reviews/ReviewItem';
-import LoadingComponent from "../../../commons/components/DecentravellerLoading";
+import React, { useEffect } from 'react';
+import { View, Text, TouchableOpacity, FlatList, ActivityIndicator } from 'react-native';
+import { placeReviewsBoxStyles } from '../../../styles/placeDetailStyles';
+import { ReviewResponse, ReviewsResponse } from '../../../api/response/reviews';
+import {
+    DecentravellerReviewsItems,
+    LoadReviewResponse,
+    ReviewShowProps,
+} from '../../../commons/components/DecentravellerReviewsList';
+import { useNavigation } from '@react-navigation/native';
+import { apiAdapter } from '../../../api/apiAdapter';
+import ReviewItem, { ReviewItemProps } from '../../reviews/ReviewItem';
+import LoadingComponent from '../../../commons/components/DecentravellerLoading';
 
 const adapter = apiAdapter;
 
-const UserReviewsBox = ({walletId}) => {
-
+const UserReviewsBox = ({ walletId }) => {
     const loadReviews = async (offset, limit): Promise<LoadReviewResponse> => {
         const reviewsResponse: ReviewsResponse = await adapter.getProfileReviews(walletId, offset, limit);
         const avatarUrl = await adapter.getProfileAvatarUrl(walletId);
@@ -28,11 +31,10 @@ const UserReviewsBox = ({walletId}) => {
                 avatarUrl: avatarUrl,
                 createdAt: r.createdAt,
             };
-        })
-        return {total: reviewsResponse.total, reviewsToShow: reviewsToShow}
+        });
+        return { total: reviewsResponse.total, reviewsToShow: reviewsToShow };
     };
 
-    return <DecentravellerReviewsItems loadReviews={loadReviews} summarized={false} />
-
+    return <DecentravellerReviewsItems loadReviews={loadReviews} summarized={false} />;
 };
 export default UserReviewsBox;

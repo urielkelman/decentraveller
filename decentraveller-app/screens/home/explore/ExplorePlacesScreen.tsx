@@ -10,7 +10,7 @@ import {
     DecentravellerPlacesList,
     LoadPlaceResponse,
     PlaceShowProps,
-    PlaceLoadFunction
+    PlaceLoadFunction,
 } from '../../../commons/components/DecentravellerPlacesList';
 import DecentravellerPicker from '../../../commons/components/DecentravellerPicker';
 import { PickerItem } from '../../../commons/types';
@@ -108,13 +108,14 @@ const ExplorePlacesScreen = ({ navigation }) => {
         const placesResponse = await adapter.getPlacesSearch(
             [latitude, longitude],
             onNotFound,
-            0, 500,
+            0,
+            500,
             interestPickerValue,
             sortBy,
             minStars !== 0 ? minStars : null,
             maxDistance !== 0 ? maxDistance : null,
         );
-        if (placesResponse != null){
+        if (placesResponse != null) {
             const imageUris = placesResponse.places.map((p: PlaceResponse) => {
                 return adapter.getPlaceImageUrl(p.id);
             });
@@ -209,7 +210,9 @@ const ExplorePlacesScreen = ({ navigation }) => {
         <LoadingComponent />
     ) : !showNotFound ? (
         <DecentravellerPlacesList placeList={places} minified={false} horizontal={false} />
-    ) : (<Text> No places where found </Text>);
+    ) : (
+        <Text> No places where found </Text>
+    );
 
     return (
         <View

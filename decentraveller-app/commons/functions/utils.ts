@@ -1,4 +1,4 @@
-const withTimeout = async (promiseToExecute: () => Promise<any>, timeoutInMillis: number, taskName: string) => {
+const withTimeout = async <T>(promiseToExecute: () => Promise<T>, timeoutInMillis: number, taskName: string) => {
     return Promise.race([
         promiseToExecute(),
         new Promise((_, reject) => {
