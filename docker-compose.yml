@@ -43,6 +43,7 @@ services:
       - weaviate
       - ipfs
       - ml-api
+      - blockchain
 
   ml-api:
     build: decentraveller-ml-api/
