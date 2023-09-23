@@ -204,12 +204,20 @@ class BlockchainAdapter {
 
     async proposeNewRule(web3Provider: ethers.providers.Web3Provider, ruleStatement: string): Promise<string> {
         try {
-            return await this.populateAndSend(
+            return this.populateAndSend(
                 web3Provider,
                 decentravellerMainContract,
                 'createNewRuleProposal',
                 ruleStatement,
             );
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    async proposeRuleDeletion(web3Provider: ethers.providers.Web3Provider, ruleId: number): Promise<string> {
+        try {
+            return this.populateAndSend(web3Provider, decentravellerMainContract, 'createRuleDeletionProposal', ruleId);
         } catch (e) {
             console.log(e);
         }

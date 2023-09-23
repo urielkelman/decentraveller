@@ -26,6 +26,10 @@ const decentravellerMainContract: DecentravellerContract = {
             functionName: 'createNewRuleProposal',
             fullContractABI: mainContractStringfiedABI,
         },
+        createRuleDeletionProposal: {
+            functionName: 'createRuleDeletionProposal',
+            fullContractABI: mainContractStringfiedABI,
+        },
     },
 };
 

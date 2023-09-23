@@ -6,6 +6,7 @@ import { BlockchainProposalStatus } from '../types';
 import { decentravellerMainContract } from '../contracts/decentravellerMainContract';
 import { BlockchainByChainId } from '../config';
 import { DEFAULT_CHAIN_ID } from '../../context/AppContext';
+import { DecentravellerContract } from '../contractTypes';
 
 class RulesService {
     private blockchainAdapter: BlockchainAdapter;
@@ -91,14 +92,46 @@ class RulesService {
     }
 
     async queueNewRule(web3Provider: ethers.providers.Web3Provider, rule: RuleResponse): Promise<string> {
-        return this.callNewRuleApproveAction(web3Provider, rule, (web3Provider, address, calldata, hash) =>
-            blockchainAdapter.queueProposal(web3Provider, address, calldata, hash),
+        return this.callRuleProposalAction(
+            web3Provider,
+            rule,
+            async (contract) => (await contract.populateTransaction.approveProposedRule(rule.ruleId)).data!,
+            (web3Provider, address, calldata, hash) =>
+                blockchainAdapter.queueProposal(web3Provider, address, calldata, hash),
         );
     }
 
     async executeNewRule(web3Provider: ethers.providers.Web3Provider, rule: RuleResponse): Promise<string> {
-        return this.callNewRuleApproveAction(web3Provider, rule, (web3Provider, address, calldata, hash) =>
-            blockchainAdapter.executeProposal(web3Provider, address, calldata, hash),
+        return this.callRuleProposalAction(
+            web3Provider,
+            rule,
+            async (contract) => (await contract.populateTransaction.approveProposedRule(rule.ruleId)).data!,
+            (web3Provider, address, calldata, hash) =>
+                blockchainAdapter.executeProposal(web3Provider, address, calldata, hash),
+        );
+    }
+
+    async proposeRuleDeletion(web3Provider: ethers.providers.Web3Provider, ruleId: number): Promise<string> {
+        return blockchainAdapter.proposeRuleDeletion(web3Provider, ruleId);
+    }
+
+    async queueRuleDeletion(web3Provider: ethers.providers.Web3Provider, rule: RuleResponse): Promise<string> {
+        return this.callRuleProposalAction(
+            web3Provider,
+            rule,
+            async (contract) => (await contract.populateTransaction.deleteRule(rule.ruleId)).data!,
+            (web3Provider, address, calldata, hash) =>
+                blockchainAdapter.queueProposal(web3Provider, address, calldata, hash),
+        );
+    }
+
+    async executeRuleDeletion(web3Provider: ethers.providers.Web3Provider, rule: RuleResponse): Promise<string> {
+        return this.callRuleProposalAction(
+            web3Provider,
+            rule,
+            async (contract) => (await contract.populateTransaction.deleteRule(rule.ruleId)).data!,
+            (web3Provider, address, calldata, hash) =>
+                blockchainAdapter.executeProposal(web3Provider, address, calldata, hash),
         );
     }
 
@@ -129,9 +162,10 @@ class RulesService {
         }
     }
 
-    private async callNewRuleApproveAction(
+    private async callRuleProposalAction(
         web3Provider: ethers.providers.Web3Provider,
         rule: RuleResponse,
+        generateCallData: (contract: ethers.Contract) => Promise<string>,
         ruleAction: (
             provider: ethers.providers.Web3Provider,
             contractAddress: string,
@@ -145,12 +179,11 @@ class RulesService {
             decentravellerContractAddress,
             decentravellerMainContract.fullContractABI,
         );
-        const approveTxCalldata = (await decentravellerContract.populateTransaction.approveProposedRule(rule.ruleId))
-            .data!;
+        const txCalldata = await generateCallData(decentravellerContract);
 
         const proposalHash = ethers.utils.id(rule.ruleStatement);
 
-        return ruleAction(web3Provider, decentravellerContractAddress, approveTxCalldata, proposalHash);
+        return ruleAction(web3Provider, decentravellerContractAddress, txCalldata, proposalHash);
     }
 }
 
