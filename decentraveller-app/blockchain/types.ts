@@ -8,3 +8,10 @@ export enum BlockchainProposalStatus {
     EXPIRED = 6,
     EXECUTED = 7,
 }
+export const blockchainStatusOptions = [
+    'PENDING',
+    'ACTIVE',
+    'DEFEATED',
+    'SUCCEEDED',
+    'QUEUED'
+]

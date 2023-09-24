@@ -13,12 +13,9 @@ import UserReviewsScreen from '../users/profile/UserReviewsScreen';
 import AddReviewComment from '../reviews/AddReviewComment';
 import SuccessAddReviewScreen from '../reviews/SuccessAddReviewScreen';
 import AddReviewImages from '../reviews/AddReviewImages';
-import PendingApprovalRuleScreen from "./community/PendingApprovalRuleScreen";
-import {Rule} from "./community/types";
 import DecentravellerRulesList from "./community/DecentravellerRulesList";
-import ApprovedRuleScreen from "./community/ApprovedRuleScreen";
-import PendingDeletedRuleScreen from "./community/PendingDeletedRuleScreen";
-import DeletedRuleScreen from "./community/DeletedRuleScreen";
+import {Rule} from "./community/types";
+import RuleDetailScreen from "./community/RuleDeatailScreen";
 
 export type HomeStackScreens = {
     LeftSideBar: undefined;
@@ -34,10 +31,7 @@ export type HomeStackScreens = {
     SuccessAddReviewScreen: undefined;
     UserProfileScreen: { walletId: string };
     DecentravellerRulesList: undefined;
-    PendingApprovalRuleScreen: { rule: Rule };
-    ApprovedScreen: { rule: Rule };
-    PendingDeletedScreen: { rule: Rule };
-    DeletedScreen: { rule: Rule };
+    RuleDetailScreen: { rule: Rule, a:number};
 };
 
 const HomeStackNavigator = createStackNavigator<HomeStackScreens>();
@@ -141,34 +135,10 @@ const HomeNavigator = () => {
                     }}
                 />
                 <HomeStackNavigator.Screen
-                    name="PendingApprovalRuleScreen"
-                    component={PendingApprovalRuleScreen}
+                    name="RuleDetailScreen"
+                    component={RuleDetailScreen}
                     options={{
-                        title: 'Pending approval rule',
-                        headerShown: true,
-                    }}
-                />
-                <HomeStackNavigator.Screen
-                    name="ApprovedScreen"
-                    component={ApprovedRuleScreen}
-                    options={{
-                        title: 'Approved rule',
-                        headerShown: true,
-                    }}
-                />
-                <HomeStackNavigator.Screen
-                    name="PendingDeletedScreen"
-                    component={PendingDeletedRuleScreen}
-                    options={{
-                        title: 'Pending delete rule',
-                        headerShown: true,
-                    }}
-                />
-                <HomeStackNavigator.Screen
-                    name="DeletedScreen"
-                    component={DeletedRuleScreen}
-                    options={{
-                        title: 'Deleted rule',
+                        title: 'Rule',
                         headerShown: true,
                     }}
                 />

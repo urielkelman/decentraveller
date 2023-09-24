@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, TouchableOpacity } from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {FlatList, Text, TouchableOpacity, View} from 'react-native';
 import LoadingComponent from "../../../commons/components/DecentravellerLoading";
 import {RouteProp, useNavigation} from "@react-navigation/native";
 import {Rule, RuleScreenProps} from "./types";
+import {RuleResponse, RuleStatus} from "../../../api/response/rules";
 
 type LoadRulesResponse = {
     total: number;
@@ -70,22 +71,7 @@ const DecentravellerRulesList: React.FC<RuleListProps> = ({ route}) => {
     const rulesListComponent = () => {
         const internalRenderRuleItem = ({ item }: { item: Rule }) => {
             const navigateToScreen = () => {
-                switch (item.status) {
-                    case 'PENDING_APPROVAL':
-                        navigation.navigate('PendingApprovalRuleScreen', { rule: item });
-                        break;
-                    case 'APPROVED':
-                        navigation.navigate('ApprovedScreen', { rule: item });
-                        break;
-                    case 'PENDING_DELETED':
-                        navigation.navigate('PendingDeletedScreen', { rule: item });
-                        break;
-                    case 'DELETED':
-                        navigation.navigate('DeletedScreen', { rule: item });
-                        break;
-                    default:
-                        break;
-                }
+                navigation.navigate('RuleDetailScreen', { rule: item, a:2 });
             };
 
             return (
@@ -101,10 +87,10 @@ const DecentravellerRulesList: React.FC<RuleListProps> = ({ route}) => {
                         shadowRadius: 2,
                         elevation: 2,
                     }}
-                    onPress={navigateToScreen} // Llamar a la función de navegación en onPress
+                    onPress={navigateToScreen}
                 >
-                    <Text style={{ fontSize: 18, fontWeight: 'bold' }}>{item.description}</Text>
-                    <Text style={{ fontSize: 12, fontStyle: 'italic' }}>{item.status}</Text>
+                    <Text style={{ fontSize: 18, fontWeight: 'bold' }}>{item.ruleStatement}</Text>
+                    <Text style={{ fontSize: 12, fontStyle: 'italic' }}>{item.ruleStatus}</Text>
                 </TouchableOpacity>
             );
         };

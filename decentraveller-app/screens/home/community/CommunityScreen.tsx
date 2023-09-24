@@ -1,41 +1,90 @@
-import { useAppContext } from '../../../context/AppContext';
-import { useWalletConnectModal } from '@walletconnect/modal-react-native';
-import React, { useEffect, useState } from 'react';
-import { View, Text, Button, ScrollView, StyleSheet } from 'react-native';
-import {apiAdapter} from "../../../api/apiAdapter";
+import React, {useEffect, useState} from 'react';
+import {ScrollView, StyleSheet, Text, View} from 'react-native';
 import RulesList from './RulesList';
 import DecentravellerButton from "../../../commons/components/DecentravellerButton";
-import {Rule} from "./types";
 import {mockApiAdapter} from "../../../api/mockApiAdapter";
 import {communityScreenStyles} from "../../../styles/communityStyles";
+import {RuleResponse} from "../../../api/response/rules";
+import {useWalletConnectModal} from "@walletconnect/modal-react-native";
+import {useAppContext} from "../../../context/AppContext";
+import {mockRulesService} from "../../../blockchain/service/mockRulesService";
+import ModalDropdown from 'react-native-modal-dropdown';
+import {Rule} from "./types";
+import {BlockchainProposalStatus, blockchainStatusOptions} from "../../../blockchain/types";
 
+const rulesService = mockRulesService
 
 const CommunityScreen = ({ navigation }) => {
     const adapter = mockApiAdapter;
+    const { provider, address } = useWalletConnectModal();
+    const appContext = useAppContext();
+    const { web3Provider } = useAppContext();
     const [communityRules, setCommunityRules] = useState([]);
-    const [rulesInVotation, setRulesInVotation] = useState([]);
+    const [nonActiveRules, setNonActiveRules] = useState([]);
+    const [selectedNonActiveRule, setSelectedNonActiveRule] = useState('PENDING');
+
+    const handleOptionSelect = async (status) => {
+        setSelectedNonActiveRule(status);
+        let getRuleFunction;
+
+        switch (status) {
+            case 'PENDING':
+                getRuleFunction = rulesService.getAllPendingToVote;
+                break;
+            case 'ACTIVE':
+                getRuleFunction = rulesService.getAllInVotingProcess;
+                break;
+            case 'DEFEATED':
+                getRuleFunction = rulesService.getAllNewDefeated;
+                break;
+            case 'SUCCEEDED':
+                getRuleFunction = rulesService.getAllNewToQueue;
+                break;
+            case 'QUEUED':
+                getRuleFunction = rulesService.getAllQueued;
+                break;
+        }
+
+        await fetchNonActiveRules(getRuleFunction, status);
+
+    };
+    const fetchNonActiveRules = async (getRuleFunction, status) => {
+        const nonActiveRules = await getRuleFunction(web3Provider);
+        setNonActiveRules(mapRuleResponsesToRules(nonActiveRules, status));
+    };
 
     const fetchCommunityRules = async () => {
-        const communityRulesData = await adapter.getRules();
-        const rules = communityRulesData.rules;
-        setCommunityRules(rules);
+        const communityRulesData = await rulesService.getFormerRules();
+        setCommunityRules(mapRuleResponsesToRules(communityRulesData, 'EXECUTED'));
     };
 
     function mapRulesToString(rules: Rule[]): string[] {
         return rules.map((rule, index) => (
-            rule.description
+            rule.ruleStatement
         ));
     }
 
-    const fetchRulesInVotation = async () => {
-        const rulesInVotationData = await adapter.getRulesInVotation();
-        const rules = rulesInVotationData.rules;
-        setRulesInVotation(rules);
-    };
+    function mapRuleResponseToRule(ruleResponse: RuleResponse, status: string): Rule {
+        const rule: Rule = {
+            ruleId: ruleResponse.ruleId,
+            proposalId: ruleResponse.proposalId,
+            proposer: ruleResponse.proposer,
+            ruleStatement: ruleResponse.ruleStatement,
+            ruleStatus: ruleResponse.ruleStatus,
+            ruleSubStatus: BlockchainProposalStatus[status]
+        };
+
+        return rule;
+    }
+
+    function mapRuleResponsesToRules(ruleResponses: RuleResponse[], status): Rule[] {
+        return ruleResponses.map((ruleResponse) => mapRuleResponseToRule(ruleResponse, status));
+    }
+
 
     useEffect(() => {
         fetchCommunityRules();
-        fetchRulesInVotation();
+        handleOptionSelect(selectedNonActiveRule);
     }, []);
 
     return (
@@ -57,9 +106,21 @@ const CommunityScreen = ({ navigation }) => {
                     <Text style={communityScreenStyles.title}>Rules in Votation</Text>
                     <Text style={communityScreenStyles.subtitle}>Vote to agree or disagree with any of these rule proposals.</Text>
                 </View>
+                <View style={styles.container}>
+                    <Text>Select proposal status</Text>
+                    <ModalDropdown
+                        options={blockchainStatusOptions}
+                        onSelect={(index, value) => handleOptionSelect(value)}
+                        defaultValue="PENDING"
+                        style={styles.dropdown}
+                        textStyle={styles.dropdownText}
+                        dropdownStyle={styles.dropdownMenu}
+
+                    />
+                </View>
                 <RulesList
-                    rules={mapRulesToString(rulesInVotation).slice(0, 4)}
-                    onPress={() => navigation.navigate('DecentravellerRulesList', { ruleList: rulesInVotation, minified: false, horizontal: false })}
+                    rules={mapRulesToString(nonActiveRules).slice(0, 4)}
+                    onPress={() => navigation.navigate('DecentravellerRulesList', { ruleList: nonActiveRules, minified: false, horizontal: false })}
                 />
             </View>
             <View style={communityScreenStyles.buttonContainer}>
@@ -69,4 +130,26 @@ const CommunityScreen = ({ navigation }) => {
     );
 };
 
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    dropdown: {
+        width: 200,
+        borderWidth: 1,
+        borderColor: 'black',
+        backgroundColor: '#ffffff',
+        borderRadius: 5,
+        padding: 5,
+    },
+    dropdownText: {
+        fontSize: 16,
+        color: '#000000'
+    },
+    dropdownMenu: {
+        width: 200,
+    },
+});
 export default CommunityScreen;

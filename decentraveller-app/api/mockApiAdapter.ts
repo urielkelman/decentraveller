@@ -1,17 +1,18 @@
-import { GeocodingResponse } from './response/geocoding';
-import { Honduras4709GeocodingResponse, HondurasGeocodingResponse } from './mocks/geocoding';
-import { UserResponse } from './response/user';
-import { GianUserResponse, MatiUserResponse, UriUserResponse } from './mocks/user';
-import { alternativePlacesMock, defaultPlacesMock } from './mocks/places';
-import { ReviewImageResponse, ReviewsResponse } from './response/reviews';
-import { emptyReviewsResponse, imageReviewResponse, manyReviewsResponse, oneReviewsResponse } from './mocks/reviews';
-import { PlaceResponse } from './response/places';
-import { HttpGetRequest } from '../connectors/HttpConnector';
-import { PLACES_SEARCH } from './config';
+import {GeocodingResponse} from './response/geocoding';
+import {Honduras4709GeocodingResponse, HondurasGeocodingResponse} from './mocks/geocoding';
+import {UserResponse} from './response/user';
+import {GianUserResponse, UriUserResponse} from './mocks/user';
+import {alternativePlacesMock, defaultPlacesMock} from './mocks/places';
+import {ReviewImageResponse, ReviewsResponse} from './response/reviews';
+import {emptyReviewsResponse, imageReviewResponse, manyReviewsResponse, oneReviewsResponse} from './mocks/reviews';
+import {PlaceResponse} from './response/places';
+import {httpAPIConnector, HttpGetRequest} from '../connectors/HttpConnector';
+import {PLACES_SEARCH, RULES_ENDPOINT} from './config';
+import {RuleResponse, RulesResponse, RuleStatus} from "./response/rules";
 
 const searchTextHondurasResponse = ['Honduras', 'Honduras ', 'Honduras 4', 'Honduras 47', 'Honduras 470'];
 
-class MockApiAdapter {
+class ApiAdapter {
     async getGeocoding(physicalAddress: string, _: string): Promise<GeocodingResponse> {
         switch (true) {
             case searchTextHondurasResponse.includes(physicalAddress): {
@@ -139,43 +140,30 @@ class MockApiAdapter {
         return imageReviewResponse;
     }
 
-    async getRules(): Promise<RulesResponse> {
-        const rules: Rule[] = [];
+    async getRules(ruleStatus: RuleStatus): Promise<RulesResponse> {
+        const rules: RuleResponse[] = [];
 
         for (let i = 1; i <= 10; i++) {
             const statusIndex = Math.floor(Math.random() * 2);
-            const status = statusIndex === 0 ? 'APPROVED' : 'DELETED';
 
             rules.push({
-                id: i,
-                description: `Rule ${i}: This is an invented rule.`,
-                status,
+                ruleId: i,
+                proposalId: "proposalId",
+                deletionExecutionTimestampAt: "",
+                executionTimeAt: "",
+                proposer: "",
+                ruleStatement: `Rule ${i}: This is an invented rule.`,
+                ruleStatus: ruleStatus,
+                isInitial: false,
+                proposedAt: "2023-09-23",
+                deletionProposer: ""
             });
         }
 
-        return { rules };
-    }
-
-
-    async getRulesInVotation(
-    ): Promise<RulesResponse> {
-        const rules: Rule[] = [];
-
-        for (let i = 10; i <= 20; i++) {
-            const statusIndex = Math.floor(Math.random() * 2);
-            const status = statusIndex === 0 ? 'PENDING_APPROVAL' : 'PENDING_DELETED';
-
-            rules.push({
-                id: i,
-                description: `Rule ${i}: This is an invented rule in votation.`,
-                status,
-            });
-        }
-
-        return { rules };
+        return { rules: rules };
     }
 }
 
-const mockApiAdapter = new MockApiAdapter();
+const mockApiAdapter = new ApiAdapter();
 
-export { mockApiAdapter };
+export { mockApiAdapter, ApiAdapter };
