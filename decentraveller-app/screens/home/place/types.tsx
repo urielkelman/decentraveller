@@ -12,7 +12,6 @@ export interface PlaceDetailParams {
     score: number;
     category: DecentravellerPlaceCategory;
     reviewCount: number;
-    imageUri: string | null;
 }
 
 type AddReviewImagesParams = {

@@ -1,4 +1,5 @@
 import { Dimensions, StyleSheet } from 'react-native';
+import { DECENTRAVELLER_DEFAULT_BACKGROUND_COLOR } from '../commons/global';
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
@@ -6,7 +7,7 @@ const windowWidth = Dimensions.get('window').width;
 const placeDetailStyles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#FFE1E1',
+        backgroundColor: DECENTRAVELLER_DEFAULT_BACKGROUND_COLOR,
     },
     image: {
         width: '100%',
@@ -42,9 +43,15 @@ const placeDetailStyles = StyleSheet.create({
         flexDirection: 'column',
         alignItems: 'flex-start',
     },
+    placeTitleContainer: {
+        flexDirection: 'column',
+        alignItems: 'flex-start',
+        maxWidth: windowWidth - 140,
+    },
     bulletsContainer: {
         flexDirection: 'column',
         marginLeft: 'auto',
+        minWidth: 100,
     },
     titleText: {
         fontSize: 30,
@@ -138,7 +145,6 @@ const placeReviewsBoxStyles = StyleSheet.create({
         paddingVertical: 8,
         backgroundColor: '#FFFFFF',
     },
-    reviewsFooter: {},
     titleContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -165,6 +171,34 @@ const placeReviewsBoxStyles = StyleSheet.create({
         marginTop: 6,
         marginBottom: 6,
         borderRadius: 10,
+    },
+    imagesContainer: {
+        paddingHorizontal: 10,
+        overflow: 'hidden',
+        justifyContent: 'flex-start',
+        alignItems: 'flex-start',
+        height: 80,
+    },
+    imageContainer: {
+        marginRight: 10,
+        flex: 1,
+    },
+    imageFlatList: {
+        flex: 1,
+        paddingVertical: 10,
+        overflow: 'scroll',
+    },
+    image: {
+        borderRadius: 10,
+        height: 60,
+        width: 80,
+    },
+    moreImages: {
+        paddingRight: 10,
+        height: 80,
+        position: 'absolute',
+        width: 40,
+        alignSelf: 'flex-end',
     },
     commentContainer: {
         flexDirection: 'row',
@@ -199,7 +233,7 @@ const placeReviewsBoxStyles = StyleSheet.create({
     },
     userNameText: {
         fontSize: 12,
-        color: 'red',
+        color: 'rgb(80,80,80)',
         fontWeight: 'bold',
     },
     dateText: {

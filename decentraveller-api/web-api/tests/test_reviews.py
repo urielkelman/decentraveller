@@ -594,7 +594,7 @@ def test_upload_image_twice(cleanup):
     assert response.status_code == 201
 
     response = client.get("/place/0/image.jpg")
-    assert response.status_code == 404
+    assert response.status_code == 200
 
     response = client.post("/upload",
                            files={"file": open("tests/assets/place_image.jpg", "rb").read()})

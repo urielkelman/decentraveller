@@ -15,6 +15,9 @@ import { PlaceDetailParams, PlaceDetailScreenProp } from './types';
 import { useNavigation } from '@react-navigation/native';
 import StarComponent from '../../../commons/components/StarComponent';
 import { PlaceShowProps } from '../../../commons/components/DecentravellerPlacesList';
+import { apiAdapter } from '../../../api/apiAdapter';
+
+const adapter = apiAdapter;
 
 export type PlaceItemProps = PlaceShowProps & {
     minified: boolean;
@@ -29,7 +32,6 @@ const PlaceItem: React.FC<PlaceItemProps> = ({
     score,
     category,
     reviewCount,
-    imageUri,
     minified,
 }) => {
     const navigation = useNavigation<PlaceDetailScreenProp>();
@@ -40,6 +42,8 @@ const PlaceItem: React.FC<PlaceItemProps> = ({
     } catch (_) {}
 
     const addressToShow = address.split(',').slice(0, 3).join(',');
+
+    const imageToShow = !minified ? apiAdapter.getPlaceImageUrl(id) : apiAdapter.getPlaceThumbailUrl(id);
 
     const capitalizeCategory = (category: DecentravellerPlaceCategory): string => {
         const lowercaseStr = category.toLowerCase();
@@ -57,31 +61,27 @@ const PlaceItem: React.FC<PlaceItemProps> = ({
         category: category,
         score: score,
         reviewCount: reviewCount,
-        imageUri: imageUri,
     };
     const itemStyle = minified ? placeItemMinifiedStyle : placeItemStyle;
+
+    const placeTitle = minified ? (
+        <Text style={itemStyle.nameText} numberOfLines={1} adjustsFontSizeToFit>
+            {name}
+        </Text>
+    ) : (
+        <Text style={itemStyle.nameText} numberOfLines={2} adjustsFontSizeToFit>
+            {name}
+        </Text>
+    );
 
     return (
         <TouchableOpacity onPress={() => navigation.navigate('PlaceDetailScreen', placeDetailParams)}>
             <View style={itemStyle.container}>
                 <View style={itemStyle.leftContainer}>
-                    <Image style={itemStyle.image}
-                           defaultSource={require('../../../assets/images/no_place_image.jpg')}
-                           source={{uri: imageUri}} />
+                    <Image style={itemStyle.image} source={{ uri: adapter.getPlaceThumbailUrl(id) }} />
                 </View>
                 <View style={itemStyle.rightSideContainer}>
-                    <View style={itemStyle.informationContainer}>
-                        <Text style={itemStyle.nameText}>{name}</Text>
-                        {countryISOCode ? (
-                            <CountryFlag
-                                isoCode={countryISOCode}
-                                size={countryFlagSize}
-                                style={itemStyle.countryFlag}
-                            />
-                        ) : (
-                            <></>
-                        )}
-                    </View>
+                    <View style={itemStyle.informationContainer}>{placeTitle}</View>
                     <View>
                         <Text style={itemStyle.subtitleText}>{capitalizedCategory}</Text>
                     </View>
@@ -101,7 +101,22 @@ const PlaceItem: React.FC<PlaceItemProps> = ({
                         ) : null}
                     </View>
                     <View style={itemStyle.informationContainer}>
-                        <Text style={itemStyle.informationText}>{addressToShow}</Text>
+                        {countryISOCode ? (
+                            <CountryFlag
+                                isoCode={countryISOCode}
+                                size={countryFlagSize}
+                                style={itemStyle.countryFlag}
+                            />
+                        ) : (
+                            <></>
+                        )}
+                        <Text
+                            style={itemStyle.addressText}
+                            numberOfLines={minified ? 1 : 2}
+                            adjustsFontSizeToFit={!minified}
+                        >
+                            {addressToShow}
+                        </Text>
                     </View>
                 </View>
             </View>

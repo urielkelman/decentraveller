@@ -1,4 +1,4 @@
-import { Text, TouchableOpacity, View } from 'react-native';
+import { Text, TouchableOpacity, View, Image } from 'react-native';
 import { useAppContext } from '../../context/AppContext';
 import React, { useEffect } from 'react';
 import { apiAdapter } from '../../api/apiAdapter';
@@ -11,6 +11,7 @@ import { DECENTRAVELLER_DEFAULT_BACKGROUND_COLOR } from '../../commons/global';
 import LoadingComponent from '../../commons/components/DecentravellerLoading';
 import { registerForPushNotificationsAsync } from '../../commons/notifications/notifications';
 import { useWalletConnectModal } from '@walletconnect/modal-react-native';
+import MapView, { Marker } from 'react-native-maps';
 
 const adapter = apiAdapter;
 
@@ -19,13 +20,14 @@ const PERMISSION_GRANTED = 'granted';
 const HomeScreen = ({ navigation }) => {
     const { address, provider } = useWalletConnectModal();
     const { userLocation, shouldUpdateHomeRecommendations } = useAppContext();
-    const [loadingRecommendedPlaces, setLoadingRecommendedPlaces] = React.useState<boolean>(false);
+    const [loadingRecommendedPlaces, setLoadingRecommendedPlaces] = React.useState<boolean>(true);
     const [recommendedPlaces, setRecommendedPlaces] = React.useState<PlaceShowProps[]>([]);
     const [showPlacesNotFound, setShowPlacesNotFound] = React.useState<boolean>(false);
+    const [centroid, setCentroid] = React.useState<[number, number]>(null);
 
     const onNotFoundRecommendations = () => setShowPlacesNotFound(true);
 
-    const parsePlaceResponse = (placeResponse: PlaceResponse, imageUri: string): PlaceShowProps => {
+    const parsePlaceResponse = (placeResponse: PlaceResponse): PlaceShowProps => {
         return {
             id: placeResponse.id,
             name: placeResponse.name,
@@ -35,7 +37,6 @@ const HomeScreen = ({ navigation }) => {
             score: placeResponse.score,
             category: placeResponse.category,
             reviewCount: placeResponse.reviews,
-            imageUri: imageUri,
         };
     };
 
@@ -45,14 +46,30 @@ const HomeScreen = ({ navigation }) => {
             [latitude, longitude],
             onNotFoundRecommendations,
         );
-        const imageUris = placesResponse.map((p: PlaceResponse) => {
-                return adapter.getPlaceImageUrl(p.id);
-            });
+        if (placesResponse == null) {
+            setMapCentroid([], [latitude, longitude]);
+            setRecommendedPlaces([]);
+            return;
+        }
         const placesToShow: PlaceShowProps[] = placesResponse.map(function (p, i) {
-            return parsePlaceResponse(p, imageUris[i]);
+            return parsePlaceResponse(p);
         });
         setRecommendedPlaces(placesToShow);
-        setLoadingRecommendedPlaces(false);
+        setMapCentroid(placesToShow, [latitude, longitude]);
+    };
+
+    const setMapCentroid = (placesToShow: PlaceShowProps[], [latitude, longitude]: [string?, string?]) => {
+        if (latitude != null && longitude != null) {
+            setCentroid([Number(latitude), Number(longitude)]);
+        } else {
+            const sumLat = placesToShow.map((x) => Number(x.latitude)).reduce((a, b) => a + b, 0);
+            const sumLon = placesToShow.map((x) => Number(x.longitude)).reduce((a, b) => a + b, 0);
+            if (placesToShow.length > 0) {
+                setCentroid([sumLat / placesToShow.length, sumLon / placesToShow.length]);
+            } else {
+                setCentroid([sumLat, sumLon]);
+            }
+        }
     };
 
     const getAndSetRecommendedPlaces = async (): Promise<void> => {
@@ -63,6 +80,7 @@ const HomeScreen = ({ navigation }) => {
             if (statusRequest !== PERMISSION_GRANTED) {
                 console.log('Permission not granted');
                 await getWithLocation([]);
+                setLoadingRecommendedPlaces(false);
                 return;
             }
         }
@@ -72,6 +90,7 @@ const HomeScreen = ({ navigation }) => {
         if (!location) {
             console.log('Could not retrieve last location.');
             await getWithLocation([]);
+            setLoadingRecommendedPlaces(false);
             return;
         }
 
@@ -79,9 +98,11 @@ const HomeScreen = ({ navigation }) => {
         const latitude = location.coords.latitude.toString();
         const longitude = location.coords.longitude.toString();
         userLocation.setValue([latitude, longitude]);
+        setCentroid([Number(latitude), Number(longitude)]);
         console.log('to get');
         await getWithLocation([latitude, longitude]);
         console.log('geted');
+        setLoadingRecommendedPlaces(false);
     };
 
     const obtainAndSetPushNotificationToken = async (): Promise<void> => {
@@ -107,17 +128,83 @@ const HomeScreen = ({ navigation }) => {
         })();
     }, [shouldUpdateHomeRecommendations.value]);
 
-    const componentToRender = loadingRecommendedPlaces ? (
+    const placesToRender = loadingRecommendedPlaces ? (
         <LoadingComponent />
     ) : showPlacesNotFound ? (
-        <Text>We couldn't find any place for you. Try in the Explore Tab.</Text>
+        <Text style={homeStyle.title}>We couldn't find any place for you. Try in the Explore Tab.</Text>
     ) : (
         <DecentravellerPlacesList placeList={recommendedPlaces} minified={false} horizontal={false} />
     );
 
+    const mapToRender = !loadingRecommendedPlaces ? (
+        <MapView
+            initialRegion={{
+                latitude: centroid[0],
+                longitude: centroid[1],
+                latitudeDelta: 0.1,
+                longitudeDelta: 0.1,
+            }}
+            style={homeStyle.map}
+            rotateEnabled={false}
+            showsBuildings={false}
+            showsCompass={false}
+            showsScale={false}
+            showsTraffic={false}
+            toolbarEnabled={false}
+            zoomTapEnabled={false}
+            customMapStyle={[
+                {
+                    featureType: 'administrative.land_parcel',
+                    stylers: [
+                        {
+                            visibility: 'off',
+                        },
+                    ],
+                },
+                {
+                    featureType: 'administrative.neighborhood',
+                    stylers: [
+                        {
+                            visibility: 'off',
+                        },
+                    ],
+                },
+            ]}
+        >
+            {recommendedPlaces.map((item, index) => (
+                <Marker
+                    key={item.id}
+                    coordinate={{ latitude: Number(item.latitude), longitude: Number(item.longitude) }}
+                    image={null}
+                    onPress={() =>
+                        navigation.navigate('PlaceDetailScreen', {
+                            id: item.id,
+                            name: item.name,
+                            address: item.address,
+                            latitude: item.latitude,
+                            longitude: item.longitude,
+                            category: item.category,
+                            score: item.score,
+                            reviewCount: item.reviewCount,
+                        })
+                    }
+                >
+                    <View style={homeStyle.mapMarker}>
+                        <Image source={require('../../assets/bubble.png')} style={homeStyle.bubbleImage} />
+                        <Image source={{ uri: apiAdapter.getPlaceThumbailUrl(item.id) }} style={homeStyle.mapImage} />
+                    </View>
+                </Marker>
+            ))}
+        </MapView>
+    ) : null;
+
     return (
-        <View style={{ flex: 1, backgroundColor: DECENTRAVELLER_DEFAULT_BACKGROUND_COLOR }}>
-            {componentToRender}
+        <View style={homeStyle.homeContainer}>
+            <Text style={homeStyle.title} numberOfLines={1} adjustsFontSizeToFit>
+                Recommended for you:
+            </Text>
+            {mapToRender}
+            {placesToRender}
             {!loadingRecommendedPlaces && (
                 <View style={homeStyle.addNewPlaceReference}>
                     <TouchableOpacity onPress={() => navigation.navigate('CreatePlaceNameScreen')}>

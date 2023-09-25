@@ -356,4 +356,4 @@ def test_create_place_no_image(cleanup):
                                "score": None,
                                "reviews": 0}
     response = client.get("/place/0/image.jpg")
-    assert response.status_code == 404
+    assert response.status_code == 200

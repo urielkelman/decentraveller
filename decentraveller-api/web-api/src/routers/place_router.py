@@ -1,5 +1,7 @@
+from io import BytesIO
 from typing import Optional
 
+from PIL import Image
 from fastapi import Depends, HTTPException, Query, Response
 from fastapi_utils.cbv import cbv
 from fastapi_utils.inferring_router import InferringRouter
@@ -12,13 +14,16 @@ from src.api_models.place import PlaceID, PlaceUpdate, PlaceInDB, PlaceBody, \
     PlaceWithStats, PlaceWithDistance, PlaceCategory
 from src.api_models.profile import WalletID, wallet_id_validator
 from src.dependencies.indexer_auth import indexer_auth
+from src.dependencies.ipfs_service import IPFSService
 from src.dependencies.relational_database import build_relational_database, RelationalDatabase
 from src.dependencies.vector_database import VectorDatabase
-from src.dependencies.ipfs_service import IPFSService
 from src.orms.place import PlaceORM
 from src.orms.review import ReviewORM
 
 place_router = InferringRouter()
+
+with open('src/assets/no_place_image.jpg', 'rb') as file:
+    DEFAULT_PLACE_IMAGE = file.read()
 
 
 @cbv(place_router)
@@ -137,7 +142,7 @@ class PlaceCBV:
         else:
             places = self.database.session.query(PlaceORM, func.avg(ReviewORM.score).label("score"),
                                                  func.count(ReviewORM.id).label("reviews"))
-        places = places.join(ReviewORM, ReviewORM.place_id == PlaceORM.id, isouter=True).\
+        places = places.join(ReviewORM, ReviewORM.place_id == PlaceORM.id, isouter=True). \
             group_by(PlaceORM.id)
         if place_category is not None:
             places = places.filter(PlaceORM.category == place_category)
@@ -147,7 +152,9 @@ class PlaceCBV:
             if not located_query:
                 raise HTTPException(status_code=HTTP_400_BAD_REQUEST,
                                     detail=f"Can't filter by distance if latitude and longitude is not provided")
-            places = places.filter(text(f"distance <={maximum_distance}"))
+            places = places.filter(RelationalDatabase.km_distance_query_func(PlaceORM.latitude,
+                                                                             PlaceORM.longitude,
+                                                                             latitude, longitude) <= maximum_distance)
         if sort_by == "relevancy":
             places = places.order_by((self.database.relevancy_score(
                 func.avg(ReviewORM.score), func.count(distinct(ReviewORM.owner)))).desc())
@@ -163,7 +170,7 @@ class PlaceCBV:
         else:
             raise HTTPException(status_code=HTTP_400_BAD_REQUEST,
                                 detail=f"sort_by parameter does not accept the value: {sort_by}")
-
+        places.order_by(PlaceORM.id.desc())
         total_count = places.count()
         places = places.limit(per_page).offset(page * per_page).all()
 
@@ -177,6 +184,28 @@ class PlaceCBV:
         else:
             raise HTTPException(status_code=HTTP_404_NOT_FOUND)
 
+    @staticmethod
+    def resize_image(image: bytes, maxsize: int) -> bytes:
+        """
+        Resizes an image keeping relative size
+        :param image: the image bytes
+        :param maxsize: new size of the image
+        :return: the new image bytes
+        """
+        image = Image.open(BytesIO(image))
+        if image.size[0] >= image.size[1]:
+            ratio = image.size[1] / image.size[0]
+            image = image.resize((maxsize, int(ratio * maxsize))).convert('RGBA')
+        else:
+            ratio = image.size[0] / image.size[1]
+            image = image.resize((int(ratio * maxsize), maxsize)).convert('RGBA')
+        final = Image.new("RGB", image.size, (255, 255, 255))
+        final.paste(image, (0, 0), image)
+
+        bytesfile = BytesIO()
+        final.save(bytesfile, format='jpeg', optimize=True, quality=95)
+        return bytesfile.getvalue()
+
     @place_router.get("/place/{place_id}/image.jpg")
     def get_place_image(self, place_id: PlaceID):
         """
@@ -187,7 +216,26 @@ class PlaceCBV:
         """
         image_hash = self.database.get_place_image_hash(place_id)
         if image_hash is None:
-            raise HTTPException(status_code=HTTP_404_NOT_FOUND)
+            return Response(content=DEFAULT_PLACE_IMAGE,
+                            media_type="image/jpeg")
         image_bytes = self.ipfs_service.get_file(image_hash)
+        return Response(content=image_bytes,
+                        media_type="image/jpeg")
+
+    @place_router.get("/place/{place_id}/thumbnail.jpg")
+    def get_place_thumbail(self, place_id: PlaceID):
+        """
+        Get a place image by its id
+
+        :param place_id: the place id
+        :return: the image or 404 if there is no image
+        """
+        image_hash = self.database.get_place_image_hash(place_id)
+        if image_hash is None:
+            image_bytes = self.resize_image(DEFAULT_PLACE_IMAGE, 256)
+            return Response(content=image_bytes,
+                            media_type="image/jpeg")
+        image_bytes = self.ipfs_service.get_file(image_hash)
+        image_bytes = self.resize_image(image_bytes, 256)
         return Response(content=image_bytes,
                         media_type="image/jpeg")

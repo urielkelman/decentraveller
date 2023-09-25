@@ -1,6 +1,6 @@
 import { GeocodingElementResponse, GeocodingResponse } from '../../api/response/geocoding';
 import { mockApiAdapter } from '../../api/mockApiAdapter';
-import {apiAdapter} from "../../api/apiAdapter";
+import { apiAdapter } from '../../api/apiAdapter';
 import { PickerItem } from '../types';
 import React from 'react';
 

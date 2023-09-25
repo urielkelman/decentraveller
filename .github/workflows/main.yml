@@ -20,8 +20,16 @@ jobs:
       run: make docker-image
     - name: Run environment
       run: make docker-compose-up 
+    - name: Sleep Action
+      uses: juliangruber/sleep-action@v2.0.0
+      with:
+        time: 5s
+    - name: Log docker
+      run: docker-compose logs
     - name: Load sample data
       run: docker-compose -f docker-compose-tests.yml run load-sample-data
+    - name: Log docker
+      run: docker-compose logs
     - name: Check ETL
       run: ./check_status.sh
 
