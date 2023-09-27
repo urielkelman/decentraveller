@@ -28,10 +28,7 @@ const PlaceSimilarsBox = ({ placeId }) => {
                 placeId,
                 onNotFoundRecommendations,
             );
-            const imageUris = placesResponse.map((p: PlaceResponse) => {
-                return adapter.getPlaceImageUrl(p.id);
-            });
-            const placesToShow: PlaceShowProps[] = placesResponse.map(function (p, i) {
+            const placesToShow: PlaceShowProps[] = placesResponse.map(function (p) {
                 return {
                     id: p.id,
                     name: p.name,
@@ -41,7 +38,8 @@ const PlaceSimilarsBox = ({ placeId }) => {
                     score: p.score,
                     category: p.category,
                     reviewCount: p.reviews,
-                    imageUri: imageUris[i],
+                    imageUri: adapter.getPlaceImageUrl(p.id),
+                    thumbnailUri: adapter.getPlaceThumbailUrl(p.id),
                 };
             });
             setPlaces(placesToShow);

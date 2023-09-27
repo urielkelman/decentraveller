@@ -15,10 +15,14 @@ import {
     REVIEWS_PROFILE_ENDPOINT,
     UPLOAD_IMAGES,
     RULES_ENDPOINT,
+    REVIEW_IMAGE,
+    GET_PLACE_ENDPOINT,
+    GET_REVIEW_ENDPOINT,
+    PLACE_THUMBNAIL,
 } from './config';
 import { UserResponse } from './response/user';
 import { formatString } from '../commons/functions/utils';
-import { ReviewImageResponse, ReviewsResponse } from './response/reviews';
+import { ReviewImageResponse, ReviewResponse, ReviewsResponse } from './response/reviews';
 import { PlaceResponse, PlacesResponse } from './response/places';
 import * as FileSystem from 'expo-file-system';
 import FormData from 'form-data';
@@ -59,6 +63,17 @@ class ApiAdapter {
         return API_ENDPOINT + formatString(PLACE_IMAGE, { placeId: placeId });
     }
 
+    getPlaceThumbailUrl(placeId: number, maxResolution?: number): string {
+        return API_ENDPOINT + formatString(PLACE_THUMBNAIL, { placeId: placeId });
+    }
+
+    getReviewImageUrl(placeId: number, reviewId: number, imageNumber: number): string {
+        return (
+            API_ENDPOINT +
+            formatString(REVIEW_IMAGE, { placeId: placeId, reviewId: reviewId, imageNumber: imageNumber })
+        );
+    }
+
     async getPlacesSearch(
         [latitude, longitude]: [string, string],
         onNotFound: () => void,
@@ -91,6 +106,7 @@ class ApiAdapter {
         if (maximum_distance !== null && maximum_distance !== undefined) {
             queryParams.maximum_distance = maximum_distance.toString();
         }
+        console.log(queryParams);
 
         const httpRequest: HttpGetRequest = {
             url: PLACES_SEARCH,
@@ -145,6 +161,30 @@ class ApiAdapter {
         const httpRequest: HttpGetRequest = {
             url: `${GET_USER_ENDPOINT}/${walletAddress}`,
             queryParams: {},
+            onUnexpectedError: (e) => {
+                onFailed();
+            },
+        };
+
+        return await httpAPIConnector.get(httpRequest);
+    }
+
+    async getPlace(placeId: number, onFailed: () => void): Promise<PlaceResponse> {
+        const httpRequest: HttpGetRequest = {
+            url: `${GET_PLACE_ENDPOINT}/${placeId}`,
+            queryParams: {},
+            onUnexpectedError: (e) => {
+                onFailed();
+            },
+        };
+
+        return await httpAPIConnector.get(httpRequest);
+    }
+
+    async getReview(placeId: number, reviewId: number, onFailed: () => void): Promise<ReviewResponse> {
+        const httpRequest: HttpGetRequest = {
+            url: `${GET_REVIEW_ENDPOINT}`,
+            queryParams: { id: reviewId, place_id: placeId },
             onUnexpectedError: (e) => {
                 onFailed();
             },

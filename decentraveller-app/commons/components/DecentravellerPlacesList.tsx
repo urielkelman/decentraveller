@@ -1,8 +1,7 @@
 import PlaceItem from '../../screens/home/place/PlaceItem';
 import { FlatList, Text, View } from 'react-native';
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { DecentravellerPlaceCategory } from '../../context/types';
-import { placeReviewsBoxStyles } from '../../styles/placeDetailStyles';
 import LoadingComponent from './DecentravellerLoading';
 import { ReviewShowProps } from './DecentravellerReviewsList';
 
@@ -15,7 +14,6 @@ export type PlaceShowProps = {
     score: number;
     category: DecentravellerPlaceCategory;
     reviewCount: number;
-    imageUri: string | null;
 };
 
 const renderPlaceItem = ({ item, minified }: { item: PlaceShowProps; minified: boolean }) => (
@@ -28,7 +26,6 @@ const renderPlaceItem = ({ item, minified }: { item: PlaceShowProps; minified: b
         longitude={item.longitude}
         score={item.score}
         reviewCount={item.reviewCount}
-        imageUri={item.imageUri}
         minified={minified}
     />
 );
@@ -65,7 +62,7 @@ const DecentravellerPlacesList: React.FC<PlacesItemsProps> = ({ placeList, loadP
                 setPlaces(placeList);
                 setPlacesCount(total);
             } else if (loadPlaces != undefined) {
-                const { total, placesToShow } = await loadPlaces(0, 5);
+                const { total, placesToShow } = await loadPlaces(0, 10);
                 setPlaces(placesToShow);
                 setPlacesCount(total);
             }
@@ -76,7 +73,7 @@ const DecentravellerPlacesList: React.FC<PlacesItemsProps> = ({ placeList, loadP
     const loadMore = async () => {
         if (hasPlaces() && placeCount > places.length) {
             setLoading(true);
-            const { total, placesToShow } = await loadPlaces((places.length / 5) | 0, 5);
+            const { total, placesToShow } = await loadPlaces((places.length / 10) | 0, 10);
             places.push.apply(places, placesToShow);
             setLoading(false);
         }
@@ -84,8 +81,8 @@ const DecentravellerPlacesList: React.FC<PlacesItemsProps> = ({ placeList, loadP
 
     const footerComponent = () => {
         return (
-            <View style={placeReviewsBoxStyles.reviewsFooter}>
-                {!hasPlaces() ? <Text>No places found.</Text> : null}
+            <View>
+                {!hasPlaces() ? <Text style={{ padding: 5, fontSize: 18 }}>No places found.</Text> : null}
                 {hasPlaces() && placeCount > places.length ? <LoadingComponent /> : null}
             </View>
         );
@@ -100,7 +97,7 @@ const DecentravellerPlacesList: React.FC<PlacesItemsProps> = ({ placeList, loadP
                 data={places}
                 renderItem={internalRenderPlaceItem}
                 horizontal={horizontal}
-                keyExtractor={(item, index) => String(index)}
+                keyExtractor={(item, index) => String(item.id)}
                 ListFooterComponent={footerComponent}
                 onEndReached={loadMore}
                 onEndReachedThreshold={0.1}

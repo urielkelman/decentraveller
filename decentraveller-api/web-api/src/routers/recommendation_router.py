@@ -80,10 +80,11 @@ class RecommendationCBV:
             group_by(ReviewORM.place_id). \
             having(func.count(distinct(ReviewORM.owner)) >= MINIMUM_REVIEWS_TO_RECOMMEND). \
             order_by((database.relevancy_score(
-            func.avg(ReviewORM.score), func.count(distinct(ReviewORM.owner)))).desc()). \
-            limit(limit).subquery()
-        distance_similars = database.session.query(PlaceORM.id). \
-            join(distance_similars, distance_similars.c.place_id == PlaceORM.id).all()
+            func.avg(ReviewORM.score), func.count(distinct(ReviewORM.owner)))).desc()).\
+            subquery()
+        distance_similars = database.session.query(PlaceORM.id.distinct()). \
+            join(distance_similars, distance_similars.c.place_id == PlaceORM.id).\
+            limit(limit).all()
         distance_similars = [t[0] for t in distance_similars]
         similars = database.query_places(distance_similars)
         if similars:
@@ -132,8 +133,8 @@ class RecommendationCBV:
         :return: the best places
         """
         best_places = database.session.query(ReviewORM.place_id). \
-            filter(not_(ReviewORM.place_id.in_(excluded_place_ids))). \
             group_by(ReviewORM.place_id). \
+            filter(not_(ReviewORM.place_id.in_(excluded_place_ids))). \
             order_by((func.avg(ReviewORM.score) * func.log(func.count(distinct(ReviewORM.owner)))).desc()). \
             limit(limit).all()
         best_places = [t[0] for t in best_places]
@@ -198,7 +199,7 @@ class RecommendationCBV:
                             places_to_avoid.add(p.id)
 
         if len(result) < limit and nearby:
-            result += [p for p in nearby[:limit - len(result)]]
+            result += [p for p in nearby[:limit - len(result)] if p.id not in places_to_avoid]
             places_to_avoid.update([r.id for r in result])
 
         if len(result) < limit:
@@ -208,7 +209,7 @@ class RecommendationCBV:
             result += best_places
 
         if result:
-            return result
+            return result[:limit]
 
         raise HTTPException(status_code=HTTP_404_NOT_FOUND)
 
@@ -226,17 +227,15 @@ class RecommendationCBV:
         :return: the places data
         """
         result = []
-        places_to_avoid = set()
         if latitude and longitude:
             nearby = self.get_good_nearby_places(self.database, latitude, longitude,
                                                  NEAR_PLACE_DISTANCE_KM, [], limit)
             if nearby:
                 result += [p for p in nearby[:limit - len(result)]]
-                places_to_avoid.update([r.id for r in result])
 
         if len(result) < limit:
             best_places = self.get_best_places(self.database,
-                                               list(places_to_avoid),
+                                               [r.id for r in result],
                                                limit - len(result))
             result += best_places
 

@@ -1,9 +1,10 @@
 import { StyleSheet } from 'react-native';
+import { DECENTRAVELLER_DEFAULT_BACKGROUND_COLOR } from '../commons/global';
 
 const userProfileMainStyles = StyleSheet.create({
     background: {
         flex: 1,
-        backgroundColor: '#FFE1E1',
+        backgroundColor: DECENTRAVELLER_DEFAULT_BACKGROUND_COLOR,
     },
     mainContainer: {
         backgroundColor: '#FFFFFF',

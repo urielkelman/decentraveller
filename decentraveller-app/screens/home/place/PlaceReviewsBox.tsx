@@ -134,7 +134,7 @@ const PlaceReviewsBox = ({ placeId, summarized }) => {
 
     const footerComponent = () => {
         return (
-            <View style={placeReviewsBoxStyles.reviewsFooter}>
+            <View>
                 {!hasReviews() ? <Text>Be the first to review!</Text> : null}
                 {summarized && reviewCount > 5 ? (
                     <TouchableOpacity onPress={onPressMoreReviews}>
