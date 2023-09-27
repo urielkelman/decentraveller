@@ -13,6 +13,8 @@ import UserReviewsScreen from '../users/profile/UserReviewsScreen';
 import AddReviewComment from '../reviews/AddReviewComment';
 import SuccessAddReviewScreen from '../reviews/SuccessAddReviewScreen';
 import AddReviewImages from '../reviews/AddReviewImages';
+import * as Linking from 'expo-linking';
+import ReviewDetailScreen from '../reviews/ReviewDetailScreen';
 import DecentravellerRulesList from './community/DecentravellerRulesList';
 import { Rule } from './community/types';
 import RuleDetailScreen from './community/RuleDeatailScreen';
@@ -30,6 +32,7 @@ export type HomeStackScreens = {
     AddReviewComment: { selectedImages: string[]; placeId: number };
     SuccessAddReviewScreen: undefined;
     UserProfileScreen: { walletId: string };
+    ReviewDetailScreen: { reviewId: number; placeId: number };
     DecentravellerRulesList: undefined;
     RuleDetailScreen: { rule: Rule; action: () => void; inFavor: () => void; against: () => void };
 };
@@ -77,6 +80,14 @@ const HomeNavigator = () => {
                     }}
                 />
                 <HomeStackNavigator.Screen name="Profile" component={MyProfileScreen} options={{ headerShown: true }} />
+                <HomeStackNavigator.Screen
+                    name="ReviewDetailScreen"
+                    component={ReviewDetailScreen}
+                    options={{
+                        title: 'Review',
+                        headerShown: true,
+                    }}
+                />
                 <HomeStackNavigator.Screen
                     name="UserProfileScreen"
                     component={UserProfileScreen}

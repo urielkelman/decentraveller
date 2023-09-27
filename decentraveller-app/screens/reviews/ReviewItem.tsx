@@ -5,8 +5,8 @@ import { useNavigation } from '@react-navigation/native';
 import { placeReviewsBoxStyles } from '../../styles/placeDetailStyles';
 import StarComponent from '../../commons/components/StarComponent';
 import { ReviewShowProps } from '../../commons/components/DecentravellerReviewsList';
-import { PlaceDetailScreenProp } from '../home/place/types';
 import { UserProfileScreenProps } from '../users/profile/types';
+import ReviewImageContainer from './ReviewImageContainer';
 
 export type ReviewItemProps = ReviewShowProps & {
     summarized: boolean;
@@ -28,16 +28,15 @@ const ReviewItem: React.FC<ReviewItemProps> = ({
     const [showMore, setshowMore] = React.useState<boolean>(!summarized);
     const navigation = useNavigation<UserProfileScreenProps>();
 
-    const onPress = () => {
-        setshowMore(true);
-    };
-
     const showCreatedAt = (createdAt) => {
         return createdAt.split('T')[0];
     };
 
     return (
-        <TouchableOpacity style={placeReviewsBoxStyles.reviewItem} onPress={onPress}>
+        <TouchableOpacity
+            style={placeReviewsBoxStyles.reviewItem}
+            onPress={() => navigation.navigate('ReviewDetailScreen', { reviewId: id, placeId: placeId })}
+        >
             <View style={placeReviewsBoxStyles.reviewHeader}>
                 <View style={placeReviewsBoxStyles.dataContainer}>
                     <Text style={placeReviewsBoxStyles.dateText}>{showCreatedAt(createdAt)}</Text>
@@ -59,12 +58,13 @@ const ReviewItem: React.FC<ReviewItemProps> = ({
             <View style={placeReviewsBoxStyles.commentContainer}>
                 <Text
                     style={placeReviewsBoxStyles.commentText}
-                    numberOfLines={showMore ? null : 3}
+                    numberOfLines={summarized ? 3 : null}
                     ellipsizeMode="tail"
                 >
                     {text}
                 </Text>
             </View>
+            <ReviewImageContainer placeId={placeId} reviewId={id} imageCount={imageCount} />
         </TouchableOpacity>
     );
 };

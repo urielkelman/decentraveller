@@ -26,13 +26,13 @@ import LoadingComponent from '../../../commons/components/DecentravellerLoading'
 import FilterModal from './FilterModal';
 import { FilterModalData } from './types';
 import DecentravellerInformativeModal from '../../../commons/components/DecentravellerInformativeModal';
+import { useHeaderHeight } from '@react-navigation/elements';
 
 const adapter = apiAdapter;
 
 const ExplorePlacesScreen = ({ navigation }) => {
     const { userLocation } = useAppContext();
 
-    const [places, setPlaces] = React.useState<PlaceShowProps[]>([]);
     const [loadingPlaces, setLoadingPlaces] = React.useState<boolean>(false);
     const [lastSearchTextLength, setLastSearchTextLength] = React.useState<number>(0);
     const [loadingGeocodingResponse, setLoadingGeocodingResponse] = React.useState<boolean>(false);
@@ -52,12 +52,6 @@ const ExplorePlacesScreen = ({ navigation }) => {
     const [minStars, setMinStars] = useState<number>(0);
     const [maxDistance, setMaxDistance] = useState<number>(0);
     const [interestPickerValue, setInterestPickerValue] = useState<string>(null);
-    const [showNotFound, setNotFound] = React.useState<boolean>(false);
-
-    const onNotFound = () => {
-        setNotFound(true);
-        setLoadingPlaces(false);
-    };
 
     const filterModalDataProps: FilterModalData = {
         orderBy: sortBy,
@@ -98,28 +92,22 @@ const ExplorePlacesScreen = ({ navigation }) => {
         }
     };
 
-    const fetchPlaces = async (
-        latitude: string,
-        longitude: string,
-        lastLocationLabelSearched: string,
-    ): Promise<void> => {
-        setLoadingPlaces(true);
-        console.log('to fetch places', latitude, longitude, lastLocationLabelSearched);
+    const loadPlaces = async (limit: number, offset: number): Promise<LoadPlaceResponse> => {
+        if (lastLocationSearched == null) {
+            return { total: 0, placesToShow: [] };
+        }
         const placesResponse = await adapter.getPlacesSearch(
-            [latitude, longitude],
-            onNotFound,
-            0,
-            500,
+            lastLocationSearched,
+            () => {},
+            limit,
+            offset,
             interestPickerValue,
             sortBy,
             minStars !== 0 ? minStars : null,
             maxDistance !== 0 ? maxDistance : null,
         );
         if (placesResponse != null) {
-            const imageUris = placesResponse.places.map((p: PlaceResponse) => {
-                return adapter.getPlaceImageUrl(p.id);
-            });
-            const placesToShow: PlaceShowProps[] = placesResponse.places.map(function (p, i) {
+            const placesToShow: PlaceShowProps[] = placesResponse.places.map(function (p) {
                 return {
                     id: p.id,
                     name: p.name,
@@ -129,21 +117,25 @@ const ExplorePlacesScreen = ({ navigation }) => {
                     score: p.score,
                     category: p.category,
                     reviewCount: p.reviews,
-                    imageUri: imageUris[i],
                 };
             });
-            setPlaces(placesToShow);
+            return { total: placesResponse.total, placesToShow: placesToShow };
         }
-        setLoadingPlaces(false);
+        return { total: 0, placesToShow: [] };
+    };
+
+    const fetchPlaces = (latitude: string, longitude: string, lastLocationLabelSearched: string): void => {
+        setLoadingPlaces(true);
         setLastLocationLabelSearched(lastLocationLabelSearched);
         setLastLocationSearched([latitude, longitude]);
+        setLoadingPlaces(false);
     };
 
     React.useEffect(() => {
         if (userLocation.value) {
-            (async () => {
+            (() => {
                 const [latitude, longitude] = userLocation.value;
-                await fetchPlaces(
+                fetchPlaces(
                     latitude,
                     longitude,
                     explorePlacesScreenWording.EXPLORE_PLACE_LOCATION_PICKER_CURRENT_LOCATION,
@@ -172,8 +164,8 @@ const ExplorePlacesScreen = ({ navigation }) => {
         if (lastLocationLabelSearched !== item.label) {
             clearFilters();
             const geocodingElement: GeocodingElement = JSON.parse(item.value);
-            (async () => {
-                await fetchPlaces(geocodingElement.latitude, geocodingElement.longitude, geocodingElement.address);
+            (() => {
+                fetchPlaces(geocodingElement.latitude, geocodingElement.longitude, geocodingElement.address);
             })();
         }
     };
@@ -188,8 +180,8 @@ const ExplorePlacesScreen = ({ navigation }) => {
             return;
         }
 
-        (async () => {
-            await fetchPlaces(lastLocationSearched[0], lastLocationSearched[1], lastLocationLabelSearched);
+        (() => {
+            fetchPlaces(lastLocationSearched[0], lastLocationSearched[1], lastLocationLabelSearched);
         })();
 
         setModalVisible(!modalVisible);
@@ -206,12 +198,27 @@ const ExplorePlacesScreen = ({ navigation }) => {
         setInterestPickerValue(null);
     };
 
+    const placesListKey = () => {
+        var k = '';
+        if (lastLocationSearched != null) {
+            k += lastLocationSearched[0];
+            k += lastLocationSearched[1];
+        }
+        if (interestPickerValue != null) {
+            k += interestPickerValue;
+        }
+        if (sortBy != null) {
+            k += sortBy;
+        }
+        k += `minStars:${minStars}`;
+        k += `maxDistance:${maxDistance}`;
+        return k;
+    };
+
     const componentToRender = loadingPlaces ? (
         <LoadingComponent />
-    ) : !showNotFound ? (
-        <DecentravellerPlacesList placeList={places} minified={false} horizontal={false} />
     ) : (
-        <Text> No places where found </Text>
+        <DecentravellerPlacesList key={placesListKey()} loadPlaces={loadPlaces} minified={false} horizontal={false} />
     );
 
     return (
@@ -257,24 +264,15 @@ const ExplorePlacesScreen = ({ navigation }) => {
                     <Ionicons name="funnel" size={25} color={DECENTRAVELLER_DEFAULT_CONTRAST_COLOR} />
                 </TouchableOpacity>
                 <Modal visible={modalVisible} transparent={true} animationType="fade">
-                    <View style={styles.filterModalContainer}>
+                    <View style={[styles.filterModalContainer, { marginTop: useHeaderHeight() }]}>
                         <View style={styles.filterModal}>
+                            <TouchableOpacity style={[styles.closeButton]} onPress={toggleModal}>
+                                <Text style={styles.closeButtonText}>╳</Text>
+                            </TouchableOpacity>
                             <FilterModal route={{ params: { filterModalData: filterModalDataProps } }} />
                             <View style={styles.modalButtons}>
-                                <TouchableOpacity
-                                    style={[styles.filterModalButton, { marginRight: 10 }]}
-                                    onPress={toggleModal}
-                                >
-                                    <Text style={styles.filterModalButtonText}>Back</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity
-                                    style={[styles.filterModalButton, { marginRight: 10 }]}
-                                    onPress={filterPlaces}
-                                >
-                                    <Text style={styles.filterModalButtonText}>Send</Text>
-                                </TouchableOpacity>
                                 <TouchableOpacity style={styles.filterModalButton} onPress={clearFilters}>
-                                    <Text style={styles.filterModalButtonText}>Clear</Text>
+                                    <Text style={styles.filterModalButtonText}>Clear all filters</Text>
                                 </TouchableOpacity>
                             </View>
                         </View>
@@ -322,11 +320,17 @@ const styles = StyleSheet.create({
         flex: 0.9,
     },
     filterModalContainer: {
-        flex: 0.825,
-        backgroundColor: 'white',
+        flex: 0.75,
+        flexDirection: 'row',
+        backgroundColor: 'rgba(255, 225, 225, 0)',
         justifyContent: 'center',
         alignItems: 'center',
-        marginTop: 80,
+    },
+    filterModal: {
+        backgroundColor: 'rgba(255, 225, 225, 1)',
+        paddingVertical: 20,
+        borderRadius: 10,
+        alignItems: 'center',
         shadowColor: '#000',
         shadowOffset: {
             width: 0,
@@ -335,12 +339,6 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 100,
         elevation: 50,
-    },
-    filterModal: {
-        backgroundColor: 'rgba(255, 225, 225, 0.5)',
-        padding: 20,
-        borderRadius: 10,
-        alignItems: 'center',
     },
     modalButtons: {
         flexDirection: 'row',
@@ -353,6 +351,22 @@ const styles = StyleSheet.create({
     filterModalButtonText: {
         color: 'white',
         fontWeight: 'bold',
+    },
+    closeButtonText: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        color: 'rgb(100,100,100)',
+        textAlign: 'right',
+        padding: 5,
+    },
+    closeButton: {
+        position: 'absolute',
+        paddingHorizontal: 10,
+        width: '100%',
+        flexDirection: 'row',
+        backgroundColor: null,
+        margin: 0,
+        justifyContent: 'flex-end',
     },
 });
 

@@ -102,11 +102,10 @@ const DecentravellerReviewsItems: React.FC<ReviewItemsProps> = ({ reviewList, lo
 
     const footerComponent = () => {
         if (footer != null) {
-            return <View style={placeReviewsBoxStyles.reviewsFooter}>{footer}</View>;
         }
         return (
-            <View style={placeReviewsBoxStyles.reviewsFooter}>
-                {!hasReviews() ? <Text>No reviews found.</Text> : null}
+            <View>
+                {!hasReviews() ? <Text style={{ padding: 5, fontSize: 18 }}>No reviews found.</Text> : null}
                 {hasReviews() && reviewCount > reviews.length ? <LoadingComponent /> : null}
             </View>
         );

@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image, TouchableOpacity } from 'react-native';
+import { Image, Text, TouchableOpacity, View } from 'react-native';
 import { userProfileMainStyles } from '../../../styles/userProfileStyles';
 import { apiAdapter } from '../../../api/apiAdapter';
 import LoadingComponent from '../../../commons/components/DecentravellerLoading';
 import { useNavigation } from '@react-navigation/native';
 import { UserProfileScreenProps } from './types';
+import { ImageGallery } from '@georstat/react-native-image-gallery';
 
 export type UserProfileScreens = {
     UserProfileScreen: undefined;
@@ -20,12 +21,19 @@ export type UserShowProps = {
     tokens: number;
 };
 
+const adapter = apiAdapter;
+
 const UserProfileScreen: React.FC<UserProfileScreenProps> = ({ route }) => {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [loading, setLoading] = React.useState<boolean>(true);
     const [user, setUser] = React.useState<UserShowProps>(null);
     const { walletId } = route.params;
     const navigation = useNavigation<UserProfileScreenProps>();
+    const [isOpen, setIsOpen] = useState(false);
+
+    const openGallery = () => setIsOpen(true);
+
+    const closeGallery = () => setIsOpen(false);
 
     const toggleModal = () => {
         setIsModalVisible(!isModalVisible);
@@ -34,7 +42,7 @@ const UserProfileScreen: React.FC<UserProfileScreenProps> = ({ route }) => {
     useEffect(() => {
         (async () => {
             setLoading(true);
-            const userData = await apiAdapter.getUser(walletId, () => {});
+            const userData = await adapter.getUser(walletId, () => {});
             const user = {
                 profileImageUrl: apiAdapter.getProfileAvatarUrl(walletId),
                 name: userData.nickname,
@@ -49,20 +57,20 @@ const UserProfileScreen: React.FC<UserProfileScreenProps> = ({ route }) => {
         })();
     }, []);
 
-    const componentToRender = loading ? (
+    return loading ? (
         <LoadingComponent />
     ) : (
         <View style={userProfileMainStyles.background}>
             <View style={userProfileMainStyles.mainContainer}>
                 <View style={userProfileMainStyles.imageContainer}>
-                    <View style={userProfileMainStyles.imageCircle}>
+                    <TouchableOpacity style={userProfileMainStyles.imageCircle} onPress={openGallery}>
                         <Image
                             source={{
                                 uri: user.profileImageUrl,
                             }}
                             style={userProfileMainStyles.circleDimensions}
                         />
-                    </View>
+                    </TouchableOpacity>
                 </View>
                 <View style={userProfileMainStyles.titleContainer}>
                     <Text style={userProfileMainStyles.nicknameTitle}>{user.name}</Text>
@@ -107,10 +115,14 @@ const UserProfileScreen: React.FC<UserProfileScreenProps> = ({ route }) => {
                     </View>
                 </View>
             </TouchableOpacity>
+            <ImageGallery
+                close={closeGallery}
+                isOpen={isOpen}
+                images={[{ id: 1, url: user.profileImageUrl }]}
+                hideThumbs={true}
+            />
         </View>
     );
-
-    return componentToRender;
 };
 
 export default UserProfileScreen;

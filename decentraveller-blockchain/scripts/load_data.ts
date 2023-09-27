@@ -23,15 +23,20 @@ const main = async () => {
         }
     }).then(
         function (response) {
-            var imageHashes = new Map<string, string>();
+            var imageHashes = new Map<string, string[]>();
             for(let i=0; i<files.length; i++){
-                imageHashes.set(files[i].split(".")[0], response.data['hashes'][i]);
+                const fileHeader = files[i].split(".")[0];
+                const filePlace = fileHeader.split("_").slice(1).join("_");
+                if(imageHashes.has(filePlace)){
+                    imageHashes.set(filePlace, imageHashes.get(filePlace)!.concat([response.data['hashes'][i]]));
+                } else {
+                    imageHashes.set(filePlace, [response.data['hashes'][i]]);
+                }
             }
             return imageHashes;
     }).catch(function (error) {
-        var imageHashes = new Map<string, string>();
         console.log(`Error uploading place images: ${error}`)
-        return imageHashes;
+        return new Map<string, string[]>();;
     });
     
     const signers = await ethers.getSigners();
@@ -82,7 +87,7 @@ const main = async () => {
             businessData["name"],
             businessData["latitude"].toString(),
             businessData["longitude"].toString(),
-            businessData["address"],
+            businessData["address"] + ", Argentina",
             0
         );
 
@@ -114,7 +119,7 @@ const main = async () => {
         );
         let reviewImages: string[] = [];
         if (imageHashes.has(reviewData['business_id'])){
-            reviewImages = [imageHashes.get(reviewData['business_id'])!];
+            reviewImages = imageHashes.get(reviewData['business_id'])!;
             imageHashes.delete(reviewData['business_id']);
         }
         const result = await placeContract.addReview(

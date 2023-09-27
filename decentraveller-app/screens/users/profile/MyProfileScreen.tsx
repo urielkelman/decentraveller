@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity, Alert, Modal } from 'react-native';
+import { Alert, Image, Modal, Text, TouchableOpacity, View } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { userProfileMainStyles } from '../../../styles/userProfileStyles';
 import { useAppContext } from '../../../context/AppContext';
-import { addReviewImagesStyles } from '../../../styles/addReviewStyles';
 import * as ImagePicker from 'expo-image-picker';
 import { apiAdapter } from '../../../api/apiAdapter';
-import { PlaceResponse } from '../../../api/response/places';
-import { PlaceShowProps } from '../../../commons/components/DecentravellerPlacesList';
+import { ImageGallery } from '@georstat/react-native-image-gallery';
+import { UserShowProps } from './UserProfileScreen';
+import LoadingComponent from '../../../commons/components/DecentravellerLoading';
 
 export type UserProfileScreens = {
     UserProfileScreen: undefined;
@@ -15,11 +15,19 @@ export type UserProfileScreens = {
 
 const HomeStackNavigator = createStackNavigator<UserProfileScreens>();
 
+const adapter = apiAdapter;
+
 const MyProfileScreen = ({ navigation }) => {
     const { userNickname, connectionContext, userCreatedAt, userInterest } = useAppContext();
 
     const [selectedImage, setSelectedImage] = useState(null);
     const [isModalVisible, setIsModalVisible] = useState(false);
+    const [isOpen, setIsOpen] = useState(false);
+    const [loading, setLoading] = React.useState<boolean>(true);
+    const [user, setUser] = React.useState<UserShowProps>(null);
+
+    const openGallery = () => setIsOpen(true);
+    const closeGallery = () => setIsOpen(false);
 
     const toggleModal = () => {
         setIsModalVisible(!isModalVisible);
@@ -34,6 +42,7 @@ const MyProfileScreen = ({ navigation }) => {
                 const imageUri = result.assets[0].uri;
                 try {
                     await apiAdapter.sendProfileImage(user.walletAddress, imageUri);
+                    setIsModalVisible(!isModalVisible);
                 } catch (error) {
                     console.error('Error on avatar updating:', error);
                 }
@@ -43,21 +52,48 @@ const MyProfileScreen = ({ navigation }) => {
         }
     };
 
-    const user = {
-        name: userNickname.value,
-        walletAddress: connectionContext.connectedAddress,
-        createdAt: userCreatedAt.value,
-        interest: userInterest.value,
-        tokens: 67,
-        sharedLocation: 'Yes',
-        profileImageUrl: apiAdapter.getProfileAvatarUrl(connectionContext.connectedAddress, true),
-    };
+    useEffect(() => {
+        (async () => {
+            setLoading(true);
+            if (userNickname.value == '') {
+                const userData = await adapter.getUser(connectionContext.connectedAddress, () => {});
+                userNickname.setValue(userData.nickname);
+                userCreatedAt.setValue(userData.createdAt);
+                userInterest.setValue(userData.interest);
+                const user = {
+                    name: userData.nickname,
+                    walletAddress: connectionContext.connectedAddress,
+                    createdAt: userData.createdAt,
+                    interest: userData.interest,
+                    tokens: 67,
+                    sharedLocation: 'Yes',
+                    profileImageUrl: apiAdapter.getProfileAvatarUrl(connectionContext.connectedAddress, true),
+                };
+                setUser(user);
+                setLoading(false);
+                return;
+            }
+            const user = {
+                name: userNickname.value,
+                walletAddress: connectionContext.connectedAddress,
+                createdAt: userCreatedAt.value,
+                interest: userInterest.value,
+                tokens: 67,
+                sharedLocation: 'Yes',
+                profileImageUrl: apiAdapter.getProfileAvatarUrl(connectionContext.connectedAddress, true),
+            };
+            setUser(user);
+            setLoading(false);
+        })();
+    }, []);
 
-    return (
+    return loading ? (
+        <LoadingComponent />
+    ) : (
         <View style={userProfileMainStyles.background}>
             <View style={userProfileMainStyles.mainContainer}>
                 <View style={userProfileMainStyles.imageContainer}>
-                    <View style={userProfileMainStyles.imageCircle}>
+                    <TouchableOpacity style={userProfileMainStyles.imageCircle} onPress={openGallery}>
                         <Image
                             key={Date.now()}
                             source={{
@@ -65,7 +101,7 @@ const MyProfileScreen = ({ navigation }) => {
                             }}
                             style={userProfileMainStyles.circleDimensions}
                         />
-                    </View>
+                    </TouchableOpacity>
                     <TouchableOpacity style={userProfileMainStyles.smallCircleButton} onPress={toggleModal}>
                         <Image
                             source={require('../../../assets/images/pencil.png')}
@@ -128,6 +164,12 @@ const MyProfileScreen = ({ navigation }) => {
                     </View>
                 </View>
             </Modal>
+            <ImageGallery
+                close={closeGallery}
+                isOpen={isOpen}
+                images={[{ id: 1, url: user.profileImageUrl }]}
+                hideThumbs={true}
+            />
         </View>
     );
 };
