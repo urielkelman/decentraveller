@@ -3,10 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 
 const RulesList = ({ rules, onPress }) => {
     return (
-        <TouchableOpacity
-            style={styles.container}
-            onPress={() => onPress(rules)}
-        >
+        <TouchableOpacity style={styles.container} onPress={() => onPress(rules)}>
             <View style={styles.rulesContainer}>
                 {rules.map((rule, index) => (
                     <View

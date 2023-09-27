@@ -1,5 +1,5 @@
-import {RuleResponse, RuleStatus} from '../../api/response/rules';
-import {ethers} from 'ethers';
+import { RuleResponse, RuleStatus } from '../../api/response/rules';
+import { ethers } from 'ethers';
 
 class RulesService {
     async getAllPendingToVote(web3Provider: ethers.providers.Web3Provider): Promise<RuleResponse[]> {
@@ -10,19 +10,19 @@ class RulesService {
 
             rules.push({
                 ruleId: i,
-                proposalId: "proposalId",
-                deletionExecutionTimestampAt: "",
-                executionTimeAt: "",
-                proposer: "",
+                proposalId: 'proposalId',
+                deletionExecutionTimestampAt: '',
+                executionTimeAt: '',
+                proposer: '',
                 ruleStatement: `this is a PENDING ${i}: Rule.`,
                 ruleStatus: RuleStatus.PENDING_APPROVAL,
                 isInitial: false,
-                proposedAt: "2023-09-23",
-                deletionProposer: ""
+                proposedAt: '2023-09-23',
+                deletionProposer: '',
             });
         }
 
-        return rules
+        return rules;
     }
 
     async getAllInVotingProcess(web3Provider: ethers.providers.Web3Provider): Promise<RuleResponse[]> {
@@ -33,19 +33,19 @@ class RulesService {
 
             rules.push({
                 ruleId: i,
-                proposalId: "proposalId",
-                deletionExecutionTimestampAt: "",
-                executionTimeAt: "",
-                proposer: "",
+                proposalId: 'proposalId',
+                deletionExecutionTimestampAt: '',
+                executionTimeAt: '',
+                proposer: '',
                 ruleStatement: `ACTIVE ${i}: Rule.`,
                 ruleStatus: RuleStatus.PENDING_APPROVAL,
                 isInitial: false,
-                proposedAt: "2023-09-23",
-                deletionProposer: ""
+                proposedAt: '2023-09-23',
+                deletionProposer: '',
             });
         }
 
-        return rules
+        return rules;
     }
 
     async getAllNewDefeated(web3Provider: ethers.providers.Web3Provider): Promise<RuleResponse[]> {
@@ -56,19 +56,19 @@ class RulesService {
 
             rules.push({
                 ruleId: i,
-                proposalId: "proposalId",
-                deletionExecutionTimestampAt: "",
-                executionTimeAt: "",
-                proposer: "",
+                proposalId: 'proposalId',
+                deletionExecutionTimestampAt: '',
+                executionTimeAt: '',
+                proposer: '',
                 ruleStatement: `this is a DEFEATED ${i}: Rule.`,
                 ruleStatus: RuleStatus.PENDING_APPROVAL,
                 isInitial: false,
-                proposedAt: "2023-09-23",
-                deletionProposer: ""
+                proposedAt: '2023-09-23',
+                deletionProposer: '',
             });
         }
 
-        return rules
+        return rules;
     }
 
     async getAllNewToQueue(web3Provider: ethers.providers.Web3Provider): Promise<RuleResponse[]> {
@@ -79,19 +79,19 @@ class RulesService {
 
             rules.push({
                 ruleId: i,
-                proposalId: "proposalId",
-                deletionExecutionTimestampAt: "",
-                executionTimeAt: "",
-                proposer: "",
+                proposalId: 'proposalId',
+                deletionExecutionTimestampAt: '',
+                executionTimeAt: '',
+                proposer: '',
                 ruleStatement: `this is a SUCCEDED ${i}: Rule.`,
                 ruleStatus: RuleStatus.PENDING_APPROVAL,
                 isInitial: false,
-                proposedAt: "2023-09-23",
-                deletionProposer: ""
+                proposedAt: '2023-09-23',
+                deletionProposer: '',
             });
         }
 
-        return rules
+        return rules;
     }
 
     async getAllQueued(web3Provider: ethers.providers.Web3Provider): Promise<RuleResponse[]> {
@@ -102,19 +102,19 @@ class RulesService {
 
             rules.push({
                 ruleId: i,
-                proposalId: "proposalId",
-                deletionExecutionTimestampAt: "",
-                executionTimeAt: "",
-                proposer: "",
+                proposalId: 'proposalId',
+                deletionExecutionTimestampAt: '',
+                executionTimeAt: '',
+                proposer: '',
                 ruleStatement: `this is a QUEUED ${i}: Rule.`,
                 ruleStatus: RuleStatus.PENDING_APPROVAL,
                 isInitial: false,
-                proposedAt: "2023-09-23",
-                deletionProposer: ""
+                proposedAt: '2023-09-23',
+                deletionProposer: '',
             });
         }
 
-        return rules
+        return rules;
     }
 
     async getAllNewToExecute(web3Provider: ethers.providers.Web3Provider): Promise<RuleResponse[]> {
@@ -125,19 +125,19 @@ class RulesService {
 
             rules.push({
                 ruleId: i,
-                proposalId: "proposalId",
-                deletionExecutionTimestampAt: "",
-                executionTimeAt: "",
-                proposer: "",
+                proposalId: 'proposalId',
+                deletionExecutionTimestampAt: '',
+                executionTimeAt: '',
+                proposer: '',
                 ruleStatement: `this is a QUEUED ${i}: Rule.`,
                 ruleStatus: RuleStatus.PENDING_APPROVAL,
                 isInitial: false,
-                proposedAt: "2023-09-23",
-                deletionProposer: ""
+                proposedAt: '2023-09-23',
+                deletionProposer: '',
             });
         }
 
-        return rules
+        return rules;
     }
 
     async getFormerRules(): Promise<RuleResponse[]> {
@@ -148,19 +148,19 @@ class RulesService {
 
             rules.push({
                 ruleId: i,
-                proposalId: "proposalId",
-                deletionExecutionTimestampAt: "",
-                executionTimeAt: "",
-                proposer: "",
+                proposalId: 'proposalId',
+                deletionExecutionTimestampAt: '',
+                executionTimeAt: '',
+                proposer: '',
                 ruleStatement: `this is a EXECUTED ${i}: Rule.`,
                 ruleStatus: RuleStatus.APPROVED,
                 isInitial: false,
-                proposedAt: "2023-09-23",
-                deletionProposer: ""
+                proposedAt: '2023-09-23',
+                deletionProposer: '',
             });
         }
 
-        return rules
+        return rules;
     }
 
     async hasVotedInProposal(
@@ -168,39 +168,39 @@ class RulesService {
         proposalId: string,
         address: string,
     ): Promise<boolean> {
-        return false
+        return false;
     }
 
     async proposeNewRule(web3Provider: ethers.providers.Web3Provider, ruleStatement: string): Promise<string> {
-        return ""
+        return '';
     }
 
     async voteAgainstProposal(web3Provider: ethers.providers.Web3Provider, proposalId: string): Promise<string> {
-        return ""
+        return '';
     }
 
     async voteInFavorOfProposal(web3Provider: ethers.providers.Web3Provider, proposalId: string): Promise<string> {
-        return ""
+        return '';
     }
 
     async queueNewRule(web3Provider: ethers.providers.Web3Provider, rule: RuleResponse): Promise<string> {
-        return ""
+        return '';
     }
 
     async executeNewRule(web3Provider: ethers.providers.Web3Provider, rule: RuleResponse): Promise<string> {
-        return ""
+        return '';
     }
 
     async proposeRuleDeletion(web3Provider: ethers.providers.Web3Provider, ruleId: number): Promise<string> {
-        return ""
+        return '';
     }
 
     async queueRuleDeletion(web3Provider: ethers.providers.Web3Provider, rule: RuleResponse): Promise<string> {
-        return ""
+        return '';
     }
 
     async executeRuleDeletion(web3Provider: ethers.providers.Web3Provider, rule: RuleResponse): Promise<string> {
-        return ""
+        return '';
     }
 
     private async getRulesWithStatus(ruleStatus: RuleStatus): Promise<RuleResponse[]> {
@@ -211,22 +211,20 @@ class RulesService {
 
             rules.push({
                 ruleId: i,
-                proposalId: "proposalId",
-                deletionExecutionTimestampAt: "",
-                executionTimeAt: "",
-                proposer: "",
+                proposalId: 'proposalId',
+                deletionExecutionTimestampAt: '',
+                executionTimeAt: '',
+                proposer: '',
                 ruleStatement: `this is an invented ${i}: Rule.`,
                 ruleStatus: ruleStatus,
                 isInitial: false,
-                proposedAt: "2023-09-23",
-                deletionProposer: ""
+                proposedAt: '2023-09-23',
+                deletionProposer: '',
             });
         }
 
-        return rules
+        return rules;
     }
-
-
 }
 
 const mockRulesService = new RulesService();

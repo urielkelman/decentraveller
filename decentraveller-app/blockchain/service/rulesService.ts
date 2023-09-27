@@ -5,7 +5,7 @@ import { BlockchainProposalStatus } from '../types';
 import { decentravellerMainContract } from '../contracts/decentravellerMainContract';
 import { BlockchainByChainId } from '../config';
 import { DEFAULT_CHAIN_ID } from '../../context/AppContext';
-import {apiAdapter, ApiAdapter} from "../../api/apiAdapter";
+import { apiAdapter, ApiAdapter } from '../../api/apiAdapter';
 
 class RulesService {
     private blockchainAdapter: BlockchainAdapter;

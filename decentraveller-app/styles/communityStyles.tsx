@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import {DECENTRAVELLER_DEFAULT_BACKGROUND_COLOR} from "../commons/global";
+import { DECENTRAVELLER_DEFAULT_BACKGROUND_COLOR } from '../commons/global';
 
 const communityScreenStyles = StyleSheet.create({
     container: {
@@ -46,7 +46,7 @@ const communityScreenStyles = StyleSheet.create({
     },
     dropdownText: {
         fontSize: 16,
-        color: '#000000'
+        color: '#000000',
     },
     dropdownMenu: {
         width: 200,
@@ -58,7 +58,7 @@ const ruleDetailStyles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         padding: 20,
-        backgroundColor: DECENTRAVELLER_DEFAULT_BACKGROUND_COLOR
+        backgroundColor: DECENTRAVELLER_DEFAULT_BACKGROUND_COLOR,
     },
     header: {
         backgroundColor: 'transparent',
@@ -99,7 +99,7 @@ const ruleDetailStyles = StyleSheet.create({
     buttonContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginTop: 50
+        marginTop: 50,
     },
     buttonImage: {
         width: 100,
@@ -115,4 +115,4 @@ const ruleDetailStyles = StyleSheet.create({
     },
 });
 
-export { communityScreenStyles, ruleDetailStyles,  };
+export { communityScreenStyles, ruleDetailStyles };

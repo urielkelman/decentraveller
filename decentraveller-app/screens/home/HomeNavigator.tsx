@@ -13,9 +13,9 @@ import UserReviewsScreen from '../users/profile/UserReviewsScreen';
 import AddReviewComment from '../reviews/AddReviewComment';
 import SuccessAddReviewScreen from '../reviews/SuccessAddReviewScreen';
 import AddReviewImages from '../reviews/AddReviewImages';
-import DecentravellerRulesList from "./community/DecentravellerRulesList";
-import {Rule} from "./community/types";
-import RuleDetailScreen from "./community/RuleDeatailScreen";
+import DecentravellerRulesList from './community/DecentravellerRulesList';
+import { Rule } from './community/types';
+import RuleDetailScreen from './community/RuleDeatailScreen';
 
 export type HomeStackScreens = {
     LeftSideBar: undefined;
@@ -31,7 +31,7 @@ export type HomeStackScreens = {
     SuccessAddReviewScreen: undefined;
     UserProfileScreen: { walletId: string };
     DecentravellerRulesList: undefined;
-    RuleDetailScreen: { rule: Rule, action: () => void, inFavor: () => void, against: () => void};
+    RuleDetailScreen: { rule: Rule; action: () => void; inFavor: () => void; against: () => void };
 };
 
 const HomeStackNavigator = createStackNavigator<HomeStackScreens>();

@@ -1,20 +1,18 @@
 import { decentravellerMainContract } from './contracts/decentravellerMainContract';
-import {ethers} from "ethers";
-import {ContractFunction, DecentravellerContract} from "./contractTypes";
-import {withTimeout} from "../commons/functions/utils";
-import {DEFAULT_CHAIN_ID} from "../context/AppContext";
-import {Blockchain, BlockchainByChainId} from "./config";
-import {decentravellerPlaceFactoryContract} from "./contracts/decentravellerPlaceFactoryABI";
-import {decentravellerPlaceContract} from "./contracts/decentravellerPlaceContract";
-import {BlockchainProposalStatus} from "./types";
-import {decentravellerGovernanceContract} from "./contracts/decentravellerGovernanceContract";
-
+import { ethers } from 'ethers';
+import { ContractFunction, DecentravellerContract } from './contractTypes';
+import { withTimeout } from '../commons/functions/utils';
+import { DEFAULT_CHAIN_ID } from '../context/AppContext';
+import { Blockchain, BlockchainByChainId } from './config';
+import { decentravellerPlaceFactoryContract } from './contracts/decentravellerPlaceFactoryABI';
+import { decentravellerPlaceContract } from './contracts/decentravellerPlaceContract';
+import { BlockchainProposalStatus } from './types';
+import { decentravellerGovernanceContract } from './contracts/decentravellerGovernanceContract';
 
 const BLOCKCHAIN_TIMEOUT_IN_MILLIS = 100000;
 const BLOCKCHAIN_TRANSACTION_TASK_NAME = 'Blockchain transaction';
 
 class BlockchainAdapter {
-
     private async populateAndSendWithAddress(
         web3Provider: ethers.providers.Web3Provider,
         contract: DecentravellerContract,
@@ -31,7 +29,7 @@ class BlockchainAdapter {
 
         const populatedTransaction: ethers.PopulatedTransaction = await ethersContract.populateTransaction[
             contractFunction.functionName
-            ].call(this, ...args);
+        ].call(this, ...args);
         const connectedSigner = web3Provider.getSigner();
 
         return (await withTimeout(
@@ -189,7 +187,6 @@ class BlockchainAdapter {
                 return BlockchainProposalStatus.EXECUTED;
         }
     }
-
 
     async hasVotedInProposal(
         web3Provider: ethers.providers.Web3Provider,

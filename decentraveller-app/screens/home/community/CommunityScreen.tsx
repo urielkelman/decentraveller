@@ -1,18 +1,18 @@
-import React, {useEffect, useState} from 'react';
-import {ScrollView, StyleSheet, Text, View} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import RulesList from './RulesList';
-import DecentravellerButton from "../../../commons/components/DecentravellerButton";
-import {communityScreenStyles} from "../../../styles/communityStyles";
-import {RuleResponse} from "../../../api/response/rules";
-import {useWalletConnectModal} from "@walletconnect/modal-react-native";
-import {useAppContext} from "../../../context/AppContext";
-import {mockRulesService} from "../../../blockchain/service/mockRulesService";
+import DecentravellerButton from '../../../commons/components/DecentravellerButton';
+import { communityScreenStyles } from '../../../styles/communityStyles';
+import { RuleResponse } from '../../../api/response/rules';
+import { useWalletConnectModal } from '@walletconnect/modal-react-native';
+import { useAppContext } from '../../../context/AppContext';
+import { mockRulesService } from '../../../blockchain/service/mockRulesService';
 import ModalDropdown from 'react-native-modal-dropdown';
-import {Rule} from "./types";
-import {BlockchainProposalStatus, blockchainStatusOptions} from "../../../blockchain/types";
-import {communityWording} from "./wording";
+import { Rule } from './types';
+import { BlockchainProposalStatus, blockchainStatusOptions } from '../../../blockchain/types';
+import { communityWording } from './wording';
 
-const rulesService = mockRulesService
+const rulesService = mockRulesService;
 
 const CommunityScreen = ({ navigation }) => {
     const { provider, address } = useWalletConnectModal();
@@ -44,7 +44,6 @@ const CommunityScreen = ({ navigation }) => {
         }
 
         await fetchNonActiveRules(getRuleFunction, status);
-
     };
     const fetchNonActiveRules = async (getRuleFunction, status) => {
         const nonActiveRules = await getRuleFunction(web3Provider);
@@ -57,9 +56,7 @@ const CommunityScreen = ({ navigation }) => {
     };
 
     function mapRulesToString(rules: Rule[]): string[] {
-        return rules.map((rule, index) => (
-            rule.ruleStatement
-        ));
+        return rules.map((rule, index) => rule.ruleStatement);
     }
 
     function mapRuleResponseToRule(ruleResponse: RuleResponse, status: string): Rule {
@@ -69,7 +66,7 @@ const CommunityScreen = ({ navigation }) => {
             proposer: ruleResponse.proposer,
             ruleStatement: ruleResponse.ruleStatement,
             ruleStatus: ruleResponse.ruleStatus,
-            ruleSubStatus: BlockchainProposalStatus[status]
+            ruleSubStatus: BlockchainProposalStatus[status],
         };
 
         return rule;
@@ -78,7 +75,6 @@ const CommunityScreen = ({ navigation }) => {
     function mapRuleResponsesToRules(ruleResponses: RuleResponse[], status): Rule[] {
         return ruleResponses.map((ruleResponse) => mapRuleResponseToRule(ruleResponse, status));
     }
-
 
     useEffect(() => {
         fetchCommunityRules();
@@ -94,11 +90,13 @@ const CommunityScreen = ({ navigation }) => {
                 </View>
                 <RulesList
                     rules={mapRulesToString(communityRules).slice(0, 4)}
-                    onPress={() => navigation.navigate('DecentravellerRulesList', {
-                        ruleList: communityRules,
-                        minified: false,
-                        horizontal: false,
-                    })}
+                    onPress={() =>
+                        navigation.navigate('DecentravellerRulesList', {
+                            ruleList: communityRules,
+                            minified: false,
+                            horizontal: false,
+                        })
+                    }
                 />
                 <View style={communityScreenStyles.section}>
                     <Text style={communityScreenStyles.title}>Rules in Votation</Text>
@@ -113,16 +111,25 @@ const CommunityScreen = ({ navigation }) => {
                         style={communityScreenStyles.dropdown}
                         textStyle={communityScreenStyles.dropdownText}
                         dropdownStyle={communityScreenStyles.dropdownMenu}
-
                     />
                 </View>
                 <RulesList
                     rules={mapRulesToString(nonActiveRules).slice(0, 4)}
-                    onPress={() => navigation.navigate('DecentravellerRulesList', { ruleList: nonActiveRules, minified: false, horizontal: false })}
+                    onPress={() =>
+                        navigation.navigate('DecentravellerRulesList', {
+                            ruleList: nonActiveRules,
+                            minified: false,
+                            horizontal: false,
+                        })
+                    }
                 />
             </View>
             <View style={communityScreenStyles.buttonContainer}>
-                <DecentravellerButton text="Propose a New Rule" onPress={() => navigation.navigate('NewProposal')} loading={false} />
+                <DecentravellerButton
+                    text="Propose a New Rule"
+                    onPress={() => navigation.navigate('NewProposal')}
+                    loading={false}
+                />
             </View>
         </ScrollView>
     );

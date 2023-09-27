@@ -1,14 +1,14 @@
-import {GeocodingResponse} from './response/geocoding';
-import {Honduras4709GeocodingResponse, HondurasGeocodingResponse} from './mocks/geocoding';
-import {UserResponse} from './response/user';
-import {GianUserResponse, UriUserResponse} from './mocks/user';
-import {alternativePlacesMock, defaultPlacesMock} from './mocks/places';
-import {ReviewImageResponse, ReviewsResponse} from './response/reviews';
-import {emptyReviewsResponse, imageReviewResponse, manyReviewsResponse, oneReviewsResponse} from './mocks/reviews';
-import {PlaceResponse} from './response/places';
-import {httpAPIConnector, HttpGetRequest} from '../connectors/HttpConnector';
-import {PLACES_SEARCH, RULES_ENDPOINT} from './config';
-import {RuleResponse, RulesResponse, RuleStatus} from "./response/rules";
+import { GeocodingResponse } from './response/geocoding';
+import { Honduras4709GeocodingResponse, HondurasGeocodingResponse } from './mocks/geocoding';
+import { UserResponse } from './response/user';
+import { GianUserResponse, UriUserResponse } from './mocks/user';
+import { alternativePlacesMock, defaultPlacesMock } from './mocks/places';
+import { ReviewImageResponse, ReviewsResponse } from './response/reviews';
+import { emptyReviewsResponse, imageReviewResponse, manyReviewsResponse, oneReviewsResponse } from './mocks/reviews';
+import { PlaceResponse } from './response/places';
+import { httpAPIConnector, HttpGetRequest } from '../connectors/HttpConnector';
+import { PLACES_SEARCH, RULES_ENDPOINT } from './config';
+import { RuleResponse, RulesResponse, RuleStatus } from './response/rules';
 
 const searchTextHondurasResponse = ['Honduras', 'Honduras ', 'Honduras 4', 'Honduras 47', 'Honduras 470'];
 
@@ -148,15 +148,15 @@ class ApiAdapter {
 
             rules.push({
                 ruleId: i,
-                proposalId: "proposalId",
-                deletionExecutionTimestampAt: "",
-                executionTimeAt: "",
-                proposer: "",
+                proposalId: 'proposalId',
+                deletionExecutionTimestampAt: '',
+                executionTimeAt: '',
+                proposer: '',
                 ruleStatement: `Rule ${i}: This is an invented rule.`,
                 ruleStatus: ruleStatus,
                 isInitial: false,
-                proposedAt: "2023-09-23",
-                deletionProposer: ""
+                proposedAt: '2023-09-23',
+                deletionProposer: '',
             });
         }
 

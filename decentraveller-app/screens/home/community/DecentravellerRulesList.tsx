@@ -1,12 +1,12 @@
-import React, {useEffect, useState} from 'react';
-import {FlatList, Text, TouchableOpacity, View} from 'react-native';
-import LoadingComponent from "../../../commons/components/DecentravellerLoading";
-import { useNavigation } from "@react-navigation/native";
-import {Rule, RuleListProps, RuleScreenProps} from "./types";
+import React, { useEffect, useState } from 'react';
+import { FlatList, Text, TouchableOpacity, View } from 'react-native';
+import LoadingComponent from '../../../commons/components/DecentravellerLoading';
+import { useNavigation } from '@react-navigation/native';
+import { Rule, RuleListProps, RuleScreenProps } from './types';
 
-const DecentravellerRulesList: React.FC<RuleListProps> = ({ route}) => {
-    const { ruleList, minified, horizontal, loadRules } = route.params
-    const navigation = useNavigation<RuleScreenProps>()
+const DecentravellerRulesList: React.FC<RuleListProps> = ({ route }) => {
+    const { ruleList, minified, horizontal, loadRules } = route.params;
+    const navigation = useNavigation<RuleScreenProps>();
     const [loading, setLoading] = useState<boolean>(false);
     const [rules, setRules] = useState<Rule[]>([]);
     const [ruleCount, setRuleCount] = useState<number>(0);
