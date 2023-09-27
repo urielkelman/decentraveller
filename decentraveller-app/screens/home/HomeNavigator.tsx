@@ -31,7 +31,7 @@ export type HomeStackScreens = {
     SuccessAddReviewScreen: undefined;
     UserProfileScreen: { walletId: string };
     DecentravellerRulesList: undefined;
-    RuleDetailScreen: { rule: Rule, a:number};
+    RuleDetailScreen: { rule: Rule, action: () => void, inFavor: () => void, against: () => void};
 };
 
 const HomeStackNavigator = createStackNavigator<HomeStackScreens>();

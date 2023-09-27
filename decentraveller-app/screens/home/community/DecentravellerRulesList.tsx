@@ -1,27 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import {FlatList, Text, TouchableOpacity, View} from 'react-native';
 import LoadingComponent from "../../../commons/components/DecentravellerLoading";
-import {RouteProp, useNavigation} from "@react-navigation/native";
-import {Rule, RuleScreenProps} from "./types";
-import {RuleResponse, RuleStatus} from "../../../api/response/rules";
-
-type LoadRulesResponse = {
-    total: number;
-    rulesToShow: Rule[];
-};
-
-type RuleLoadFunction = (offset: number, limit: number) => Promise<LoadRulesResponse>;
-
-type RulesListParams = {
-    ruleList?: Rule[] | null | undefined;
-    loadRules?: RuleLoadFunction | null | undefined;
-    minified: boolean;
-    horizontal: boolean;
-};
-
-type RuleListProps = {
-    route: RouteProp<Record<string, RulesListParams>, string>;
-};
+import { useNavigation } from "@react-navigation/native";
+import {Rule, RuleListProps, RuleScreenProps} from "./types";
 
 const DecentravellerRulesList: React.FC<RuleListProps> = ({ route}) => {
     const { ruleList, minified, horizontal, loadRules } = route.params
@@ -71,7 +52,7 @@ const DecentravellerRulesList: React.FC<RuleListProps> = ({ route}) => {
     const rulesListComponent = () => {
         const internalRenderRuleItem = ({ item }: { item: Rule }) => {
             const navigateToScreen = () => {
-                navigation.navigate('RuleDetailScreen', { rule: item, a:2 });
+                navigation.navigate('RuleDetailScreen', { rule: item, action: null, against: null, inFavor: null });
             };
 
             return (

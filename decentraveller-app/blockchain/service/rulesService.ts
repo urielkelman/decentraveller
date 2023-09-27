@@ -1,13 +1,11 @@
-import { BlockchainAdapter, blockchainAdapter } from './../mockBlockchainAdapter';
-import { apiAdapter } from '../../api/apiAdapter';
+import { BlockchainAdapter, blockchainAdapter } from './../blockhainAdapter';
 import { RuleResponse, RuleStatus } from '../../api/response/rules';
 import { ethers } from 'ethers';
 import { BlockchainProposalStatus } from '../types';
 import { decentravellerMainContract } from '../contracts/decentravellerMainContract';
 import { BlockchainByChainId } from '../config';
 import { DEFAULT_CHAIN_ID } from '../../context/AppContext';
-import { DecentravellerContract } from '../contractTypes';
-import {mockApiAdapter, ApiAdapter} from "../../api/mockApiAdapter";
+import {apiAdapter, ApiAdapter} from "../../api/apiAdapter";
 
 class RulesService {
     private blockchainAdapter: BlockchainAdapter;
@@ -188,6 +186,6 @@ class RulesService {
     }
 }
 
-const rulesService = new RulesService(blockchainAdapter, mockApiAdapter);
+const rulesService = new RulesService(blockchainAdapter, apiAdapter);
 
 export { rulesService, RulesService };

@@ -13,6 +13,25 @@ export type Rule = {
     ruleSubStatus: BlockchainProposalStatus
 };
 
+
+type LoadRulesResponse = {
+    total: number;
+    rulesToShow: Rule[];
+};
+
+type RuleLoadFunction = (offset: number, limit: number) => Promise<LoadRulesResponse>;
+
+type RulesListParams = {
+    ruleList?: Rule[] | null | undefined;
+    loadRules?: RuleLoadFunction | null | undefined;
+    minified: boolean;
+    horizontal: boolean;
+};
+
+export type RuleListProps = {
+    route: RouteProp<Record<string, RulesListParams>, string>;
+};
+
 export type RuleScreenProps = NavigationProp<HomeStackScreens, 'RuleDetailScreen'> & {
     route: RouteProp<HomeStackScreens, 'RuleDetailScreen'> & {
         params: Rule;

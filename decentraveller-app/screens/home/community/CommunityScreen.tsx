@@ -2,7 +2,6 @@ import React, {useEffect, useState} from 'react';
 import {ScrollView, StyleSheet, Text, View} from 'react-native';
 import RulesList from './RulesList';
 import DecentravellerButton from "../../../commons/components/DecentravellerButton";
-import {mockApiAdapter} from "../../../api/mockApiAdapter";
 import {communityScreenStyles} from "../../../styles/communityStyles";
 import {RuleResponse} from "../../../api/response/rules";
 import {useWalletConnectModal} from "@walletconnect/modal-react-native";
@@ -11,13 +10,12 @@ import {mockRulesService} from "../../../blockchain/service/mockRulesService";
 import ModalDropdown from 'react-native-modal-dropdown';
 import {Rule} from "./types";
 import {BlockchainProposalStatus, blockchainStatusOptions} from "../../../blockchain/types";
+import {communityWording} from "./wording";
 
 const rulesService = mockRulesService
 
 const CommunityScreen = ({ navigation }) => {
-    const adapter = mockApiAdapter;
     const { provider, address } = useWalletConnectModal();
-    const appContext = useAppContext();
     const { web3Provider } = useAppContext();
     const [communityRules, setCommunityRules] = useState([]);
     const [nonActiveRules, setNonActiveRules] = useState([]);
@@ -92,7 +90,7 @@ const CommunityScreen = ({ navigation }) => {
             <View style={communityScreenStyles.content}>
                 <View style={communityScreenStyles.section}>
                     <Text style={communityScreenStyles.title}>Community Rules</Text>
-                    <Text style={communityScreenStyles.subtitle}>Those rules are accepted by the community and all members should keep them.</Text>
+                    <Text style={communityScreenStyles.subtitle}>{communityWording.ACCEPTED_RULES}</Text>
                 </View>
                 <RulesList
                     rules={mapRulesToString(communityRules).slice(0, 4)}
@@ -104,17 +102,17 @@ const CommunityScreen = ({ navigation }) => {
                 />
                 <View style={communityScreenStyles.section}>
                     <Text style={communityScreenStyles.title}>Rules in Votation</Text>
-                    <Text style={communityScreenStyles.subtitle}>Vote to agree or disagree with any of these rule proposals.</Text>
+                    <Text style={communityScreenStyles.subtitle}>{communityWording.VOTATION_RULES}</Text>
                 </View>
-                <View style={styles.container}>
+                <View style={communityScreenStyles.dropContainer}>
                     <Text>Select proposal status</Text>
                     <ModalDropdown
                         options={blockchainStatusOptions}
                         onSelect={(index, value) => handleOptionSelect(value)}
                         defaultValue="PENDING"
-                        style={styles.dropdown}
-                        textStyle={styles.dropdownText}
-                        dropdownStyle={styles.dropdownMenu}
+                        style={communityScreenStyles.dropdown}
+                        textStyle={communityScreenStyles.dropdownText}
+                        dropdownStyle={communityScreenStyles.dropdownMenu}
 
                     />
                 </View>
@@ -130,26 +128,4 @@ const CommunityScreen = ({ navigation }) => {
     );
 };
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    dropdown: {
-        width: 200,
-        borderWidth: 1,
-        borderColor: 'black',
-        backgroundColor: '#ffffff',
-        borderRadius: 5,
-        padding: 5,
-    },
-    dropdownText: {
-        fontSize: 16,
-        color: '#000000'
-    },
-    dropdownMenu: {
-        width: 200,
-    },
-});
 export default CommunityScreen;
