@@ -8,7 +8,7 @@ from sqlalchemy.exc import IntegrityError
 from starlette.status import HTTP_400_BAD_REQUEST, HTTP_404_NOT_FOUND
 
 from src.api_models.rule import RuleInput, RuleInDB, RuleActionInput, RuleId, RuleProposedDeletionInput, \
-    GetRulesResponse
+    GetRulesResponse, RuleProposalQueuedInput
 from src.dependencies.indexer_auth import indexer_auth
 from src.dependencies.push_notification_adapter import PushNotificationAdapter
 from src.dependencies.relational_database import RelationalDatabase, build_relational_database
@@ -90,6 +90,14 @@ class RuleCBV:
     @rule_router.get("/rule/{rule_id}", status_code=200)
     def get_rule(self, rule_id: RuleId):
         rule = self.database.get_rule_by_id(rule_id)
+        if rule is None:
+            raise HTTPException(status_code=HTTP_404_NOT_FOUND)
+
+        return rule
+
+    @rule_router.post("/rule/proposal", status_code=201)
+    def update_rule_timestamp_with_proposal(self, rule_proposal_input: RuleProposalQueuedInput):
+        rule = self.database.update_execution_time_by_proposal_id(rule_proposal_input)
         if rule is None:
             raise HTTPException(status_code=HTTP_404_NOT_FOUND)
 

@@ -10,7 +10,7 @@ from src.api_models.bulk_results import PaginatedReviews, PaginatedPlaces
 from src.api_models.place import PlaceID, PlaceInDB, PlaceWithStats
 from src.api_models.profile import ProfileInDB, WalletID
 from src.api_models.review import ReviewID, ReviewInDB, ReviewWithProfile, ReviewInput
-from src.api_models.rule import RuleInput, RuleInDB, RuleId, RuleProposedDeletionInput
+from src.api_models.rule import RuleInput, RuleInDB, RuleId, RuleProposedDeletionInput, RuleProposalQueuedInput
 from src.orms.image import ImageORM
 from src.orms.place import PlaceORM
 from src.orms.profile import ProfileORM
@@ -398,7 +398,7 @@ class RelationalDatabase:
         self.session.refresh(rule)
         return RuleInDB.from_orm(rule)
 
-    def update_rule_to_propose_deletion(self, rule_deletion_proposal: RuleProposedDeletionInput):
+    def update_rule_to_propose_deletion(self, rule_deletion_proposal: RuleProposedDeletionInput) -> Optional[RuleInDB]:
         """
         Update the status of the rule matching the id to pending deletion status.
         :param rule_deletion_proposal: the data to update the rule.
@@ -420,7 +420,7 @@ class RelationalDatabase:
         self.session.refresh(rule)
         return RuleInDB.from_orm(rule)
 
-    def update_rule_to_deleted(self, rule_id: RuleId):
+    def update_rule_to_deleted(self, rule_id: RuleId) -> Optional[RuleInDB]:
         """
         Update the status of the rule matching the id to pending deletion status.
         :param rule_id: the id if the rule to match and update.
@@ -438,6 +438,38 @@ class RelationalDatabase:
         self.session.commit()
         self.session.refresh(rule)
         return RuleInDB.from_orm(rule)
+
+    def update_execution_time_by_proposal_id(self, rule_proposal_input: RuleProposalQueuedInput) -> Optional[RuleInDB]:
+        """
+        Update the rule execution time or the delete execution time based on finding logic .
+        :param rule_proposal_input: the id and timestamp of the proposal that belongs to a rule that should be updated.
+        :return: the modified rule.
+        """
+        rule = self.session.query(RuleORM).filter(RuleORM.proposal_id == rule_proposal_input.proposal_id).first()
+
+        if rule is None:
+            rule = self.session.query(RuleORM)\
+                .filter(RuleORM.deletion_proposal_id == rule_proposal_input.proposal_id).first()
+
+            if rule is None:
+                return None
+
+            rule.deletion_execution_time_at = datetime.utcfromtimestamp(rule_proposal_input.execution_timestamp)
+
+        else:
+            rule.execution_time_at = datetime.utcfromtimestamp(rule_proposal_input.execution_timestamp)
+
+        self.session.commit()
+        self.session.refresh(rule)
+
+        return RuleInDB.from_orm(rule)
+
+
+
+
+
+
+
 
 
 

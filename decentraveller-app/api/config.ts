@@ -9,9 +9,9 @@ if (Constants.deviceName === 'Simulator' || Constants.deviceName.includes('Emula
     API_ENDPOINT = 'http://10.0.2.2:8000';
     JSON_RPC_URL = 'http://10.0.2.2:8545';
 } else {
-    //API_ENDPOINT = 'http://192.168.1.3:8000';
-    API_ENDPOINT = 'http://192.168.1.115:8000';
-    JSON_RPC_URL = 'https://dtblockchain.loca.lt/';
+    API_ENDPOINT = 'http://192.168.1.3:8000';
+    //API_ENDPOINT = 'http://192.168.1.115:8000';
+    JSON_RPC_URL = 'https://dtblockchainls.loca.lt/';
 }
 
 export const FORWARD_GEOCODING_ENDPOINT = '/geocoding/forward';
@@ -30,3 +30,5 @@ export const PLACE_IMAGE = '/place/{placeId}/image.jpg';
 export const PLACE_THUMBNAIL = '/place/{placeId}/thumbnail.jpg';
 export const REVIEW_IMAGE = '/review/{imageNumber}.jpg?place_id={placeId}&id={reviewId}';
 export const UPLOAD_IMAGES = '/uploads';
+
+export const RULES_ENDPOINT = '/rule';

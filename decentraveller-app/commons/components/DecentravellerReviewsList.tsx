@@ -102,7 +102,6 @@ const DecentravellerReviewsItems: React.FC<ReviewItemsProps> = ({ reviewList, lo
 
     const footerComponent = () => {
         if (footer != null) {
-            return <View>{footer}</View>;
         }
         return (
             <View>

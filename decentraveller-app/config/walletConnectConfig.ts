@@ -23,7 +23,7 @@ export const sessionParams = {
             chains: [`eip155:${DEFAULT_CHAIN_ID}`],
             events: ['chainChanged', 'accountsChanged'],
             rpcMap: {
-                31337: 'https://dtblockchain.loca.lt',
+                31337: 'https://dtblockchainls.loca.lt',
             },
         },
     },

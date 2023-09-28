@@ -1,12 +1,14 @@
 import '@ethersproject/shims';
-import { ethers, utils } from 'ethers';
+import { ethers } from 'ethers';
 import { ContractFunction, DecentravellerContract } from './contractTypes';
-import { Blockchain, BlockchainByChainId, LOCAL_DEVELOPMENT_CHAIN_ID } from './config';
+import { Blockchain, BlockchainByChainId } from './config';
 import { withTimeout } from '../commons/functions/utils';
 import { DEFAULT_CHAIN_ID } from '../context/AppContext';
 import { decentravellerPlaceContract } from './contracts/decentravellerPlaceContract';
 import { decentravellerMainContract } from './contracts/decentravellerMainContract';
 import { decentravellerPlaceFactoryContract } from './contracts/decentravellerPlaceFactoryABI';
+import { BlockchainProposalStatus } from './types';
+import { decentravellerGovernanceContract } from './contracts/decentravellerGovernanceContract';
 
 const BLOCKCHAIN_TIMEOUT_IN_MILLIS = 100000;
 const BLOCKCHAIN_TRANSACTION_TASK_NAME = 'Blockchain transaction';
@@ -25,12 +27,13 @@ class BlockchainAdapter {
             contractFunction.fullContractABI,
             web3Provider,
         );
+
         const populatedTransaction: ethers.PopulatedTransaction = await ethersContract.populateTransaction[
             contractFunction.functionName
         ].call(this, ...args);
         const connectedSigner = web3Provider.getSigner();
 
-        return await withTimeout(
+        return (await withTimeout(
             async () => {
                 const txResponse: ethers.providers.TransactionResponse = await connectedSigner.sendTransaction({
                     to: contractAddress,
@@ -47,7 +50,7 @@ class BlockchainAdapter {
             },
             BLOCKCHAIN_TIMEOUT_IN_MILLIS,
             BLOCKCHAIN_TRANSACTION_TASK_NAME,
-        );
+        )) as Promise<string>;
     }
 
     private async populateAndSend(
@@ -159,8 +162,137 @@ class BlockchainAdapter {
             console.log(e);
         }
     }
+
+    async getProposalState(
+        web3Provider: ethers.providers.Web3Provider,
+        proposalId: string,
+    ): Promise<BlockchainProposalStatus> {
+        try {
+            const blockchain: Blockchain = BlockchainByChainId[DEFAULT_CHAIN_ID];
+            const contractFunction: ContractFunction = decentravellerGovernanceContract.functions['state'];
+
+            const governanceAddress: string = decentravellerGovernanceContract.addressesByBlockchain[blockchain];
+            const decentravellerGovernance = new ethers.Contract(
+                governanceAddress,
+                contractFunction.fullContractABI,
+                web3Provider,
+            );
+            return await decentravellerGovernance.state(proposalId);
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    async hasVotedInProposal(
+        web3Provider: ethers.providers.Web3Provider,
+        proposalId: string,
+        address: string,
+    ): Promise<boolean> {
+        try {
+            const blockchain: Blockchain = BlockchainByChainId[DEFAULT_CHAIN_ID];
+            const governanceAddress: string = decentravellerGovernanceContract.addressesByBlockchain[blockchain];
+            const decentravellerGovernance = new ethers.Contract(
+                governanceAddress,
+                decentravellerGovernanceContract.fullContractABI,
+                web3Provider,
+            );
+            return await decentravellerGovernance.hasVoted(proposalId, address);
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    async proposeNewRule(web3Provider: ethers.providers.Web3Provider, ruleStatement: string): Promise<string> {
+        try {
+            return this.populateAndSend(
+                web3Provider,
+                decentravellerMainContract,
+                'createNewRuleProposal',
+                ruleStatement,
+            );
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    async proposeRuleDeletion(web3Provider: ethers.providers.Web3Provider, ruleId: number): Promise<string> {
+        try {
+            return this.populateAndSend(web3Provider, decentravellerMainContract, 'createRuleDeletionProposal', ruleId);
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    async voteInProposal(
+        web3Provider: ethers.providers.Web3Provider,
+        proposalId: string,
+        voteValue: number,
+    ): Promise<string> {
+        const blockchain: Blockchain = BlockchainByChainId[DEFAULT_CHAIN_ID];
+        const governanceAddress: string = decentravellerGovernanceContract.addressesByBlockchain[blockchain];
+        try {
+            return await this.populateAndSendWithAddress(
+                web3Provider,
+                decentravellerGovernanceContract,
+                'castVote',
+                governanceAddress,
+                proposalId,
+                voteValue,
+            );
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    private async executeProposalAction(
+        web3Provider: ethers.providers.Web3Provider,
+        targetContractAddress: string,
+        txCalldata: string,
+        proposalHash: string,
+        proposalAction: string,
+    ): Promise<string> {
+        const blockchain: Blockchain = BlockchainByChainId[DEFAULT_CHAIN_ID];
+        const governanceAddress: string = decentravellerGovernanceContract.addressesByBlockchain[blockchain];
+
+        const governance = new ethers.Contract(
+            governanceAddress,
+            decentravellerGovernanceContract.fullContractABI,
+            web3Provider.getSigner(),
+        );
+
+        try {
+            const queueProposalTx = await governance[`${proposalAction}(address[],uint256[],bytes[],bytes32)`](
+                [targetContractAddress],
+                [0],
+                [txCalldata],
+                proposalHash,
+            );
+            const txReceipt = await queueProposalTx.wait();
+            return txReceipt.hash;
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    async queueProposal(
+        web3Provider: ethers.providers.Web3Provider,
+        targetContractAddress: string,
+        txCalldata: string,
+        proposalHash: string,
+    ): Promise<string> {
+        return this.executeProposalAction(web3Provider, targetContractAddress, txCalldata, proposalHash, 'queue');
+    }
+
+    async executeProposal(
+        web3Provider: ethers.providers.Web3Provider,
+        targetContractAddress: string,
+        txCalldata: string,
+        proposalHash,
+    ): Promise<string> {
+        return this.executeProposalAction(web3Provider, targetContractAddress, txCalldata, proposalHash, 'execute');
+    }
 }
 
 const blockchainAdapter = new BlockchainAdapter();
 
-export { blockchainAdapter };
+export { blockchainAdapter, BlockchainAdapter };

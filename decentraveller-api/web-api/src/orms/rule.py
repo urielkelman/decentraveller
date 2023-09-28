@@ -26,5 +26,7 @@ class RuleORM(Base):
     deletion_proposer = Column(ForeignKey("profiles.owner"), nullable=True, default=None)
     deletion_proposal_id = Column(String, unique=True, nullable=True, default=None)
     deletion_proposed_at = Column(DateTime, nullable=True, default=None)
+    execution_time_at = Column(DateTime, nullable=True, default=None)
+    deletion_execution_time_at = Column(DateTime, nullable=True, default=None)
 
 

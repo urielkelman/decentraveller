@@ -5,13 +5,14 @@ import {
     RuleDeletionProposedRequestBody,
 } from "../adapters/types";
 import EventTransformer from "./EventTransformer";
+import { eventEndpoints } from "../adapters/config";
 
 class RuleDeletionProposedTransformer extends EventTransformer<RuleDeletionProposedRequestBody> {
     public transformEvent(
         event: any[]
     ): EventRequest<RuleDeletionProposedRequestBody> {
         return {
-            endpoint: "/rule-deletion",
+            endpoint: eventEndpoints.NEW_RULE_DELETION_ENDPOINT,
             method: HTTPMethod.POST,
             body: {
                 ruleId: (event[0] as BigNumber).toNumber(),

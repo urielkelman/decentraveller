@@ -42,6 +42,8 @@ class RuleInDB(RuleBody):
     deletion_proposer: Optional[str]
     deletion_proposal_id: Optional[str]
     deletion_proposed_at: Optional[datetime]
+    execution_time_at: Optional[datetime]
+    deletion_execution_time_at: Optional[datetime]
 
 
 class RuleActionInput(APIModel):
@@ -63,3 +65,8 @@ class RuleProposedDeletionInput(APIModel):
 
 class GetRulesResponse(APIModel):
     rules: List[RuleInDB]
+
+
+class RuleProposalQueuedInput(APIModel):
+    proposal_id: str
+    execution_timestamp: int
