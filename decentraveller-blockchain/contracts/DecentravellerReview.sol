@@ -2,6 +2,7 @@
 pragma solidity ^0.8.17;
 
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import "./DecentravellerDataTypes.sol";
 
 contract DecentravellerReview is Initializable {
     uint256 reviewId;
@@ -10,6 +11,7 @@ contract DecentravellerReview is Initializable {
     string reviewText;
     string[] imagesHashes;
     uint8 score;
+    DecentravellerDataTypes.DecentravellerReviewState state;
 
     function initialize(
         uint256 _reviewId,
@@ -25,5 +27,6 @@ contract DecentravellerReview is Initializable {
         reviewText = _reviewText;
         imagesHashes = _imagesHashes;
         score = _score;
+        state = DecentravellerDataTypes.DecentravellerReviewState.PUBLIC;
     }
 }

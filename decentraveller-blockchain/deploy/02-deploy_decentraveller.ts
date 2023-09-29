@@ -1,6 +1,10 @@
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { DeployFunction } from "hardhat-deploy/types";
-import { Decentraveller, DecentravellerToken } from "../typechain-types";
+import {
+    Decentraveller,
+    DecentravellerPlaceCloneFactory,
+    DecentravellerToken,
+} from "../typechain-types";
 
 const deployFunction: DeployFunction = async function (
     hre: HardhatRuntimeEnvironment
@@ -27,7 +31,7 @@ const deployFunction: DeployFunction = async function (
         from: deployer,
         log: true,
     });
-    const decentravellerPlaceFactory = await deploy(
+    const decentravellerPlaceFactoryDeployment = await deploy(
         "DecentravellerPlaceCloneFactory",
         {
             from: deployer,
@@ -47,7 +51,7 @@ const deployFunction: DeployFunction = async function (
     );
 
     const addFactoriesAsMintersTx = await token.addMinters([
-        decentravellerPlaceFactory.address,
+        decentravellerPlaceFactoryDeployment.address,
         decentravellerReviewFactory.address,
     ]);
 
@@ -55,11 +59,11 @@ const deployFunction: DeployFunction = async function (
 
     const governanceDeployment = await get("DecentravellerGovernance");
 
-    await deploy("Decentraveller", {
+    const decentravellerDeployment = await deploy("Decentraveller", {
         from: deployer,
         args: [
             governanceDeployment.address,
-            decentravellerPlaceFactory.address,
+            decentravellerPlaceFactoryDeployment.address,
             [
                 "Do not insult any person.",
                 "If it is a gastronomic place, you should specify what you ate.",
@@ -67,6 +71,20 @@ const deployFunction: DeployFunction = async function (
         ],
         log: true,
     });
+
+    const decentravellerPlaceFactory: DecentravellerPlaceCloneFactory =
+        await ethers.getContractAt(
+            "DecentravellerPlaceCloneFactory",
+            decentravellerPlaceFactoryDeployment.address,
+            deployer
+        );
+
+    const transferOwnershipTx =
+        await decentravellerPlaceFactory.transferOwnership(
+            decentravellerDeployment.address
+        );
+
+    await transferOwnershipTx.wait();
 };
 deployFunction.tags = ["all"];
 export default deployFunction;

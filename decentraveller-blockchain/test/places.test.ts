@@ -134,4 +134,18 @@ describe("Decentraveller and places ", function () {
             "Address__Unregistered"
         );
     });
+
+    it("Should revert with error when trying to create place with non owner address", async function () {
+        await expect(
+            decentravellerPlaceCloneFactory.createNewPlace(
+                1,
+                "Shami shawarma",
+                "25.3232",
+                "23.321",
+                "Sanfe Fe 3173",
+                0,
+                userAddress
+            )
+        ).to.be.revertedWith("Ownable: caller is not the owner");
+    });
 });

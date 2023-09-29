@@ -10,13 +10,13 @@ error Review__NonExistent(uint256 reviewId);
 error Review__InvalidScore(uint8 score);
 
 contract DecentravellerPlace is Initializable {
-    uint256 public placeId;
-    string public name;
-    string public latitude;
-    string public longitude;
-    string public physicalAddress;
+    uint256 private placeId;
+    string private name;
+    string private latitude;
+    string private longitude;
+    string private physicalAddress;
     DecentravellerDataTypes.DecentravellerPlaceCategory public category;
-    address public placeCreator;
+    address private placeCreator;
     mapping(uint256 => address) reviewAddressByReviewId;
 
     DecentravellerReviewCloneFactory private reviewFactory;

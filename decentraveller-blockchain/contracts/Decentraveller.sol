@@ -109,10 +109,14 @@ contract Decentraveller {
         }
 
         ownersByNicknames[_nickname] = msg.sender;
-        profilesByOwner[msg.sender].owner = msg.sender;
-        profilesByOwner[msg.sender].nickname = _nickname;
-        profilesByOwner[msg.sender].country = _country;
-        profilesByOwner[msg.sender].interest = _interest;
+        profilesByOwner[msg.sender] = DecentravellerDataTypes
+            .DecentravellerProfile({
+                owner: msg.sender,
+                nickname: _nickname,
+                country: _country,
+                interest: _interest,
+                role: DecentravellerDataTypes.DecentravellerUserRole.NORMAL
+            });
 
         emit UpdatedProfile(msg.sender, _nickname, _country, _interest);
 
