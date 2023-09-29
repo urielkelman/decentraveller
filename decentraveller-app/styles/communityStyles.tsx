@@ -151,4 +151,37 @@ const ruleDetailStyles = StyleSheet.create({
     },
 });
 
-export { communityScreenStyles, ruleDetailStyles };
+
+const proposeRuleStyles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: DECENTRAVELLER_DEFAULT_BACKGROUND_COLOR,
+        padding: 16,
+        alignItems: 'center',
+    },
+    title: {
+        fontSize: 24,
+        fontFamily: 'Montserrat_700Bold',
+        marginBottom: 16,
+    },
+    subtitle: {
+        fontSize: 16,
+        fontFamily: 'Montserrat_400Regular',
+        textAlign: 'center',
+        marginBottom: 16,
+    },
+    textInput: {
+        width: '100%',
+        backgroundColor: 'white',
+        borderRadius: 10,
+        elevation: 2,
+        padding: 16,
+        marginBottom: 16,
+        fontSize: 16,
+    },
+    buttonContainer: {
+        marginTop: -25,
+    },
+});
+
+export { communityScreenStyles, ruleDetailStyles, proposeRuleStyles };

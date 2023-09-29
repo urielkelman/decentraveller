@@ -143,7 +143,7 @@ const CommunityScreen = ({ navigation }) => {
             <View style={communityScreenStyles.buttonContainer}>
                 <DecentravellerButton
                     text="Propose a New Rule"
-                    onPress={() => navigation.navigate('NewProposal')}
+                    onPress={() => navigation.navigate('ProposeRuleScreen')}
                     loading={false}
                 />
             </View>

@@ -23,4 +23,5 @@ export const communityWording = {
     ACCEPTED_RULES: 'Those rules are accepted by the community and all members should keep them.',
     VOTATION_RULES:
         'Rules that are not part of the community yet, you can chose the status and take different actions to make it part',
+    PROPOSE_RULE: 'Write here a statement of the rule you want to add, remember that what you write is what the moderators will use to decide whether or not a review complies with this rule. Once proposed, the rule will proceed to a vote.'
 };

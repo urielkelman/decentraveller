@@ -18,6 +18,7 @@ import ReviewDetailScreen from '../reviews/ReviewDetailScreen';
 import DecentravellerRulesList from './community/DecentravellerRulesList';
 import { Rule } from './community/types';
 import RuleDetailScreen from './community/RuleDeatailScreen';
+import ProposeRuleScreen from "./community/ProposeRuleScreen";
 
 export type HomeStackScreens = {
     LeftSideBar: undefined;
@@ -35,6 +36,8 @@ export type HomeStackScreens = {
     ReviewDetailScreen: { reviewId: number; placeId: number };
     DecentravellerRulesList: undefined;
     RuleDetailScreen: { rule: Rule; action: () => void; inFavor: () => void; against: () => void };
+    ProposeRuleScreen: undefined;
+
 };
 
 const HomeStackNavigator = createStackNavigator<HomeStackScreens>();
@@ -150,6 +153,14 @@ const HomeNavigator = () => {
                     component={RuleDetailScreen}
                     options={{
                         title: 'Rule',
+                        headerShown: true,
+                    }}
+                />
+                <HomeStackNavigator.Screen
+                    name="ProposeRuleScreen"
+                    component={ProposeRuleScreen}
+                    options={{
+                        title: 'Propose rule',
                         headerShown: true,
                     }}
                 />
