@@ -4,46 +4,54 @@ import RulesList from './RulesList';
 import DecentravellerButton from '../../../commons/components/DecentravellerButton';
 import { communityScreenStyles } from '../../../styles/communityStyles';
 import { RuleResponse } from '../../../api/response/rules';
-import { useWalletConnectModal } from '@walletconnect/modal-react-native';
 import { useAppContext } from '../../../context/AppContext';
 import { mockRulesService } from '../../../blockchain/service/mockRulesService';
 import ModalDropdown from 'react-native-modal-dropdown';
 import { Rule } from './types';
-import { BlockchainProposalStatus, blockchainStatusOptions } from '../../../blockchain/types';
+import {BlockchainProposalStatus, BlockchainProposalStatusNames, BlockchainUserStatus} from '../../../blockchain/types';
 import { communityWording } from './wording';
 
 const rulesService = mockRulesService;
 
 const CommunityScreen = ({ navigation }) => {
-    const { provider, address } = useWalletConnectModal();
     const { web3Provider } = useAppContext();
     const [communityRules, setCommunityRules] = useState([]);
     const [nonActiveRules, setNonActiveRules] = useState([]);
-    const [selectedNonActiveRule, setSelectedNonActiveRule] = useState('PENDING');
+    const [selectedNonActiveRule, setSelectedNonActiveRule] = useState(BlockchainUserStatus.PENDING);
 
     const handleOptionSelect = async (status) => {
         setSelectedNonActiveRule(status);
         let getRuleFunction;
+        let blockchainStatus;
 
         switch (status) {
-            case 'PENDING':
+            case BlockchainUserStatus.PENDING:
                 getRuleFunction = rulesService.getAllPendingToVote;
+                blockchainStatus = BlockchainProposalStatusNames.PENDING
                 break;
-            case 'ACTIVE':
+            case BlockchainUserStatus.ACTIVE:
                 getRuleFunction = rulesService.getAllInVotingProcess;
+                blockchainStatus = BlockchainProposalStatusNames.ACTIVE
+
                 break;
-            case 'DEFEATED':
+            case BlockchainUserStatus.DEFEATED:
                 getRuleFunction = rulesService.getAllNewDefeated;
+                blockchainStatus = BlockchainProposalStatusNames.DEFEATED
+
                 break;
-            case 'SUCCEEDED':
+            case BlockchainUserStatus.SUCCEEDED:
                 getRuleFunction = rulesService.getAllNewToQueue;
+                blockchainStatus = BlockchainProposalStatusNames.SUCCEEDED
+
                 break;
-            case 'QUEUED':
+            case BlockchainUserStatus.QUEUED:
                 getRuleFunction = rulesService.getAllQueued;
+                blockchainStatus = BlockchainProposalStatusNames.QUEUED
+
                 break;
         }
 
-        await fetchNonActiveRules(getRuleFunction, status);
+        await fetchNonActiveRules(getRuleFunction, blockchainStatus);
     };
     const fetchNonActiveRules = async (getRuleFunction, status) => {
         const nonActiveRules = await getRuleFunction(web3Provider);
@@ -103,11 +111,11 @@ const CommunityScreen = ({ navigation }) => {
                     <Text style={communityScreenStyles.subtitle}>{communityWording.VOTATION_RULES}</Text>
                 </View>
                 <View style={communityScreenStyles.dropContainer}>
-                    <Text>Select proposal status</Text>
+                    <Text style={communityScreenStyles.subtitle}>Select proposal status</Text>
                     <ModalDropdown
-                        options={blockchainStatusOptions}
+                        options={Object.values(BlockchainUserStatus)}
                         onSelect={(index, value) => handleOptionSelect(value)}
-                        defaultValue="PENDING"
+                        defaultValue={BlockchainUserStatus.PENDING}
                         style={communityScreenStyles.dropdown}
                         textStyle={communityScreenStyles.dropdownText}
                         dropdownStyle={communityScreenStyles.dropdownMenu}

@@ -26,13 +26,14 @@ const styles = StyleSheet.create({
     },
     rulesContainer: {
         borderRadius: 10,
-        overflow: 'hidden', // Esto recortará los elementos que estén fuera del contenedor
+        overflow: 'hidden',
     },
     ruleContainer: {
         marginBottom: 4,
     },
     rule: {
         fontSize: 14,
+        fontFamily: 'Montserrat_400Regular',
     },
 });
 

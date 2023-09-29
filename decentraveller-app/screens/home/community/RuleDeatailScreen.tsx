@@ -28,7 +28,8 @@ export type RuleAction = {
 
 const RuleDetailScreen: React.FC<RuleDetailProps> = ({ route }) => {
     const [titleLabel, setTitleLabel] = useState('');
-    const [subTitleLabel, setSubTitleLabel] = useState('');
+    const [actionExplanationLabel, setActionExplanationLabel] = useState('');
+    const [statusExplanationLabel, setStatusExplanationLabel] = useState('')
     const { web3Provider, connectionContext } = useAppContext();
     const [contentComponent, setContentComponent] = useState<React.ReactNode | null>(null);
     const navigation = useNavigation();
@@ -41,26 +42,29 @@ const RuleDetailScreen: React.FC<RuleDetailProps> = ({ route }) => {
     const getActionByStatus = (): RuleAction => {
         const { ruleSubStatus } = rule;
         let action = null;
-        let label = '';
+        let buttonActionText = '';
 
         if (ruleSubStatus === BlockchainProposalStatus.EXECUTED) {
             action = rulesService.proposeRuleDeletion;
-            label = communityWording.PROPOSE_DELETE;
+            buttonActionText = communityWording.PROPOSE_DELETE;
         } else if (ruleSubStatus === BlockchainProposalStatus.SUCCEEDED) {
-            setSubTitleLabel(communityWording.SUCCEDED_VOTATION);
+            setActionExplanationLabel(communityWording.SUCCEDED_VOTATION_ACTION);
+            setStatusExplanationLabel(communityWording.SUCCEDED_VOTATION_STATUS);
             action = rulesService.queueNewRule;
-            label = communityWording.ENQUEUE;
+            buttonActionText = communityWording.ENQUEUE;
         } else if (ruleSubStatus === BlockchainProposalStatus.QUEUED) {
-            setSubTitleLabel(communityWording.QUEUED_VOTATION);
+            setActionExplanationLabel(communityWording.QUEUED_VOTATION_ACTION);
+            setStatusExplanationLabel(communityWording.QUEUED_VOTATION_STATUS);
             action = rulesService.executeNewRule;
-            label = communityWording.EXECUTE;
+            buttonActionText = communityWording.EXECUTE;
         } else if (ruleSubStatus === BlockchainProposalStatus.DEFEATED) {
-            setSubTitleLabel(communityWording.DEFEATED_VOTATION);
+            setActionExplanationLabel(communityWording.DEFEATED_VOTATION_ACTION);
+            setStatusExplanationLabel(communityWording.DEFEATED_VOTATION_STATUS);
             action = navigation.goBack;
-            label = communityWording.GO_BACK;
+            buttonActionText = communityWording.GO_BACK;
         }
 
-        return { action, label };
+        return { action, label: buttonActionText };
     };
 
     const renderPending = () => {
@@ -102,14 +106,21 @@ const RuleDetailScreen: React.FC<RuleDetailProps> = ({ route }) => {
     };
 
     const renderVoting = () => {
-        const subTitle =
+        const actionLabel =
             rule.ruleSubStatus === BlockchainProposalStatus.PENDING
-                ? communityWording.PENDING_VOTATION
-                : communityWording.ACTIVE_VOTATION;
-        setSubTitleLabel(subTitle);
+                ? communityWording.PENDING_VOTATION_ACTION
+                : communityWording.ACTIVE_VOTATION_ACTION;
+
+        const statusLabel =
+            rule.ruleSubStatus === BlockchainProposalStatus.PENDING
+                ? communityWording.PENDING_VOTATION_STATUS
+                : communityWording.ACTIVE_VOTATION_STATUS;
+
+        setActionExplanationLabel(actionLabel);
+        setStatusExplanationLabel(statusLabel);
 
         return (
-            <View style={ruleDetailStyles.buttonContainer}>
+            <View style={ruleDetailStyles.buttonVoteContainer}>
                 <TouchableOpacity
                     onPress={() => voteForProposal(rulesService.voteInFavorOfProposal)}
                     disabled={rule.ruleSubStatus === BlockchainProposalStatus.PENDING}
@@ -136,12 +147,13 @@ const RuleDetailScreen: React.FC<RuleDetailProps> = ({ route }) => {
         switch (ruleStatus) {
             case RuleStatus.APPROVED:
                 setTitleLabel(communityWording.APPROVED_STATUS);
-                setSubTitleLabel(communityWording.PROPOSE_DELETE_ACTIONABLE);
+                setActionExplanationLabel(communityWording.PROPOSE_DELETE_ACTION);
+                setStatusExplanationLabel(communityWording.PROPOSE_DELETE_STATUS);
                 setContentComponent(renderVoted());
                 break;
             case RuleStatus.DELETED:
                 setTitleLabel(communityWording.DELETED_STATUS);
-                setSubTitleLabel(communityWording.NO_ACTION_AVAILABLE);
+                setActionExplanationLabel(communityWording.NO_ACTION_AVAILABLE);
                 setContentComponent(renderVoted());
                 break;
             case RuleStatus.PENDING_APPROVAL:
@@ -156,20 +168,49 @@ const RuleDetailScreen: React.FC<RuleDetailProps> = ({ route }) => {
     };
 
     return (
-        <View style={[ruleDetailStyles.container]}>
-            <Text style={ruleDetailStyles.label}>{titleLabel}</Text>
-            <View style={ruleDetailStyles.header}>
-                <Text style={ruleDetailStyles.headerText}>Rule</Text>
+        <View>
+            <View style={ruleDetailStyles.cardContainer}>
+                <View>
+                    <Text style={ruleDetailStyles.label}>{titleLabel}</Text>
+                </View>
             </View>
-            <View style={ruleDetailStyles.descriptionContainer}>
-                <Text style={ruleDetailStyles.description}>{rule.ruleStatement}</Text>
+
+            <View style={ruleDetailStyles.cardContainer}>
+                <View>
+                    <Text style={ruleDetailStyles.headerText}>Statement rule is:</Text>
+                    <View style={ruleDetailStyles.descriptionContainer}>
+                        <Text style={ruleDetailStyles.description}>{rule.ruleStatement}</Text>
+                    </View>
+                </View>
             </View>
-            <Text style={ruleDetailStyles.subtitle}>
-                <Text style={ruleDetailStyles.italic}>{subTitleLabel}</Text>
-            </Text>
+
+            <View style={ruleDetailStyles.cardContainer}>
+                <View style={ruleDetailStyles.cardContent}>
+                    <Image
+                        source={require('../../../assets/images/info.png')}
+                        style={ruleDetailStyles.icon}
+                    />
+                    <View style={ruleDetailStyles.textContainer}>
+                        <Text style={ruleDetailStyles.headerText}>What's the meaning of the proposal status?</Text>
+                        <View style={{ maxWidth: '95%' }}>
+                            <Text style={ruleDetailStyles.explanationText}>
+                                {statusExplanationLabel}
+                            </Text>
+                        </View>
+                    </View>
+                </View>
+            </View>
+
+
+            <View style={ruleDetailStyles.cardContainer}>
+                <View>
+                    <Text style={ruleDetailStyles.subtitle}>{actionExplanationLabel}</Text>
+                </View>
+            </View>
             {contentComponent}
         </View>
     );
+
 };
 
 export default RuleDetailScreen;

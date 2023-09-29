@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { DECENTRAVELLER_DEFAULT_BACKGROUND_COLOR } from '../commons/global';
+import {Montserrat_700Bold} from "@expo-google-fonts/montserrat";
 
 const communityScreenStyles = StyleSheet.create({
     container: {
@@ -17,10 +18,11 @@ const communityScreenStyles = StyleSheet.create({
     },
     title: {
         fontSize: 24,
-        fontWeight: 'bold',
+        fontFamily: 'Montserrat_800ExtraBold',
     },
     subtitle: {
         fontSize: 16,
+        fontFamily: 'Montserrat_400Regular',
     },
     buttonContainer: {
         position: 'absolute',
@@ -47,6 +49,7 @@ const communityScreenStyles = StyleSheet.create({
     dropdownText: {
         fontSize: 16,
         color: '#000000',
+        fontFamily: 'Montserrat_400Regular',
     },
     dropdownMenu: {
         width: 200,
@@ -67,8 +70,7 @@ const ruleDetailStyles = StyleSheet.create({
     },
     headerText: {
         fontSize: 18,
-        fontWeight: 'bold',
-        marginLeft: -150,
+        fontFamily: 'Montserrat_700Bold',
     },
     descriptionContainer: {
         backgroundColor: 'transparent',
@@ -80,38 +82,72 @@ const ruleDetailStyles = StyleSheet.create({
     },
     description: {
         fontSize: 24,
-        fontWeight: 'bold',
         textAlign: 'center',
-        color: 'black',
+        fontFamily: 'Montserrat_700Bold',
     },
     label: {
         fontSize: 14,
         marginBottom: 10,
+        fontFamily: 'Montserrat_500Medium',
     },
     subtitle: {
         fontSize: 16,
-        fontStyle: 'italic',
+        fontFamily: 'Montserrat_400Regular',
+        marginBottom: 20,
+    },
+    explanationText: {
+        fontSize: 14,
+        fontFamily: 'Montserrat_400Regular',
         marginBottom: 20,
     },
     italic: {
-        fontStyle: 'italic',
+        fontFamily: 'Montserrat_400Regular',
     },
     buttonContainer: {
         flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginTop: 50,
+        justifyContent: 'center',
+        marginTop: 0,
+    },
+
+    buttonVoteContainer: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        marginTop: 0,
     },
     buttonImage: {
         width: 100,
         height: 100,
-        marginTop: 20,
+        marginTop: 10,
     },
-
     buttonMargin: {
         marginLeft: 20,
     },
     disabledButton: {
         opacity: 0.1,
+    },
+    cardContainer: {
+        backgroundColor: 'white',
+        borderRadius: 10,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 2,
+        elevation: 4,
+        padding: 8,
+        margin: 10,
+    },
+    icon: {
+        width: 24,
+        height: 24,
+        marginRight: 8,
+        resizeMode: 'contain',
+    },
+    textContainer: {
+        marginLeft: 4
+    },
+    cardContent: {
+        flexDirection: 'row',
+        alignItems: 'center',
     },
 });
 

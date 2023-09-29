@@ -3,6 +3,7 @@ import { FlatList, Text, TouchableOpacity, View } from 'react-native';
 import LoadingComponent from '../../../commons/components/DecentravellerLoading';
 import { useNavigation } from '@react-navigation/native';
 import { Rule, RuleListProps, RuleScreenProps } from './types';
+import {Montserrat_700Bold} from "@expo-google-fonts/montserrat";
 
 const DecentravellerRulesList: React.FC<RuleListProps> = ({ route }) => {
     const { ruleList, minified, horizontal, loadRules } = route.params;
@@ -70,8 +71,8 @@ const DecentravellerRulesList: React.FC<RuleListProps> = ({ route }) => {
                     }}
                     onPress={navigateToScreen}
                 >
-                    <Text style={{ fontSize: 18, fontWeight: 'bold' }}>{item.ruleStatement}</Text>
-                    <Text style={{ fontSize: 12, fontStyle: 'italic' }}>{item.ruleStatus}</Text>
+                    <Text style={{ fontSize: 18, fontFamily: 'Montserrat_700Bold'}}>{item.ruleStatement}</Text>
+                    <Text style={{ fontSize: 12, fontFamily: 'Montserrat_400Regular' }}>{item.ruleStatus}</Text>
                 </TouchableOpacity>
             );
         };
