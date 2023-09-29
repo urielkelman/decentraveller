@@ -66,6 +66,58 @@ class RulesService {
         return rulesWithQueuedProposal.filter((queuedRule) => now > new Date(queuedRule.executionTimeAt));
     }
 
+    async getAllPendingDeleteToVote(web3Provider: ethers.providers.Web3Provider): Promise<RuleResponse[]> {
+        return this.getAllWithRuleStatusAndBlockchainProposalStatus(
+            web3Provider,
+            RuleStatus.PENDING_DELETED,
+            BlockchainProposalStatus.PENDING,
+        );
+    }
+
+    async getAllDeleteInVotingProcess(web3Provider: ethers.providers.Web3Provider): Promise<RuleResponse[]> {
+        return this.getAllWithRuleStatusAndBlockchainProposalStatus(
+            web3Provider,
+            RuleStatus.PENDING_DELETED,
+            BlockchainProposalStatus.ACTIVE,
+        );
+    }
+
+    async getAllDeleteDefeated(web3Provider: ethers.providers.Web3Provider): Promise<RuleResponse[]> {
+        return this.getAllWithRuleStatusAndBlockchainProposalStatus(
+            web3Provider,
+            RuleStatus.PENDING_DELETED,
+            BlockchainProposalStatus.DEFEATED,
+        );
+    }
+
+    async getAllDeleteToQueue(web3Provider: ethers.providers.Web3Provider): Promise<RuleResponse[]> {
+        return this.getAllWithRuleStatusAndBlockchainProposalStatus(
+            web3Provider,
+            RuleStatus.PENDING_DELETED,
+            BlockchainProposalStatus.SUCCEEDED,
+        );
+    }
+
+    async getAllDeleteQueued(web3Provider: ethers.providers.Web3Provider): Promise<RuleResponse[]> {
+        return this.getAllWithRuleStatusAndBlockchainProposalStatus(
+            web3Provider,
+            RuleStatus.PENDING_DELETED,
+            BlockchainProposalStatus.QUEUED,
+        );
+    }
+
+    async getAllDeleteToExecute(web3Provider: ethers.providers.Web3Provider): Promise<RuleResponse[]> {
+        const rulesWithQueuedProposal = await this.getAllWithRuleStatusAndBlockchainProposalStatus(
+            web3Provider,
+            RuleStatus.PENDING_DELETED,
+            BlockchainProposalStatus.QUEUED,
+        );
+
+        // const now = new Date("2023-09-25T11:23:54");
+        const now = new Date();
+        return rulesWithQueuedProposal.filter((queuedRule) => now > new Date(queuedRule.executionTimeAt));
+    }
+
     async getFormerRules(): Promise<RuleResponse[]> {
         return (await this.apiAdapter.getRules(RuleStatus.APPROVED)).rules;
     }

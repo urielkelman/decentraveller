@@ -22,49 +22,57 @@ const CommunityScreen = ({ navigation }) => {
     const handleOptionSelect = async (status) => {
         setSelectedNonActiveRule(status);
         let getRuleFunction;
+        let getRuleDeletedFunction;
         let blockchainStatus;
 
         switch (status) {
             case BlockchainUserStatus.PENDING:
                 getRuleFunction = rulesService.getAllPendingToVote;
+                getRuleDeletedFunction = rulesService.getAllPendingDeleteToVote;
                 blockchainStatus = BlockchainProposalStatusNames.PENDING
                 break;
             case BlockchainUserStatus.ACTIVE:
                 getRuleFunction = rulesService.getAllInVotingProcess;
+                getRuleDeletedFunction = rulesService.getAllDeleteInVotingProcess;
                 blockchainStatus = BlockchainProposalStatusNames.ACTIVE
 
                 break;
             case BlockchainUserStatus.DEFEATED:
                 getRuleFunction = rulesService.getAllNewDefeated;
+                getRuleDeletedFunction = rulesService.getAllDeleteDefeated;
                 blockchainStatus = BlockchainProposalStatusNames.DEFEATED
 
                 break;
             case BlockchainUserStatus.SUCCEEDED:
                 getRuleFunction = rulesService.getAllNewToQueue;
+                getRuleDeletedFunction = rulesService.getAllDeleteToQueue;
                 blockchainStatus = BlockchainProposalStatusNames.SUCCEEDED
 
                 break;
             case BlockchainUserStatus.QUEUED:
                 getRuleFunction = rulesService.getAllQueued;
+                getRuleDeletedFunction = rulesService.getAllDeleteQueued;
                 blockchainStatus = BlockchainProposalStatusNames.QUEUED
 
                 break;
         }
 
-        await fetchNonActiveRules(getRuleFunction, blockchainStatus);
+        await fetchNonActiveRules(getRuleFunction, getRuleDeletedFunction, blockchainStatus);
     };
-    const fetchNonActiveRules = async (getRuleFunction, status) => {
-        const nonActiveRules = await getRuleFunction(web3Provider);
+    const fetchNonActiveRules = async (getRuleFunction, getRuleDeletedFunction,  status) => {
+        const nonActiveNewRules: RuleResponse[] = await getRuleFunction(web3Provider);
+        const nonActiveDeleteRules: RuleResponse[] = await getRuleDeletedFunction(web3Provider);
+        const nonActiveRules = nonActiveNewRules.concat(nonActiveDeleteRules)
         setNonActiveRules(mapRuleResponsesToRules(nonActiveRules, status));
     };
 
     const fetchCommunityRules = async () => {
         const communityRulesData = await rulesService.getFormerRules();
-        setCommunityRules(mapRuleResponsesToRules(communityRulesData, 'EXECUTED'));
+        setCommunityRules(mapRuleResponsesToRules(communityRulesData, BlockchainProposalStatusNames.EXECUTED));
     };
 
     function mapRulesToString(rules: Rule[]): string[] {
-        return rules.map((rule, index) => rule.ruleStatement);
+        return rules.map((rule) => rule.ruleStatement);
     }
 
     function mapRuleResponseToRule(ruleResponse: RuleResponse, status: string): Rule {

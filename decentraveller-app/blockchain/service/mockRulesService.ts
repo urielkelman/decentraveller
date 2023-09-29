@@ -1,5 +1,6 @@
 import { RuleResponse, RuleStatus } from '../../api/response/rules';
 import { ethers } from 'ethers';
+import {BlockchainProposalStatus} from "../types";
 
 class RulesService {
     async getAllPendingToVote(web3Provider: ethers.providers.Web3Provider): Promise<RuleResponse[]> {
@@ -154,6 +155,144 @@ class RulesService {
                 proposer: '',
                 ruleStatement: `this is a EXECUTED ${i}: Rule.`,
                 ruleStatus: RuleStatus.APPROVED,
+                isInitial: false,
+                proposedAt: '2023-09-23',
+                deletionProposer: '',
+            });
+        }
+
+        return rules;
+    }
+
+    async getAllPendingDeleteToVote(web3Provider: ethers.providers.Web3Provider): Promise<RuleResponse[]> {
+        const rules: RuleResponse[] = [];
+
+        for (let i = 1; i <= 10; i++) {
+            const statusIndex = Math.floor(Math.random() * 2);
+
+            rules.push({
+                ruleId: i,
+                proposalId: 'proposalId',
+                deletionExecutionTimestampAt: '',
+                executionTimeAt: '',
+                proposer: '',
+                ruleStatement: `this is a PENDING ${i}: Rule.`,
+                ruleStatus: RuleStatus.PENDING_DELETED,
+                isInitial: false,
+                proposedAt: '2023-09-23',
+                deletionProposer: '',
+            });
+        }
+
+        return rules;
+    }
+
+    async getAllDeleteInVotingProcess(web3Provider: ethers.providers.Web3Provider): Promise<RuleResponse[]> {
+        const rules: RuleResponse[] = [];
+
+        for (let i = 1; i <= 10; i++) {
+            const statusIndex = Math.floor(Math.random() * 2);
+
+            rules.push({
+                ruleId: i,
+                proposalId: 'proposalId',
+                deletionExecutionTimestampAt: '',
+                executionTimeAt: '',
+                proposer: '',
+                ruleStatement: `this is a ACTIVE ${i}: Rule.`,
+                ruleStatus: RuleStatus.PENDING_DELETED,
+                isInitial: false,
+                proposedAt: '2023-09-23',
+                deletionProposer: '',
+            });
+        }
+
+        return rules;
+    }
+
+    async getAllDeleteDefeated(web3Provider: ethers.providers.Web3Provider): Promise<RuleResponse[]> {
+        const rules: RuleResponse[] = [];
+
+        for (let i = 1; i <= 10; i++) {
+            const statusIndex = Math.floor(Math.random() * 2);
+
+            rules.push({
+                ruleId: i,
+                proposalId: 'proposalId',
+                deletionExecutionTimestampAt: '',
+                executionTimeAt: '',
+                proposer: '',
+                ruleStatement: `this is a DEFEATED ${i}: Rule.`,
+                ruleStatus: RuleStatus.PENDING_DELETED,
+                isInitial: false,
+                proposedAt: '2023-09-23',
+                deletionProposer: '',
+            });
+        }
+
+        return rules;
+    }
+
+    async getAllDeleteToQueue(web3Provider: ethers.providers.Web3Provider): Promise<RuleResponse[]> {
+        const rules: RuleResponse[] = [];
+
+        for (let i = 1; i <= 10; i++) {
+            const statusIndex = Math.floor(Math.random() * 2);
+
+            rules.push({
+                ruleId: i,
+                proposalId: 'proposalId',
+                deletionExecutionTimestampAt: '',
+                executionTimeAt: '',
+                proposer: '',
+                ruleStatement: `this is a SUCCEDED ${i}: Rule.`,
+                ruleStatus: RuleStatus.PENDING_DELETED,
+                isInitial: false,
+                proposedAt: '2023-09-23',
+                deletionProposer: '',
+            });
+        }
+
+        return rules;
+    }
+
+    async getAllDeleteQueued(web3Provider: ethers.providers.Web3Provider): Promise<RuleResponse[]> {
+        const rules: RuleResponse[] = [];
+
+        for (let i = 1; i <= 10; i++) {
+            const statusIndex = Math.floor(Math.random() * 2);
+
+            rules.push({
+                ruleId: i,
+                proposalId: 'proposalId',
+                deletionExecutionTimestampAt: '',
+                executionTimeAt: '',
+                proposer: '',
+                ruleStatement: `this is a QUEUED ${i}: Rule.`,
+                ruleStatus: RuleStatus.PENDING_DELETED,
+                isInitial: false,
+                proposedAt: '2023-09-23',
+                deletionProposer: '',
+            });
+        }
+
+        return rules;
+    }
+
+    async getAllDeleteToExecute(web3Provider: ethers.providers.Web3Provider): Promise<RuleResponse[]> {
+        const rules: RuleResponse[] = [];
+
+        for (let i = 1; i <= 10; i++) {
+            const statusIndex = Math.floor(Math.random() * 2);
+
+            rules.push({
+                ruleId: i,
+                proposalId: 'proposalId',
+                deletionExecutionTimestampAt: '',
+                executionTimeAt: '',
+                proposer: '',
+                ruleStatement: `this is a QUEUED ${i}: Rule.`,
+                ruleStatus: RuleStatus.PENDING_DELETED,
                 isInitial: false,
                 proposedAt: '2023-09-23',
                 deletionProposer: '',

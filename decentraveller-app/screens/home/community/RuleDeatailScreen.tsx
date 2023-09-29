@@ -12,9 +12,6 @@ import { communityWording } from './wording';
 
 type RuleDetailParams = {
     rule: Rule | null | undefined;
-    action: () => void;
-    inFavor: () => void;
-    against: () => void;
 };
 
 type RuleDetailProps = {
@@ -33,39 +30,56 @@ const RuleDetailScreen: React.FC<RuleDetailProps> = ({ route }) => {
     const { web3Provider, connectionContext } = useAppContext();
     const [contentComponent, setContentComponent] = useState<React.ReactNode | null>(null);
     const navigation = useNavigation();
-    const { rule, action } = route.params;
+    const { rule } = route.params;
 
     useEffect(() => {
         renderContentByRuleStatus(rule.ruleStatus);
     }, [rule.ruleStatus]);
 
     const getActionByStatus = (): RuleAction => {
-        const { ruleSubStatus } = rule;
-        let action = null;
-        let buttonActionText = '';
+        const { ruleStatus, ruleSubStatus } = rule;
 
-        if (ruleSubStatus === BlockchainProposalStatus.EXECUTED) {
-            action = rulesService.proposeRuleDeletion;
-            buttonActionText = communityWording.PROPOSE_DELETE;
-        } else if (ruleSubStatus === BlockchainProposalStatus.SUCCEEDED) {
-            setActionExplanationLabel(communityWording.SUCCEDED_VOTATION_ACTION);
-            setStatusExplanationLabel(communityWording.SUCCEDED_VOTATION_STATUS);
-            action = rulesService.queueNewRule;
-            buttonActionText = communityWording.ENQUEUE;
-        } else if (ruleSubStatus === BlockchainProposalStatus.QUEUED) {
-            setActionExplanationLabel(communityWording.QUEUED_VOTATION_ACTION);
-            setStatusExplanationLabel(communityWording.QUEUED_VOTATION_STATUS);
-            action = rulesService.executeNewRule;
-            buttonActionText = communityWording.EXECUTE;
-        } else if (ruleSubStatus === BlockchainProposalStatus.DEFEATED) {
-            setActionExplanationLabel(communityWording.DEFEATED_VOTATION_ACTION);
-            setStatusExplanationLabel(communityWording.DEFEATED_VOTATION_STATUS);
-            action = navigation.goBack;
-            buttonActionText = communityWording.GO_BACK;
+        const statusActionMap = {
+            [BlockchainProposalStatus.EXECUTED]: {
+                action: rulesService.proposeRuleDeletion,
+                buttonActionText: communityWording.PROPOSE_DELETE,
+            },
+            [BlockchainProposalStatus.SUCCEEDED]: {
+                action: ruleStatus === RuleStatus.PENDING_APPROVAL ? rulesService.queueNewRule : rulesService.queueRuleDeletion,
+                buttonActionText: communityWording.ENQUEUE,
+                explanations: {
+                    action: communityWording.SUCCEDED_VOTATION_ACTION,
+                    status: communityWording.SUCCEDED_VOTATION_STATUS,
+                },
+            },
+            [BlockchainProposalStatus.QUEUED]: {
+                action: ruleStatus === RuleStatus.PENDING_APPROVAL ? rulesService.executeNewRule : rulesService.executeRuleDeletion,
+                buttonActionText: communityWording.EXECUTE,
+                explanations: {
+                    action: communityWording.QUEUED_VOTATION_ACTION,
+                    status: communityWording.QUEUED_VOTATION_STATUS,
+                },
+            },
+            [BlockchainProposalStatus.DEFEATED]: {
+                action: navigation.goBack,
+                buttonActionText: communityWording.GO_BACK,
+                explanations: {
+                    action: communityWording.DEFEATED_VOTATION_ACTION,
+                    status: communityWording.DEFEATED_VOTATION_STATUS,
+                },
+            },
+        };
+
+        const { action, buttonActionText, explanations } = statusActionMap[ruleSubStatus] || {};
+
+        if (explanations) {
+            setActionExplanationLabel(explanations.action);
+            setStatusExplanationLabel(explanations.status);
         }
 
         return { action, label: buttonActionText };
     };
+
 
     const renderPending = () => {
         const { ruleSubStatus } = rule;
@@ -74,6 +88,12 @@ const RuleDetailScreen: React.FC<RuleDetailProps> = ({ route }) => {
         } else {
             return renderVoted;
         }
+    };
+
+    const execute = async (action) => {
+        const { ruleSubStatus } = rule;
+        const arg = ruleSubStatus === BlockchainProposalStatus.EXECUTED ? rule.ruleId : rule
+        await action(web3Provider, arg)
     };
 
     const renderVoted = () => {
@@ -85,7 +105,9 @@ const RuleDetailScreen: React.FC<RuleDetailProps> = ({ route }) => {
             <React.Fragment>
                 {ruleStatus !== RuleStatus.DELETED && (
                     <View style={ruleDetailStyles.buttonContainer}>
-                        <DecentravellerButton text={label} onPress={action} loading={false} />
+                        <DecentravellerButton text={label} onPress={async () => {
+                            await execute(action)
+                        }} loading={false} />
                     </View>
                 )}
             </React.Fragment>
