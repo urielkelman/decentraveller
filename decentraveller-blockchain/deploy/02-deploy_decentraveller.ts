@@ -60,7 +60,10 @@ const deployFunction: DeployFunction = async function (
         args: [
             governanceDeployment.address,
             decentravellerPlaceFactory.address,
-            [],
+            [
+                "Do not insult any person.",
+                "If it is a gastronomic place, you should specify what you ate.",
+            ],
         ],
         log: true,
     });

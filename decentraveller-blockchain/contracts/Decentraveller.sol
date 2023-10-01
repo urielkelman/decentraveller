@@ -161,6 +161,10 @@ contract Decentraveller {
         return currentPlaceId;
     }
 
+    function getCurrentRuleId() external view returns (uint256) {
+        return currentRuleId;
+    }
+
     function approveProposedRule(uint256 ruleId) external onlyGovernance {
         ruleById[ruleId].status = DecentravellerDataTypes
             .DecentravellerRuleStatus

@@ -187,26 +187,39 @@ const main = async () => {
     tx = await decentravellerContracts[0].createNewRuleProposal(
         "No se habla de Decentraveller."
     )
-    const ruleId = await tx.wait();
-    const votingDelay = await decentravellerGovContracts[0].votingDelay();
-    await time.increase(votingDelay);
+    tx = await tx.wait();
 
-    for (const govUser of decentravellerGovContracts) {
-        const voteTx = await govUser.castVote(ruleId, 1);
+    const ruleId = await decentravellerContracts[0].getCurrentRuleId();
+
+    const rule = await decentravellerContracts[0].getRuleById(ruleId);
+    const proposalId = rule.proposalId;
+
+    console.log(`Rule id is ${ruleId} and proposal id is ${proposalId}`);
+
+    const votingDelay = await decentravellerGovContracts[0].votingDelay();
+    console.log(`Voting delay is: ${votingDelay}`);
+    await time.increase(votingDelay.toBigInt());
+
+    console.log("Voting");
+    for (const govUser of decentravellerGovContracts.slice(1)) {
+        const voteTx = await govUser.castVote(proposalId, 1);
         await voteTx.wait();
     }
 
     const votingPeriod = await decentravellerGovContracts[0].votingPeriod();
+    console.log(`Voting period is: ${votingPeriod}`);
     await time.increase(votingPeriod);
 
-    const proposalHash = ethers.utils.id("No se habla de Decentraveller.");
     const approveTxCalldata = (
         await decentravellerContracts[0].populateTransaction.approveProposedRule(ruleId)
     ).data!;
 
+    const proposalHash = ethers.utils.id("No se habla de Decentraveller.");
     tx = await decentravellerGovContracts[0][
         "queue(address[],uint256[],bytes[],bytes32)"
     ]([decentravellerContracts[0].address], [0], [approveTxCalldata], proposalHash);
+    await tx.wait();
+    await time.increase(1 * 24 * 60 * 60);
     tx = await decentravellerGovContracts[0][
         "execute(address[],uint256[],bytes[],bytes32)"
     ]([decentravellerContracts[0].address], [0], [approveTxCalldata], proposalHash);
