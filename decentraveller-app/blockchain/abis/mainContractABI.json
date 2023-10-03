@@ -131,6 +131,18 @@
                 "internalType": "address",
                 "name": "proposer",
                 "type": "address"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "proposalId",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "proposalTimestamp",
+                "type": "uint256"
             }
         ],
         "name": "DecentravellerRuleDeletionProposed",
@@ -161,6 +173,12 @@
                 "indexed": false,
                 "internalType": "uint256",
                 "name": "proposalId",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "proposalTimestamp",
                 "type": "uint256"
             }
         ],
@@ -298,6 +316,19 @@
     {
         "inputs": [],
         "name": "getCurrentPlaceId",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "getCurrentRuleId",
         "outputs": [
             {
                 "internalType": "uint256",
