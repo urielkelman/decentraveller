@@ -1,16 +1,16 @@
 import { BlockchainAdapter, blockchainAdapter } from './../blockhainAdapter';
+import { apiAdapter, ApiAdapter } from '../../api/apiAdapter';
 import { RuleResponse, RuleStatus } from '../../api/response/rules';
 import { ethers } from 'ethers';
 import { BlockchainProposalStatus } from '../types';
 import { decentravellerMainContract } from '../contracts/decentravellerMainContract';
 import { BlockchainByChainId } from '../config';
 import { DEFAULT_CHAIN_ID } from '../../context/AppContext';
-import { apiAdapter, ApiAdapter } from '../../api/apiAdapter';
 
 class RulesService {
     private blockchainAdapter: BlockchainAdapter;
     private apiAdapter: ApiAdapter;
-    constructor(blockchainAdapter: BlockchainAdapter, apiAdapter: ApiAdapter) {
+    constructor() {
         this.blockchainAdapter = blockchainAdapter;
         this.apiAdapter = apiAdapter;
     }
@@ -119,7 +119,7 @@ class RulesService {
     }
 
     async getFormerRules(): Promise<RuleResponse[]> {
-        return (await this.apiAdapter.getRules(RuleStatus.APPROVED)).rules;
+        return (await apiAdapter.getRules(RuleStatus.APPROVED)).rules;
     }
 
     async hasVotedInProposal(
@@ -127,19 +127,19 @@ class RulesService {
         proposalId: string,
         address: string,
     ): Promise<boolean> {
-        return this.blockchainAdapter.hasVotedInProposal(web3Provider, proposalId, address);
+        return blockchainAdapter.hasVotedInProposal(web3Provider, proposalId, address);
     }
 
     async proposeNewRule(web3Provider: ethers.providers.Web3Provider, ruleStatement: string): Promise<string> {
-        return this.blockchainAdapter.proposeNewRule(web3Provider, ruleStatement);
+        return blockchainAdapter.proposeNewRule(web3Provider, ruleStatement);
     }
 
     async voteAgainstProposal(web3Provider: ethers.providers.Web3Provider, proposalId: string): Promise<string> {
-        return this.blockchainAdapter.voteInProposal(web3Provider, proposalId, 0);
+        return blockchainAdapter.voteInProposal(web3Provider, proposalId, 0);
     }
 
     async voteInFavorOfProposal(web3Provider: ethers.providers.Web3Provider, proposalId: string): Promise<string> {
-        return this.blockchainAdapter.voteInProposal(web3Provider, proposalId, 1);
+        return blockchainAdapter.voteInProposal(web3Provider, proposalId, 1);
     }
 
     async queueNewRule(web3Provider: ethers.providers.Web3Provider, rule: RuleResponse): Promise<string> {
@@ -148,7 +148,7 @@ class RulesService {
             rule,
             async (contract) => (await contract.populateTransaction.approveProposedRule(rule.ruleId)).data!,
             (web3Provider, address, calldata, hash) =>
-                this.blockchainAdapter.queueProposal(web3Provider, address, calldata, hash),
+                blockchainAdapter.queueProposal(web3Provider, address, calldata, hash),
         );
     }
 
@@ -158,12 +158,12 @@ class RulesService {
             rule,
             async (contract) => (await contract.populateTransaction.approveProposedRule(rule.ruleId)).data!,
             (web3Provider, address, calldata, hash) =>
-                this.blockchainAdapter.executeProposal(web3Provider, address, calldata, hash),
+                blockchainAdapter.executeProposal(web3Provider, address, calldata, hash),
         );
     }
 
     async proposeRuleDeletion(web3Provider: ethers.providers.Web3Provider, ruleId: number): Promise<string> {
-        return this.blockchainAdapter.proposeRuleDeletion(web3Provider, ruleId);
+        return blockchainAdapter.proposeRuleDeletion(web3Provider, ruleId);
     }
 
     async queueRuleDeletion(web3Provider: ethers.providers.Web3Provider, rule: RuleResponse): Promise<string> {
@@ -172,7 +172,7 @@ class RulesService {
             rule,
             async (contract) => (await contract.populateTransaction.deleteRule(rule.ruleId)).data!,
             (web3Provider, address, calldata, hash) =>
-                this.blockchainAdapter.queueProposal(web3Provider, address, calldata, hash),
+                blockchainAdapter.queueProposal(web3Provider, address, calldata, hash),
         );
     }
 
@@ -182,7 +182,7 @@ class RulesService {
             rule,
             async (contract) => (await contract.populateTransaction.deleteRule(rule.ruleId)).data!,
             (web3Provider, address, calldata, hash) =>
-                this.blockchainAdapter.executeProposal(web3Provider, address, calldata, hash),
+                blockchainAdapter.executeProposal(web3Provider, address, calldata, hash),
         );
     }
 
@@ -200,7 +200,7 @@ class RulesService {
         try {
             const allRulesWithProposals = await Promise.all(
                 allRulesWithStatus.map(async (rule) => {
-                    const proposalStatus = await this.blockchainAdapter.getProposalState(web3Provider, rule.proposalId);
+                    const proposalStatus = await blockchainAdapter.getProposalState(web3Provider, rule.proposalId);
                     return { proposalStatus, rule };
                 }),
             );
@@ -238,6 +238,6 @@ class RulesService {
     }
 }
 
-const rulesService = new RulesService(blockchainAdapter, apiAdapter);
+const rulesService = new RulesService();
 
 export { rulesService, RulesService };

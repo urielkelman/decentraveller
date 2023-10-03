@@ -298,6 +298,6 @@ class BlockchainAdapter {
     }
 }
 
-const blockchainAdapter = new BlockchainAdapter();
+const mockBlockchainAdapter = new BlockchainAdapter();
 
-export { blockchainAdapter, BlockchainAdapter };
+export { mockBlockchainAdapter, BlockchainAdapter };

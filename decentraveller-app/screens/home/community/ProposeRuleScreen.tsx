@@ -1,12 +1,12 @@
 import React, {useState} from 'react';
 import { View, Text, TextInput, StyleSheet, ScrollView } from 'react-native';
 import DecentravellerButton from '../../../commons/components/DecentravellerButton';
-import {mockRulesService} from "../../../blockchain/service/mockRulesService";
 import {useAppContext} from "../../../context/AppContext";
 import {proposeRuleStyles} from "../../../styles/communityStyles";
 import {communityWording} from "./wording";
+import {rulesService} from "../../../blockchain/service/rulesService";
+import {useNavigation} from "@react-navigation/native";
 
-const rulesService = mockRulesService;
 
 const ProposeRuleScreen = () => {
     const [ruleStatement, setRuleStatement] = useState('');
@@ -15,6 +15,7 @@ const ProposeRuleScreen = () => {
     const handleProposeRule = async () => {
         console.log("About to create a new rule")
         await rulesService.proposeNewRule(web3Provider, ruleStatement)
+        useNavigation().goBack()
     };
 
     return (

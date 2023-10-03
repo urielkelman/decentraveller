@@ -6,9 +6,15 @@ import { Rule } from './types';
 import { RouteProp, useNavigation } from '@react-navigation/native';
 import { RuleStatus } from '../../../api/response/rules';
 import { useAppContext } from '../../../context/AppContext';
-import { rulesService } from '../../../blockchain/service/rulesService';
 import { BlockchainProposalStatus } from '../../../blockchain/types';
 import { communityWording } from './wording';
+import {StackNavigationProp} from "@react-navigation/stack";
+import {HomeStackScreens} from "../HomeNavigator";
+import DecentravellerInformativeModal from "../../../commons/components/DecentravellerInformativeModal";
+import {rulesService} from "../../../blockchain/service/rulesService";
+
+
+type RuleDetailScreenProp = StackNavigationProp<HomeStackScreens, 'VotingResultsScreen'>;
 
 type RuleDetailParams = {
     rule: Rule | null | undefined;
@@ -27,14 +33,21 @@ const RuleDetailScreen: React.FC<RuleDetailProps> = ({ route }) => {
     const [titleLabel, setTitleLabel] = useState('');
     const [actionExplanationLabel, setActionExplanationLabel] = useState('');
     const [statusExplanationLabel, setStatusExplanationLabel] = useState('')
+    const [showSuccessVotingModal, setShowSuccessVotingModal] = React.useState<boolean>(false);
+    const [showAlreadyVotedModal, setShowAlreadyVotedModal] = React.useState<boolean>(false);
     const { web3Provider, connectionContext } = useAppContext();
     const [contentComponent, setContentComponent] = useState<React.ReactNode | null>(null);
-    const navigation = useNavigation();
+    const navigation = useNavigation<RuleDetailScreenProp>();
     const { rule } = route.params;
 
     useEffect(() => {
         renderContentByRuleStatus(rule.ruleStatus);
     }, [rule.ruleStatus]);
+
+    const onCloseModal = () => {
+        setShowSuccessVotingModal(false);
+        setShowAlreadyVotedModal(false);
+    };
 
     const getActionByStatus = (): RuleAction => {
         const { ruleStatus, ruleSubStatus } = rule;
@@ -124,7 +137,11 @@ const RuleDetailScreen: React.FC<RuleDetailProps> = ({ route }) => {
         if (!hasVotedInProposal) {
             const voteTxHash = await voteFunction(web3Provider, rule.proposalId);
             console.log('voteTxHash', voteTxHash);
+        } else {
+            setShowAlreadyVotedModal(true)
+            return
         }
+        setShowSuccessVotingModal(true)
     };
 
     const renderVoting = () => {
@@ -160,6 +177,17 @@ const RuleDetailScreen: React.FC<RuleDetailProps> = ({ route }) => {
                     ]}
                 >
                     <Image source={require('../../../assets/images/contra.png')} style={ruleDetailStyles.buttonImage} />
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                    onPress={() => navigation.navigate("VotingResultsScreen")}
+                    disabled={rule.ruleSubStatus === BlockchainProposalStatus.PENDING}
+                    style={[
+                        ruleDetailStyles.buttonMargin,
+                        rule.ruleSubStatus === BlockchainProposalStatus.PENDING && ruleDetailStyles.disabledButton,
+                    ]}
+                >
+                    <Image source={require('../../../assets/images/results.png')} style={ruleDetailStyles.buttonImage} />
                 </TouchableOpacity>
             </View>
         );
@@ -230,6 +258,20 @@ const RuleDetailScreen: React.FC<RuleDetailProps> = ({ route }) => {
                 </View>
             </View>
             {contentComponent}
+
+            <DecentravellerInformativeModal
+                informativeText={`Vote registered gracefully`}
+                visible={showSuccessVotingModal}
+                closeModalText={'Close'}
+                handleCloseModal={() => onCloseModal()}
+            />
+
+            <DecentravellerInformativeModal
+                informativeText={`You have already voted for this proposal`}
+                visible={showAlreadyVotedModal}
+                closeModalText={'Close'}
+                handleCloseModal={() => onCloseModal()}
+            />
         </View>
     );
 

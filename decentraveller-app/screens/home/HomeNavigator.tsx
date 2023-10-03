@@ -19,6 +19,7 @@ import DecentravellerRulesList from './community/DecentravellerRulesList';
 import { Rule } from './community/types';
 import RuleDetailScreen from './community/RuleDeatailScreen';
 import ProposeRuleScreen from "./community/ProposeRuleScreen";
+import VotingResultsScreen from "./community/VotingResultsScreen";
 
 export type HomeStackScreens = {
     LeftSideBar: undefined;
@@ -37,6 +38,7 @@ export type HomeStackScreens = {
     DecentravellerRulesList: undefined;
     RuleDetailScreen: { rule: Rule; action: () => void; inFavor: () => void; against: () => void };
     ProposeRuleScreen: undefined;
+    VotingResultsScreen: undefined;
 
 };
 
@@ -161,6 +163,14 @@ const HomeNavigator = () => {
                     component={ProposeRuleScreen}
                     options={{
                         title: 'Propose rule',
+                        headerShown: true,
+                    }}
+                />
+                <HomeStackNavigator.Screen
+                    name="VotingResultsScreen"
+                    component={VotingResultsScreen}
+                    options={{
+                        title: 'Voting results',
                         headerShown: true,
                     }}
                 />

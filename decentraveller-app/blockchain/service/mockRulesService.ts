@@ -307,7 +307,7 @@ class RulesService {
         proposalId: string,
         address: string,
     ): Promise<boolean> {
-        return false;
+        return true;
     }
 
     async proposeNewRule(web3Provider: ethers.providers.Web3Provider, ruleStatement: string): Promise<string> {
