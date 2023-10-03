@@ -83,7 +83,7 @@ const DecentravellerInitialScreen = () => {
             case 'Login':
                 return <LoginNavigator />;
             case 'Registration':
-                return <RegistrationNavigator />;
+                return <RegistrationNavigator onSuccess={onSuccessfulRegistration} />;
         }
     };
 
