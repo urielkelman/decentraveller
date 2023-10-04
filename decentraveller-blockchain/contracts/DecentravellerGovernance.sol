@@ -19,6 +19,7 @@ contract DecentravellerGovernance is
     GovernorTimelockControl,
     GovernorCompatibilityBravo
 {
+
     constructor(
         IVotes token,
         TimelockController _timelock
@@ -112,5 +113,9 @@ contract DecentravellerGovernance is
         returns (bool)
     {
         return super.supportsInterface(interfaceId);
+    }
+
+    function getVotes(address account) external view returns (uint256){
+        return token.getVotes(account);
     }
 }

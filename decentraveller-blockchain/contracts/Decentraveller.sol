@@ -292,4 +292,8 @@ contract Decentraveller {
         }
         return rule;
     }
+
+    function getTokens(address account) external view returns (uint256){
+        return governance.getVotes(account);
+    }
 }

@@ -8,6 +8,7 @@ import { apiAdapter } from '../../../api/apiAdapter';
 import { ImageGallery } from '@georstat/react-native-image-gallery';
 import { UserShowProps } from './UserProfileScreen';
 import LoadingComponent from '../../../commons/components/DecentravellerLoading';
+import { blockchainAdapter } from '../../../blockchain/blockhainAdapter';
 
 export type UserProfileScreens = {
     UserProfileScreen: undefined;
@@ -16,15 +17,16 @@ export type UserProfileScreens = {
 const HomeStackNavigator = createStackNavigator<UserProfileScreens>();
 
 const adapter = apiAdapter;
+const contractAdapter = blockchainAdapter;
 
 const MyProfileScreen = ({ navigation }) => {
     const { userNickname, connectionContext, userCreatedAt, userInterest } = useAppContext();
-
     const [selectedImage, setSelectedImage] = useState(null);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
     const [loading, setLoading] = React.useState<boolean>(true);
     const [user, setUser] = React.useState<UserShowProps>(null);
+    const { web3Provider } = useAppContext();
 
     const openGallery = () => setIsOpen(true);
     const closeGallery = () => setIsOpen(false);
@@ -65,8 +67,8 @@ const MyProfileScreen = ({ navigation }) => {
                     walletAddress: connectionContext.connectedAddress,
                     createdAt: userData.createdAt,
                     interest: userData.interest,
-                    tokens: 67,
-                    sharedLocation: 'Yes',
+                    tokens: Number(await contractAdapter.getTokens(web3Provider,
+                        connectionContext.connectedAddress)),
                     profileImageUrl: apiAdapter.getProfileAvatarUrl(connectionContext.connectedAddress, true),
                 };
                 setUser(user);
@@ -78,7 +80,8 @@ const MyProfileScreen = ({ navigation }) => {
                 walletAddress: connectionContext.connectedAddress,
                 createdAt: userCreatedAt.value,
                 interest: userInterest.value,
-                tokens: 67,
+                tokens: Number(await contractAdapter.getTokens(web3Provider,
+                    connectionContext.connectedAddress)),
                 sharedLocation: 'Yes',
                 profileImageUrl: apiAdapter.getProfileAvatarUrl(connectionContext.connectedAddress, true),
             };
@@ -122,10 +125,6 @@ const MyProfileScreen = ({ navigation }) => {
                 <View style={userProfileMainStyles.spacedBetweenView}>
                     <Text style={userProfileMainStyles.leftText}>Main interest</Text>
                     <Text style={userProfileMainStyles.rightText}>{user.interest}</Text>
-                </View>
-                <View style={userProfileMainStyles.spacedBetweenView}>
-                    <Text style={userProfileMainStyles.leftText}>Shared Location</Text>
-                    <Text style={userProfileMainStyles.rightText}>{user.sharedLocation}</Text>
                 </View>
                 <View style={userProfileMainStyles.spacedBetweenView}>
                     <Text style={userProfileMainStyles.leftText}>DT Tokens</Text>

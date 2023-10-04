@@ -30,6 +30,10 @@ const decentravellerMainContract: DecentravellerContract = {
             functionName: 'createRuleDeletionProposal',
             fullContractABI: mainContractStringfiedABI,
         },
+        getTokens: {
+            functionName: 'getTokens',
+            fullContractABI: mainContractStringfiedABI,
+        }
     },
 };
 

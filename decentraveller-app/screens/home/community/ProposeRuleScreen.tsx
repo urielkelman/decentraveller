@@ -6,20 +6,26 @@ import {proposeRuleStyles} from "../../../styles/communityStyles";
 import {communityWording} from "./wording";
 import {rulesService} from "../../../blockchain/service/rulesService";
 import {useNavigation} from "@react-navigation/native";
+import DecentravellerInformativeModal from '../../../commons/components/DecentravellerInformativeModal';
 
 
 const ProposeRuleScreen = () => {
     const [ruleStatement, setRuleStatement] = useState('');
     const { web3Provider } = useAppContext();
+    const [showErrorModal, setShowErrorModal] = React.useState<boolean>(false);
 
     const handleProposeRule = async () => {
-        console.log("About to create a new rule")
-        await rulesService.proposeNewRule(web3Provider, ruleStatement)
-        useNavigation().goBack()
+        rulesService.proposeNewRule(web3Provider, ruleStatement).then(
+        (result) => {
+            useNavigation().goBack();
+        },
+        (error) => {
+            setShowErrorModal(true);
+        });
     };
 
     return (
-        <ScrollView contentContainerStyle={proposeRuleStyles.container}>
+        <View style={proposeRuleStyles.container}>
             <Text style={proposeRuleStyles.title}>Propose a new Rule</Text>
             <Text style={proposeRuleStyles.subtitle}>{communityWording.PROPOSE_RULE}</Text>
             <TextInput
@@ -34,7 +40,14 @@ const ProposeRuleScreen = () => {
             <View style={proposeRuleStyles.buttonContainer}>
                 <DecentravellerButton text="Propose Rule" onPress={handleProposeRule} loading={false} />
             </View>
-        </ScrollView>
+            <DecentravellerInformativeModal
+                informativeText={'Error ocurred: Check if you have the required tokens'}
+                visible={showErrorModal}
+                closeModalText={'Close'}
+                handleCloseModal={() => setShowErrorModal(false)}
+            />
+        </View>
+
     );
 };
 
