@@ -139,7 +139,16 @@ describe("Decentraveller governance", function () {
                 .connect(wallet)
                 .castVote(proposalId, vote);
             await voteTx.wait();
+            if (index == 10) {
+                const result = await decentravellerGovernance.proposals(
+                    proposalId
+                );
+                console.log(result);
+            }
         }
+
+        const result = await decentravellerGovernance.proposals(proposalId);
+        console.log(result);
 
         // Increase the evm time for the voting period.
         const votingPeriod = await decentravellerGovernance.votingPeriod();

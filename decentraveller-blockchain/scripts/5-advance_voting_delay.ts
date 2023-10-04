@@ -1,12 +1,6 @@
-import { ethers, getNamedAccounts } from "hardhat";
-import {
-    Decentraveller,
-    DecentravellerGovernance,
-    DecentravellerToken,
-} from "../typechain-types";
-import { createAndFundUserWallets } from "./set_up_dao_participants";
+import { ethers } from "hardhat";
+import { DecentravellerGovernance } from "../typechain-types";
 import { time } from "@nomicfoundation/hardhat-network-helpers";
-import { Wallet } from "ethers";
 
 const WALLET_PRIVATE_KEY =
     "0x5787c71b828644eaf04241e5627f5cb58e197e2fd348f865c5cc25c4de2bdcb1";
@@ -20,7 +14,7 @@ const main = async () => {
 
     // Increase the evm time to start voting.
     const votingDelay = await decentravellerGovernance.votingDelay();
-    await time.increase(votingDelay);
+    await time.increase(votingDelay.add(1));
 };
 
 main()
