@@ -184,4 +184,100 @@ const proposeRuleStyles = StyleSheet.create({
     },
 });
 
-export { communityScreenStyles, ruleDetailStyles, proposeRuleStyles };
+
+const votingResultsStyles = StyleSheet.create({
+    container: {
+        flex: 1,
+        alignItems: 'center',
+        padding: 20,
+        backgroundColor: DECENTRAVELLER_DEFAULT_BACKGROUND_COLOR,
+    },
+    cardContent: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    cardContainer: {
+        backgroundColor: 'white',
+        borderRadius: 10,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 2,
+        elevation: 4,
+        padding: 8,
+        margin: 10,
+    },
+    header: {
+        backgroundColor: 'transparent',
+        padding: 10,
+        borderRadius: 10,
+    },
+    headerText: {
+        fontSize: 18,
+        fontFamily: 'Montserrat_700Bold',
+    },
+    descriptionContainer: {
+        backgroundColor: 'transparent',
+        padding: 10,
+        borderRadius: 10,
+        marginBottom: 20,
+        borderWidth: 2,
+        borderColor: 'black',
+    },
+    description: {
+        fontSize: 24,
+        textAlign: 'center',
+        fontFamily: 'Montserrat_700Bold',
+    },
+    label: {
+        fontSize: 14,
+        marginBottom: 10,
+        fontFamily: 'Montserrat_500Medium',
+    },
+    subtitle: {
+        fontSize: 16,
+        fontFamily: 'Montserrat_400Regular',
+        marginBottom: 20,
+    },
+    explanationText: {
+        fontSize: 14,
+        fontFamily: 'Montserrat_400Regular',
+        marginBottom: 20,
+        maxWidth: '95%',
+    },
+    italic: {
+        fontFamily: 'Montserrat_400Regular',
+    },
+    buttonContainer: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        marginTop: 0,
+    },
+    buttonVoteContainer: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        marginTop: 0,
+    },
+    buttonImage: {
+        width: 100,
+        height: 100,
+        marginTop: 10,
+    },
+    buttonMargin: {
+        marginLeft: 20,
+    },
+    disabledButton: {
+        opacity: 0.1,
+    },
+    icon: {
+        width: 24,
+        height: 24,
+        marginRight: 8,
+        resizeMode: 'contain',
+    },
+    textContainer: {
+        marginLeft: 4,
+    },
+});
+
+export { communityScreenStyles, ruleDetailStyles, proposeRuleStyles, votingResultsStyles };

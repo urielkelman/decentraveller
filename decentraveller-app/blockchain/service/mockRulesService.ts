@@ -1,6 +1,7 @@
 import { RuleResponse, RuleStatus } from '../../api/response/rules';
 import { ethers } from 'ethers';
 import {BlockchainProposalStatus} from "../types";
+import {VotingResultsResponse} from "../../screens/home/community/VotingResultsScreen";
 
 class RulesService {
     async getAllPendingToVote(web3Provider: ethers.providers.Web3Provider): Promise<RuleResponse[]> {
@@ -340,6 +341,17 @@ class RulesService {
 
     async executeRuleDeletion(web3Provider: ethers.providers.Web3Provider, rule: RuleResponse): Promise<string> {
         return '';
+    }
+
+    async getResults(web3Provider: ethers.providers.Web3Provider, proposalId: string): Promise<VotingResultsResponse> {
+        return {
+            favor: 20,
+            against: 10,
+        }
+    }
+
+    async getVotingPower(web3Provider: ethers.providers.Web3Provider, wallet: string): Promise<number> {
+        return 150
     }
 
     private async getRulesWithStatus(ruleStatus: RuleStatus): Promise<RuleResponse[]> {

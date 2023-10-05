@@ -24,7 +24,7 @@ type RuleDetailProps = {
     route: RouteProp<Record<string, RuleDetailParams>, string>;
 };
 
-export type RuleAction = {
+type RuleAction = {
     action: () => {};
     label: string;
 };
@@ -180,7 +180,7 @@ const RuleDetailScreen: React.FC<RuleDetailProps> = ({ route }) => {
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                    onPress={() => navigation.navigate("VotingResultsScreen")}
+                    onPress={() => navigation.navigate("VotingResultsScreen", { rule: rule })}
                     disabled={rule.ruleSubStatus === BlockchainProposalStatus.PENDING}
                     style={[
                         ruleDetailStyles.buttonMargin,

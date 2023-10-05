@@ -38,7 +38,7 @@ export type HomeStackScreens = {
     DecentravellerRulesList: undefined;
     RuleDetailScreen: { rule: Rule; action: () => void; inFavor: () => void; against: () => void };
     ProposeRuleScreen: undefined;
-    VotingResultsScreen: undefined;
+    VotingResultsScreen: { rule: Rule };
 
 };
 
