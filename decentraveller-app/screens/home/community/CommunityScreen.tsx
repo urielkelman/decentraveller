@@ -25,33 +25,29 @@ const CommunityScreen = ({ navigation }) => {
 
         switch (status) {
             case BlockchainUserStatus.PENDING:
-                getRuleFunction = () => {rulesService.getAllPendingToVote(web3Provider)};
-                getRuleDeletedFunction = () =>{rulesService.getAllPendingDeleteToVote(web3Provider)};
-                blockchainStatus = BlockchainProposalStatusNames.PENDING
+                getRuleFunction = () => rulesService.getAllPendingToVote(web3Provider);
+                getRuleDeletedFunction = () => rulesService.getAllPendingDeleteToVote(web3Provider);
+                blockchainStatus = BlockchainProposalStatusNames.PENDING;
                 break;
             case BlockchainUserStatus.ACTIVE:
-                getRuleFunction = () =>{rulesService.getAllInVotingProcess(web3Provider)};
-                getRuleDeletedFunction = () =>{rulesService.getAllDeleteInVotingProcess(web3Provider)};
-                blockchainStatus = BlockchainProposalStatusNames.ACTIVE
-
+                getRuleFunction = () => rulesService.getAllInVotingProcess(web3Provider);
+                getRuleDeletedFunction = () => rulesService.getAllDeleteInVotingProcess(web3Provider);
+                blockchainStatus = BlockchainProposalStatusNames.ACTIVE;
                 break;
             case BlockchainUserStatus.DEFEATED:
-                getRuleFunction = () =>{rulesService.getAllNewDefeated(web3Provider)};
-                getRuleDeletedFunction = () =>{rulesService.getAllDeleteDefeated(web3Provider)};
-                blockchainStatus = BlockchainProposalStatusNames.DEFEATED
-
+                getRuleFunction = () => rulesService.getAllNewDefeated(web3Provider);
+                getRuleDeletedFunction = () => rulesService.getAllDeleteDefeated(web3Provider);
+                blockchainStatus = BlockchainProposalStatusNames.DEFEATED;
                 break;
             case BlockchainUserStatus.SUCCEEDED:
-                getRuleFunction = () =>{rulesService.getAllNewToQueue(web3Provider)};
-                getRuleDeletedFunction = () =>{rulesService.getAllDeleteToQueue(web3Provider)};
-                blockchainStatus = BlockchainProposalStatusNames.SUCCEEDED
-
+                getRuleFunction = () => rulesService.getAllNewToQueue(web3Provider);
+                getRuleDeletedFunction = () => rulesService.getAllDeleteToQueue(web3Provider);
+                blockchainStatus = BlockchainProposalStatusNames.SUCCEEDED;
                 break;
             case BlockchainUserStatus.QUEUED:
-                getRuleFunction = () =>{rulesService.getAllQueued(web3Provider)};
-                getRuleDeletedFunction = () =>{rulesService.getAllDeleteQueued(web3Provider)};
-                blockchainStatus = BlockchainProposalStatusNames.QUEUED
-
+                getRuleFunction = () => rulesService.getAllQueued(web3Provider);
+                getRuleDeletedFunction = () => rulesService.getAllDeleteQueued(web3Provider);
+                blockchainStatus = BlockchainProposalStatusNames.QUEUED;
                 break;
         }
 
@@ -59,10 +55,10 @@ const CommunityScreen = ({ navigation }) => {
     };
     const fetchNonActiveRules = async (getRuleFunction, getRuleDeletedFunction,  status) => {
         try {
-            const nonActiveNewRules: RuleResponse[] = await getRuleFunction(web3Provider);
-            const nonActiveDeleteRules: RuleResponse[] = await getRuleDeletedFunction(web3Provider);
-            //const nonActiveRules = nonActiveNewRules.concat(nonActiveDeleteRules)
-            setNonActiveRules(mapRuleResponsesToRules(nonActiveRules, nonActiveNewRules));
+            const nonActiveNewRules: RuleResponse[] = await getRuleFunction();
+            const nonActiveDeleteRules: RuleResponse[] = await getRuleDeletedFunction();
+            const nonActiveRules = nonActiveNewRules.concat(nonActiveDeleteRules)
+            setNonActiveRules(mapRuleResponsesToRules(nonActiveRules, status));
         } catch (e) {
             console.error("Error fetching non-active rules:", e);
         }
