@@ -3,7 +3,7 @@ import {
     Decentraveller,
     DecentravellerGovernance,
     DecentravellerToken,
-} from "../typechain-types";
+} from "../../typechain-types";
 import { createAndFundUserWallets } from "./set_up_dao_participants";
 import { time } from "@nomicfoundation/hardhat-network-helpers";
 import { Wallet } from "ethers";

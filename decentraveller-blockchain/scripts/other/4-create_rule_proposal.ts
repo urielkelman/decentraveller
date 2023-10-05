@@ -1,5 +1,6 @@
 import { ethers, getNamedAccounts } from "hardhat";
-import { Decentraveller, DecentravellerToken } from "../typechain-types";
+import { Decentraveller, DecentravellerToken } from "../../typechain-types";
+import { createAndFundUserWallets } from "./set_up_dao_participants";
 
 const WALLET_PRIVATE_KEY =
     "0x5787c71b828644eaf04241e5627f5cb58e197e2fd348f865c5cc25c4de2bdcb1";
@@ -38,6 +39,9 @@ const main = async () => {
         .connect(tokenMinterSigner)
         .rewardNewPlace(user.address);
     await rewardWithTokensTx.wait();
+
+    // Create and fund wallets with DECT tokens.
+    await createAndFundUserWallets(decentraveller, decentravellerToken, 20);
 
     // Register proposal.
     const newRuleTx = await decentraveller.createNewRuleProposal(

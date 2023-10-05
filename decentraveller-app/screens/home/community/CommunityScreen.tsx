@@ -10,15 +10,18 @@ import { Rule } from './types';
 import {BlockchainProposalStatus, BlockchainProposalStatusNames, BlockchainUserStatus} from '../../../blockchain/types';
 import { communityWording } from './wording';
 import {rulesService} from "../../../blockchain/service/rulesService";
+import LoadingComponent from '../../../commons/components/DecentravellerLoading';
 
 const CommunityScreen = ({ navigation }) => {
     const { web3Provider } = useAppContext();
     const [communityRules, setCommunityRules] = useState([]);
     const [nonActiveRules, setNonActiveRules] = useState([]);
     const [selectedNonActiveRule, setSelectedNonActiveRule] = useState(BlockchainUserStatus.PENDING);
+    const [loadingProposals, setLoadingProposals] = useState(true);
 
     const handleOptionSelect = async (status) => {
         setSelectedNonActiveRule(status);
+        setLoadingProposals(true);
         let getRuleFunction;
         let getRuleDeletedFunction;
         let blockchainStatus;
@@ -52,6 +55,7 @@ const CommunityScreen = ({ navigation }) => {
         }
 
         await fetchNonActiveRules(getRuleFunction, getRuleDeletedFunction, blockchainStatus);
+        setLoadingProposals(false);
     };
     const fetchNonActiveRules = async (getRuleFunction, getRuleDeletedFunction,  status) => {
         try {
@@ -103,7 +107,7 @@ const CommunityScreen = ({ navigation }) => {
                     <Text style={communityScreenStyles.subtitle}>{communityWording.ACCEPTED_RULES}</Text>
                 </View>
                 <RulesList
-                    rules={mapRulesToString(communityRules).slice(0, 4)}
+                    rules={mapRulesToString(communityRules)}
                     onPress={() =>
                         navigation.navigate('DecentravellerRulesList', {
                             ruleList: communityRules,
@@ -127,16 +131,23 @@ const CommunityScreen = ({ navigation }) => {
                         dropdownStyle={communityScreenStyles.dropdownMenu}
                     />
                 </View>
-                <RulesList
-                    rules={mapRulesToString(nonActiveRules).slice(0, 4)}
-                    onPress={() =>
-                        navigation.navigate('DecentravellerRulesList', {
-                            ruleList: nonActiveRules,
-                            minified: false,
-                            horizontal: false,
-                        })
-                    }
-                />
+                {
+                    loadingProposals ? (
+                        <LoadingComponent />
+                    ) : (
+                        <RulesList
+                            rules={mapRulesToString(nonActiveRules)}
+                            onPress={() =>
+                                navigation.navigate('DecentravellerRulesList', {
+                                    ruleList: nonActiveRules,
+                                    minified: false,
+                                    horizontal: false,
+                                })
+                            }
+                        />
+                    )
+                }
+
             </View>
             <View style={communityScreenStyles.buttonContainer}>
                 <DecentravellerButton

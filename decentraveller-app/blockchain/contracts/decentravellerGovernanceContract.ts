@@ -26,6 +26,14 @@ const decentravellerGovernanceContract: DecentravellerContract = {
             functionName: 'proposalThreshold',
             fullContractABI: governanceStringifiedABI,
         },
+        getVotes: {
+            functionName: 'getVotes',
+            fullContractABI: governanceStringifiedABI,
+        },
+        proposals: {
+            functionName: 'proposals',
+            fullContractABI: governanceStringifiedABI
+        }
     },
 };
 
