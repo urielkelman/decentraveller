@@ -7,10 +7,9 @@ const WALLET_PRIVATE_KEY =
 
 const main = async () => {
     const user = new ethers.Wallet(WALLET_PRIVATE_KEY, ethers.provider);
-    const decentravellerGovernanceC: DecentravellerGovernance =
-        await ethers.getContract("DecentravellerGovernance", user);
+
     const decentravellerGovernance: DecentravellerGovernance =
-        decentravellerGovernanceC;
+        await ethers.getContract("DecentravellerGovernance", user);
 
     // Increase the evm time to start voting.
     const votingDelay = await decentravellerGovernance.votingDelay();
