@@ -10,15 +10,13 @@ import { Rule } from './types';
 import {BlockchainProposalStatus, BlockchainProposalStatusNames, BlockchainUserStatus} from '../../../blockchain/types';
 import { communityWording } from './wording';
 import {rulesService} from "../../../blockchain/service/rulesService";
-import { useFocusEffect } from '@react-navigation/native';
-import { useWalletConnectModal } from '@walletconnect/modal-react-native';
 
 const CommunityScreen = ({ navigation }) => {
     const { web3Provider } = useAppContext();
-    const { address } = useWalletConnectModal();
     const [communityRules, setCommunityRules] = useState([]);
     const [nonActiveRules, setNonActiveRules] = useState([]);
     const [selectedNonActiveRule, setSelectedNonActiveRule] = useState(BlockchainUserStatus.PENDING);
+
     const handleOptionSelect = async (status) => {
         setSelectedNonActiveRule(status);
         let getRuleFunction;
