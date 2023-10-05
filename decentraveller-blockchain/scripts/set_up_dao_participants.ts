@@ -2,7 +2,8 @@ import { Wallet } from "ethers";
 import { Decentraveller, DecentravellerToken } from "../typechain-types";
 import { ethers, getNamedAccounts } from "hardhat";
 
-const mnemonic = "este es el tpp de los pibardos";
+const mnemonic =
+    "powder oppose toe risk patient remember fold vast spike interest night force";
 
 async function createAndFundUserWallets(
     decentraveller: Decentraveller,
