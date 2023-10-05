@@ -32,14 +32,22 @@ const CommunityScreen = ({ navigation }) => {
                         address,
                     );
                     console.log('hasVotedInProposal', hasVotedInProposal);
+                    const votingPower = await rulesService.getVotingPowerForProposal(web3Provider, address, rule.proposedAt)
+                    console.log('votingPower for ' + rule.proposalId  , votingPower.toString())
+                    const currentProposalResult = await rulesService.getProposalResult(web3Provider, rule.proposalId)
+                    console.log('currentProposalResult', currentProposalResult)
                     if (!hasVotedInProposal) {
                         const voteTxHash = await rulesService.voteInFavorOfProposal(web3Provider, rule.proposalId);
                         console.log('voteTxHash', voteTxHash);
                     }
                 }
-
                 const allNewDefeated = await rulesService.getAllNewDefeated(web3Provider);
                 console.log('allNewDefeated', JSON.stringify(allNewDefeated));
+
+                for (const rule of allNewDefeated) {
+                    const currentProposalResult = await rulesService.getProposalResult(web3Provider, rule.proposalId)
+                    console.log('currentProposalResult', currentProposalResult)
+                }
 
                 const allNewToQueue = await rulesService.getAllNewToQueue(web3Provider);
                 console.log('allNewToQueue', JSON.stringify(allNewToQueue));
