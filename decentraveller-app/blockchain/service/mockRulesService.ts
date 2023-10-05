@@ -351,7 +351,7 @@ class RulesService {
     }
 
     async getVotingPower(web3Provider: ethers.providers.Web3Provider, wallet: string): Promise<number> {
-        return 150
+        return 241
     }
 
     private async getRulesWithStatus(ruleStatus: RuleStatus): Promise<RuleResponse[]> {

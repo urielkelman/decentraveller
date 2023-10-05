@@ -9,10 +9,8 @@ import ModalDropdown from 'react-native-modal-dropdown';
 import { Rule } from './types';
 import {BlockchainProposalStatus, BlockchainProposalStatusNames, BlockchainUserStatus} from '../../../blockchain/types';
 import { communityWording } from './wording';
-import {mockRulesService} from "../../../blockchain/service/mockRulesService";
+import {rulesService} from "../../../blockchain/service/rulesService";
 
-
-const rulesService = mockRulesService
 const CommunityScreen = ({ navigation }) => {
     const { web3Provider } = useAppContext();
     const [communityRules, setCommunityRules] = useState([]);

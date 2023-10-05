@@ -233,6 +233,7 @@ const votingResultsStyles = StyleSheet.create({
         fontSize: 14,
         marginBottom: 10,
         fontFamily: 'Montserrat_500Medium',
+        maxWidth: '95%',
     },
     subtitle: {
         fontSize: 16,
@@ -243,7 +244,7 @@ const votingResultsStyles = StyleSheet.create({
         fontSize: 14,
         fontFamily: 'Montserrat_400Regular',
         marginBottom: 20,
-        maxWidth: '95%',
+        maxWidth: '100%',
     },
     italic: {
         fontFamily: 'Montserrat_400Regular',
@@ -251,7 +252,7 @@ const votingResultsStyles = StyleSheet.create({
     buttonContainer: {
         flexDirection: 'row',
         justifyContent: 'center',
-        marginTop: 0,
+        marginTop: -25,
     },
     buttonVoteContainer: {
         flexDirection: 'row',
@@ -277,6 +278,21 @@ const votingResultsStyles = StyleSheet.create({
     },
     textContainer: {
         marginLeft: 4,
+    },
+    legendContainer: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    legendItem: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginRight: 10,
+    },
+    legendColorBox: {
+        width: 10,
+        height: 10,
+        marginRight: 5,
     },
 });
 

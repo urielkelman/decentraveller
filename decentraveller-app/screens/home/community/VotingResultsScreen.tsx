@@ -3,14 +3,12 @@ import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import DecentravellerButton from '../../../commons/components/DecentravellerButton';
 import { Rule } from './types';
 import { RouteProp, useNavigation } from '@react-navigation/native';
-import { RuleStatus } from '../../../api/response/rules';
 import { useAppContext } from '../../../context/AppContext';
-import { rulesService } from '../../../blockchain/service/rulesService';
-import { BlockchainProposalStatus } from '../../../blockchain/types';
-import { communityWording } from './wording';
 import {mockRulesService} from "../../../blockchain/service/mockRulesService";
-import {DECENTRAVELLER_DEFAULT_BACKGROUND_COLOR} from "../../../commons/global";
 import {votingResultsStyles} from "../../../styles/communityStyles";
+import { PieChart } from 'react-native-chart-kit';
+import {communityWording} from "./wording";
+
 
 type VotingResultsParams = {
     rule: Rule | null | undefined;
@@ -25,17 +23,35 @@ export type VotingResultsResponse = {
     against: number;
 };
 
-const ruleService = mockRulesService
+const rulesService = mockRulesService
 
 const VotingResultsScreen: React.FC<RuleDetailProps> = ({ route }) => {
     const { web3Provider, connectionContext } = useAppContext();
     const [favorVotes, setFavorVotes] = useState<number>(0);
     const [againstVotes, setAgainstVotes] = useState<number>(0);
+    const [votingPower, setVotingPower] = useState<number>(0);
     const { rule } = route.params
+
+    const data = [
+        {
+            name: 'Favor',
+            population: favorVotes,
+            color: 'blue',
+            legendFontColor: 'black',
+            legendFontSize: 15,
+        },
+        {
+            name: 'Against',
+            population: againstVotes,
+            color: 'red',
+            legendFontColor: 'black',
+            legendFontSize: 15,
+        },
+    ];
 
     const fetchVotingResults = async (rule: Rule) => {
         try {
-            const {favor, against} = await ruleService.getResults(web3Provider, rule.proposalId)
+            const {favor, against} = await rulesService.getResults(web3Provider, rule.proposalId)
             setFavorVotes(favor)
             setAgainstVotes(against)
         } catch (e) {
@@ -43,7 +59,17 @@ const VotingResultsScreen: React.FC<RuleDetailProps> = ({ route }) => {
         }
     }
 
+    const fetchVotingPower = async () => {
+        try {
+            const votingPowerResponse = await rulesService.getVotingPower(web3Provider, connectionContext.connectedAddress)
+            setVotingPower(votingPowerResponse)
+        } catch (e) {
+
+        }
+    }
+
     useEffect(() => {
+        fetchVotingPower()
         fetchVotingResults(rule);
     }, [rule.ruleStatus]);
 
@@ -53,19 +79,39 @@ const VotingResultsScreen: React.FC<RuleDetailProps> = ({ route }) => {
         <View>
             <View style={votingResultsStyles.cardContainer}>
                 <View>
-                    <Text style={votingResultsStyles.label}>{"The partial results of voting"}</Text>
+                    <Text style={votingResultsStyles.label}>{"Proposal statement: " + rule.ruleStatement}</Text>
                 </View>
             </View>
 
             <View style={votingResultsStyles.cardContainer}>
                 <View style={{flexDirection: 'column',}}>
                     <View style={{flexDirection: 'row',}}>
-                            <Text style={votingResultsStyles.description}>{"Favor"}</Text>
-                            <Text style={[votingResultsStyles.description, {marginLeft:150}]}>{"Against"}</Text>
+                            <Text style={votingResultsStyles.description}>{"Voting results up to date"}</Text>
                     </View>
-                    <View style={{flexDirection: 'row',}}>
-                        <Text style={votingResultsStyles.description}>{favorVotes}</Text>
-                        <Text style={[votingResultsStyles.description, {marginLeft:220}]}>{againstVotes}</Text>
+                </View>
+                <View>
+                    <PieChart
+                        data={data}
+                        width={300}
+                        height={190}
+                        chartConfig={{
+                            backgroundColor: 'white',
+                            backgroundGradientFrom: 'white',
+                            backgroundGradientTo: 'white',
+                            color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+                        }}
+                        accessor="population"
+                        backgroundColor="transparent"
+                        paddingLeft="15"
+                        absolute
+                    />
+                    <View style={votingResultsStyles.legendContainer}>
+                        {data.map((item, index) => (
+                            <View key={index} style={votingResultsStyles.legendItem}>
+                                <View style={[votingResultsStyles.legendColorBox, { backgroundColor: item.color }]} />
+                                <Text>{item.name}</Text>
+                            </View>
+                        ))}
                     </View>
                 </View>
             </View>
@@ -73,19 +119,11 @@ const VotingResultsScreen: React.FC<RuleDetailProps> = ({ route }) => {
             <View style={votingResultsStyles.cardContainer}>
                 <View style={votingResultsStyles.cardContent}>
                     <View style={votingResultsStyles.textContainer}>
-                        <Text style={votingResultsStyles.headerText}>Voting power: 150</Text>
+                        <Text style={votingResultsStyles.headerText}>{`Voting Power: ${votingPower}`}</Text>
                         <Text style={votingResultsStyles.explanationText}>
-                            {"Tu voting power es la fuerza que tiene tu voto para inclinar la votación y depende de tus tokens"}
+                            {communityWording.VOTING_POWER}
                         </Text>
                     </View>
-                </View>
-            </View>
-
-
-
-            <View style={votingResultsStyles.cardContainer}>
-                <View>
-                    <Text style={votingResultsStyles.subtitle}>{"Esta votacion sigue abierta, puedes votar en ella"}</Text>
                 </View>
             </View>
 
@@ -97,5 +135,6 @@ const VotingResultsScreen: React.FC<RuleDetailProps> = ({ route }) => {
     );
 
 };
+
 
 export default VotingResultsScreen;
