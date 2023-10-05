@@ -6,7 +6,6 @@ const SIMULATOR_WALLET_ADDRESS = "0x1C48e99E1de65A9D005A8C07933863569e34CeCB";
 //const SIMULATOR_WALLET_ADDRESS = "0x029e8f4379943026582dd07204F5cb5F67A99074";
 
 const main = async () => {
-    const { tokenOwner, tokenMinter } = await getNamedAccounts();
     const signer = (await ethers.getSigners())[0];
     const tx = await signer.sendTransaction({
         to: SIMULATOR_WALLET_ADDRESS,
@@ -14,39 +13,6 @@ const main = async () => {
     });
 
     await tx.wait();
-
-
-    const decentravellerToken: DecentravellerToken = await ethers.getContractAt(
-        "DecentravellerToken",
-        "0x057ef64e23666f000b34ae31332854acbd1c8544",
-        tokenOwner
-    );
-
-    const tokenMinterSigner = await ethers.getSigner(tokenMinter);
-    var rewardWithTokensTx = await decentravellerToken
-        .connect(tokenMinterSigner)
-        .rewardNewPlace(SIMULATOR_WALLET_ADDRESS);
-    await rewardWithTokensTx.wait();
-
-    rewardWithTokensTx = await decentravellerToken
-        .connect(tokenMinterSigner)
-        .rewardNewPlace(SIMULATOR_WALLET_ADDRESS);
-    await rewardWithTokensTx.wait();
-
-    rewardWithTokensTx = await decentravellerToken
-        .connect(tokenMinterSigner)
-        .rewardNewPlace(SIMULATOR_WALLET_ADDRESS);
-    await rewardWithTokensTx.wait();
-
-    rewardWithTokensTx = await decentravellerToken
-        .connect(tokenMinterSigner)
-        .rewardNewPlace(SIMULATOR_WALLET_ADDRESS);
-    await rewardWithTokensTx.wait();
-
-    rewardWithTokensTx = await decentravellerToken
-    .connect(tokenMinterSigner)
-    .rewardNewPlace(SIMULATOR_WALLET_ADDRESS);
-    await rewardWithTokensTx.wait();
 };
 
 main()

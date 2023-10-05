@@ -22,6 +22,10 @@ const decentravellerGovernanceContract: DecentravellerContract = {
             functionName: 'queue',
             fullContractABI: governanceStringifiedABI,
         },
+        proposalThreshold: {
+            functionName: 'proposalThreshold',
+            fullContractABI: governanceStringifiedABI,
+        },
     },
 };
 

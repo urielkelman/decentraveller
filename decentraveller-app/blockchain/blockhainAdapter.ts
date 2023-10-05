@@ -202,6 +202,23 @@ class BlockchainAdapter {
         }
     }
 
+    async proposalTreshold(
+        web3Provider: ethers.providers.Web3Provider
+    ): Promise<bigint> {
+        try {
+            const blockchain: Blockchain = BlockchainByChainId[DEFAULT_CHAIN_ID];
+            const governanceAddress: string = decentravellerGovernanceContract.addressesByBlockchain[blockchain];
+            const decentravellerGovernance = new ethers.Contract(
+                governanceAddress,
+                decentravellerGovernanceContract.fullContractABI,
+                web3Provider,
+            );
+            return await decentravellerGovernance.proposalThreshold();
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
     async proposeNewRule(web3Provider: ethers.providers.Web3Provider, ruleStatement: string): Promise<string> {
         try {
             return this.populateAndSend(
