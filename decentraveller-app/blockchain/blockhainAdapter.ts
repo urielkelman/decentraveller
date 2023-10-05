@@ -7,7 +7,7 @@ import { DEFAULT_CHAIN_ID } from '../context/AppContext';
 import { decentravellerPlaceContract } from './contracts/decentravellerPlaceContract';
 import { decentravellerMainContract } from './contracts/decentravellerMainContract';
 import { decentravellerPlaceFactoryContract } from './contracts/decentravellerPlaceFactoryABI';
-import { BlockchainProposalStatus } from './types';
+import { BlockchainProposalResult, BlockchainProposalStatus } from './types';
 import { decentravellerGovernanceContract } from './contracts/decentravellerGovernanceContract';
 
 const BLOCKCHAIN_TIMEOUT_IN_MILLIS = 100000;
@@ -290,6 +290,52 @@ class BlockchainAdapter {
         proposalHash,
     ): Promise<string> {
         return this.executeProposalAction(web3Provider, targetContractAddress, txCalldata, proposalHash, 'execute');
+    }
+
+    async getVotesForTimePoint(
+        web3Provider: ethers.providers.Web3Provider,
+        address: string,
+        timePoint: number,
+    ): Promise<number> {
+        try {
+            const blockchain: Blockchain = BlockchainByChainId[DEFAULT_CHAIN_ID];
+            const contractFunction: ContractFunction = decentravellerGovernanceContract.functions['getVotes'];
+
+            const governanceAddress: string = decentravellerGovernanceContract.addressesByBlockchain[blockchain];
+            const decentravellerGovernance = new ethers.Contract(
+                governanceAddress,
+                contractFunction.fullContractABI,
+                web3Provider,
+            );
+            return await decentravellerGovernance.getVotes(address, timePoint);
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    async getProposalResult(
+        web3Provider: ethers.providers.Web3Provider,
+        proposalId: string,
+    ): Promise<BlockchainProposalResult> {
+        try {
+            const blockchain: Blockchain = BlockchainByChainId[DEFAULT_CHAIN_ID];
+            const contractFunction: ContractFunction = decentravellerGovernanceContract.functions['proposals'];
+
+            const governanceAddress: string = decentravellerGovernanceContract.addressesByBlockchain[blockchain];
+            const decentravellerGovernance = new ethers.Contract(
+                governanceAddress,
+                contractFunction.fullContractABI,
+                web3Provider,
+            );
+            const result = await decentravellerGovernance.proposals(ethers.BigNumber.from(proposalId));
+            console.log(result)
+            return {
+                ForVotes: result[5].toNumber(),
+                AgainstVotes: result[6].toNumber()
+            }
+        } catch (e) {
+            console.log(e);
+        }
     }
 }
 

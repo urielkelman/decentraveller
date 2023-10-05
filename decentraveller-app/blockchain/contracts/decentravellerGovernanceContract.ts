@@ -22,6 +22,14 @@ const decentravellerGovernanceContract: DecentravellerContract = {
             functionName: 'queue',
             fullContractABI: governanceStringifiedABI,
         },
+        getVotes: {
+            functionName: 'getVotes',
+            fullContractABI: governanceStringifiedABI,
+        },
+        proposals: {
+            functionName: 'proposals',
+            fullContractABI: governanceStringifiedABI
+        }
     },
 };
 
