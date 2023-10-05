@@ -71,6 +71,15 @@ class RulesService {
         return (await apiAdapter.getRules(RuleStatus.APPROVED)).rules;
     }
 
+    async getVotingPowerForProposal(web3Provider: ethers.providers.Web3Provider, address: string, proposedAt: string): Promise<number> {
+        const proposalBlockTimePoint = Math.floor(new Date(proposedAt).getTime() / 1000)
+        return blockchainAdapter.getVotesForTimePoint(web3Provider, address, proposalBlockTimePoint)
+    }
+
+    async getProposalResult(web3Provider: ethers.providers.Web3Provider, proposalId: string): Promise<any> {
+        return blockchainAdapter.getProposalResult(web3Provider, proposalId)
+    }
+
     async hasVotedInProposal(
         web3Provider: ethers.providers.Web3Provider,
         proposalId: string,

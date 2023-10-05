@@ -11,7 +11,7 @@ if (Constants.deviceName === 'Simulator' || Constants.deviceName.includes('Emula
 } else {
     API_ENDPOINT = 'http://192.168.1.3:8000';
     //API_ENDPOINT = 'http://192.168.1.115:8000';
-    JSON_RPC_URL = 'https://dtblockchainls.loca.lt/';
+    JSON_RPC_URL = 'https://dtblockchainls.loca.lt';
 }
 
 export const FORWARD_GEOCODING_ENDPOINT = '/geocoding/forward';
