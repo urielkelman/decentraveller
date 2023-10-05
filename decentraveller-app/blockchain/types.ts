@@ -8,3 +8,8 @@ export enum BlockchainProposalStatus {
     EXPIRED = 6,
     EXECUTED = 7,
 }
+
+export type BlockchainProposalResult = {
+    ForVotes: number;
+    AgainstVotes: number;
+}
