@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Text, View } from 'react-native';
 import DecentravellerButton from '../../../commons/components/DecentravellerButton';
 import { Rule } from './types';
 import { RouteProp, useNavigation } from '@react-navigation/native';
@@ -10,7 +10,10 @@ import { PieChart } from 'react-native-chart-kit';
 import { communityWording } from './wording';
 import DecentravellerInformativeModal from '../../../commons/components/DecentravellerInformativeModal';
 import LoadingComponent from '../../../commons/components/DecentravellerLoading';
-
+import DecentravellerProgressBar from '../../../commons/components/DecentravellerProgressBar';
+import {
+    DECENTRAVELLER_DEFAULT_CONTRAST_COLOR,
+} from '../../../commons/global';
 
 type VotingResultsParams = {
     rule: Rule | null | undefined;
@@ -33,6 +36,7 @@ const VotingResultsScreen: React.FC<RuleDetailProps> = ({ route }) => {
     const [showError, setShowError] = React.useState<boolean>(false);
     const [favorVotes, setFavorVotes] = useState<number>(0);
     const [againstVotes, setAgainstVotes] = useState<number>(0);
+    const [quorumVotes, setQuorumVotes] = useState<number>(0);
     const [votingPower, setVotingPower] = useState<number>(0);
     const { rule } = route.params;
 
@@ -40,14 +44,14 @@ const VotingResultsScreen: React.FC<RuleDetailProps> = ({ route }) => {
         {
             name: 'Favor',
             population: favorVotes,
-            color: 'blue',
+            color: '#8D8CFF',
             legendFontColor: 'black',
             legendFontSize: 15,
         },
         {
             name: 'Against',
             population: againstVotes,
-            color: 'red',
+            color: '#FF7978',
             legendFontColor: 'black',
             legendFontSize: 15,
         },
@@ -59,6 +63,8 @@ const VotingResultsScreen: React.FC<RuleDetailProps> = ({ route }) => {
             const proposalResult = await blockchainRulesService.getProposalResult(web3Provider, rule.proposalId);
             setFavorVotes(proposalResult.ForVotes);
             setAgainstVotes(proposalResult.AgainstVotes);
+            const timepointQuorum = await blockchainRulesService.getTimepointQuorum(web3Provider, rule.proposedAt)
+            setQuorumVotes(timepointQuorum)
         } catch (e) {
             setShowError(true);
             console.log(e);
@@ -86,18 +92,18 @@ const VotingResultsScreen: React.FC<RuleDetailProps> = ({ route }) => {
 
     const componentToShow = (
         <View>
-            <View style={votingResultsStyles.cardContainer}>
-                <View>
-                    <Text style={votingResultsStyles.label}>{'Proposal statement: ' + rule.ruleStatement}</Text>
-                </View>
-            </View>
 
             <View style={votingResultsStyles.cardContainer}>
-                <View style={{ flexDirection: 'column' }}>
-                    <View style={{ flexDirection: 'row' }}>
-                        <Text style={votingResultsStyles.description}>{'Voting results up to date'}</Text>
-                    </View>
-                </View>
+                <Text style={votingResultsStyles.description}>Votes to quorum</Text>
+                <DecentravellerProgressBar
+                    progress={(favorVotes + againstVotes)/quorumVotes}
+                    height={20}
+                     color={DECENTRAVELLER_DEFAULT_CONTRAST_COLOR}
+                     unfilledColor={"rgba(200, 200, 200, 1)"}
+                    label={`${favorVotes + againstVotes}/${quorumVotes}`}/>
+            </View>
+            <View style={votingResultsStyles.cardContainer}>
+                <Text style={votingResultsStyles.description}>Updated voting results</Text>
                 <View>
                     <PieChart
                         data={data}
@@ -111,8 +117,7 @@ const VotingResultsScreen: React.FC<RuleDetailProps> = ({ route }) => {
                         }}
                         accessor='population'
                         backgroundColor='transparent'
-                        paddingLeft='15'
-                        absolute
+                        paddingLeft='15' absolute
                     />
                     <View style={votingResultsStyles.legendContainer}>
                         {data.map((item, index) => (

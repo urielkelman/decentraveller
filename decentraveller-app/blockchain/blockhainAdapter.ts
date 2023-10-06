@@ -344,13 +344,13 @@ class BlockchainAdapter {
         }
     }
 
-    async getProposalResult(
+    async getTimepointQuorum(
         web3Provider: ethers.providers.Web3Provider,
-        proposalId: string,
-    ): Promise<BlockchainProposalResult> {
+        timePoint: number,
+    ): Promise<number> {
         try {
             const blockchain: Blockchain = BlockchainByChainId[DEFAULT_CHAIN_ID];
-            const contractFunction: ContractFunction = decentravellerGovernanceContract.functions['proposals'];
+            const contractFunction: ContractFunction = decentravellerGovernanceContract.functions['quorum'];
 
             const governanceAddress: string = decentravellerGovernanceContract.addressesByBlockchain[blockchain];
             const decentravellerGovernance = new ethers.Contract(
@@ -358,10 +358,30 @@ class BlockchainAdapter {
                 contractFunction.fullContractABI,
                 web3Provider,
             );
-            const result = await decentravellerGovernance.proposals(ethers.BigNumber.from(proposalId));
+            return Number(await decentravellerGovernance.quorum(timePoint));
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    async getProposalResult(
+        web3Provider: ethers.providers.Web3Provider,
+        proposalId: string,
+    ): Promise<BlockchainProposalResult> {
+        try {
+            const blockchain: Blockchain = BlockchainByChainId[DEFAULT_CHAIN_ID];
+            const contractFunction: ContractFunction = decentravellerGovernanceContract.functions['proposalVotes'];
+
+            const governanceAddress: string = decentravellerGovernanceContract.addressesByBlockchain[blockchain];
+            const decentravellerGovernance = new ethers.Contract(
+                governanceAddress,
+                contractFunction.fullContractABI,
+                web3Provider,
+            );
+            const result = await decentravellerGovernance.proposalVotes(ethers.BigNumber.from(proposalId));
             return {
-                ForVotes: Number(result[6]),
-                AgainstVotes: Number(result[7])
+                ForVotes: Number(result[1]),
+                AgainstVotes: Number(result[0])
             }
         } catch (e) {
             console.log(e);

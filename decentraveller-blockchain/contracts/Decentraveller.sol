@@ -294,6 +294,6 @@ contract Decentraveller {
     }
 
     function getTokens(address account) external view returns (uint256){
-        return governance.getVotes(account);
+        return governance.currentVotes(account);
     }
 }

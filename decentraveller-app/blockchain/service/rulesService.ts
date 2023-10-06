@@ -131,6 +131,11 @@ class RulesService {
         return blockchainAdapter.getProposalResult(web3Provider, proposalId)
     }
 
+    async getTimepointQuorum(web3Provider: ethers.providers.Web3Provider, proposedAt: string){
+        const proposalBlockTimePoint = Math.floor(new Date(proposedAt).getTime() / 1000)
+        return blockchainAdapter.getTimepointQuorum(web3Provider, proposalBlockTimePoint)
+    }
+
     async hasVotedInProposal(
         web3Provider: ethers.providers.Web3Provider,
         proposalId: string,

@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { DECENTRAVELLER_DEFAULT_BACKGROUND_COLOR } from '../commons/global';
-import {Montserrat_700Bold} from "@expo-google-fonts/montserrat";
+import { Montserrat_700Bold } from '@expo-google-fonts/montserrat';
 
 const communityScreenStyles = StyleSheet.create({
     container: {
@@ -141,7 +141,7 @@ const ruleDetailStyles = StyleSheet.create({
         resizeMode: 'contain',
     },
     textContainer: {
-        marginLeft: 4
+        marginLeft: 4,
     },
     cardContent: {
         flexDirection: 'row',
@@ -291,6 +291,13 @@ const votingResultsStyles = StyleSheet.create({
         width: 10,
         height: 10,
         marginRight: 5,
+    },
+    quorumProgressBar: {
+        width: '100%',
+        marginTop: 10,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        fontFamily: 'Montserrat_400Regular',
     },
 });
 

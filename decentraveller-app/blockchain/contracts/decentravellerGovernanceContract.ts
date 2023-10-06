@@ -30,8 +30,12 @@ const decentravellerGovernanceContract: DecentravellerContract = {
             functionName: 'getVotes',
             fullContractABI: governanceStringifiedABI,
         },
-        proposals: {
-            functionName: 'proposals',
+        proposalVotes: {
+            functionName: 'proposalVotes',
+            fullContractABI: governanceStringifiedABI
+        },
+        quorum: {
+            functionName: 'quorum',
             fullContractABI: governanceStringifiedABI
         }
     },
