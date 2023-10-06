@@ -2,7 +2,7 @@ import { BlockchainAdapter, blockchainAdapter } from './../blockhainAdapter';
 import { apiAdapter, ApiAdapter } from '../../api/apiAdapter';
 import { RuleResponse, RuleStatus } from '../../api/response/rules';
 import { ethers } from 'ethers';
-import { BlockchainProposalStatus } from '../types';
+import { BlockchainProposalResult, BlockchainProposalStatus } from '../types';
 import { decentravellerMainContract } from '../contracts/decentravellerMainContract';
 import { BlockchainByChainId } from '../config';
 import { DEFAULT_CHAIN_ID } from '../../context/AppContext';
@@ -127,7 +127,7 @@ class RulesService {
         return blockchainAdapter.getVotesForTimePoint(web3Provider, address, proposalBlockTimePoint)
     }
 
-    async getProposalResult(web3Provider: ethers.providers.Web3Provider, proposalId: string): Promise<any> {
+    async getProposalResult(web3Provider: ethers.providers.Web3Provider, proposalId: string): Promise<BlockchainProposalResult> {
         return blockchainAdapter.getProposalResult(web3Provider, proposalId)
     }
 

@@ -85,6 +85,7 @@ const CommunityScreen = ({ navigation }) => {
             ruleStatement: ruleResponse.ruleStatement,
             ruleStatus: ruleResponse.ruleStatus,
             ruleSubStatus: BlockchainProposalStatus[status],
+            proposedAt: ruleResponse.proposedAt
         };
 
         return rule;

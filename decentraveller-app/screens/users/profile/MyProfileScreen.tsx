@@ -21,7 +21,6 @@ const contractAdapter = blockchainAdapter;
 
 const MyProfileScreen = ({ navigation }) => {
     const { userNickname, connectionContext, userCreatedAt, userInterest } = useAppContext();
-    const [selectedImage, setSelectedImage] = useState(null);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
     const [loading, setLoading] = React.useState<boolean>(true);

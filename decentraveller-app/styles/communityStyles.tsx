@@ -93,12 +93,10 @@ const ruleDetailStyles = StyleSheet.create({
     subtitle: {
         fontSize: 16,
         fontFamily: 'Montserrat_400Regular',
-        marginBottom: 20,
     },
     explanationText: {
         fontSize: 14,
         fontFamily: 'Montserrat_400Regular',
-        marginBottom: 20,
     },
     italic: {
         fontFamily: 'Montserrat_400Regular',
@@ -112,11 +110,10 @@ const ruleDetailStyles = StyleSheet.create({
     buttonVoteContainer: {
         flexDirection: 'row',
         justifyContent: 'center',
-        marginTop: 0,
     },
     buttonImage: {
-        width: 100,
-        height: 100,
+        width: 60,
+        height: 60,
         marginTop: 10,
     },
     buttonMargin: {
@@ -140,6 +137,7 @@ const ruleDetailStyles = StyleSheet.create({
         width: 24,
         height: 24,
         marginRight: 8,
+        marginLeft: 4,
         resizeMode: 'contain',
     },
     textContainer: {

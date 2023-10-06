@@ -359,10 +359,9 @@ class BlockchainAdapter {
                 web3Provider,
             );
             const result = await decentravellerGovernance.proposals(ethers.BigNumber.from(proposalId));
-            console.log(result)
             return {
-                ForVotes: result[5].toNumber(),
-                AgainstVotes: result[6].toNumber()
+                ForVotes: Number(result[6]),
+                AgainstVotes: Number(result[7])
             }
         } catch (e) {
             console.log(e);

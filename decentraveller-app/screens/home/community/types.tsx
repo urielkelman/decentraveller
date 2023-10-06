@@ -10,6 +10,7 @@ export type Rule = {
     ruleStatement: string;
     ruleStatus: RuleStatus;
     ruleSubStatus: BlockchainProposalStatus;
+    proposedAt: string;
 };
 
 type LoadRulesResponse = {

@@ -17,7 +17,7 @@ import * as Linking from 'expo-linking';
 import ReviewDetailScreen from '../reviews/ReviewDetailScreen';
 import DecentravellerRulesList from './community/DecentravellerRulesList';
 import { Rule } from './community/types';
-import RuleDetailScreen from './community/RuleDeatailScreen';
+import RuleDetailScreen from './community/RuleDetailScreen';
 import ProposeRuleScreen from "./community/ProposeRuleScreen";
 import VotingResultsScreen from "./community/VotingResultsScreen";
 

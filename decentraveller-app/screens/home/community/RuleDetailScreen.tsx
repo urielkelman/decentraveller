@@ -256,8 +256,8 @@ const RuleDetailScreen: React.FC<RuleDetailProps> = ({ route }) => {
                 <View>
                     <Text style={ruleDetailStyles.subtitle}>{actionExplanationLabel}</Text>
                 </View>
+                {contentComponent}
             </View>
-            {contentComponent}
 
             <DecentravellerInformativeModal
                 informativeText={`Vote registered gracefully`}
