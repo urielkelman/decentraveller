@@ -49,6 +49,7 @@ const RuleDetailScreen: React.FC<RuleDetailProps> = ({ route }) => {
         setShowAlreadyVotedModal(false);
     };
 
+
     const getActionByStatus = (): RuleAction => {
         const { ruleStatus, ruleSubStatus } = rule;
 
@@ -58,7 +59,7 @@ const RuleDetailScreen: React.FC<RuleDetailProps> = ({ route }) => {
                 buttonActionText: communityWording.PROPOSE_DELETE,
             },
             [BlockchainProposalStatus.SUCCEEDED]: {
-                action: ruleStatus === RuleStatus.PENDING_APPROVAL ? rulesService.queueNewRule : rulesService.queueRuleDeletion,
+                action: ruleStatus === RuleStatus.PENDING_APPROVAL ? () => rulesService.queueNewRule(web3Provider, rule) : () => rulesService.queueRuleDeletion(web3Provider, rule),
                 buttonActionText: communityWording.ENQUEUE,
                 explanations: {
                     action: communityWording.SUCCEDED_VOTATION_ACTION,
@@ -66,7 +67,7 @@ const RuleDetailScreen: React.FC<RuleDetailProps> = ({ route }) => {
                 },
             },
             [BlockchainProposalStatus.QUEUED]: {
-                action: ruleStatus === RuleStatus.PENDING_APPROVAL ? rulesService.executeNewRule : rulesService.executeRuleDeletion,
+                action: ruleStatus === RuleStatus.PENDING_APPROVAL ? () => rulesService.executeNewRule(web3Provider, rule)  : () => rulesService.executeRuleDeletion(web3Provider, rule),
                 buttonActionText: communityWording.EXECUTE,
                 explanations: {
                     action: communityWording.QUEUED_VOTATION_ACTION,

@@ -6,6 +6,7 @@ import { BlockchainProposalResult, BlockchainProposalStatus } from '../types';
 import { decentravellerMainContract } from '../contracts/decentravellerMainContract';
 import { BlockchainByChainId } from '../config';
 import { DEFAULT_CHAIN_ID } from '../../context/AppContext';
+import { Rule } from '../../screens/home/community/types';
 
 class RulesService {
     private blockchainAdapter: BlockchainAdapter;
@@ -156,7 +157,7 @@ class RulesService {
         return blockchainAdapter.voteInProposal(web3Provider, proposalId, 1);
     }
 
-    async queueNewRule(web3Provider: ethers.providers.Web3Provider, rule: RuleResponse): Promise<string> {
+    async queueNewRule(web3Provider: ethers.providers.Web3Provider, rule: Rule): Promise<string> {
         return this.callRuleProposalAction(
             web3Provider,
             rule,
@@ -166,7 +167,7 @@ class RulesService {
         );
     }
 
-    async executeNewRule(web3Provider: ethers.providers.Web3Provider, rule: RuleResponse): Promise<string> {
+    async executeNewRule(web3Provider: ethers.providers.Web3Provider, rule: Rule): Promise<string> {
         return this.callRuleProposalAction(
             web3Provider,
             rule,
@@ -180,7 +181,7 @@ class RulesService {
         return blockchainAdapter.proposeRuleDeletion(web3Provider, ruleId);
     }
 
-    async queueRuleDeletion(web3Provider: ethers.providers.Web3Provider, rule: RuleResponse): Promise<string> {
+    async queueRuleDeletion(web3Provider: ethers.providers.Web3Provider, rule: Rule): Promise<string> {
         return this.callRuleProposalAction(
             web3Provider,
             rule,
@@ -190,7 +191,7 @@ class RulesService {
         );
     }
 
-    async executeRuleDeletion(web3Provider: ethers.providers.Web3Provider, rule: RuleResponse): Promise<string> {
+    async executeRuleDeletion(web3Provider: ethers.providers.Web3Provider, rule: Rule): Promise<string> {
         return this.callRuleProposalAction(
             web3Provider,
             rule,
@@ -229,7 +230,7 @@ class RulesService {
 
     private async callRuleProposalAction(
         web3Provider: ethers.providers.Web3Provider,
-        rule: RuleResponse,
+        rule: Rule,
         generateCallData: (contract: ethers.Contract) => Promise<string>,
         ruleAction: (
             provider: ethers.providers.Web3Provider,

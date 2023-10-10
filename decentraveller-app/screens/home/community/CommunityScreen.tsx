@@ -69,8 +69,10 @@ const CommunityScreen = ({ navigation }) => {
     };
 
     const fetchCommunityRules = async () => {
+        setLoadingProposals(true)
         const communityRulesData = await rulesService.getFormerRules();
         setCommunityRules(mapRuleResponsesToRules(communityRulesData, BlockchainProposalStatusNames.EXECUTED));
+        setLoadingProposals(false)
     };
 
     function mapRulesToString(rules: Rule[]): string[] {
@@ -96,8 +98,8 @@ const CommunityScreen = ({ navigation }) => {
     }
 
     useEffect(() => {
-        fetchCommunityRules();
-        handleOptionSelect(selectedNonActiveRule);
+        fetchCommunityRules()
+        handleOptionSelect(selectedNonActiveRule)
     }, []);
 
     return (
@@ -107,16 +109,18 @@ const CommunityScreen = ({ navigation }) => {
                     <Text style={communityScreenStyles.title}>Community Rules</Text>
                     <Text style={communityScreenStyles.subtitle}>{communityWording.ACCEPTED_RULES}</Text>
                 </View>
-                <RulesList
-                    rules={mapRulesToString(communityRules)}
-                    onPress={() =>
-                        navigation.navigate('DecentravellerRulesList', {
-                            ruleList: communityRules,
-                            minified: false,
-                            horizontal: false,
-                        })
-                    }
-                />
+                {
+                    loadingProposals ? (<LoadingComponent></LoadingComponent>) : (<RulesList
+                        rules={mapRulesToString(communityRules)}
+                        onPress={() =>
+                            navigation.navigate('DecentravellerRulesList', {
+                                ruleList: communityRules,
+                                minified: false,
+                                horizontal: false,
+                            })
+                        }
+                    />)
+                }
                 <View style={communityScreenStyles.section}>
                     <Text style={communityScreenStyles.title}>Rules in Votation</Text>
                     <Text style={communityScreenStyles.subtitle}>{communityWording.VOTATION_RULES}</Text>

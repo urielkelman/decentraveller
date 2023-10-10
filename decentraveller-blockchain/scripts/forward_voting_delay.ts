@@ -1,6 +1,7 @@
 import { ethers, getNamedAccounts } from "hardhat";
 import { DecentravellerGovernance } from "../typechain-types";
 import { time } from "@nomicfoundation/hardhat-network-helpers";
+import { BigNumber } from "ethers";
 
 const main = async () => {
     const { deployer } = await getNamedAccounts();
@@ -13,9 +14,9 @@ const main = async () => {
     const decentravellerGovernance: DecentravellerGovernance =
         decentravellerGovernanceC;
 
-    // Increase the evm time to start voting.
-    const votingDelay = await decentravellerGovernance.votingDelay();
-    await time.increase(votingDelay);
+
+    const votingDelay = (await decentravellerGovernance.votingDelay()).toNumber();
+    await time.increase(votingDelay + 1);
 };
 
 main()
