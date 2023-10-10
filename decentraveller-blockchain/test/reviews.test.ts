@@ -6,14 +6,17 @@ import {
     DecentravellerReviewCloneFactory,
     DecentravellerToken,
 } from "../typechain-types";
+import { Signer } from "ethers";
 
 const DEFAULT_MOCK_HASHES = ["0xhash1", "0xhash2", "0xhash3"];
 
 describe("Places and Reviews", function () {
+    let decentraveller: Decentraveller;
     let decentravellerPlace: DecentravellerPlace;
     let decentravellerReviewCloneFactory: DecentravellerReviewCloneFactory;
     let decentravellerToken: DecentravellerToken;
     let reviewerUserAddress: string;
+    let reviewerSigner: Signer;
 
     const rewardNewReviewTokensAmount = 1;
 
@@ -21,11 +24,16 @@ describe("Places and Reviews", function () {
         await deployments.fixture(["all"]);
         const { user, reviewer } = await getNamedAccounts();
         reviewerUserAddress = reviewer;
-        const decentraveller: Decentraveller = await ethers.getContract(
-            "Decentraveller",
-            user
-        );
+
+        decentraveller = await ethers.getContract("Decentraveller", user);
+
         await decentraveller.registerProfile("Messi", "AR", 0);
+
+        reviewerSigner = await ethers.getSigner(reviewerUserAddress);
+
+        await decentraveller
+            .connect(reviewerSigner)
+            .registerProfile("Di Maria", "AR", 1);
 
         const addPlaceTxResponse = await decentraveller.addPlace(
             "Shami shawarma",
@@ -60,23 +68,19 @@ describe("Places and Reviews", function () {
     });
 
     it("Should increment id after saving a new review", async function () {
-        await decentravellerPlace.addReview(
-            "Amazing shawarma place",
-            DEFAULT_MOCK_HASHES,
-            3
-        );
+        await decentraveller
+            .connect(reviewerSigner)
+            .addReview(1, "Amazing shawarma place", DEFAULT_MOCK_HASHES, 3);
         const currentReviewId = await decentravellerPlace.getCurrentReviewId();
         assert.equal(currentReviewId.toString(), "1");
     });
 
     it("Should emit event when adding a new review and reward user with tokens", async function () {
-        const placeId = await decentravellerPlace.placeId();
+        const placeId = await decentravellerPlace.getPlaceId();
         await expect(
-            decentravellerPlace.addReview(
-                "Amazing shawarma place",
-                DEFAULT_MOCK_HASHES,
-                3
-            )
+            decentraveller
+                .connect(reviewerSigner)
+                .addReview(1, "Amazing shawarma place", DEFAULT_MOCK_HASHES, 3)
         )
             .to.emit(decentravellerReviewCloneFactory, "NewReview")
             .withArgs(
@@ -98,7 +102,8 @@ describe("Places and Reviews", function () {
     });
 
     it("Should return review address of valid review id", async function () {
-        const addReviewTxReponse = await decentravellerPlace.addReview(
+        const addReviewTxReponse = await decentraveller.addReview(
+            1,
             "Amazing shawarma place",
             DEFAULT_MOCK_HASHES,
             3
@@ -112,6 +117,37 @@ describe("Places and Reviews", function () {
         assert.equal(retrievedReviewAddress, createdReviewAddress);
     });
 
+    it("Should revert with error when trying to create it directly in place contract", async function () {
+        await expect(
+            decentravellerPlace.addReview(
+                "Amazing shawarma place",
+                DEFAULT_MOCK_HASHES,
+                3,
+                reviewerUserAddress
+            )
+        ).to.be.revertedWith("Ownable: caller is not the owner");
+    });
+
+    it("Should revert with error when trying to create it directly on review factory contract", async function () {
+        await expect(
+            decentravellerReviewCloneFactory
+                .connect(reviewerSigner)
+                .createNewReview(
+                    1,
+                    1,
+                    reviewerUserAddress,
+                    "Amazing shawarma place",
+                    DEFAULT_MOCK_HASHES,
+                    3
+                )
+        )
+            .to.be.revertedWithCustomError(
+                decentravellerReviewCloneFactory,
+                "Place__NonRegistered"
+            )
+            .withArgs(reviewerUserAddress);
+    });
+
     it("Should revert with error when trying to return invalid review address", async function () {
         await expect(decentravellerPlace.getReviewAddress(1))
             .to.be.revertedWithCustomError(
@@ -123,7 +159,8 @@ describe("Places and Reviews", function () {
 
     it("Should revert with error when trying to create review with invalid score", async function () {
         await expect(
-            decentravellerPlace.addReview(
+            decentraveller.addReview(
+                1,
                 "Amazing shawarma place",
                 DEFAULT_MOCK_HASHES,
                 6

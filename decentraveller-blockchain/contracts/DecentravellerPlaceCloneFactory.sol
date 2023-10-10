@@ -42,7 +42,10 @@ contract DecentravellerPlaceCloneFactory is Ownable {
         address placeCloneAddress = Clones.clone(
             decentravellerPlaceImplementation
         );
-        DecentravellerPlace(placeCloneAddress).initialize(
+        DecentravellerPlace decentravellerPlace = DecentravellerPlace(
+            placeCloneAddress
+        );
+        decentravellerPlace.initialize(
             _placeId,
             _name,
             _latitude,
@@ -50,9 +53,9 @@ contract DecentravellerPlaceCloneFactory is Ownable {
             _physicalAddress,
             _category,
             _placeCreator,
-            decentravellerReviewCloneFactory
+            decentravellerReviewCloneFactory,
+            owner()
         );
-
         decentravellerToken.rewardNewPlace(_placeCreator);
 
         emit NewPlace(
@@ -64,6 +67,10 @@ contract DecentravellerPlaceCloneFactory is Ownable {
             _latitude,
             _longitude
         );
+
+        DecentravellerReviewCloneFactory(decentravellerReviewCloneFactory)
+            .registerPlaceAddress(placeCloneAddress);
+
         return placeCloneAddress;
     }
 }

@@ -1,8 +1,8 @@
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { DeployFunction } from "hardhat-deploy/types";
 import {
-    Decentraveller,
     DecentravellerPlaceCloneFactory,
+    DecentravellerReviewCloneFactory,
     DecentravellerToken,
 } from "../typechain-types";
 
@@ -19,7 +19,7 @@ const deployFunction: DeployFunction = async function (
         from: deployer,
         log: true,
     });
-    const decentravellerReviewFactory = await deploy(
+    const decentravellerReviewFactoryDeployment = await deploy(
         "DecentravellerReviewCloneFactory",
         {
             from: deployer,
@@ -37,7 +37,7 @@ const deployFunction: DeployFunction = async function (
             from: deployer,
             args: [
                 decentravellerPlace.address,
-                decentravellerReviewFactory.address,
+                decentravellerReviewFactoryDeployment.address,
                 tokenDeployment.address,
             ],
             log: true,
@@ -52,7 +52,7 @@ const deployFunction: DeployFunction = async function (
 
     const addFactoriesAsMintersTx = await token.addMinters([
         decentravellerPlaceFactoryDeployment.address,
-        decentravellerReviewFactory.address,
+        decentravellerReviewFactoryDeployment.address,
     ]);
 
     await addFactoriesAsMintersTx.wait();
@@ -85,6 +85,20 @@ const deployFunction: DeployFunction = async function (
         );
 
     await transferOwnershipTx.wait();
+
+    const decentravellerReviewFactory: DecentravellerReviewCloneFactory =
+        await ethers.getContractAt(
+            "DecentravellerReviewCloneFactory",
+            decentravellerReviewFactoryDeployment.address,
+            deployer
+        );
+
+    const transferReviewFactoryOwnershipTx =
+        await decentravellerReviewFactory.transferOwnership(
+            decentravellerPlaceFactory.address
+        );
+
+    await transferReviewFactoryOwnershipTx.wait();
 };
 deployFunction.tags = ["all"];
 export default deployFunction;
