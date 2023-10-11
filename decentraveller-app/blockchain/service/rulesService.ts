@@ -63,8 +63,7 @@ class RulesService {
         );
 
         const now = new Date((await web3Provider.getBlock("latest")).timestamp * 1000);
-        const executionTime = new Date(rulesWithQueuedProposal[0].executionTimeAt);
-        return rulesWithQueuedProposal.filter((queuedRule) => now >= executionTime);
+        return rulesWithQueuedProposal.filter((queuedRule) => now >= new Date(queuedRule.executionTimeAt));
     }
 
     async getAllPendingDeleteToVote(web3Provider: ethers.providers.Web3Provider): Promise<RuleResponse[]> {
@@ -114,8 +113,7 @@ class RulesService {
             BlockchainProposalStatus.QUEUED,
         );
 
-        // const now = new Date("2023-09-25T11:23:54");
-        const now = new Date();
+        const now = new Date((await web3Provider.getBlock("latest")).timestamp * 1000);
         return rulesWithQueuedProposal.filter((queuedRule) => now > new Date(queuedRule.executionTimeAt));
     }
 
