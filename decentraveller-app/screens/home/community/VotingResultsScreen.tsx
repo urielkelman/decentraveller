@@ -94,7 +94,7 @@ const VotingResultsScreen: React.FC<RuleDetailProps> = ({ route }) => {
         <View>
 
             <View style={votingResultsStyles.cardContainer}>
-                <Text style={votingResultsStyles.description}>Votes to quorum</Text>
+                <Text style={votingResultsStyles.description}>Votes to reach quorum</Text>
                 <DecentravellerProgressBar
                     progress={(favorVotes + againstVotes)/quorumVotes}
                     height={20}

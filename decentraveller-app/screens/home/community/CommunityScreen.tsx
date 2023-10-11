@@ -18,6 +18,7 @@ const CommunityScreen = ({ navigation }) => {
     const [nonActiveRules, setNonActiveRules] = useState([]);
     const [selectedNonActiveRule, setSelectedNonActiveRule] = useState(BlockchainUserStatus.PENDING);
     const [loadingProposals, setLoadingProposals] = useState(true);
+    const [loadingRules, setLoadingRules] = useState(true);
 
     const handleOptionSelect = async (status) => {
         setSelectedNonActiveRule(status);
@@ -52,6 +53,11 @@ const CommunityScreen = ({ navigation }) => {
                 getRuleDeletedFunction = () => rulesService.getAllDeleteQueued(web3Provider);
                 blockchainStatus = BlockchainProposalStatusNames.QUEUED;
                 break;
+            case BlockchainUserStatus.TO_EXECUTE:
+                getRuleFunction = () => rulesService.getAllNewToExecute(web3Provider);
+                getRuleDeletedFunction = () => rulesService.getAllDeleteToExecute(web3Provider);
+                blockchainStatus = BlockchainProposalStatusNames.TO_EXECUTE;
+                break;
         }
 
         await fetchNonActiveRules(getRuleFunction, getRuleDeletedFunction, blockchainStatus);
@@ -69,10 +75,10 @@ const CommunityScreen = ({ navigation }) => {
     };
 
     const fetchCommunityRules = async () => {
-        setLoadingProposals(true)
+        setLoadingRules(true)
         const communityRulesData = await rulesService.getFormerRules();
         setCommunityRules(mapRuleResponsesToRules(communityRulesData, BlockchainProposalStatusNames.EXECUTED));
-        setLoadingProposals(false)
+        setLoadingRules(false)
     };
 
     function mapRulesToString(rules: Rule[]): string[] {
@@ -110,7 +116,7 @@ const CommunityScreen = ({ navigation }) => {
                     <Text style={communityScreenStyles.subtitle}>{communityWording.ACCEPTED_RULES}</Text>
                 </View>
                 {
-                    loadingProposals ? (<LoadingComponent></LoadingComponent>) : (<RulesList
+                    loadingRules ? (<LoadingComponent></LoadingComponent>) : (<RulesList
                         rules={mapRulesToString(communityRules)}
                         onPress={() =>
                             navigation.navigate('DecentravellerRulesList', {

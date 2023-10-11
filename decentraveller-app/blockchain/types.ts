@@ -14,7 +14,8 @@ export enum BlockchainUserStatus {
     ACTIVE = 'Active voting',
     DEFEATED = 'Lost vote',
     SUCCEEDED = 'Vote Won',
-    QUEUED = 'To execute',
+    QUEUED = 'Queued',
+    TO_EXECUTE = 'To execute',
 }
 
 export enum BlockchainProposalStatusNames {
@@ -24,6 +25,7 @@ export enum BlockchainProposalStatusNames {
     DEFEATED = "DEFEATED",
     SUCCEEDED = "SUCCEEDED",
     QUEUED = "QUEUED",
+    TO_EXECUTE = "TO_EXECUTE",
     EXPIRED = "EXPIRED",
     EXECUTED = "EXECUTED",
 }
