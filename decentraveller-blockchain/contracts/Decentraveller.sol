@@ -2,6 +2,7 @@
 pragma solidity ^0.8.17;
 
 import "./DecentravellerPlace.sol";
+import "./DecentravellerReview.sol";
 import "./DecentravellerDataTypes.sol";
 import "./DecentravellerPlaceCloneFactory.sol";
 import "./DecentravellerGovernance.sol";
@@ -15,6 +16,7 @@ error Address__Unregistered(address sender);
 error OnlyGovernance__Execution();
 error Rule__NonExistent(uint256 ruleId);
 error Rule__AlreadyDeleted(uint256 ruleId);
+error OnlyModerator__Execution();
 
 contract Decentraveller {
     event UpdatedProfile(
@@ -43,24 +45,45 @@ contract Decentraveller {
 
     event DecentravellerRuleDeleted(uint256 indexed ruleId);
 
+    event DecentravellerReviewCensored(
+        uint256 indexed placeId,
+        uint256 indexed reviewId,
+        uint256 brokenRuleId
+    );
+
+    event DecentravellerReviewUncesored(
+        uint256 indexed placeId,
+        uint256 indexed reviewId
+    );
+
     DecentravellerGovernance governance;
     DecentravellerPlaceCloneFactory placeFactory;
 
     uint256 private currentPlaceId;
     uint256 private currentRuleId;
 
+    uint8 moderatorsAmount;
+    uint8 currentModeratorsAmount;
+
     address timelockGovernanceAddress;
+
+    struct ReviewIdData {
+        uint256 placeId;
+        uint256 reviewId;
+    }
 
     mapping(uint256 => address) private placeAddressByPlaceId;
     mapping(string => uint) private placeIdByPlaceLocation;
     mapping(address => DecentravellerDataTypes.DecentravellerProfile) profilesByOwner;
     mapping(string => address) ownersByNicknames;
     mapping(uint256 => DecentravellerDataTypes.DecentravellerRule) ruleById;
+    mapping(uint256 => ReviewIdData[]) censoredReviewsByBrokenRuleId;
 
     constructor(
         address _governance,
         address _placesFactory,
-        string[] memory initialRules
+        string[] memory initialRules,
+        uint8 _moderatorsAmount
     ) {
         governance = DecentravellerGovernance(payable(_governance));
         timelockGovernanceAddress = governance.timelock();
@@ -77,6 +100,8 @@ contract Decentraveller {
         }
         currentRuleId = initialRulesLength;
         currentPlaceId = 0;
+        moderatorsAmount = _moderatorsAmount;
+        currentModeratorsAmount = 0;
     }
 
     modifier onlyGovernance() {
@@ -93,29 +118,40 @@ contract Decentraveller {
         _;
     }
 
+    modifier onlyModerator() {
+        if (
+            profilesByOwner[msg.sender].role !=
+            DecentravellerDataTypes.DecentravellerUserRole.MODERATOR
+        ) {
+            revert OnlyModerator__Execution();
+        }
+        _;
+    }
+
     function registerProfile(
         string calldata _nickname,
         string calldata _country,
         DecentravellerDataTypes.DecentravellerPlaceCategory _interest
     ) public returns (address owner) {
         address nicknameOwner = ownersByNicknames[_nickname];
-        if (nicknameOwner != address(0) && nicknameOwner != msg.sender) {
+
+        if (nicknameOwner != address(0)) {
             revert Profile__NicknameInUse(_nickname);
         }
 
-        if (profilesByOwner[msg.sender].owner != address(0)) {
-            // Nickname change
-            delete ownersByNicknames[profilesByOwner[msg.sender].nickname];
-        }
-
         ownersByNicknames[_nickname] = msg.sender;
+        DecentravellerDataTypes.DecentravellerUserRole role = currentModeratorsAmount <
+                moderatorsAmount
+                ? DecentravellerDataTypes.DecentravellerUserRole.NORMAL
+                : DecentravellerDataTypes.DecentravellerUserRole.MODERATOR;
+
         profilesByOwner[msg.sender] = DecentravellerDataTypes
             .DecentravellerProfile({
                 owner: msg.sender,
                 nickname: _nickname,
                 country: _country,
                 interest: _interest,
-                role: DecentravellerDataTypes.DecentravellerUserRole.NORMAL
+                role: role
             });
 
         emit UpdatedProfile(msg.sender, _nickname, _country, _interest);
@@ -176,8 +212,37 @@ contract Decentraveller {
         );
     }
 
-    function getCurrentPlaceId() external view returns (uint256) {
-        return currentPlaceId;
+    function _getReviewAddress(
+        uint256 _placeId,
+        uint256 _reviewId
+    ) internal returns (address) {
+        address placeAddress = getPlaceAddress(_placeId);
+        return DecentravellerPlace(placeAddress).getReviewAddress(_reviewId);
+    }
+
+    function censorReview(
+        uint256 _placeId,
+        uint256 _reviewId,
+        uint256 _brokenRuleId
+    ) external onlyModerator {
+        _getRuleById(_brokenRuleId);
+
+        address reviewAddress = _getReviewAddress(_placeId, _reviewId);
+
+        DecentravellerReview(reviewAddress).censor();
+
+        emit DecentravellerReviewCensored(_placeId, _reviewId, _brokenRuleId);
+
+        censoredReviewsByBrokenRuleId[_brokenRuleId].push(
+            ReviewIdData({placeId: _placeId, reviewId: _reviewId})
+        );
+    }
+
+    function _uncensorReview(uint256 _placeId, uint256 _reviewId) internal {
+        address reviewAddress = _getReviewAddress(_placeId, _reviewId);
+        DecentravellerReview(reviewAddress).uncensor();
+
+        emit DecentravellerReviewUncesored(_placeId, _reviewId);
     }
 
     function approveProposedRule(uint256 ruleId) external onlyGovernance {
@@ -187,7 +252,7 @@ contract Decentraveller {
         emit DecentravellerRuleApproved(ruleId);
     }
 
-    function proposeToGovernor(
+    function _proposeToGovernor(
         bytes memory data,
         string memory proposalStatement
     ) internal returns (uint256) {
@@ -216,7 +281,10 @@ contract Decentraveller {
             this.approveProposedRule.selector,
             currentRuleId
         );
-        uint256 proposalId = proposeToGovernor(proposalCallData, ruleStatement);
+        uint256 proposalId = _proposeToGovernor(
+            proposalCallData,
+            ruleStatement
+        );
         ruleById[currentRuleId] = DecentravellerDataTypes.DecentravellerRule({
             proposalId: proposalId,
             status: DecentravellerDataTypes
@@ -238,22 +306,36 @@ contract Decentraveller {
     }
 
     function deleteRule(uint256 ruleId) external onlyGovernance {
-        DecentravellerDataTypes.DecentravellerRule
-            storage rule = getRuleByIdInternal(ruleId);
+        DecentravellerDataTypes.DecentravellerRule storage rule = _getRuleById(
+            ruleId
+        );
         rule.status = DecentravellerDataTypes.DecentravellerRuleStatus.DELETED;
         emit DecentravellerRuleDeleted(ruleId);
+
+        ReviewIdData[]
+            memory censoredReviewsOfDeletedRule = censoredReviewsByBrokenRuleId[
+                ruleId
+            ];
+
+        uint256 censoredReviewsAmount = censoredReviewsOfDeletedRule.length;
+
+        for (uint i = 0; i <= censoredReviewsAmount; i++) {
+            ReviewIdData memory reviewIdData = censoredReviewsOfDeletedRule[i];
+            _uncensorReview(reviewIdData.placeId, reviewIdData.reviewId);
+        }
     }
 
     function createRuleDeletionProposal(
         uint256 ruleId
     ) external onlyRegisteredAddress {
-        DecentravellerDataTypes.DecentravellerRule
-            storage rule = getRuleByIdInternal(ruleId);
+        DecentravellerDataTypes.DecentravellerRule storage rule = _getRuleById(
+            ruleId
+        );
         bytes memory proposalCallData = abi.encodeWithSelector(
             this.deleteRule.selector,
             ruleId
         );
-        uint256 deletionProposalId = proposeToGovernor(
+        uint256 deletionProposalId = _proposeToGovernor(
             proposalCallData,
             string.concat("Delete rule: ", rule.statement)
         );
@@ -270,23 +352,7 @@ contract Decentraveller {
         );
     }
 
-    function getRuleById(
-        uint256 ruleId
-    )
-        external
-        view
-        returns (DecentravellerDataTypes.DecentravellerRule memory)
-    {
-        DecentravellerDataTypes.DecentravellerRule memory rule = ruleById[
-            ruleId
-        ];
-        if (rule.proposer == address(0)) {
-            revert Rule__NonExistent(ruleId);
-        }
-        return rule;
-    }
-
-    function getRuleByIdInternal(
+    function _getRuleById(
         uint256 ruleId
     )
         internal
@@ -306,5 +372,25 @@ contract Decentraveller {
             revert Rule__AlreadyDeleted(0);
         }
         return rule;
+    }
+
+    function getRuleById(
+        uint256 ruleId
+    )
+        external
+        view
+        returns (DecentravellerDataTypes.DecentravellerRule memory)
+    {
+        DecentravellerDataTypes.DecentravellerRule memory rule = ruleById[
+            ruleId
+        ];
+        if (rule.proposer == address(0)) {
+            revert Rule__NonExistent(ruleId);
+        }
+        return rule;
+    }
+
+    function getCurrentPlaceId() external view returns (uint256) {
+        return currentPlaceId;
     }
 }

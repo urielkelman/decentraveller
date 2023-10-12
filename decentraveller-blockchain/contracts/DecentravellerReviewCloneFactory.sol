@@ -52,7 +52,8 @@ contract DecentravellerReviewCloneFactory is Ownable {
             _owner,
             _reviewText,
             _imagesHashes,
-            _score
+            _score,
+            owner()
         );
 
         decentravellerToken.rewardNewReview(_owner);

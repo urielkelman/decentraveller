@@ -18,7 +18,7 @@ library DecentravellerDataTypes {
 
     enum DecentravellerUserRole {
         NORMAL,
-        ADMIN
+        MODERATOR
     }
 
     enum DecentravellerReviewState {
