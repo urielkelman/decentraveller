@@ -131,6 +131,18 @@
                 "internalType": "address",
                 "name": "proposer",
                 "type": "address"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "proposalId",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "proposalTimestamp",
+                "type": "uint256"
             }
         ],
         "name": "DecentravellerRuleDeletionProposed",
@@ -161,6 +173,12 @@
                 "indexed": false,
                 "internalType": "uint256",
                 "name": "proposalId",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "proposalTimestamp",
                 "type": "uint256"
             }
         ],
@@ -234,6 +252,34 @@
                 "type": "uint256"
             }
         ],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "placeId",
+                "type": "uint256"
+            },
+            {
+                "internalType": "string",
+                "name": "_reviewText",
+                "type": "string"
+            },
+            {
+                "internalType": "string[]",
+                "name": "_imagesHashes",
+                "type": "string[]"
+            },
+            {
+                "internalType": "uint8",
+                "name": "_score",
+                "type": "uint8"
+            }
+        ],
+        "name": "addReview",
+        "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
     },
