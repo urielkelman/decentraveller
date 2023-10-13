@@ -3,14 +3,14 @@ import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import RulesList from './RulesList';
 import DecentravellerButton from '../../../commons/components/DecentravellerButton';
 import { communityScreenStyles } from '../../../styles/communityStyles';
-import { RuleResponse } from '../../../api/response/rules';
+import { RuleResponse, RuleStatus } from '../../../api/response/rules';
 import { useAppContext } from '../../../context/AppContext';
-import ModalDropdown from 'react-native-modal-dropdown';
 import { Rule } from './types';
 import {BlockchainProposalStatus, BlockchainProposalStatusNames, BlockchainUserStatus} from '../../../blockchain/types';
 import { communityWording } from './wording';
 import {rulesService} from "../../../blockchain/service/rulesService";
 import LoadingComponent from '../../../commons/components/DecentravellerLoading';
+import { Picker } from '@react-native-picker/picker';
 
 const CommunityScreen = ({ navigation }) => {
     const { web3Provider } = useAppContext();
@@ -37,16 +37,6 @@ const CommunityScreen = ({ navigation }) => {
                 getRuleFunction = () => rulesService.getAllInVotingProcess(web3Provider);
                 getRuleDeletedFunction = () => rulesService.getAllDeleteInVotingProcess(web3Provider);
                 blockchainStatus = BlockchainProposalStatusNames.ACTIVE;
-                break;
-            case BlockchainUserStatus.DEFEATED:
-                getRuleFunction = () => rulesService.getAllNewDefeated(web3Provider);
-                getRuleDeletedFunction = () => rulesService.getAllDeleteDefeated(web3Provider);
-                blockchainStatus = BlockchainProposalStatusNames.DEFEATED;
-                break;
-            case BlockchainUserStatus.SUCCEEDED:
-                getRuleFunction = () => rulesService.getAllNewToQueue(web3Provider);
-                getRuleDeletedFunction = () => rulesService.getAllDeleteToQueue(web3Provider);
-                blockchainStatus = BlockchainProposalStatusNames.SUCCEEDED;
                 break;
             case BlockchainUserStatus.QUEUED:
                 getRuleFunction = () => rulesService.getAllQueued(web3Provider);
@@ -85,10 +75,18 @@ const CommunityScreen = ({ navigation }) => {
         return rules.map((rule) => rule.ruleStatement);
     }
 
+    function mapProposalsToString(rules: Rule[]): string[] {
+        return rules.map((rule) => ((rule.ruleStatus == RuleStatus.PENDING_DELETED ||
+                rule.ruleStatus  == RuleStatus.DELETED) ? "To delete: " : "") +
+            rule.ruleStatement);
+    }
+
     function mapRuleResponseToRule(ruleResponse: RuleResponse, status: string): Rule {
         const rule: Rule = {
             ruleId: ruleResponse.ruleId,
-            proposalId: ruleResponse.proposalId,
+            proposalId: (ruleResponse.ruleStatus == RuleStatus.PENDING_DELETED ||
+                ruleResponse.ruleStatus  == RuleStatus.DELETED) ?
+                ruleResponse.deletionProposalId : ruleResponse.proposalId,
             proposer: ruleResponse.proposer,
             ruleStatement: ruleResponse.ruleStatement,
             ruleStatus: ruleResponse.ruleStatus,
@@ -109,57 +107,65 @@ const CommunityScreen = ({ navigation }) => {
     }, []);
 
     return (
-        <ScrollView style={communityScreenStyles.container}>
-            <View style={communityScreenStyles.content}>
-                <View style={communityScreenStyles.section}>
-                    <Text style={communityScreenStyles.title}>Community Rules</Text>
-                    <Text style={communityScreenStyles.subtitle}>{communityWording.ACCEPTED_RULES}</Text>
-                </View>
-                {
-                    loadingRules ? (<LoadingComponent></LoadingComponent>) : (<RulesList
-                        rules={mapRulesToString(communityRules)}
-                        onPress={() =>
-                            navigation.navigate('DecentravellerRulesList', {
-                                ruleList: communityRules,
-                                minified: false,
-                                horizontal: false,
-                            })
+        <View style={communityScreenStyles.container}>
+            <ScrollView style={communityScreenStyles.scrollView}>
+                <View style={communityScreenStyles.content}>
+                    <View style={communityScreenStyles.section}>
+                        <Text style={communityScreenStyles.title}>Community Rules</Text>
+                        <Text style={communityScreenStyles.subtitle}>{communityWording.ACCEPTED_RULES}</Text>
+                    </View>
+                    <View style={communityScreenStyles.ruleContainer}>
+                        {
+                            loadingRules ? (<LoadingComponent></LoadingComponent>) : (<RulesList
+                                rules={mapRulesToString(communityRules)}
+                                onPress={() =>
+                                    navigation.navigate('DecentravellerRulesList', {
+                                        ruleList: communityRules,
+                                        minified: false,
+                                        horizontal: false,
+                                    })
+                                }
+                            />)
                         }
-                    />)
-                }
-                <View style={communityScreenStyles.section}>
-                    <Text style={communityScreenStyles.title}>Rules in Votation</Text>
-                    <Text style={communityScreenStyles.subtitle}>{communityWording.VOTATION_RULES}</Text>
-                </View>
-                <View style={communityScreenStyles.dropContainer}>
-                    <Text style={communityScreenStyles.subtitle}>Select proposal status</Text>
-                    <ModalDropdown
-                        options={Object.values(BlockchainUserStatus)}
-                        onSelect={(index, value) => handleOptionSelect(value)}
-                        defaultValue={BlockchainUserStatus.PENDING}
-                        style={communityScreenStyles.dropdown}
-                        textStyle={communityScreenStyles.dropdownText}
-                        dropdownStyle={communityScreenStyles.dropdownMenu}
-                    />
-                </View>
-                {
-                    loadingProposals ? (
-                        <LoadingComponent />
-                    ) : (
-                        <RulesList
-                            rules={mapRulesToString(nonActiveRules)}
-                            onPress={() =>
-                                navigation.navigate('DecentravellerRulesList', {
-                                    ruleList: nonActiveRules,
-                                    minified: false,
-                                    horizontal: false,
-                                })
-                            }
-                        />
-                    )
-                }
+                    </View>
+                    <View style={communityScreenStyles.section}>
+                        <Text style={communityScreenStyles.title}>Rules in pending voting</Text>
+                        <Text style={communityScreenStyles.subtitle}>{communityWording.VOTATION_RULES}</Text>
+                    </View>
+                    <View style={communityScreenStyles.dropContainer}>
+                        <Text style={communityScreenStyles.subtitle}>Select proposal status</Text>
+                        <View style={communityScreenStyles.picker}>
+                            <Picker
+                                    onValueChange={(v, pos) => handleOptionSelect(v)}
+                                    selectedValue={selectedNonActiveRule}>
+                                <Picker.Item label={BlockchainUserStatus.PENDING} value={BlockchainUserStatus.PENDING} />
+                                <Picker.Item label={BlockchainUserStatus.ACTIVE} value={BlockchainUserStatus.ACTIVE} />
+                                <Picker.Item label={BlockchainUserStatus.QUEUED} value={BlockchainUserStatus.QUEUED} />
+                                <Picker.Item label={BlockchainUserStatus.TO_EXECUTE} value={BlockchainUserStatus.TO_EXECUTE} />
+                            </Picker>
+                        </View>
+                    </View>
+                    <View style={communityScreenStyles.ruleContainer}>
+                        {
+                            loadingProposals ? (
+                                <LoadingComponent />
+                            ) : (
+                                <RulesList
+                                    rules={mapProposalsToString(nonActiveRules)}
+                                    onPress={() =>
+                                        navigation.navigate('DecentravellerRulesList', {
+                                            ruleList: nonActiveRules,
+                                            minified: false,
+                                            horizontal: false,
+                                        })
+                                    }
+                                />
+                            )
+                        }
+                    </View>
 
-            </View>
+                </View>
+            </ScrollView>
             <View style={communityScreenStyles.buttonContainer}>
                 <DecentravellerButton
                     text="Propose a New Rule"
@@ -167,7 +173,7 @@ const CommunityScreen = ({ navigation }) => {
                     loading={false}
                 />
             </View>
-        </ScrollView>
+        </View>
     );
 };
 

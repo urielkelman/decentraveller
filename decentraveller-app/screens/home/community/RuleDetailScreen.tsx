@@ -8,10 +8,10 @@ import { RuleStatus } from '../../../api/response/rules';
 import { useAppContext } from '../../../context/AppContext';
 import { BlockchainProposalStatus } from '../../../blockchain/types';
 import { communityWording } from './wording';
-import {StackNavigationProp} from "@react-navigation/stack";
-import {HomeStackScreens} from "../HomeNavigator";
-import DecentravellerInformativeModal from "../../../commons/components/DecentravellerInformativeModal";
-import {rulesService} from "../../../blockchain/service/rulesService";
+import { StackNavigationProp } from '@react-navigation/stack';
+import { HomeStackScreens } from '../HomeNavigator';
+import DecentravellerInformativeModal from '../../../commons/components/DecentravellerInformativeModal';
+import { rulesService } from '../../../blockchain/service/rulesService';
 
 
 type RuleDetailScreenProp = StackNavigationProp<HomeStackScreens, 'VotingResultsScreen'>;
@@ -149,7 +149,8 @@ const RuleDetailScreen: React.FC<RuleDetailProps> = ({ route }) => {
         const actionLabel =
             rule.ruleSubStatus === BlockchainProposalStatus.PENDING
                 ? communityWording.PENDING_VOTATION_ACTION
-                : communityWording.ACTIVE_VOTATION_ACTION;
+                : (rule.ruleStatus == RuleStatus.PENDING_DELETED ? communityWording.ACTIVE_DELETION_ACTION :
+                    communityWording.ACTIVE_VOTATION_ACTION);
 
         const statusLabel =
             rule.ruleSubStatus === BlockchainProposalStatus.PENDING

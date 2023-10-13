@@ -20,8 +20,7 @@ const RulesList = ({ rules, onPress }) => {
 
 const styles = StyleSheet.create({
     container: {
-        padding: 16,
-        marginVertical: 8,
+        paddingHorizontal: 16,
         borderRadius: 10,
     },
     rulesContainer: {
@@ -29,7 +28,6 @@ const styles = StyleSheet.create({
         overflow: 'hidden',
     },
     ruleContainer: {
-        marginBottom: 4,
         paddingVertical: 5,
         paddingHorizontal: 3
     },

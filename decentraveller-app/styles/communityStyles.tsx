@@ -7,14 +7,14 @@ const communityScreenStyles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#FFE1E1',
     },
+    scrollView: {
+    },
     content: {
         flex: 1,
-        paddingBottom: 100,
     },
     section: {
         padding: 16,
-        borderBottomWidth: 1,
-        borderBottomColor: '#ccc',
+        paddingBottom: 0,
     },
     title: {
         fontSize: 24,
@@ -25,10 +25,6 @@ const communityScreenStyles = StyleSheet.create({
         fontFamily: 'Montserrat_400Regular',
     },
     buttonContainer: {
-        position: 'absolute',
-        bottom: 30,
-        left: 0,
-        right: 0,
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: 'transparent',
@@ -37,23 +33,19 @@ const communityScreenStyles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
+        marginTop: 10,
     },
-    dropdown: {
-        width: 200,
-        borderWidth: 1,
-        borderColor: 'black',
-        backgroundColor: '#ffffff',
-        borderRadius: 5,
-        padding: 5,
-    },
-    dropdownText: {
+    picker: {
+        width: '90%',
+        backgroundColor: 'white',
+        borderRadius: 10,
+        marginTop: 10,
         fontSize: 16,
-        color: '#000000',
         fontFamily: 'Montserrat_400Regular',
     },
-    dropdownMenu: {
-        width: 200,
-    },
+    ruleContainer: {
+        marginTop: 10
+    }
 });
 
 const ruleDetailStyles = StyleSheet.create({
@@ -91,7 +83,8 @@ const ruleDetailStyles = StyleSheet.create({
         fontFamily: 'Montserrat_500Medium',
     },
     subtitle: {
-        fontSize: 16,
+        alignSelf: "center",
+        fontSize: 18,
         fontFamily: 'Montserrat_400Regular',
     },
     explanationText: {

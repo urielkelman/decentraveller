@@ -118,7 +118,9 @@ class RulesService {
     }
 
     async getFormerRules(): Promise<RuleResponse[]> {
-        return (await apiAdapter.getRules(RuleStatus.APPROVED)).rules;
+        return (await apiAdapter.getRules(RuleStatus.APPROVED)).rules.concat(
+            (await apiAdapter.getRules(RuleStatus.PENDING_DELETED)).rules
+        );
     }
 
     async getVotingPowerForProposal(web3Provider: ethers.providers.Web3Provider, address: string, proposedAt: string): Promise<number> {
@@ -213,7 +215,9 @@ class RulesService {
         try {
             const allRulesWithProposals = await Promise.all(
                 allRulesWithStatus.map(async (rule) => {
-                    const proposalStatus = await blockchainAdapter.getProposalState(web3Provider, rule.proposalId);
+                    const proposalId = (ruleStatus == RuleStatus.PENDING_DELETED || ruleStatus == RuleStatus.DELETED) ?
+                        rule.deletionProposalId : rule.proposalId
+                    const proposalStatus = await blockchainAdapter.getProposalState(web3Provider, proposalId);
                     return { proposalStatus, rule };
                 }),
             );
