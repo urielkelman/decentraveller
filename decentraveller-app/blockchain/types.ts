@@ -20,7 +20,6 @@ export enum BlockchainProposalStatusNames {
     PENDING = "PENDING",
     ACTIVE = "ACTIVE",
     QUEUED = "QUEUED",
-    TO_EXECUTE = "TO_EXECUTE",
     EXECUTED = "EXECUTED",
 }
 

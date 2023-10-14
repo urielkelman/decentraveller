@@ -46,7 +46,7 @@ const CommunityScreen = ({ navigation }) => {
             case BlockchainUserStatus.TO_EXECUTE:
                 getRuleFunction = () => rulesService.getAllNewToExecute(web3Provider);
                 getRuleDeletedFunction = () => rulesService.getAllDeleteToExecute(web3Provider);
-                blockchainStatus = BlockchainProposalStatusNames.TO_EXECUTE;
+                blockchainStatus = BlockchainProposalStatusNames.QUEUED;
                 break;
         }
 
