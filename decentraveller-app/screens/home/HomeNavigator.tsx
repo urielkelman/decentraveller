@@ -20,6 +20,7 @@ import { Rule } from './community/types';
 import RuleDetailScreen from './community/RuleDetailScreen';
 import ProposeRuleScreen from "./community/ProposeRuleScreen";
 import VotingResultsScreen from "./community/VotingResultsScreen";
+import {RuleResponse} from "../../api/response/rules";
 
 export type HomeStackScreens = {
     LeftSideBar: undefined;
@@ -35,8 +36,8 @@ export type HomeStackScreens = {
     SuccessAddReviewScreen: undefined;
     UserProfileScreen: { walletId: string };
     ReviewDetailScreen: { reviewId: number; placeId: number };
-    DecentravellerRulesList: undefined;
-    RuleDetailScreen: { rule: Rule; action: () => void; inFavor: () => void; against: () => void };
+    DecentravellerRulesList: { ruleList: RuleResponse[]; minified: boolean; horizontal: boolean; refreshCallback: () => void };
+    RuleDetailScreen: { rule: Rule; refreshCallback: () => void };
     ProposeRuleScreen: undefined;
     VotingResultsScreen: { rule: Rule };
 

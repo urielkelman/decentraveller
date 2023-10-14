@@ -13,11 +13,11 @@ import { HomeStackScreens } from '../HomeNavigator';
 import DecentravellerInformativeModal from '../../../commons/components/DecentravellerInformativeModal';
 import { rulesService } from '../../../blockchain/service/rulesService';
 
-
 type RuleDetailScreenProp = StackNavigationProp<HomeStackScreens, 'VotingResultsScreen'>;
 
 type RuleDetailParams = {
     rule: Rule | null | undefined;
+    refreshCallback: () => void
 };
 
 type RuleDetailProps = {
@@ -38,7 +38,7 @@ const RuleDetailScreen: React.FC<RuleDetailProps> = ({ route }) => {
     const { web3Provider, connectionContext } = useAppContext();
     const [contentComponent, setContentComponent] = useState<React.ReactNode | null>(null);
     const navigation = useNavigation<RuleDetailScreenProp>();
-    const { rule } = route.params;
+    const { rule, refreshCallback } = route.params;
 
     useEffect(() => {
         renderContentByRuleStatus(rule.ruleStatus);
@@ -48,7 +48,6 @@ const RuleDetailScreen: React.FC<RuleDetailProps> = ({ route }) => {
         setShowSuccessVotingModal(false);
         setShowAlreadyVotedModal(false);
     };
-
 
     const getActionByStatus = (): RuleAction => {
         const { ruleStatus, ruleSubStatus } = rule;
@@ -121,6 +120,8 @@ const RuleDetailScreen: React.FC<RuleDetailProps> = ({ route }) => {
                     <View style={ruleDetailStyles.buttonContainer}>
                         <DecentravellerButton text={label} onPress={async () => {
                             await execute(action)
+                            refreshCallback()
+                            navigation.pop(2)
                         }} loading={false} />
                     </View>
                 )}

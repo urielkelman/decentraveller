@@ -25,6 +25,7 @@ type RulesListParams = {
     loadRules?: RuleLoadFunction | null | undefined;
     minified: boolean;
     horizontal: boolean;
+    refreshCallback: () => void;
 };
 
 export type RuleListProps = {

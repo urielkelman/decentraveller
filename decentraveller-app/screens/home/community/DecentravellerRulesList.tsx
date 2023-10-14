@@ -6,7 +6,7 @@ import { Rule, RuleListProps, RuleScreenProps } from './types';
 import {Montserrat_700Bold} from "@expo-google-fonts/montserrat";
 
 const DecentravellerRulesList: React.FC<RuleListProps> = ({ route }) => {
-    const { ruleList, minified, horizontal, loadRules } = route.params;
+    const { ruleList, minified, horizontal, loadRules, refreshCallback } = route.params;
     const navigation = useNavigation<RuleScreenProps>();
     const [loading, setLoading] = useState<boolean>(false);
     const [rules, setRules] = useState<Rule[]>([]);
@@ -53,7 +53,7 @@ const DecentravellerRulesList: React.FC<RuleListProps> = ({ route }) => {
     const rulesListComponent = () => {
         const internalRenderRuleItem = ({ item }: { item: Rule }) => {
             const navigateToScreen = () => {
-                navigation.navigate('RuleDetailScreen', { rule: item, action: null, against: null, inFavor: null });
+                navigation.navigate('RuleDetailScreen', { rule: item, refreshCallback: refreshCallback });
             };
 
             return (

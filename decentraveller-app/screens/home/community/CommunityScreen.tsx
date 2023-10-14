@@ -19,6 +19,7 @@ const CommunityScreen = ({ navigation }) => {
     const [selectedNonActiveRule, setSelectedNonActiveRule] = useState(BlockchainUserStatus.PENDING);
     const [loadingProposals, setLoadingProposals] = useState(true);
     const [loadingRules, setLoadingRules] = useState(true);
+    const [goBackRefresh, setGoBackRefresh] = useState(true);
 
     const handleOptionSelect = async (status) => {
         setSelectedNonActiveRule(status);
@@ -101,10 +102,15 @@ const CommunityScreen = ({ navigation }) => {
         return ruleResponses.map((ruleResponse) => mapRuleResponseToRule(ruleResponse, status));
     }
 
+    const refresh = () => {
+        setGoBackRefresh(true)
+    };
+
     useEffect(() => {
         fetchCommunityRules()
         handleOptionSelect(selectedNonActiveRule)
-    }, []);
+        setGoBackRefresh(false)
+    }, [goBackRefresh]);
 
     return (
         <View style={communityScreenStyles.container}>
@@ -123,6 +129,7 @@ const CommunityScreen = ({ navigation }) => {
                                         ruleList: communityRules,
                                         minified: false,
                                         horizontal: false,
+                                        refreshCallback: refresh,
                                     })
                                 }
                             />)
@@ -157,6 +164,7 @@ const CommunityScreen = ({ navigation }) => {
                                             ruleList: nonActiveRules,
                                             minified: false,
                                             horizontal: false,
+                                            refreshCallback: refresh,
                                         })
                                     }
                                 />
