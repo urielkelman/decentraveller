@@ -13,7 +13,7 @@ export enum BlockchainUserStatus {
     PENDING = 'Vote pending opening',
     ACTIVE = 'Active voting',
     QUEUED = 'Queued',
-    TO_QUEUE = 'To queue',
+    TO_QUEUE = 'To enqueue',
     TO_EXECUTE = 'To execute',
 }
 

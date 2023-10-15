@@ -253,7 +253,6 @@ const votingResultsStyles = StyleSheet.create({
     buttonContainer: {
         flexDirection: 'row',
         justifyContent: 'center',
-        marginTop: -25,
     },
     buttonVoteContainer: {
         flexDirection: 'row',
