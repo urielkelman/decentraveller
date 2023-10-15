@@ -21,6 +21,7 @@ import RuleDetailScreen from './community/RuleDetailScreen';
 import ProposeRuleScreen from "./community/ProposeRuleScreen";
 import VotingResultsScreen from "./community/VotingResultsScreen";
 import {RuleResponse} from "../../api/response/rules";
+import RulesScreen from './community/RulesScreen';
 
 export type HomeStackScreens = {
     LeftSideBar: undefined;
@@ -36,6 +37,7 @@ export type HomeStackScreens = {
     SuccessAddReviewScreen: undefined;
     UserProfileScreen: { walletId: string };
     ReviewDetailScreen: { reviewId: number; placeId: number };
+    RulesScreen: undefined
     DecentravellerRulesList: { ruleList: RuleResponse[]; minified: boolean; horizontal: boolean; refreshCallback: () => void };
     RuleDetailScreen: { rule: Rule; refreshCallback: () => void };
     ProposeRuleScreen: undefined;
@@ -140,6 +142,14 @@ const HomeNavigator = () => {
                     component={SuccessAddReviewScreen}
                     options={{
                         title: 'Thank you!',
+                        headerShown: true,
+                    }}
+                />
+                <HomeStackNavigator.Screen
+                    name="RulesScreen"
+                    component={RulesScreen}
+                    options={{
+                        title: 'Rules screen',
                         headerShown: true,
                     }}
                 />

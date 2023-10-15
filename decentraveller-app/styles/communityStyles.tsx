@@ -5,7 +5,7 @@ import { Montserrat_700Bold } from '@expo-google-fonts/montserrat';
 const communityScreenStyles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#FFE1E1',
+        backgroundColor: DECENTRAVELLER_DEFAULT_BACKGROUND_COLOR,
     },
     scrollView: {
     },
@@ -19,6 +19,7 @@ const communityScreenStyles = StyleSheet.create({
     title: {
         fontSize: 24,
         fontFamily: 'Montserrat_800ExtraBold',
+        marginBottom: 10,
     },
     subtitle: {
         fontSize: 16,
@@ -45,6 +46,20 @@ const communityScreenStyles = StyleSheet.create({
     },
     ruleContainer: {
         marginTop: 10
+    },
+    cardContainer: {
+        backgroundColor: 'white',
+        borderRadius: 10,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 2,
+        elevation: 4,
+        padding: 8,
+        margin: 10,
+    },
+    halfScreenCard: {
+        flex: 0.45,
     }
 });
 
@@ -124,17 +139,6 @@ const ruleDetailStyles = StyleSheet.create({
     disabledButton: {
         opacity: 0.1,
     },
-    cardContainer: {
-        backgroundColor: 'white',
-        borderRadius: 10,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.2,
-        shadowRadius: 2,
-        elevation: 4,
-        padding: 8,
-        margin: 10,
-    },
     icon: {
         width: 24,
         height: 24,
@@ -178,9 +182,6 @@ const proposeRuleStyles = StyleSheet.create({
         padding: 16,
         marginBottom: 16,
         fontSize: 16,
-    },
-    buttonContainer: {
-        marginTop: -25,
     },
 });
 

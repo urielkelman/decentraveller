@@ -51,9 +51,7 @@ const ProposeRuleScreen = () => {
                 value={ruleStatement}
                 onChangeText={(text) => setRuleStatement(text)}
             />
-            <View style={proposeRuleStyles.buttonContainer}>
-                <DecentravellerButton text="Propose Rule" onPress={handleProposeRule} loading={false} />
-            </View>
+            <DecentravellerButton text="Propose Rule" onPress={handleProposeRule} loading={false} />
             <DecentravellerInformativeModal
                 informativeText={errorMessage}
                 visible={showErrorModal}

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
 import DecentravellerButton from '../../../commons/components/DecentravellerButton';
-import { ruleDetailStyles } from '../../../styles/communityStyles';
+import { communityScreenStyles, ruleDetailStyles } from '../../../styles/communityStyles';
 import { Rule } from './types';
 import { RouteProp, useNavigation } from '@react-navigation/native';
 import { RuleStatus } from '../../../api/response/rules';
@@ -252,11 +252,11 @@ const RuleDetailScreen: React.FC<RuleDetailProps> = ({ route }) => {
 
     return (
         <View style={ruleDetailStyles.main}>
-            <View style={ruleDetailStyles.cardContainer}>
+            <View style={communityScreenStyles.cardContainer}>
                 <Text style={ruleDetailStyles.title}>{titleLabel}</Text>
             </View>
 
-            <View style={ruleDetailStyles.cardContainer}>
+            <View style={communityScreenStyles.cardContainer}>
                 <View>
                     <Text style={ruleDetailStyles.headerText}>Statement rule is:</Text>
                     <View style={ruleDetailStyles.descriptionContainer}>
@@ -265,7 +265,7 @@ const RuleDetailScreen: React.FC<RuleDetailProps> = ({ route }) => {
                 </View>
             </View>
 
-            <View style={ruleDetailStyles.cardContainer}>
+            <View style={communityScreenStyles.cardContainer}>
                 <View style={ruleDetailStyles.cardContent}>
                     <Image
                         source={require('../../../assets/images/info.png')}
@@ -283,7 +283,7 @@ const RuleDetailScreen: React.FC<RuleDetailProps> = ({ route }) => {
             </View>
 
 
-            <View style={ruleDetailStyles.cardContainer}>
+            <View style={communityScreenStyles.cardContainer}>
                 <Text style={ruleDetailStyles.subtitle}>{actionExplanationLabel}</Text>
                 {
                     loadingAction ? <LoadingComponent></LoadingComponent> : null
