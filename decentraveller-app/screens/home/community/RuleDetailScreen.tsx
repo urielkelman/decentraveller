@@ -12,6 +12,10 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { HomeStackScreens } from '../HomeNavigator';
 import DecentravellerInformativeModal from '../../../commons/components/DecentravellerInformativeModal';
 import { rulesService } from '../../../blockchain/service/rulesService';
+import { blockchainAdapter } from '../../../blockchain/blockhainAdapter';
+import { Simulate } from 'react-dom/test-utils';
+import load = Simulate.load;
+import LoadingComponent from '../../../commons/components/DecentravellerLoading';
 
 type RuleDetailScreenProp = StackNavigationProp<HomeStackScreens, 'VotingResultsScreen'>;
 
@@ -27,6 +31,8 @@ type RuleDetailProps = {
 type RuleAction = {
     action: () => {};
     label: string;
+    precondition: any;
+    preconditionFailedMessage: string;
 };
 
 const RuleDetailScreen: React.FC<RuleDetailProps> = ({ route }) => {
@@ -35,13 +41,14 @@ const RuleDetailScreen: React.FC<RuleDetailProps> = ({ route }) => {
     const [statusExplanationLabel, setStatusExplanationLabel] = useState('')
     const [showSuccessVotingModal, setShowSuccessVotingModal] = React.useState<boolean>(false);
     const [showAlreadyVotedModal, setShowAlreadyVotedModal] = React.useState<boolean>(false);
+    const [loadingAction, setLoadingAction] = useState(true);
     const { web3Provider, connectionContext } = useAppContext();
     const [contentComponent, setContentComponent] = useState<React.ReactNode | null>(null);
     const navigation = useNavigation<RuleDetailScreenProp>();
     const { rule, refreshCallback } = route.params;
 
     useEffect(() => {
-        renderContentByRuleStatus(rule.ruleStatus);
+        renderContentByRule(rule)
     }, [rule.ruleStatus]);
 
     const onCloseModal = () => {
@@ -56,10 +63,16 @@ const RuleDetailScreen: React.FC<RuleDetailProps> = ({ route }) => {
             [BlockchainProposalStatus.EXECUTED]: {
                 action: rulesService.proposeRuleDeletion,
                 buttonActionText: communityWording.PROPOSE_DELETE,
+                precondition: async (rule: Rule) => {
+                    return rule.ruleStatus == RuleStatus.APPROVED
+                },
+                preconditionFailedMessage: "The rule is already being proposed to delete",
             },
             [BlockchainProposalStatus.SUCCEEDED]: {
                 action: ruleStatus === RuleStatus.PENDING_APPROVAL ? () => rulesService.queueNewRule(web3Provider, rule) : () => rulesService.queueRuleDeletion(web3Provider, rule),
                 buttonActionText: communityWording.ENQUEUE,
+                precondition: undefined,
+                preconditionFailedMessage: "",
                 explanations: {
                     action: communityWording.SUCCEDED_VOTATION_ACTION,
                     status: communityWording.SUCCEDED_VOTATION_STATUS,
@@ -68,14 +81,21 @@ const RuleDetailScreen: React.FC<RuleDetailProps> = ({ route }) => {
             [BlockchainProposalStatus.QUEUED]: {
                 action: ruleStatus === RuleStatus.PENDING_APPROVAL ? () => rulesService.executeNewRule(web3Provider, rule)  : () => rulesService.executeRuleDeletion(web3Provider, rule),
                 buttonActionText: communityWording.EXECUTE,
+                precondition: async (rule: Rule) => {
+                    const now = await blockchainAdapter.blockchainDate(web3Provider)
+                    return now >= new Date(rule.executionTimeAt)
+                },
+                preconditionFailedMessage: communityWording.EXECUTE_NOT_READY,
                 explanations: {
                     action: communityWording.QUEUED_VOTATION_ACTION,
                     status: communityWording.QUEUED_VOTATION_STATUS,
-                },
+                }
             },
             [BlockchainProposalStatus.DEFEATED]: {
                 action: navigation.goBack,
                 buttonActionText: communityWording.GO_BACK,
+                precondition: undefined,
+                preconditionFailedMessage: "",
                 explanations: {
                     action: communityWording.DEFEATED_VOTATION_ACTION,
                     status: communityWording.DEFEATED_VOTATION_STATUS,
@@ -83,14 +103,16 @@ const RuleDetailScreen: React.FC<RuleDetailProps> = ({ route }) => {
             },
         };
 
-        const { action, buttonActionText, explanations } = statusActionMap[ruleSubStatus] || {};
+        const { action, buttonActionText, precondition,
+            preconditionFailedMessage, explanations } = statusActionMap[ruleSubStatus] || {};
 
         if (explanations) {
             setActionExplanationLabel(explanations.action);
             setStatusExplanationLabel(explanations.status);
         }
 
-        return { action, label: buttonActionText };
+        return { action, label: buttonActionText, precondition: precondition,
+            preconditionFailedMessage: preconditionFailedMessage};
     };
 
 
@@ -109,20 +131,23 @@ const RuleDetailScreen: React.FC<RuleDetailProps> = ({ route }) => {
         await action(web3Provider, arg)
     };
 
-    const renderVoted = () => {
+    const renderVoted = async () => {
         const { ruleStatus } = rule;
 
-        const { action, label }: RuleAction = getActionByStatus();
+        const { action, label, precondition, preconditionFailedMessage }: RuleAction = getActionByStatus();
+
+        const preconditionOk = !precondition || await precondition(rule);
 
         return (
             <React.Fragment>
+                <Text style={ruleDetailStyles.subsubtitle}>{preconditionOk ? "" : preconditionFailedMessage}</Text>
                 {ruleStatus !== RuleStatus.DELETED && (
                     <View style={ruleDetailStyles.buttonContainer}>
                         <DecentravellerButton text={label} onPress={async () => {
                             await execute(action)
                             refreshCallback()
                             navigation.pop(2)
-                        }} loading={false} />
+                        }} loading={false} enabled={preconditionOk}/>
                     </View>
                 )}
             </React.Fragment>
@@ -146,7 +171,7 @@ const RuleDetailScreen: React.FC<RuleDetailProps> = ({ route }) => {
         setShowSuccessVotingModal(true)
     };
 
-    const renderVoting = () => {
+    const renderVoting = async () => {
         const actionLabel =
             rule.ruleSubStatus === BlockchainProposalStatus.PENDING
                 ? communityWording.PENDING_VOTATION_ACTION
@@ -196,36 +221,39 @@ const RuleDetailScreen: React.FC<RuleDetailProps> = ({ route }) => {
         );
     };
 
-    const renderContentByRuleStatus = (ruleStatus: RuleStatus) => {
-        switch (ruleStatus) {
+    const renderContentByRule = async (rule: Rule) => {
+        setLoadingAction(true)
+        switch (rule.ruleStatus) {
             case RuleStatus.APPROVED:
                 setTitleLabel(communityWording.APPROVED_STATUS);
                 setActionExplanationLabel(communityWording.PROPOSE_DELETE_ACTION);
                 setStatusExplanationLabel(communityWording.PROPOSE_DELETE_STATUS);
-                setContentComponent(renderVoted());
+                setContentComponent(await renderVoted());
                 break;
             case RuleStatus.DELETED:
                 setTitleLabel(communityWording.DELETED_STATUS);
                 setActionExplanationLabel(communityWording.NO_ACTION_AVAILABLE);
-                setContentComponent(renderVoted());
+                setContentComponent(await renderVoted());
                 break;
             case RuleStatus.PENDING_APPROVAL:
                 setTitleLabel(communityWording.PENDING_APPROVAL_STATUS);
-                setContentComponent(renderPending());
+                setContentComponent(await renderPending()());
                 break;
             case RuleStatus.PENDING_DELETED:
+                if(rule.ruleSubStatus == BlockchainProposalStatus.EXECUTED){
+                    setActionExplanationLabel(communityWording.PROPOSE_DELETE_ACTION);
+                }
                 setTitleLabel(communityWording.PENDING_DELETED_STATUS);
-                setContentComponent(renderPending());
+                setContentComponent(await renderPending()());
                 break;
         }
+        setLoadingAction(false)
     };
 
     return (
-        <View>
+        <View style={ruleDetailStyles.main}>
             <View style={ruleDetailStyles.cardContainer}>
-                <View>
-                    <Text style={ruleDetailStyles.label}>{titleLabel}</Text>
-                </View>
+                <Text style={ruleDetailStyles.title}>{titleLabel}</Text>
             </View>
 
             <View style={ruleDetailStyles.cardContainer}>
@@ -256,9 +284,10 @@ const RuleDetailScreen: React.FC<RuleDetailProps> = ({ route }) => {
 
 
             <View style={ruleDetailStyles.cardContainer}>
-                <View>
-                    <Text style={ruleDetailStyles.subtitle}>{actionExplanationLabel}</Text>
-                </View>
+                <Text style={ruleDetailStyles.subtitle}>{actionExplanationLabel}</Text>
+                {
+                    loadingAction ? <LoadingComponent></LoadingComponent> : null
+                }
                 {contentComponent}
             </View>
 

@@ -13,6 +13,7 @@ export enum BlockchainUserStatus {
     PENDING = 'Vote pending opening',
     ACTIVE = 'Active voting',
     QUEUED = 'Queued',
+    TO_QUEUE = 'To queue',
     TO_EXECUTE = 'To execute',
 }
 
@@ -21,6 +22,7 @@ export enum BlockchainProposalStatusNames {
     ACTIVE = "ACTIVE",
     QUEUED = "QUEUED",
     EXECUTED = "EXECUTED",
+    SUCCEEDED = "SUCCEEDED"
 }
 
 export type BlockchainProposalResult = {

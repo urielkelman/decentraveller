@@ -39,6 +39,11 @@ const CommunityScreen = ({ navigation }) => {
                 getRuleDeletedFunction = () => rulesService.getAllDeleteInVotingProcess(web3Provider);
                 blockchainStatus = BlockchainProposalStatusNames.ACTIVE;
                 break;
+            case BlockchainUserStatus.TO_QUEUE:
+                getRuleFunction = () => rulesService.getAllNewToQueue(web3Provider);
+                getRuleDeletedFunction = () => rulesService.getAllDeleteToQueue(web3Provider);
+                blockchainStatus = BlockchainProposalStatusNames.SUCCEEDED;
+                break;
             case BlockchainUserStatus.QUEUED:
                 getRuleFunction = () => rulesService.getAllQueued(web3Provider);
                 getRuleDeletedFunction = () => rulesService.getAllDeleteQueued(web3Provider);
@@ -88,11 +93,16 @@ const CommunityScreen = ({ navigation }) => {
             proposalId: (ruleResponse.ruleStatus == RuleStatus.PENDING_DELETED ||
                 ruleResponse.ruleStatus  == RuleStatus.DELETED) ?
                 ruleResponse.deletionProposalId : ruleResponse.proposalId,
-            proposer: ruleResponse.proposer,
+            proposer: (ruleResponse.ruleStatus == RuleStatus.PENDING_DELETED ||
+                ruleResponse.ruleStatus  == RuleStatus.DELETED) ?
+                ruleResponse.deletionProposer : ruleResponse.proposer,
             ruleStatement: ruleResponse.ruleStatement,
             ruleStatus: ruleResponse.ruleStatus,
             ruleSubStatus: BlockchainProposalStatus[status],
-            proposedAt: ruleResponse.proposedAt
+            proposedAt: ruleResponse.proposedAt,
+            executionTimeAt: (ruleResponse.ruleStatus == RuleStatus.PENDING_DELETED ||
+                ruleResponse.ruleStatus  == RuleStatus.DELETED) ?
+                ruleResponse.deletionExecutionTimeAt : ruleResponse.executionTimeAt,
         };
 
         return rule;
@@ -147,6 +157,7 @@ const CommunityScreen = ({ navigation }) => {
                                     selectedValue={selectedNonActiveRule}>
                                 <Picker.Item label={BlockchainUserStatus.PENDING} value={BlockchainUserStatus.PENDING} />
                                 <Picker.Item label={BlockchainUserStatus.ACTIVE} value={BlockchainUserStatus.ACTIVE} />
+                                <Picker.Item label={BlockchainUserStatus.TO_QUEUE} value={BlockchainUserStatus.TO_QUEUE} />
                                 <Picker.Item label={BlockchainUserStatus.QUEUED} value={BlockchainUserStatus.QUEUED} />
                                 <Picker.Item label={BlockchainUserStatus.TO_EXECUTE} value={BlockchainUserStatus.TO_EXECUTE} />
                             </Picker>

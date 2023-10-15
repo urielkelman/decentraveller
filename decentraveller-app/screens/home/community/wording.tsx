@@ -2,6 +2,7 @@ export const communityWording = {
     PROPOSE_DELETE: 'Propose to delete',
     ENQUEUE: 'Enqueue',
     EXECUTE: 'Execute',
+    EXECUTE_NOT_READY: 'The execution is not yet ready',
     GO_BACK: 'Go back',
     SUCCEDED_VOTATION_ACTION: 'This rule passed the voting, queue it to make it part of the community',
     SUCCEDED_VOTATION_STATUS: 'Since this rule won its corresponding vote, it remains to be queued in the blockchain for its corresponding processing.',

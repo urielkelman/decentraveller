@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { DECENTRAVELLER_DEFAULT_BACKGROUND_COLOR } from '../../../commons/global';
 
 const RulesList = ({ rules, onPress }) => {
     return (

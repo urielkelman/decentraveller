@@ -11,6 +11,7 @@ export type Rule = {
     ruleStatus: RuleStatus;
     ruleSubStatus: BlockchainProposalStatus;
     proposedAt: string;
+    executionTimeAt: string | undefined;
 };
 
 type LoadRulesResponse = {

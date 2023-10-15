@@ -93,7 +93,10 @@ const bottomTabButtonStyle = StyleSheet.create({
         minHeight: height * 0.06,
         margin: height * 0.01,
         borderRadius: width * 0.06,
-        marginTop: height * 0.05,
+    },
+    disabled: {
+        opacity: 0.6,
+        backgroundColor: 'rgb(170, 170, 170)'
     },
     text: {
         color: 'white',

@@ -49,6 +49,10 @@ const communityScreenStyles = StyleSheet.create({
 });
 
 const ruleDetailStyles = StyleSheet.create({
+    main: {
+        backgroundColor: DECENTRAVELLER_DEFAULT_BACKGROUND_COLOR,
+        flex: 1
+    },
     container: {
         flex: 1,
         alignItems: 'center',
@@ -77,15 +81,21 @@ const ruleDetailStyles = StyleSheet.create({
         textAlign: 'center',
         fontFamily: 'Montserrat_700Bold',
     },
-    label: {
-        fontSize: 14,
-        marginBottom: 10,
+    title: {
+        fontSize: 18,
         fontFamily: 'Montserrat_500Medium',
+        alignSelf: "center",
+    },
+    subsubtitle: {
+        alignSelf: "center",
+        fontSize: 14,
+        fontFamily: 'Montserrat_400Regular',
     },
     subtitle: {
         alignSelf: "center",
         fontSize: 18,
         fontFamily: 'Montserrat_400Regular',
+        marginBottom: 10
     },
     explanationText: {
         fontSize: 14,
@@ -97,7 +107,6 @@ const ruleDetailStyles = StyleSheet.create({
     buttonContainer: {
         flexDirection: 'row',
         justifyContent: 'center',
-        marginTop: 0,
     },
 
     buttonVoteContainer: {

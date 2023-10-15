@@ -4,6 +4,7 @@ import LoadingComponent from '../../../commons/components/DecentravellerLoading'
 import { useNavigation } from '@react-navigation/native';
 import { Rule, RuleListProps, RuleScreenProps } from './types';
 import {Montserrat_700Bold} from "@expo-google-fonts/montserrat";
+import { DECENTRAVELLER_DEFAULT_BACKGROUND_COLOR } from '../../../commons/global';
 
 const DecentravellerRulesList: React.FC<RuleListProps> = ({ route }) => {
     const { ruleList, minified, horizontal, loadRules, refreshCallback } = route.params;
@@ -86,6 +87,8 @@ const DecentravellerRulesList: React.FC<RuleListProps> = ({ route }) => {
                 ListFooterComponent={footerComponent}
                 onEndReached={loadMore}
                 onEndReachedThreshold={0.1}
+                style={{backgroundColor: DECENTRAVELLER_DEFAULT_BACKGROUND_COLOR,
+                    flex: 1}}
             />
         );
     };

@@ -15,6 +15,7 @@ class RulesService {
         this.blockchainAdapter = blockchainAdapter;
         this.apiAdapter = apiAdapter;
     }
+
     async getAllPendingToVote(web3Provider: ethers.providers.Web3Provider): Promise<RuleResponse[]> {
         return this.getAllWithRuleStatusAndBlockchainProposalStatus(
             web3Provider,
@@ -48,11 +49,14 @@ class RulesService {
     }
 
     async getAllQueued(web3Provider: ethers.providers.Web3Provider): Promise<RuleResponse[]> {
-        return this.getAllWithRuleStatusAndBlockchainProposalStatus(
+        const rulesWithQueuedProposal = await this.getAllWithRuleStatusAndBlockchainProposalStatus(
             web3Provider,
             RuleStatus.PENDING_APPROVAL,
             BlockchainProposalStatus.QUEUED,
         );
+
+        const now = await blockchainAdapter.blockchainDate(web3Provider)
+        return rulesWithQueuedProposal.filter((queuedRule) => now < new Date(queuedRule.executionTimeAt));
     }
 
     async getAllNewToExecute(web3Provider: ethers.providers.Web3Provider): Promise<RuleResponse[]> {
@@ -62,7 +66,7 @@ class RulesService {
             BlockchainProposalStatus.QUEUED,
         );
 
-        const now = new Date((await web3Provider.getBlock("latest")).timestamp * 1000);
+        const now = await blockchainAdapter.blockchainDate(web3Provider)
         return rulesWithQueuedProposal.filter((queuedRule) => now >= new Date(queuedRule.executionTimeAt));
     }
 
@@ -99,11 +103,14 @@ class RulesService {
     }
 
     async getAllDeleteQueued(web3Provider: ethers.providers.Web3Provider): Promise<RuleResponse[]> {
-        return this.getAllWithRuleStatusAndBlockchainProposalStatus(
+        const rulesWithQueuedProposal = await this.getAllWithRuleStatusAndBlockchainProposalStatus(
             web3Provider,
             RuleStatus.PENDING_DELETED,
             BlockchainProposalStatus.QUEUED,
         );
+
+        const now = await blockchainAdapter.blockchainDate(web3Provider)
+        return rulesWithQueuedProposal.filter((queuedRule) => now < new Date(queuedRule.deletionExecutionTimeAt));
     }
 
     async getAllDeleteToExecute(web3Provider: ethers.providers.Web3Provider): Promise<RuleResponse[]> {
@@ -113,8 +120,8 @@ class RulesService {
             BlockchainProposalStatus.QUEUED,
         );
 
-        const now = new Date((await web3Provider.getBlock("latest")).timestamp * 1000);
-        return rulesWithQueuedProposal.filter((queuedRule) => now > new Date(queuedRule.executionTimeAt));
+        const now = await blockchainAdapter.blockchainDate(web3Provider)
+        return rulesWithQueuedProposal.filter((queuedRule) => now >= new Date(queuedRule.deletionExecutionTimeAt));
     }
 
     async getFormerRules(): Promise<RuleResponse[]> {
@@ -182,7 +189,7 @@ class RulesService {
     }
 
     async queueRuleDeletion(web3Provider: ethers.providers.Web3Provider, rule: Rule): Promise<string> {
-        return this.callRuleProposalAction(
+        return this.callDeleteRuleProposalAction(
             web3Provider,
             rule,
             async (contract) => (await contract.populateTransaction.deleteRule(rule.ruleId)).data!,
@@ -192,7 +199,7 @@ class RulesService {
     }
 
     async executeRuleDeletion(web3Provider: ethers.providers.Web3Provider, rule: Rule): Promise<string> {
-        return this.callRuleProposalAction(
+        return this.callDeleteRuleProposalAction(
             web3Provider,
             rule,
             async (contract) => (await contract.populateTransaction.deleteRule(rule.ruleId)).data!,
@@ -250,6 +257,30 @@ class RulesService {
         const txCalldata = await generateCallData(decentravellerContract);
 
         const proposalHash = ethers.utils.id(rule.ruleStatement);
+
+        return ruleAction(web3Provider, decentravellerContractAddress, txCalldata, proposalHash);
+    }
+
+    private async callDeleteRuleProposalAction(
+        web3Provider: ethers.providers.Web3Provider,
+        rule: Rule,
+        generateCallData: (contract: ethers.Contract) => Promise<string>,
+        ruleAction: (
+            provider: ethers.providers.Web3Provider,
+            contractAddress: string,
+            calldata: string,
+            proposalHash: string,
+        ) => Promise<string>,
+    ): Promise<string> {
+        const decentravellerContractAddress =
+            decentravellerMainContract.addressesByBlockchain[BlockchainByChainId[DEFAULT_CHAIN_ID]];
+        const decentravellerContract: ethers.Contract = new ethers.Contract(
+            decentravellerContractAddress,
+            decentravellerMainContract.fullContractABI,
+        );
+        const txCalldata = await generateCallData(decentravellerContract);
+
+        const proposalHash = ethers.utils.id("Delete rule: " + rule.ruleStatement);
 
         return ruleAction(web3Provider, decentravellerContractAddress, txCalldata, proposalHash);
     }

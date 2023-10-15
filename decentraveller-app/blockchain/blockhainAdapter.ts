@@ -63,6 +63,10 @@ class BlockchainAdapter {
         return this.populateAndSendWithAddress(web3Provider, contract, functionName, contractAddress, ...args);
     }
 
+    async blockchainDate(web3Provider: ethers.providers.Web3Provider) {
+        return new Date((await web3Provider.getBlock("latest")).timestamp * 1000);
+    }
+
     async createAddNewPlaceTransaction(
         web3Provider: ethers.providers.Web3Provider,
         placeName: string,
