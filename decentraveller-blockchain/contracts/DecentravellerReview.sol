@@ -11,7 +11,7 @@ error Review__IsPublic();
 contract DecentravellerReview is Initializable, Ownable {
     uint256 reviewId;
     uint256 placeId;
-    address owner;
+    address reviewOwner;
     string reviewText;
     string[] imagesHashes;
     uint8 score;
@@ -20,7 +20,7 @@ contract DecentravellerReview is Initializable, Ownable {
     function initialize(
         uint256 _reviewId,
         uint256 _placeId,
-        address _owner,
+        address _reviewOwner,
         string memory _reviewText,
         string[] memory _imagesHashes,
         uint8 _score,
@@ -28,7 +28,7 @@ contract DecentravellerReview is Initializable, Ownable {
     ) public initializer {
         reviewId = _reviewId;
         placeId = _placeId;
-        owner = _owner;
+        reviewOwner = _reviewOwner;
         reviewText = _reviewText;
         imagesHashes = _imagesHashes;
         score = _score;

@@ -32,9 +32,9 @@ const baseConfig: HardhatUserConfig = {
         },
         hardhat: {
             accounts: {
-                count: 200
+                count: 200,
             },
-        }
+        },
     },
     gasReporter: {
         enabled: true,
@@ -61,6 +61,15 @@ const baseConfig: HardhatUserConfig = {
         },
         faucet: {
             default: 5,
+        },
+        secondUser: {
+            default: 6,
+        },
+        thirdUser: {
+            default: 7,
+        },
+        fourthUser: {
+            default: 8,
         },
     },
 };

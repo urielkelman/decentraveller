@@ -68,6 +68,7 @@ const deployFunction: DeployFunction = async function (
                 "Do not insult any person.",
                 "If it is a gastronomic place, you should specify what you ate.",
             ],
+            3,
         ],
         log: true,
     });

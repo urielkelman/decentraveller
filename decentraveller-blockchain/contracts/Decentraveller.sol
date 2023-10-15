@@ -12,6 +12,7 @@ import "hardhat/console.sol";
 error Place__NonExistent(uint256 placeId);
 error Place__AlreadyExistent(uint256 placeId);
 error Profile__NicknameInUse(string nickname);
+error Profile__AlreadyCreated(address userAddress);
 error Address__Unregistered(address sender);
 error OnlyGovernance__Execution();
 error Rule__NonExistent(uint256 ruleId);
@@ -19,11 +20,12 @@ error Rule__AlreadyDeleted(uint256 ruleId);
 error OnlyModerator__Execution();
 
 contract Decentraveller {
-    event UpdatedProfile(
+    event ProfileCreated(
         address indexed owner,
         string nickname,
         string country,
-        DecentravellerDataTypes.DecentravellerPlaceCategory interest
+        DecentravellerDataTypes.DecentravellerPlaceCategory interest,
+        DecentravellerDataTypes.DecentravellerUserRole userRole
     );
 
     event DecentravellerRuleProposed(
@@ -133,6 +135,12 @@ contract Decentraveller {
         string calldata _country,
         DecentravellerDataTypes.DecentravellerPlaceCategory _interest
     ) public returns (address owner) {
+        address profileOwner = profilesByOwner[msg.sender].owner;
+
+        if (profileOwner != address(0)) {
+            revert Profile__AlreadyCreated(profileOwner);
+        }
+
         address nicknameOwner = ownersByNicknames[_nickname];
 
         if (nicknameOwner != address(0)) {
@@ -140,10 +148,15 @@ contract Decentraveller {
         }
 
         ownersByNicknames[_nickname] = msg.sender;
-        DecentravellerDataTypes.DecentravellerUserRole role = currentModeratorsAmount <
-                moderatorsAmount
-                ? DecentravellerDataTypes.DecentravellerUserRole.NORMAL
-                : DecentravellerDataTypes.DecentravellerUserRole.MODERATOR;
+
+        DecentravellerDataTypes.DecentravellerUserRole role;
+
+        if (currentModeratorsAmount < moderatorsAmount) {
+            role = DecentravellerDataTypes.DecentravellerUserRole.MODERATOR;
+            currentModeratorsAmount++;
+        } else {
+            role = DecentravellerDataTypes.DecentravellerUserRole.NORMAL;
+        }
 
         profilesByOwner[msg.sender] = DecentravellerDataTypes
             .DecentravellerProfile({
@@ -154,7 +167,7 @@ contract Decentraveller {
                 role: role
             });
 
-        emit UpdatedProfile(msg.sender, _nickname, _country, _interest);
+        emit ProfileCreated(msg.sender, _nickname, _country, _interest, role);
 
         return msg.sender;
     }
@@ -319,7 +332,7 @@ contract Decentraveller {
 
         uint256 censoredReviewsAmount = censoredReviewsOfDeletedRule.length;
 
-        for (uint i = 0; i <= censoredReviewsAmount; i++) {
+        for (uint i = 0; i < censoredReviewsAmount; i++) {
             ReviewIdData memory reviewIdData = censoredReviewsOfDeletedRule[i];
             _uncensorReview(reviewIdData.placeId, reviewIdData.reviewId);
         }
