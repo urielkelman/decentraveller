@@ -88,7 +88,6 @@ const PlaceDetailScreen: React.FC<PlaceDetailScreenProps> = ({ route }) => {
 
     return (
         <View style={placeDetailStyles.container}>
-
             <TouchableOpacity style={placeDetailStyles.imageContainer} onPress={openGallery}>
                 <Image style={placeDetailStyles.image} source={{ uri: apiAdapter.getPlaceImageUrl(id) }} />
             </TouchableOpacity>

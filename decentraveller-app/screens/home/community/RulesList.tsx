@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
     },
     ruleContainer: {
         paddingVertical: 5,
-        paddingHorizontal: 3
+        paddingHorizontal: 3,
     },
     rule: {
         fontSize: 14,

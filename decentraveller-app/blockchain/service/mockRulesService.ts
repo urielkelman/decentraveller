@@ -1,7 +1,7 @@
 import { RuleResponse, RuleStatus } from '../../api/response/rules';
 import { ethers } from 'ethers';
-import {BlockchainProposalStatus} from "../types";
-import {VotingResultsResponse} from "../../screens/home/community/VotingResultsScreen";
+import { BlockchainProposalStatus } from '../types';
+import { VotingResultsResponse } from '../../screens/home/community/VotingResultsScreen';
 
 class RulesService {
     async getAllPendingToVote(web3Provider: ethers.providers.Web3Provider): Promise<RuleResponse[]> {
@@ -13,7 +13,7 @@ class RulesService {
             rules.push({
                 ruleId: i,
                 proposalId: 'proposalId',
-                deletionExecutionTimestampAt: '',
+                deletionExecutionTimeAt: '',
                 executionTimeAt: '',
                 proposer: '',
                 ruleStatement: `this is a PENDING ${i}: Rule.`,
@@ -36,7 +36,7 @@ class RulesService {
             rules.push({
                 ruleId: i,
                 proposalId: 'proposalId',
-                deletionExecutionTimestampAt: '',
+                deletionExecutionTimeAt: '',
                 executionTimeAt: '',
                 proposer: '',
                 ruleStatement: `ACTIVE ${i}: Rule.`,
@@ -59,7 +59,7 @@ class RulesService {
             rules.push({
                 ruleId: i,
                 proposalId: 'proposalId',
-                deletionExecutionTimestampAt: '',
+                deletionExecutionTimeAt: '',
                 executionTimeAt: '',
                 proposer: '',
                 ruleStatement: `this is a DEFEATED ${i}: Rule.`,
@@ -82,7 +82,7 @@ class RulesService {
             rules.push({
                 ruleId: i,
                 proposalId: 'proposalId',
-                deletionExecutionTimestampAt: '',
+                deletionExecutionTimeAt: '',
                 executionTimeAt: '',
                 proposer: '',
                 ruleStatement: `this is a SUCCEDED ${i}: Rule.`,
@@ -105,7 +105,7 @@ class RulesService {
             rules.push({
                 ruleId: i,
                 proposalId: 'proposalId',
-                deletionExecutionTimestampAt: '',
+                deletionExecutionTimeAt: '',
                 executionTimeAt: '',
                 proposer: '',
                 ruleStatement: `this is a QUEUED ${i}: Rule.`,
@@ -128,7 +128,7 @@ class RulesService {
             rules.push({
                 ruleId: i,
                 proposalId: 'proposalId',
-                deletionExecutionTimestampAt: '',
+                deletionExecutionTimeAt: '',
                 executionTimeAt: '',
                 proposer: '',
                 ruleStatement: `this is a QUEUED ${i}: Rule.`,
@@ -151,7 +151,7 @@ class RulesService {
             rules.push({
                 ruleId: i,
                 proposalId: 'proposalId',
-                deletionExecutionTimestampAt: '',
+                deletionExecutionTimeAt: '',
                 executionTimeAt: '',
                 proposer: '',
                 ruleStatement: `this is a EXECUTED ${i}: Rule.`,
@@ -174,7 +174,7 @@ class RulesService {
             rules.push({
                 ruleId: i,
                 proposalId: 'proposalId',
-                deletionExecutionTimestampAt: '',
+                deletionExecutionTimeAt: '',
                 executionTimeAt: '',
                 proposer: '',
                 ruleStatement: `this is a PENDING ${i}: Rule.`,
@@ -197,7 +197,7 @@ class RulesService {
             rules.push({
                 ruleId: i,
                 proposalId: 'proposalId',
-                deletionExecutionTimestampAt: '',
+                deletionExecutionTimeAt: '',
                 executionTimeAt: '',
                 proposer: '',
                 ruleStatement: `this is a ACTIVE ${i}: Rule.`,
@@ -220,7 +220,7 @@ class RulesService {
             rules.push({
                 ruleId: i,
                 proposalId: 'proposalId',
-                deletionExecutionTimestampAt: '',
+                deletionExecutionTimeAt: '',
                 executionTimeAt: '',
                 proposer: '',
                 ruleStatement: `this is a DEFEATED ${i}: Rule.`,
@@ -243,7 +243,7 @@ class RulesService {
             rules.push({
                 ruleId: i,
                 proposalId: 'proposalId',
-                deletionExecutionTimestampAt: '',
+                deletionExecutionTimeAt: '',
                 executionTimeAt: '',
                 proposer: '',
                 ruleStatement: `this is a SUCCEDED ${i}: Rule.`,
@@ -266,7 +266,7 @@ class RulesService {
             rules.push({
                 ruleId: i,
                 proposalId: 'proposalId',
-                deletionExecutionTimestampAt: '',
+                deletionExecutionTimeAt: '',
                 executionTimeAt: '',
                 proposer: '',
                 ruleStatement: `this is a QUEUED ${i}: Rule.`,
@@ -289,7 +289,7 @@ class RulesService {
             rules.push({
                 ruleId: i,
                 proposalId: 'proposalId',
-                deletionExecutionTimestampAt: '',
+                deletionExecutionTimeAt: '',
                 executionTimeAt: '',
                 proposer: '',
                 ruleStatement: `this is a QUEUED ${i}: Rule.`,
@@ -347,11 +347,11 @@ class RulesService {
         return {
             favor: 20,
             against: 10,
-        }
+        };
     }
 
     async getVotingPower(web3Provider: ethers.providers.Web3Provider, wallet: string): Promise<number> {
-        return 241
+        return 241;
     }
 
     private async getRulesWithStatus(ruleStatus: RuleStatus): Promise<RuleResponse[]> {
@@ -363,7 +363,7 @@ class RulesService {
             rules.push({
                 ruleId: i,
                 proposalId: 'proposalId',
-                deletionExecutionTimestampAt: '',
+                deletionExecutionTimeAt: '',
                 executionTimeAt: '',
                 proposer: '',
                 ruleStatement: `this is an invented ${i}: Rule.`,

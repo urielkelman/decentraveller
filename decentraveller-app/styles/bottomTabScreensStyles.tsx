@@ -96,7 +96,7 @@ const bottomTabButtonStyle = StyleSheet.create({
     },
     disabled: {
         opacity: 0.6,
-        backgroundColor: 'rgb(170, 170, 170)'
+        backgroundColor: 'rgb(170, 170, 170)',
     },
     text: {
         color: 'white',

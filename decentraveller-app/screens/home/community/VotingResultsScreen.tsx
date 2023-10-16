@@ -11,9 +11,7 @@ import { communityWording } from './wording';
 import DecentravellerInformativeModal from '../../../commons/components/DecentravellerInformativeModal';
 import LoadingComponent from '../../../commons/components/DecentravellerLoading';
 import DecentravellerProgressBar from '../../../commons/components/DecentravellerProgressBar';
-import {
-    DECENTRAVELLER_DEFAULT_CONTRAST_COLOR,
-} from '../../../commons/global';
+import { DECENTRAVELLER_DEFAULT_CONTRAST_COLOR } from '../../../commons/global';
 
 type VotingResultsParams = {
     rule: Rule | null | undefined;
@@ -63,8 +61,8 @@ const VotingResultsScreen: React.FC<RuleDetailProps> = ({ route }) => {
             const proposalResult = await blockchainRulesService.getProposalResult(web3Provider, rule.proposalId);
             setFavorVotes(proposalResult.ForVotes);
             setAgainstVotes(proposalResult.AgainstVotes);
-            const timepointQuorum = await blockchainRulesService.getTimepointQuorum(web3Provider, rule.proposedAt)
-            setQuorumVotes(timepointQuorum)
+            const timepointQuorum = await blockchainRulesService.getTimepointQuorum(web3Provider, rule.proposedAt);
+            setQuorumVotes(timepointQuorum);
         } catch (e) {
             setShowError(true);
             console.log(e);
@@ -74,8 +72,11 @@ const VotingResultsScreen: React.FC<RuleDetailProps> = ({ route }) => {
 
     const fetchVotingPower = async () => {
         try {
-            const votingPowerResponse = await blockchainRulesService.getVotingPowerForProposal(web3Provider,
-                connectionContext.connectedAddress, rule.proposedAt);
+            const votingPowerResponse = await blockchainRulesService.getVotingPowerForProposal(
+                web3Provider,
+                connectionContext.connectedAddress,
+                rule.proposedAt,
+            );
             setVotingPower(votingPowerResponse);
         } catch (e) {
             setShowError(true);
@@ -92,15 +93,15 @@ const VotingResultsScreen: React.FC<RuleDetailProps> = ({ route }) => {
 
     const componentToShow = (
         <View>
-
             <View style={votingResultsStyles.cardContainer}>
                 <Text style={votingResultsStyles.description}>Votes to reach quorum</Text>
                 <DecentravellerProgressBar
-                    progress={(favorVotes + againstVotes)/quorumVotes}
+                    progress={(favorVotes + againstVotes) / quorumVotes}
                     height={20}
-                     color={DECENTRAVELLER_DEFAULT_CONTRAST_COLOR}
-                     unfilledColor={"rgba(200, 200, 200, 1)"}
-                    label={`${favorVotes + againstVotes}/${quorumVotes}`}/>
+                    color={DECENTRAVELLER_DEFAULT_CONTRAST_COLOR}
+                    unfilledColor={'rgba(200, 200, 200, 1)'}
+                    label={`${favorVotes + againstVotes}/${quorumVotes}`}
+                />
             </View>
             <View style={votingResultsStyles.cardContainer}>
                 <Text style={votingResultsStyles.description}>Updated voting results</Text>
@@ -115,9 +116,10 @@ const VotingResultsScreen: React.FC<RuleDetailProps> = ({ route }) => {
                             backgroundGradientTo: 'white',
                             color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
                         }}
-                        accessor='population'
-                        backgroundColor='transparent'
-                        paddingLeft='15' absolute
+                        accessor="population"
+                        backgroundColor="transparent"
+                        paddingLeft="15"
+                        absolute
                     />
                     <View style={votingResultsStyles.legendContainer}>
                         {data.map((item, index) => (
@@ -134,38 +136,35 @@ const VotingResultsScreen: React.FC<RuleDetailProps> = ({ route }) => {
                 <View style={votingResultsStyles.cardContent}>
                     <View style={votingResultsStyles.textContainer}>
                         <Text style={votingResultsStyles.headerText}>{`Voting Power: ${votingPower}`}</Text>
-                        <Text style={votingResultsStyles.explanationText}>
-                            {communityWording.VOTING_POWER}
-                        </Text>
+                        <Text style={votingResultsStyles.explanationText}>{communityWording.VOTING_POWER}</Text>
                     </View>
                 </View>
             </View>
 
             <View style={votingResultsStyles.buttonContainer}>
-                <DecentravellerButton text={'Back'} onPress={async () => {
-                    navigation.goBack();
-                }} loading={false} />
+                <DecentravellerButton
+                    text={'Back'}
+                    onPress={async () => {
+                        navigation.goBack();
+                    }}
+                    loading={false}
+                />
             </View>
         </View>
     );
 
     return (
         <View>
-            {
-                loading ? ( <LoadingComponent /> ) : componentToShow
-            }
+            {loading ? <LoadingComponent /> : componentToShow}
 
             <DecentravellerInformativeModal
-                informativeText='Unexpected error'
+                informativeText="Unexpected error"
                 visible={showError}
                 closeModalText={'Close'}
                 handleCloseModal={() => navigation.goBack()}
             />
-
         </View>
     );
-
 };
-
 
 export default VotingResultsScreen;

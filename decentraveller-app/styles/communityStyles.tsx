@@ -7,8 +7,7 @@ const communityScreenStyles = StyleSheet.create({
         flex: 1,
         backgroundColor: DECENTRAVELLER_DEFAULT_BACKGROUND_COLOR,
     },
-    scrollView: {
-    },
+    scrollView: {},
     content: {
         flex: 1,
     },
@@ -45,7 +44,7 @@ const communityScreenStyles = StyleSheet.create({
         fontFamily: 'Montserrat_400Regular',
     },
     ruleContainer: {
-        marginTop: 10
+        marginTop: 10,
     },
     cardContainer: {
         backgroundColor: 'white',
@@ -60,13 +59,13 @@ const communityScreenStyles = StyleSheet.create({
     },
     halfScreenCard: {
         flex: 0.45,
-    }
+    },
 });
 
 const ruleDetailStyles = StyleSheet.create({
     main: {
         backgroundColor: DECENTRAVELLER_DEFAULT_BACKGROUND_COLOR,
-        flex: 1
+        flex: 1,
     },
     container: {
         flex: 1,
@@ -99,18 +98,18 @@ const ruleDetailStyles = StyleSheet.create({
     title: {
         fontSize: 18,
         fontFamily: 'Montserrat_500Medium',
-        alignSelf: "center",
+        alignSelf: 'center',
     },
     subsubtitle: {
-        alignSelf: "center",
+        alignSelf: 'center',
         fontSize: 14,
         fontFamily: 'Montserrat_400Regular',
     },
     subtitle: {
-        alignSelf: "center",
+        alignSelf: 'center',
         fontSize: 18,
         fontFamily: 'Montserrat_400Regular',
-        marginBottom: 10
+        marginBottom: 10,
     },
     explanationText: {
         fontSize: 14,
@@ -155,7 +154,6 @@ const ruleDetailStyles = StyleSheet.create({
     },
 });
 
-
 const proposeRuleStyles = StyleSheet.create({
     container: {
         flex: 1,
@@ -184,7 +182,6 @@ const proposeRuleStyles = StyleSheet.create({
         fontSize: 16,
     },
 });
-
 
 const votingResultsStyles = StyleSheet.create({
     container: {

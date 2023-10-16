@@ -18,9 +18,9 @@ import ReviewDetailScreen from '../reviews/ReviewDetailScreen';
 import DecentravellerRulesList from './community/DecentravellerRulesList';
 import { Rule } from './community/types';
 import RuleDetailScreen from './community/RuleDetailScreen';
-import ProposeRuleScreen from "./community/ProposeRuleScreen";
-import VotingResultsScreen from "./community/VotingResultsScreen";
-import {RuleResponse} from "../../api/response/rules";
+import ProposeRuleScreen from './community/ProposeRuleScreen';
+import VotingResultsScreen from './community/VotingResultsScreen';
+import { RuleResponse } from '../../api/response/rules';
 import RulesScreen from './community/RulesScreen';
 
 export type HomeStackScreens = {
@@ -37,12 +37,16 @@ export type HomeStackScreens = {
     SuccessAddReviewScreen: undefined;
     UserProfileScreen: { walletId: string };
     ReviewDetailScreen: { reviewId: number; placeId: number };
-    RulesScreen: undefined
-    DecentravellerRulesList: { ruleList: RuleResponse[]; minified: boolean; horizontal: boolean; refreshCallback: () => void };
+    RulesScreen: undefined;
+    DecentravellerRulesList: {
+        ruleList: RuleResponse[];
+        minified: boolean;
+        horizontal: boolean;
+        refreshCallback: () => void;
+    };
     RuleDetailScreen: { rule: Rule; refreshCallback: () => void };
     ProposeRuleScreen: undefined;
     VotingResultsScreen: { rule: Rule };
-
 };
 
 const HomeStackNavigator = createStackNavigator<HomeStackScreens>();

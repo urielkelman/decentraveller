@@ -33,7 +33,7 @@ const decentravellerMainContract: DecentravellerContract = {
         getTokens: {
             functionName: 'getTokens',
             fullContractABI: mainContractStringfiedABI,
-        }
+        },
     },
 };
 

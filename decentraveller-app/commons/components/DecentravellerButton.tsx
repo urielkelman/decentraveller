@@ -10,14 +10,19 @@ export type CreatePlaceButtonProps = {
     style?: StyleProp<ViewStyle> | undefined;
 };
 
-const DecentravellerButton: React.FC<CreatePlaceButtonProps> = ({ text, onPress, loading ,
-                                                                    enabled= true,
-                                                                style = undefined}) => {
-
+const DecentravellerButton: React.FC<CreatePlaceButtonProps> = ({
+    text,
+    onPress,
+    loading,
+    enabled = true,
+    style = undefined,
+}) => {
     return (
-        <TouchableOpacity style={[bottomTabButtonStyle.button,
-            enabled ? {} : bottomTabButtonStyle.disabled, style]}
-                          onPress={onPress} disabled={!enabled}>
+        <TouchableOpacity
+            style={[bottomTabButtonStyle.button, enabled ? {} : bottomTabButtonStyle.disabled, style]}
+            onPress={onPress}
+            disabled={!enabled}
+        >
             <View style={bottomTabButtonStyle.buttonTextView}>
                 {loading ? <ActivityIndicator color="white" /> : <Text style={bottomTabButtonStyle.text}>{text}</Text>}
             </View>

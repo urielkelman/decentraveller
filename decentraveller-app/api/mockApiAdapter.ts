@@ -149,7 +149,7 @@ class ApiAdapter {
             rules.push({
                 ruleId: i,
                 proposalId: 'proposalId',
-                deletionExecutionTimestampAt: '',
+                deletionExecutionTimeAt: '',
                 executionTimeAt: '',
                 proposer: '',
                 ruleStatement: `Rule ${i}: This is an invented rule.`,

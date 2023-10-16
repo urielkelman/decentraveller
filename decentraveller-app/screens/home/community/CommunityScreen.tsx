@@ -6,9 +6,13 @@ import { communityScreenStyles } from '../../../styles/communityStyles';
 import { RuleResponse, RuleStatus } from '../../../api/response/rules';
 import { useAppContext } from '../../../context/AppContext';
 import { Rule } from './types';
-import {BlockchainProposalStatus, BlockchainProposalStatusNames, BlockchainUserStatus} from '../../../blockchain/types';
+import {
+    BlockchainProposalStatus,
+    BlockchainProposalStatusNames,
+    BlockchainUserStatus,
+} from '../../../blockchain/types';
 import { communityWording } from './wording';
-import {rulesService} from "../../../blockchain/service/rulesService";
+import { rulesService } from '../../../blockchain/service/rulesService';
 import LoadingComponent from '../../../commons/components/DecentravellerLoading';
 import { Picker } from '@react-native-picker/picker';
 
@@ -17,15 +21,14 @@ const CommunityScreen = ({ navigation }) => {
 
     return (
         <View style={communityScreenStyles.container}>
-            <TouchableOpacity onPress={() => navigation.navigate('RulesScreen')}
-            style={[communityScreenStyles.cardContainer,
-                communityScreenStyles.halfScreenCard]}>
+            <TouchableOpacity
+                onPress={() => navigation.navigate('RulesScreen')}
+                style={[communityScreenStyles.cardContainer, communityScreenStyles.halfScreenCard]}
+            >
                 <Text style={communityScreenStyles.title}>Rules</Text>
                 <Text style={communityScreenStyles.subtitle}>See and manage Decentraveller rules.</Text>
             </TouchableOpacity>
-            <TouchableOpacity
-                              style={[communityScreenStyles.cardContainer,
-                                  communityScreenStyles.halfScreenCard]}>
+            <TouchableOpacity style={[communityScreenStyles.cardContainer, communityScreenStyles.halfScreenCard]}>
                 <Text style={communityScreenStyles.title}>Moderations</Text>
             </TouchableOpacity>
         </View>

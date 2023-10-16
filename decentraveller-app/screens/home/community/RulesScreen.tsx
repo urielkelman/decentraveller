@@ -6,9 +6,13 @@ import { communityScreenStyles } from '../../../styles/communityStyles';
 import { RuleResponse, RuleStatus } from '../../../api/response/rules';
 import { useAppContext } from '../../../context/AppContext';
 import { Rule } from './types';
-import {BlockchainProposalStatus, BlockchainProposalStatusNames, BlockchainUserStatus} from '../../../blockchain/types';
+import {
+    BlockchainProposalStatus,
+    BlockchainProposalStatusNames,
+    BlockchainUserStatus,
+} from '../../../blockchain/types';
 import { communityWording } from './wording';
-import {rulesService} from "../../../blockchain/service/rulesService";
+import { rulesService } from '../../../blockchain/service/rulesService';
 import LoadingComponent from '../../../commons/components/DecentravellerLoading';
 import { Picker } from '@react-native-picker/picker';
 
@@ -59,22 +63,22 @@ const RulesScreen = ({ navigation }) => {
         await fetchNonActiveRules(getRuleFunction, getRuleDeletedFunction, blockchainStatus);
         setLoadingProposals(false);
     };
-    const fetchNonActiveRules = async (getRuleFunction, getRuleDeletedFunction,  status) => {
+    const fetchNonActiveRules = async (getRuleFunction, getRuleDeletedFunction, status) => {
         try {
             const nonActiveNewRules: RuleResponse[] = await getRuleFunction();
             const nonActiveDeleteRules: RuleResponse[] = await getRuleDeletedFunction();
-            const nonActiveRules = nonActiveNewRules.concat(nonActiveDeleteRules)
+            const nonActiveRules = nonActiveNewRules.concat(nonActiveDeleteRules);
             setNonActiveRules(mapRuleResponsesToRules(nonActiveRules, status));
         } catch (e) {
-            console.error("Error fetching non-active rules:", e);
+            console.error('Error fetching non-active rules:', e);
         }
     };
 
     const fetchCommunityRules = async () => {
-        setLoadingRules(true)
+        setLoadingRules(true);
         const communityRulesData = await rulesService.getFormerRules();
         setCommunityRules(mapRuleResponsesToRules(communityRulesData, BlockchainProposalStatusNames.EXECUTED));
-        setLoadingRules(false)
+        setLoadingRules(false);
     };
 
     function mapRulesToString(rules: Rule[]): string[] {
@@ -82,27 +86,33 @@ const RulesScreen = ({ navigation }) => {
     }
 
     function mapProposalsToString(rules: Rule[]): string[] {
-        return rules.map((rule) => ((rule.ruleStatus == RuleStatus.PENDING_DELETED ||
-                rule.ruleStatus  == RuleStatus.DELETED) ? "To delete: " : "") +
-            rule.ruleStatement);
+        return rules.map(
+            (rule) =>
+                (rule.ruleStatus == RuleStatus.PENDING_DELETED || rule.ruleStatus == RuleStatus.DELETED
+                    ? 'To delete: '
+                    : '') + rule.ruleStatement,
+        );
     }
 
     function mapRuleResponseToRule(ruleResponse: RuleResponse, status: string): Rule {
         const rule: Rule = {
             ruleId: ruleResponse.ruleId,
-            proposalId: (ruleResponse.ruleStatus == RuleStatus.PENDING_DELETED ||
-                ruleResponse.ruleStatus  == RuleStatus.DELETED) ?
-                ruleResponse.deletionProposalId : ruleResponse.proposalId,
-            proposer: (ruleResponse.ruleStatus == RuleStatus.PENDING_DELETED ||
-                ruleResponse.ruleStatus  == RuleStatus.DELETED) ?
-                ruleResponse.deletionProposer : ruleResponse.proposer,
+            proposalId:
+                ruleResponse.ruleStatus == RuleStatus.PENDING_DELETED || ruleResponse.ruleStatus == RuleStatus.DELETED
+                    ? ruleResponse.deletionProposalId
+                    : ruleResponse.proposalId,
+            proposer:
+                ruleResponse.ruleStatus == RuleStatus.PENDING_DELETED || ruleResponse.ruleStatus == RuleStatus.DELETED
+                    ? ruleResponse.deletionProposer
+                    : ruleResponse.proposer,
             ruleStatement: ruleResponse.ruleStatement,
             ruleStatus: ruleResponse.ruleStatus,
             ruleSubStatus: BlockchainProposalStatus[status],
             proposedAt: ruleResponse.proposedAt,
-            executionTimeAt: (ruleResponse.ruleStatus == RuleStatus.PENDING_DELETED ||
-                ruleResponse.ruleStatus  == RuleStatus.DELETED) ?
-                ruleResponse.deletionExecutionTimeAt : ruleResponse.executionTimeAt,
+            executionTimeAt:
+                ruleResponse.ruleStatus == RuleStatus.PENDING_DELETED || ruleResponse.ruleStatus == RuleStatus.DELETED
+                    ? ruleResponse.deletionExecutionTimeAt
+                    : ruleResponse.executionTimeAt,
         };
 
         return rule;
@@ -113,13 +123,13 @@ const RulesScreen = ({ navigation }) => {
     }
 
     const refresh = () => {
-        setGoBackRefresh(true)
+        setGoBackRefresh(true);
     };
 
     useEffect(() => {
-        fetchCommunityRules()
-        handleOptionSelect(selectedNonActiveRule)
-        setGoBackRefresh(false)
+        fetchCommunityRules();
+        handleOptionSelect(selectedNonActiveRule);
+        setGoBackRefresh(false);
     }, [goBackRefresh]);
 
     return (
@@ -131,8 +141,10 @@ const RulesScreen = ({ navigation }) => {
                         <Text style={communityScreenStyles.subtitle}>{communityWording.ACCEPTED_RULES}</Text>
                     </View>
                     <View style={communityScreenStyles.ruleContainer}>
-                        {
-                            loadingRules ? (<LoadingComponent></LoadingComponent>) : (<RulesList
+                        {loadingRules ? (
+                            <LoadingComponent></LoadingComponent>
+                        ) : (
+                            <RulesList
                                 rules={mapRulesToString(communityRules)}
                                 onPress={() =>
                                     navigation.navigate('DecentravellerRulesList', {
@@ -142,8 +154,8 @@ const RulesScreen = ({ navigation }) => {
                                         refreshCallback: refresh,
                                     })
                                 }
-                            />)
-                        }
+                            />
+                        )}
                     </View>
                     <View style={communityScreenStyles.section}>
                         <Text style={communityScreenStyles.title}>Rules in pending voting</Text>
@@ -153,36 +165,43 @@ const RulesScreen = ({ navigation }) => {
                         <Text style={communityScreenStyles.subtitle}>Select proposal status</Text>
                         <View style={communityScreenStyles.picker}>
                             <Picker
-                                    onValueChange={(v, pos) => handleOptionSelect(v)}
-                                    selectedValue={selectedNonActiveRule}>
-                                <Picker.Item label={BlockchainUserStatus.PENDING} value={BlockchainUserStatus.PENDING} />
+                                onValueChange={(v, pos) => handleOptionSelect(v)}
+                                selectedValue={selectedNonActiveRule}
+                            >
+                                <Picker.Item
+                                    label={BlockchainUserStatus.PENDING}
+                                    value={BlockchainUserStatus.PENDING}
+                                />
                                 <Picker.Item label={BlockchainUserStatus.ACTIVE} value={BlockchainUserStatus.ACTIVE} />
-                                <Picker.Item label={BlockchainUserStatus.TO_QUEUE} value={BlockchainUserStatus.TO_QUEUE} />
+                                <Picker.Item
+                                    label={BlockchainUserStatus.TO_QUEUE}
+                                    value={BlockchainUserStatus.TO_QUEUE}
+                                />
                                 <Picker.Item label={BlockchainUserStatus.QUEUED} value={BlockchainUserStatus.QUEUED} />
-                                <Picker.Item label={BlockchainUserStatus.TO_EXECUTE} value={BlockchainUserStatus.TO_EXECUTE} />
+                                <Picker.Item
+                                    label={BlockchainUserStatus.TO_EXECUTE}
+                                    value={BlockchainUserStatus.TO_EXECUTE}
+                                />
                             </Picker>
                         </View>
                     </View>
                     <View style={communityScreenStyles.ruleContainer}>
-                        {
-                            loadingProposals ? (
-                                <LoadingComponent />
-                            ) : (
-                                <RulesList
-                                    rules={mapProposalsToString(nonActiveRules)}
-                                    onPress={() =>
-                                        navigation.navigate('DecentravellerRulesList', {
-                                            ruleList: nonActiveRules,
-                                            minified: false,
-                                            horizontal: false,
-                                            refreshCallback: refresh,
-                                        })
-                                    }
-                                />
-                            )
-                        }
+                        {loadingProposals ? (
+                            <LoadingComponent />
+                        ) : (
+                            <RulesList
+                                rules={mapProposalsToString(nonActiveRules)}
+                                onPress={() =>
+                                    navigation.navigate('DecentravellerRulesList', {
+                                        ruleList: nonActiveRules,
+                                        minified: false,
+                                        horizontal: false,
+                                        refreshCallback: refresh,
+                                    })
+                                }
+                            />
+                        )}
                     </View>
-
                 </View>
             </ScrollView>
             <View style={communityScreenStyles.buttonContainer}>

@@ -1,6 +1,6 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 
-import {Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 
 export type CreateProgressBarProps = {
     progress: number;
@@ -10,15 +10,18 @@ export type CreateProgressBarProps = {
     label: string;
 };
 
-const DecentravellerProgressBar: React.FC<CreateProgressBarProps> = ({ progress, height,
-                                                                         color: color,
-                                                                         unfilledColor: unfilledColor,
-                                                                         label}) => {
-    const [getPercentage, setPercentage] = useState(`${Math.floor(Math.min(progress, 1)*100)}%`);
-    
+const DecentravellerProgressBar: React.FC<CreateProgressBarProps> = ({
+    progress,
+    height,
+    color: color,
+    unfilledColor: unfilledColor,
+    label,
+}) => {
+    const [getPercentage, setPercentage] = useState(`${Math.floor(Math.min(progress, 1) * 100)}%`);
+
     return (
-        <View style={{flexDirection: 'column'}}>
-            <View style={{justifyContent: 'center'}}>
+        <View style={{ flexDirection: 'column' }}>
+            <View style={{ justifyContent: 'center' }}>
                 <View
                     style={{
                         width: '100%',
@@ -28,7 +31,8 @@ const DecentravellerProgressBar: React.FC<CreateProgressBarProps> = ({ progress,
                         borderColor: 'black',
                         backgroundColor: unfilledColor,
                         borderWidth: 1,
-                    }}/>
+                    }}
+                />
                 <View
                     style={{
                         width: getPercentage ? getPercentage : 0,
@@ -37,7 +41,7 @@ const DecentravellerProgressBar: React.FC<CreateProgressBarProps> = ({ progress,
                         borderRadius: 5,
                         backgroundColor: color,
                         position: 'absolute',
-                        bottom:height,
+                        bottom: height,
                         borderColor: 'black',
                         borderWidth: 1,
                     }}
@@ -46,9 +50,10 @@ const DecentravellerProgressBar: React.FC<CreateProgressBarProps> = ({ progress,
                     style={{
                         width: '100%',
                         height: height,
-                        bottom:10
-                    }}>
-                    <Text style={{textAlign: 'center'}}>{label}</Text>
+                        bottom: 10,
+                    }}
+                >
+                    <Text style={{ textAlign: 'center' }}>{label}</Text>
                 </View>
             </View>
         </View>

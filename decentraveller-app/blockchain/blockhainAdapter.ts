@@ -64,7 +64,7 @@ class BlockchainAdapter {
     }
 
     async blockchainDate(web3Provider: ethers.providers.Web3Provider) {
-        return new Date((await web3Provider.getBlock("latest")).timestamp * 1000);
+        return new Date((await web3Provider.getBlock('latest')).timestamp * 1000);
     }
 
     async createAddNewPlaceTransaction(
@@ -205,9 +205,7 @@ class BlockchainAdapter {
         }
     }
 
-    async proposalTreshold(
-        web3Provider: ethers.providers.Web3Provider
-    ): Promise<bigint> {
+    async proposalTreshold(web3Provider: ethers.providers.Web3Provider): Promise<bigint> {
         try {
             const blockchain: Blockchain = BlockchainByChainId[DEFAULT_CHAIN_ID];
             const governanceAddress: string = decentravellerGovernanceContract.addressesByBlockchain[blockchain];
@@ -348,10 +346,7 @@ class BlockchainAdapter {
         }
     }
 
-    async getTimepointQuorum(
-        web3Provider: ethers.providers.Web3Provider,
-        timePoint: number,
-    ): Promise<number> {
+    async getTimepointQuorum(web3Provider: ethers.providers.Web3Provider, timePoint: number): Promise<number> {
         try {
             const blockchain: Blockchain = BlockchainByChainId[DEFAULT_CHAIN_ID];
             const contractFunction: ContractFunction = decentravellerGovernanceContract.functions['quorum'];
@@ -385,8 +380,8 @@ class BlockchainAdapter {
             const result = await decentravellerGovernance.proposalVotes(ethers.BigNumber.from(proposalId));
             return {
                 ForVotes: Number(result[1]),
-                AgainstVotes: Number(result[0])
-            }
+                AgainstVotes: Number(result[0]),
+            };
         } catch (e) {
             console.log(e);
         }
