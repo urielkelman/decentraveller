@@ -17,7 +17,7 @@ class RulesService {
     }
 
     async getRule(web3Provider: ethers.providers.Web3Provider, ruleId: number): Promise<RuleResponse> {
-        return await apiAdapter.getRule(ruleId)
+        return await apiAdapter.getRule(ruleId);
     }
 
     async getAllPendingToVote(web3Provider: ethers.providers.Web3Provider): Promise<RuleResponse[]> {
@@ -59,7 +59,7 @@ class RulesService {
             BlockchainProposalStatus.QUEUED,
         );
 
-        const now = await blockchainAdapter.blockchainDate(web3Provider)
+        const now = await blockchainAdapter.blockchainDate(web3Provider);
         return rulesWithQueuedProposal.filter((queuedRule) => now < new Date(queuedRule.executionTimeAt));
     }
 
@@ -70,7 +70,7 @@ class RulesService {
             BlockchainProposalStatus.QUEUED,
         );
 
-        const now = await blockchainAdapter.blockchainDate(web3Provider)
+        const now = await blockchainAdapter.blockchainDate(web3Provider);
         return rulesWithQueuedProposal.filter((queuedRule) => now >= new Date(queuedRule.executionTimeAt));
     }
 
@@ -113,7 +113,7 @@ class RulesService {
             BlockchainProposalStatus.QUEUED,
         );
 
-        const now = await blockchainAdapter.blockchainDate(web3Provider)
+        const now = await blockchainAdapter.blockchainDate(web3Provider);
         return rulesWithQueuedProposal.filter((queuedRule) => now < new Date(queuedRule.deletionExecutionTimeAt));
     }
 
@@ -124,28 +124,35 @@ class RulesService {
             BlockchainProposalStatus.QUEUED,
         );
 
-        const now = await blockchainAdapter.blockchainDate(web3Provider)
+        const now = await blockchainAdapter.blockchainDate(web3Provider);
         return rulesWithQueuedProposal.filter((queuedRule) => now >= new Date(queuedRule.deletionExecutionTimeAt));
     }
 
     async getFormerRules(): Promise<RuleResponse[]> {
         return (await apiAdapter.getRules(RuleStatus.APPROVED)).rules.concat(
-            (await apiAdapter.getRules(RuleStatus.PENDING_DELETED)).rules
+            (await apiAdapter.getRules(RuleStatus.PENDING_DELETED)).rules,
         );
     }
 
-    async getVotingPowerForProposal(web3Provider: ethers.providers.Web3Provider, address: string, proposedAt: string): Promise<number> {
-        const proposalBlockTimePoint = Math.floor(new Date(proposedAt).getTime() / 1000)
-        return blockchainAdapter.getVotesForTimePoint(web3Provider, address, proposalBlockTimePoint)
+    async getVotingPowerForProposal(
+        web3Provider: ethers.providers.Web3Provider,
+        address: string,
+        proposedAt: string,
+    ): Promise<number> {
+        const proposalBlockTimePoint = Math.floor(new Date(proposedAt).getTime() / 1000);
+        return blockchainAdapter.getVotesForTimePoint(web3Provider, address, proposalBlockTimePoint);
     }
 
-    async getProposalResult(web3Provider: ethers.providers.Web3Provider, proposalId: string): Promise<BlockchainProposalResult> {
-        return blockchainAdapter.getProposalResult(web3Provider, proposalId)
+    async getProposalResult(
+        web3Provider: ethers.providers.Web3Provider,
+        proposalId: string,
+    ): Promise<BlockchainProposalResult> {
+        return blockchainAdapter.getProposalResult(web3Provider, proposalId);
     }
 
-    async getTimepointQuorum(web3Provider: ethers.providers.Web3Provider, proposedAt: string){
-        const proposalBlockTimePoint = Math.floor(new Date(proposedAt).getTime() / 1000)
-        return blockchainAdapter.getTimepointQuorum(web3Provider, proposalBlockTimePoint)
+    async getTimepointQuorum(web3Provider: ethers.providers.Web3Provider, proposedAt: string) {
+        const proposalBlockTimePoint = Math.floor(new Date(proposedAt).getTime() / 1000);
+        return blockchainAdapter.getTimepointQuorum(web3Provider, proposalBlockTimePoint);
     }
 
     async hasVotedInProposal(
@@ -226,8 +233,10 @@ class RulesService {
         try {
             const allRulesWithProposals = await Promise.all(
                 allRulesWithStatus.map(async (rule) => {
-                    const proposalId = (ruleStatus == RuleStatus.PENDING_DELETED || ruleStatus == RuleStatus.DELETED) ?
-                        rule.deletionProposalId : rule.proposalId
+                    const proposalId =
+                        ruleStatus == RuleStatus.PENDING_DELETED || ruleStatus == RuleStatus.DELETED
+                            ? rule.deletionProposalId
+                            : rule.proposalId;
                     const proposalStatus = await blockchainAdapter.getProposalState(web3Provider, proposalId);
                     return { proposalStatus, rule };
                 }),
@@ -284,7 +293,7 @@ class RulesService {
         );
         const txCalldata = await generateCallData(decentravellerContract);
 
-        const proposalHash = ethers.utils.id("Delete rule: " + rule.ruleStatement);
+        const proposalHash = ethers.utils.id('Delete rule: ' + rule.ruleStatement);
 
         return ruleAction(web3Provider, decentravellerContractAddress, txCalldata, proposalHash);
     }

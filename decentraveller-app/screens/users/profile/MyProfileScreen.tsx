@@ -66,8 +66,7 @@ const MyProfileScreen = ({ navigation }) => {
                     walletAddress: connectionContext.connectedAddress,
                     createdAt: userData.createdAt,
                     interest: userData.interest,
-                    tokens: Number(await contractAdapter.getTokens(web3Provider,
-                        connectionContext.connectedAddress)),
+                    tokens: Number(await contractAdapter.getTokens(web3Provider, connectionContext.connectedAddress)),
                     profileImageUrl: apiAdapter.getProfileAvatarUrl(connectionContext.connectedAddress, true),
                 };
                 setUser(user);
@@ -79,8 +78,7 @@ const MyProfileScreen = ({ navigation }) => {
                 walletAddress: connectionContext.connectedAddress,
                 createdAt: userCreatedAt.value,
                 interest: userInterest.value,
-                tokens: Number(await contractAdapter.getTokens(web3Provider,
-                    connectionContext.connectedAddress)),
+                tokens: Number(await contractAdapter.getTokens(web3Provider, connectionContext.connectedAddress)),
                 sharedLocation: 'Yes',
                 profileImageUrl: apiAdapter.getProfileAvatarUrl(connectionContext.connectedAddress, true),
             };

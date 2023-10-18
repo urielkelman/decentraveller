@@ -120,8 +120,7 @@ const DecentravellerInitialScreen = () => {
                             path: 'rule/:ruleId/:blockchainStatus',
                             parse: {
                                 ruleId: (ruleId) => Number(ruleId),
-                                blockchainStatus: (blockchainStatus) =>
-                                    BlockchainProposalStatus[blockchainStatus],
+                                blockchainStatus: (blockchainStatus) => BlockchainProposalStatus[blockchainStatus],
                             },
                         },
                     },

@@ -3,7 +3,7 @@ import { FlatList, Text, TouchableOpacity, View } from 'react-native';
 import LoadingComponent from '../../../commons/components/DecentravellerLoading';
 import { useNavigation } from '@react-navigation/native';
 import { Rule, RuleListProps, RuleScreenProps } from './types';
-import {Montserrat_700Bold} from "@expo-google-fonts/montserrat";
+import { Montserrat_700Bold } from '@expo-google-fonts/montserrat';
 import { DECENTRAVELLER_DEFAULT_BACKGROUND_COLOR } from '../../../commons/global';
 
 const DecentravellerRulesList: React.FC<RuleListProps> = ({ route }) => {
@@ -54,8 +54,11 @@ const DecentravellerRulesList: React.FC<RuleListProps> = ({ route }) => {
     const rulesListComponent = () => {
         const internalRenderRuleItem = ({ item }: { item: Rule }) => {
             const navigateToScreen = () => {
-                navigation.navigate('RuleDetailScreen', { ruleId: item.ruleId, blockchainStatus: item.ruleSubStatus,
-                    rule: item});
+                navigation.navigate('RuleDetailScreen', {
+                    ruleId: item.ruleId,
+                    blockchainStatus: item.ruleSubStatus,
+                    rule: item,
+                });
             };
 
             return (
@@ -73,7 +76,7 @@ const DecentravellerRulesList: React.FC<RuleListProps> = ({ route }) => {
                     }}
                     onPress={navigateToScreen}
                 >
-                    <Text style={{ fontSize: 18, fontFamily: 'Montserrat_700Bold'}}>{item.ruleStatement}</Text>
+                    <Text style={{ fontSize: 18, fontFamily: 'Montserrat_700Bold' }}>{item.ruleStatement}</Text>
                     <Text style={{ fontSize: 12, fontFamily: 'Montserrat_400Regular' }}>{item.ruleStatus}</Text>
                 </TouchableOpacity>
             );
@@ -88,8 +91,7 @@ const DecentravellerRulesList: React.FC<RuleListProps> = ({ route }) => {
                 ListFooterComponent={footerComponent}
                 onEndReached={loadMore}
                 onEndReachedThreshold={0.1}
-                style={{backgroundColor: DECENTRAVELLER_DEFAULT_BACKGROUND_COLOR,
-                    flex: 1}}
+                style={{ backgroundColor: DECENTRAVELLER_DEFAULT_BACKGROUND_COLOR, flex: 1 }}
             />
         );
     };

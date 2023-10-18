@@ -75,7 +75,7 @@ const userProfileMainStyles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         paddingHorizontal: 10,
-        paddingVertical: 20
+        paddingVertical: 20,
     },
     leftText: {
         fontFamily: 'Montserrat_700Bold',

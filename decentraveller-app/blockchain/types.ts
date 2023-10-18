@@ -18,14 +18,14 @@ export enum BlockchainUserStatus {
 }
 
 export enum BlockchainProposalStatusNames {
-    PENDING = "PENDING",
-    ACTIVE = "ACTIVE",
-    QUEUED = "QUEUED",
-    EXECUTED = "EXECUTED",
-    SUCCEEDED = "SUCCEEDED"
+    PENDING = 'PENDING',
+    ACTIVE = 'ACTIVE',
+    QUEUED = 'QUEUED',
+    EXECUTED = 'EXECUTED',
+    SUCCEEDED = 'SUCCEEDED',
 }
 
 export type BlockchainProposalResult = {
     ForVotes: number;
     AgainstVotes: number;
-}
+};

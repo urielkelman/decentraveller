@@ -18,7 +18,8 @@ import {
     REVIEW_IMAGE,
     GET_PLACE_ENDPOINT,
     GET_REVIEW_ENDPOINT,
-    PLACE_THUMBNAIL, RULE_ENDPOINT,
+    PLACE_THUMBNAIL,
+    RULE_ENDPOINT,
 } from './config';
 import { UserResponse } from './response/user';
 import { formatString } from '../commons/functions/utils';
@@ -314,7 +315,7 @@ class ApiAdapter {
 
     async getRule(ruleId: number): Promise<RuleResponse> {
         const httpRequest: HttpGetRequest = {
-            url: formatString(RULE_ENDPOINT, {ruleId: ruleId}),
+            url: formatString(RULE_ENDPOINT, { ruleId: ruleId }),
             onUnexpectedError: (e) => console.log('Error'),
         };
 
