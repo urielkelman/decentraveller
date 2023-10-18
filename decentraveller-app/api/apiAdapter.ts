@@ -18,7 +18,7 @@ import {
     REVIEW_IMAGE,
     GET_PLACE_ENDPOINT,
     GET_REVIEW_ENDPOINT,
-    PLACE_THUMBNAIL,
+    PLACE_THUMBNAIL, RULE_ENDPOINT,
 } from './config';
 import { UserResponse } from './response/user';
 import { formatString } from '../commons/functions/utils';
@@ -26,7 +26,7 @@ import { ReviewImageResponse, ReviewResponse, ReviewsResponse } from './response
 import { PlaceResponse, PlacesResponse } from './response/places';
 import * as FileSystem from 'expo-file-system';
 import FormData from 'form-data';
-import { RulesResponse, RuleStatus } from './response/rules';
+import { RuleResponse, RulesResponse, RuleStatus } from './response/rules';
 
 enum HTTPStatusCode {
     BAD_REQUEST = 400,
@@ -147,7 +147,6 @@ class ApiAdapter {
     async getRecommendedSimilarPlaces(placeId: number, onNotFound: () => void): Promise<PlaceResponse[]> {
         const httpRequest: HttpGetRequest = {
             url: formatString(RECOMMENDED_SIMILAR_PLACES, { placeId: placeId }),
-            queryParams: undefined,
             onUnexpectedError: (e) => console.log('Error'),
             onStatusCodeError: {
                 [HTTPStatusCode.NOT_FOUND]: onNotFound,
@@ -160,7 +159,6 @@ class ApiAdapter {
     async getUser(walletAddress: string, onFailed: () => void): Promise<UserResponse> {
         const httpRequest: HttpGetRequest = {
             url: `${GET_USER_ENDPOINT}/${walletAddress}`,
-            queryParams: {},
             onUnexpectedError: (e) => {
                 onFailed();
             },
@@ -172,7 +170,6 @@ class ApiAdapter {
     async getPlace(placeId: number, onFailed: () => void): Promise<PlaceResponse> {
         const httpRequest: HttpGetRequest = {
             url: `${GET_PLACE_ENDPOINT}/${placeId}`,
-            queryParams: {},
             onUnexpectedError: (e) => {
                 onFailed();
             },
@@ -309,6 +306,15 @@ class ApiAdapter {
         const httpRequest: HttpGetRequest = {
             url: RULES_ENDPOINT,
             queryParams: { rule_status: ruleStatus },
+            onUnexpectedError: (e) => console.log('Error'),
+        };
+
+        return await httpAPIConnector.get(httpRequest);
+    }
+
+    async getRule(ruleId: number): Promise<RuleResponse> {
+        const httpRequest: HttpGetRequest = {
+            url: formatString(RULE_ENDPOINT, {ruleId: ruleId}),
             onUnexpectedError: (e) => console.log('Error'),
         };
 

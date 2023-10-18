@@ -98,6 +98,14 @@ class RuleCBV:
     @rule_router.post("/rule/proposal", status_code=201)
     def update_rule_timestamp_with_proposal(self, rule_proposal_input: RuleProposalQueuedInput):
         rule = self.database.update_execution_time_by_proposal_id(rule_proposal_input)
+
+        proposer = rule.deletion_proposer if rule.deletion_proposer else rule.proposer
+        if proposer:
+            rule_proposer = self.database.get_profile_orm(proposer)
+            if rule_proposer.push_token:
+                self.push_notification_adapter.send_rule_queued(rule_proposer.push_token,
+                                                                rule.rule_id)
+
         if rule is None:
             raise HTTPException(status_code=HTTP_404_NOT_FOUND)
 

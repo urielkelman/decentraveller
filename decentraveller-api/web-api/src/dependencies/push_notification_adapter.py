@@ -19,23 +19,18 @@ logger = logging.getLogger(__name__)
 class PushNotificationAdapter:
 
     def __init__(self):
-        self.deep_link_scheme = "exp://192.168.1.3:19000/--/"
+        self.deep_link_scheme = "exp://localhost:19000/--/"
         if os.getenv("DEEP_LINK_SCHEME"):
             self.deep_link_scheme = os.getenv("DEEP_LINK_SCHEME")
-        expo_token = os.getenv('EXPO_TOKEN')
 
-        self.session = None
-
-        if expo_token:
-            self.session = requests.Session()
-            self.session.headers.update(
-                {
-                    "Authorization": f"Bearer {expo_token}",
-                    "accept": "application/json",
-                    "accept-encoding": "gzip, deflate",
-                    "content-type": "application/json",
-                }
-            )
+        self.session = requests.Session()
+        self.session.headers.update(
+            {
+                "accept": "application/json",
+                "accept-encoding": "gzip, deflate",
+                "content-type": "application/json",
+            }
+        )
 
     def send_new_review_on_place(
             self, token: str, place: PlaceWithStats, writer_nickname: str
@@ -53,9 +48,18 @@ class PushNotificationAdapter:
             )
         )
 
+    def send_rule_queued(self, token: str, rule_id: int):
+        self.__send_push_message__(
+            token=token,
+            heading="Your rule has been approved and queued!",
+            content="Soon you'll be able to execute it!",
+            deep_link_path="rule/{id}/{blockchain_status}/".format(
+                id=str(rule_id),
+                blockchain_status="QUEUED"
+            )
+        )
+
     def __send_push_message__(self, token: str, heading: str, content: str, deep_link_path=None):
-        if not self.session:
-            return
         try:
             response = PushClient(session=self.session).publish(
                 PushMessage(to=token,

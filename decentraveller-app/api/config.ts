@@ -32,3 +32,4 @@ export const REVIEW_IMAGE = '/review/{imageNumber}.jpg?place_id={placeId}&id={re
 export const UPLOAD_IMAGES = '/uploads';
 
 export const RULES_ENDPOINT = '/rule';
+export const RULE_ENDPOINT = '/rule/{ruleId}';

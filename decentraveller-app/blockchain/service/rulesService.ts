@@ -16,6 +16,10 @@ class RulesService {
         this.apiAdapter = apiAdapter;
     }
 
+    async getRule(web3Provider: ethers.providers.Web3Provider, ruleId: number): Promise<RuleResponse> {
+        return await apiAdapter.getRule(ruleId)
+    }
+
     async getAllPendingToVote(web3Provider: ethers.providers.Web3Provider): Promise<RuleResponse[]> {
         return this.getAllWithRuleStatusAndBlockchainProposalStatus(
             web3Provider,

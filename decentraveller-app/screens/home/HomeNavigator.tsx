@@ -22,6 +22,7 @@ import ProposeRuleScreen from "./community/ProposeRuleScreen";
 import VotingResultsScreen from "./community/VotingResultsScreen";
 import {RuleResponse} from "../../api/response/rules";
 import RulesScreen from './community/RulesScreen';
+import { BlockchainProposalStatus } from '../../blockchain/types';
 
 export type HomeStackScreens = {
     LeftSideBar: undefined;
@@ -38,8 +39,9 @@ export type HomeStackScreens = {
     UserProfileScreen: { walletId: string };
     ReviewDetailScreen: { reviewId: number; placeId: number };
     RulesScreen: undefined
-    DecentravellerRulesList: { ruleList: RuleResponse[]; minified: boolean; horizontal: boolean; refreshCallback: () => void };
-    RuleDetailScreen: { rule: Rule; refreshCallback: () => void };
+    DecentravellerRulesList: { ruleList: RuleResponse[]; minified: boolean; horizontal: boolean;};
+    RuleDetailScreen: { ruleId: number, blockchainStatus: BlockchainProposalStatus,
+        rule?: Rule; };
     ProposeRuleScreen: undefined;
     VotingResultsScreen: { rule: Rule };
 

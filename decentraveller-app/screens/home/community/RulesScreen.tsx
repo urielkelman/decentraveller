@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import RulesList from './RulesList';
 import DecentravellerButton from '../../../commons/components/DecentravellerButton';
@@ -11,6 +11,7 @@ import { communityWording } from './wording';
 import {rulesService} from "../../../blockchain/service/rulesService";
 import LoadingComponent from '../../../commons/components/DecentravellerLoading';
 import { Picker } from '@react-native-picker/picker';
+import { useFocusEffect } from '@react-navigation/native';
 
 const RulesScreen = ({ navigation }) => {
     const { web3Provider } = useAppContext();
@@ -19,7 +20,6 @@ const RulesScreen = ({ navigation }) => {
     const [selectedNonActiveRule, setSelectedNonActiveRule] = useState(BlockchainUserStatus.PENDING);
     const [loadingProposals, setLoadingProposals] = useState(true);
     const [loadingRules, setLoadingRules] = useState(true);
-    const [goBackRefresh, setGoBackRefresh] = useState(true);
 
     const handleOptionSelect = async (status) => {
         setSelectedNonActiveRule(status);
@@ -112,15 +112,15 @@ const RulesScreen = ({ navigation }) => {
         return ruleResponses.map((ruleResponse) => mapRuleResponseToRule(ruleResponse, status));
     }
 
-    const refresh = () => {
-        setGoBackRefresh(true)
-    };
+    useFocusEffect(useCallback(() => {
+        fetchCommunityRules()
+        handleOptionSelect(selectedNonActiveRule)
+    }, []))
 
     useEffect(() => {
         fetchCommunityRules()
         handleOptionSelect(selectedNonActiveRule)
-        setGoBackRefresh(false)
-    }, [goBackRefresh]);
+    }, []);
 
     return (
         <View style={communityScreenStyles.container}>
@@ -139,7 +139,6 @@ const RulesScreen = ({ navigation }) => {
                                         ruleList: communityRules,
                                         minified: false,
                                         horizontal: false,
-                                        refreshCallback: refresh,
                                     })
                                 }
                             />)
@@ -175,7 +174,6 @@ const RulesScreen = ({ navigation }) => {
                                             ruleList: nonActiveRules,
                                             minified: false,
                                             horizontal: false,
-                                            refreshCallback: refresh,
                                         })
                                     }
                                 />
