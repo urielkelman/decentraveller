@@ -54,6 +54,7 @@ contract DecentravellerReview is Initializable, Ownable {
 
     function getState()
         public
+        view
         returns (DecentravellerDataTypes.DecentravellerReviewState)
     {
         return state;

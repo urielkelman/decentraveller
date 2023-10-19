@@ -5,10 +5,15 @@ import "@openzeppelin/contracts/proxy/Clones.sol";
 import "./DecentravellerReview.sol";
 import "./DecentravellerToken.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/access/AccessControl.sol";
 
 error Place__NonRegistered(address placeAddress);
 
-contract DecentravellerReviewCloneFactory is Ownable {
+// Add role of access control
+
+contract DecentravellerReviewCloneFactory is Ownable, AccessControl {
+    bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
+
     address private immutable decentravellerReviewImplementation;
     DecentravellerToken private decentravellerToken;
     mapping(address => bool) private placeAddressesRegistered;
@@ -69,7 +74,7 @@ contract DecentravellerReviewCloneFactory is Ownable {
         return reviewCloneAddress;
     }
 
-    function registerPlaceAddress(address _placeAddress) external onlyOwner {
+    function registerPlaceAddress(address _placeAddress) external onlyRole {
         placeAddressesRegistered[_placeAddress] = true;
     }
 }

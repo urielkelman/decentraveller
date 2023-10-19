@@ -228,7 +228,7 @@ contract Decentraveller {
     function _getReviewAddress(
         uint256 _placeId,
         uint256 _reviewId
-    ) internal returns (address) {
+    ) internal view returns (address) {
         address placeAddress = getPlaceAddress(_placeId);
         return DecentravellerPlace(placeAddress).getReviewAddress(_reviewId);
     }
