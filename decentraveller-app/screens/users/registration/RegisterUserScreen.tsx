@@ -2,7 +2,6 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import { useCreateUserContext } from './CreateUserContext';
 import { blockchainAdapter } from '../../../blockchain/blockhainAdapter';
-import { mockBlockchainAdapter } from '../../../blockchain/mockBlockchainAdapter';
 import DecentravellerButton from '../../../commons/components/DecentravellerButton';
 import DecentravellerTextInput from '../../../commons/components/DecentravellerTextInput';
 import DecentravellerPicker from '../../../commons/components/DecentravellerPicker';
@@ -18,7 +17,6 @@ const RegisterUserScreen = ({ navigation }) => {
 
     const handleSubmit = async () => {
         const adapter = blockchainAdapter;
-        //const adapter = mockBlockchainAdapter
 
         const transactionHash = await adapter.createRegisterUserTransaction(
             web3Provider,

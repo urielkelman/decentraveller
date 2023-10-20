@@ -1,17 +1,18 @@
 import { GeocodingResponse } from './response/geocoding';
 import { Honduras4709GeocodingResponse, HondurasGeocodingResponse } from './mocks/geocoding';
 import { UserResponse } from './response/user';
-import { GianUserResponse, MatiUserResponse, UriUserResponse } from './mocks/user';
+import { GianUserResponse, UriUserResponse } from './mocks/user';
 import { alternativePlacesMock, defaultPlacesMock } from './mocks/places';
 import { ReviewImageResponse, ReviewsResponse } from './response/reviews';
 import { emptyReviewsResponse, imageReviewResponse, manyReviewsResponse, oneReviewsResponse } from './mocks/reviews';
 import { PlaceResponse } from './response/places';
-import { HttpGetRequest } from '../connectors/HttpConnector';
-import { PLACES_SEARCH } from './config';
+import { httpAPIConnector, HttpGetRequest } from '../connectors/HttpConnector';
+import { PLACES_SEARCH, RULES_ENDPOINT } from './config';
+import { RuleResponse, RulesResponse, RuleStatus } from './response/rules';
 
 const searchTextHondurasResponse = ['Honduras', 'Honduras ', 'Honduras 4', 'Honduras 47', 'Honduras 470'];
 
-class MockApiAdapter {
+class ApiAdapter {
     async getGeocoding(physicalAddress: string, _: string): Promise<GeocodingResponse> {
         switch (true) {
             case searchTextHondurasResponse.includes(physicalAddress): {
@@ -41,7 +42,7 @@ class MockApiAdapter {
             case '3FZbgi29cpjq2GjdwV8eyHuJJnkLtktZc5': {
                 return UriUserResponse;
             }
-            case '0x968C99f227a5D5015d3c50501C91353096AD7931': {
+            default: {
                 return UriUserResponse;
             }
         }
@@ -138,8 +139,31 @@ class MockApiAdapter {
     ): Promise<ReviewImageResponse> {
         return imageReviewResponse;
     }
+
+    async getRules(ruleStatus: RuleStatus): Promise<RulesResponse> {
+        const rules: RuleResponse[] = [];
+
+        for (let i = 1; i <= 10; i++) {
+            const statusIndex = Math.floor(Math.random() * 2);
+
+            rules.push({
+                ruleId: i,
+                proposalId: 'proposalId',
+                deletionExecutionTimeAt: '',
+                executionTimeAt: '',
+                proposer: '',
+                ruleStatement: `Rule ${i}: This is an invented rule.`,
+                ruleStatus: ruleStatus,
+                isInitial: false,
+                proposedAt: '2023-09-23',
+                deletionProposer: '',
+            });
+        }
+
+        return { rules: rules };
+    }
 }
 
-const mockApiAdapter = new MockApiAdapter();
+const mockApiAdapter = new ApiAdapter();
 
-export { mockApiAdapter };
+export { mockApiAdapter, ApiAdapter };

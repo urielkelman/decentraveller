@@ -3,14 +3,11 @@ import { useAppContext } from '../../../context/AppContext';
 import { Text, StyleSheet } from 'react-native';
 import React, { useState } from 'react';
 import { explorePlacesScreenWording } from './wording';
-import { PlaceResponse } from '../../../api/response/places';
-import { mockApiAdapter } from '../../../api/mockApiAdapter';
 import { apiAdapter } from '../../../api/apiAdapter';
 import {
     DecentravellerPlacesList,
     LoadPlaceResponse,
     PlaceShowProps,
-    PlaceLoadFunction,
 } from '../../../commons/components/DecentravellerPlacesList';
 import DecentravellerPicker from '../../../commons/components/DecentravellerPicker';
 import { PickerItem } from '../../../commons/types';

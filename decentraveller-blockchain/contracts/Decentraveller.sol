@@ -161,6 +161,10 @@ contract Decentraveller {
         return currentPlaceId;
     }
 
+    function getCurrentRuleId() external view returns (uint256) {
+        return currentRuleId;
+    }
+
     function approveProposedRule(uint256 ruleId) external onlyGovernance {
         ruleById[ruleId].status = DecentravellerDataTypes
             .DecentravellerRuleStatus
@@ -287,5 +291,9 @@ contract Decentraveller {
             revert Rule__AlreadyDeleted(0);
         }
         return rule;
+    }
+
+    function getTokens(address account) external view returns (uint256){
+        return governance.currentVotes(account);
     }
 }

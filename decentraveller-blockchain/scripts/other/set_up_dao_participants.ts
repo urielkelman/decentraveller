@@ -1,5 +1,5 @@
 import { Wallet } from "ethers";
-import { Decentraveller, DecentravellerToken } from "../typechain-types";
+import { Decentraveller, DecentravellerToken } from "../../typechain-types";
 import { ethers, getNamedAccounts } from "hardhat";
 
 const mnemonic =

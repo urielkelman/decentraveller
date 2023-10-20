@@ -17,7 +17,7 @@ class RuleDeletionProposedTransformer extends EventTransformer<RuleDeletionPropo
             body: {
                 ruleId: (event[0] as BigNumber).toNumber(),
                 deletionProposer: event[1],
-                deleteProposalId: ethers.BigNumber.from(event[3]).toString(),
+                deleteProposalId: ethers.BigNumber.from(event[2]).toString(),
                 timestamp: (event[3] as BigNumber).toNumber(),
             },
         };

@@ -7,7 +7,6 @@ import * as Location from 'expo-location';
 import { DecentravellerPlacesList, PlaceShowProps } from '../../commons/components/DecentravellerPlacesList';
 import { addNewPlaceIconSize, homeStyle } from '../../styles/homeStyles';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { DECENTRAVELLER_DEFAULT_BACKGROUND_COLOR } from '../../commons/global';
 import LoadingComponent from '../../commons/components/DecentravellerLoading';
 import { registerForPushNotificationsAsync } from '../../commons/notifications/notifications';
 import { useWalletConnectModal } from '@walletconnect/modal-react-native';

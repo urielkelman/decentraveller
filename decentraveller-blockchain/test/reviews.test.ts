@@ -15,7 +15,7 @@ describe("Places and Reviews", function () {
     let decentravellerToken: DecentravellerToken;
     let reviewerUserAddress: string;
 
-    const rewardNewReviewTokensAmount = 1;
+    const rewardNewReviewTokensAmount = 2;
 
     beforeEach(async function () {
         await deployments.fixture(["all"]);

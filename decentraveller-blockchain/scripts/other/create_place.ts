@@ -1,5 +1,5 @@
 import { ethers, run, network } from "hardhat";
-import { Decentraveller } from "../typechain-types";
+import { Decentraveller } from "../../typechain-types";
 
 const main = async () => {
     const decentravellerContract: Decentraveller = await ethers.getContractAt(
