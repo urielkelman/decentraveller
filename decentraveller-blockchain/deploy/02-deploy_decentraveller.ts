@@ -94,9 +94,20 @@ const deployFunction: DeployFunction = async function (
             deployer
         );
 
+    const placeRegistrationRole =
+        await decentravellerReviewFactory.PLACE_REG_ROLE();
+
+    const addPlaceAggregatorRoleTx =
+        await decentravellerReviewFactory.grantRole(
+            placeRegistrationRole,
+            decentravellerPlaceFactoryDeployment.address
+        );
+
+    await addPlaceAggregatorRoleTx.wait();
+
     const transferReviewFactoryOwnershipTx =
         await decentravellerReviewFactory.transferOwnership(
-            decentravellerPlaceFactory.address
+            decentravellerDeployment.address
         );
 
     await transferReviewFactoryOwnershipTx.wait();

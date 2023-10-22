@@ -12,7 +12,7 @@ error Place__NonRegistered(address placeAddress);
 // Add role of access control
 
 contract DecentravellerReviewCloneFactory is Ownable, AccessControl {
-    bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
+    bytes32 public constant PLACE_REG_ROLE = keccak256("PLACE_REG_ROLE");
 
     address private immutable decentravellerReviewImplementation;
     DecentravellerToken private decentravellerToken;
@@ -38,6 +38,7 @@ contract DecentravellerReviewCloneFactory is Ownable, AccessControl {
     constructor(address _decentravellerReviewImplementation, address _token) {
         decentravellerReviewImplementation = _decentravellerReviewImplementation;
         decentravellerToken = DecentravellerToken(_token);
+        _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
     }
 
     function createNewReview(
@@ -71,10 +72,13 @@ contract DecentravellerReviewCloneFactory is Ownable, AccessControl {
             _imagesHashes,
             _score
         );
+
         return reviewCloneAddress;
     }
 
-    function registerPlaceAddress(address _placeAddress) external onlyRole {
+    function registerPlaceAddress(
+        address _placeAddress
+    ) external onlyRole(PLACE_REG_ROLE) {
         placeAddressesRegistered[_placeAddress] = true;
     }
 }

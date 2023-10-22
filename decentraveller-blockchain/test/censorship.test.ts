@@ -21,19 +21,25 @@ describe("Decentraveller censorship", function () {
 
         decentraveller = await ethers.getContract("Decentraveller", user);
 
-        decentraveller.registerProfile("Messi", "AR", "0");
-        decentraveller
+        await decentraveller.registerProfile("Messi", "AR", "0");
+        await decentraveller
             .connect(secondUserSigner)
             .registerProfile("Neymar", "BR", "1");
-        decentraveller
+        await decentraveller
             .connect(thirdUserSigner)
             .registerProfile("Suarez", "UY", "2");
-        decentraveller
+        await decentraveller
             .connect(fourthUserSigner)
             .registerProfile("Di Maria", "AR", "1");
 
-        decentraveller.addPlace("Eretz", "34.3", "32.1", "Malabia 1322", 1);
-        decentraveller
+        await decentraveller.addPlace(
+            "Eretz",
+            "34.3",
+            "32.1",
+            "Malabia 1322",
+            1
+        );
+        await decentraveller
             .connect(secondUserSigner)
             .addReview(
                 1,
@@ -58,5 +64,9 @@ describe("Decentraveller censorship", function () {
         )
             .to.emit(decentraveller, "DecentravellerReviewCensored")
             .withArgs(1, 1, 1);
+    });
+
+    it("should not allow a review to be censored twice", async function () {
+        //const reviewAddress = decentraveller.getR
     });
 });
