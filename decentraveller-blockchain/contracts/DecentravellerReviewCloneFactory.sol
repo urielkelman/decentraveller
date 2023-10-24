@@ -9,8 +9,6 @@ import "@openzeppelin/contracts/access/AccessControl.sol";
 
 error Place__NonRegistered(address placeAddress);
 
-// Add role of access control
-
 contract DecentravellerReviewCloneFactory is Ownable, AccessControl {
     bytes32 public constant PLACE_REG_ROLE = keccak256("PLACE_REG_ROLE");
 

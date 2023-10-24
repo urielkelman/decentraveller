@@ -1,6 +1,6 @@
 import { deployments, getNamedAccounts, ethers } from "hardhat";
 import { expect, assert } from "chai";
-import { Decentraveller } from "../typechain-types";
+import { Decentraveller, DecentravellerReview } from "../typechain-types";
 import { Signer } from "ethers";
 
 describe("Decentraveller censorship", function () {
@@ -64,6 +64,17 @@ describe("Decentraveller censorship", function () {
         )
             .to.emit(decentraveller, "DecentravellerReviewCensored")
             .withArgs(1, 1, 1);
+
+        const reviewAddress = await decentraveller.getReviewAddress(1, 1);
+        const review: DecentravellerReview = await ethers.getContractAt(
+            "DecentravellerReview",
+            reviewAddress,
+            userSigner
+        );
+
+        const reviewState = await review.getState();
+
+        assert.equal(reviewState, 1);
     });
 
     it("should not allow a review to be censored twice", async function () {
