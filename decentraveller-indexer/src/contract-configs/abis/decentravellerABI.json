@@ -15,6 +15,11 @@
         "internalType": "string[]",
         "name": "initialRules",
         "type": "string[]"
+      },
+      {
+        "internalType": "uint8",
+        "name": "_moderatorsAmount",
+        "type": "uint8"
       }
     ],
     "stateMutability": "nonpayable",
@@ -37,6 +42,11 @@
     "type": "error"
   },
   {
+    "inputs": [],
+    "name": "OnlyModerator__Execution",
+    "type": "error"
+  },
+  {
     "inputs": [
       {
         "internalType": "uint256",
@@ -56,6 +66,17 @@
       }
     ],
     "name": "Place__NonExistent",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "userAddress",
+        "type": "address"
+      }
+    ],
+    "name": "Profile__AlreadyCreated",
     "type": "error"
   },
   {
@@ -90,6 +111,56 @@
     ],
     "name": "Rule__NonExistent",
     "type": "error"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "placeId",
+        "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "reviewId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "brokenRuleId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "moderator",
+        "type": "address"
+      }
+    ],
+    "name": "DecentravellerReviewCensored",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "placeId",
+        "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "reviewId",
+        "type": "uint256"
+      }
+    ],
+    "name": "DecentravellerReviewUncesored",
+    "type": "event"
   },
   {
     "anonymous": false,
@@ -211,9 +282,15 @@
         "internalType": "enum DecentravellerDataTypes.DecentravellerPlaceCategory",
         "name": "interest",
         "type": "uint8"
+      },
+      {
+        "indexed": false,
+        "internalType": "enum DecentravellerDataTypes.DecentravellerUserRole",
+        "name": "userRole",
+        "type": "uint8"
       }
     ],
-    "name": "UpdatedProfile",
+    "name": "ProfileCreated",
     "type": "event"
   },
   {
@@ -259,11 +336,62 @@
     "inputs": [
       {
         "internalType": "uint256",
+        "name": "placeId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "_reviewText",
+        "type": "string"
+      },
+      {
+        "internalType": "string[]",
+        "name": "_imagesHashes",
+        "type": "string[]"
+      },
+      {
+        "internalType": "uint8",
+        "name": "_score",
+        "type": "uint8"
+      }
+    ],
+    "name": "addReview",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
         "name": "ruleId",
         "type": "uint256"
       }
     ],
     "name": "approveProposedRule",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_placeId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_reviewId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_brokenRuleId",
+        "type": "uint256"
+      }
+    ],
+    "name": "censorReview",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -335,6 +463,30 @@
       }
     ],
     "name": "getPlaceAddress",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_placeId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_reviewId",
+        "type": "uint256"
+      }
+    ],
+    "name": "getReviewAddress",
     "outputs": [
       {
         "internalType": "address",

@@ -6,13 +6,15 @@ import decentravellerGovernanceABI from "../contract-configs/abis/decentraveller
 import EventTransformer from "../transformers/EventTransformer";
 import { newPlaceTransformer } from "../transformers/NewPlaceTransformer";
 import { EventRequestBody } from "../adapters/types";
-import { newReviewTransformer } from "../transformers/NewReviewTransformer";
-import { updatedProfileTransformer } from "../transformers/UpdatedProfileTransformer";
-import { ruleProposedTransformer } from "../transformers/RuleProposedTransformer";
-import { ruleApprovedTransformer } from "../transformers/RuleApprovedTransformer";
-import { ruleDeletionProposedTransformer } from "../transformers/RuleDeletionProposedTransformer";
-import { ruleDeletedTransformer } from "../transformers/RuleDeletedTransformer";
-import { proposalQueuedTransformer } from "../transformers/ProposalQueuedTransformer";
+import { newReviewTransformer } from "../transformers/review/NewReviewTransformer";
+import { registeredProfileTransformer } from "../transformers/RegisteredProfileTransformer";
+import { ruleProposedTransformer } from "../transformers/rule/RuleProposedTransformer";
+import { ruleApprovedTransformer } from "../transformers/rule/RuleApprovedTransformer";
+import { ruleDeletionProposedTransformer } from "../transformers/rule/RuleDeletionProposedTransformer";
+import { ruleDeletedTransformer } from "../transformers/rule/RuleDeletedTransformer";
+import { proposalQueuedTransformer } from "../transformers/rule/ProposalQueuedTransformer";
+import { reviewCensoredTransformer } from "../transformers/review/ReviewCensoredTransformer";
+import { reviewUncensoredTransformer } from "../transformers/review/ReviewUncensoredTransformer";
 
 const blockchainUri = process.env.BLOCKCHAIN_URI || "http://127.0.0.1:8545";
 
@@ -73,7 +75,7 @@ export const eventsToListen: Array<EventToListen<any>> = [
     {
         contract: decentraveller,
         eventName: "UpdatedProfile",
-        transformer: updatedProfileTransformer,
+        transformer: registeredProfileTransformer,
     },
     {
         contract: decentraveller,
@@ -99,5 +101,15 @@ export const eventsToListen: Array<EventToListen<any>> = [
         contract: decentravellerGovernanceContract,
         eventName: "ProposalQueued",
         transformer: proposalQueuedTransformer,
+    },
+    {
+        contract: decentraveller,
+        eventName: "DecentravellerReviewCensored",
+        transformer: reviewCensoredTransformer,
+    },
+    {
+        contract: decentraveller,
+        eventName: "DecentravellerReviewUncensored",
+        transformer: reviewUncensoredTransformer,
     },
 ];

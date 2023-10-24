@@ -1,8 +1,8 @@
 import { BigNumber } from "ethers";
-import { HTTPMethod } from "../adapters/AxiosRequestBuilder";
-import { eventEndpoints } from "../adapters/config";
-import { EventRequest, NewReviewRequestBody } from "../adapters/types";
-import EventTransformer from "./EventTransformer";
+import { HTTPMethod } from "../../adapters/AxiosRequestBuilder";
+import { eventEndpoints } from "../../adapters/config";
+import { EventRequest, NewReviewRequestBody } from "../../adapters/types";
+import EventTransformer from "../EventTransformer";
 
 class NewReviewTransformer extends EventTransformer<NewReviewRequestBody> {
     public transformEvent(event: any[]): EventRequest<NewReviewRequestBody> {

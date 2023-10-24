@@ -1,11 +1,11 @@
 import { BigNumber, ethers } from "ethers";
-import { HTTPMethod } from "../adapters/AxiosRequestBuilder";
+import { HTTPMethod } from "../../adapters/AxiosRequestBuilder";
 import {
     EventRequest,
     RuleDeletionProposedRequestBody,
-} from "../adapters/types";
-import EventTransformer from "./EventTransformer";
-import { eventEndpoints } from "../adapters/config";
+} from "../../adapters/types";
+import EventTransformer from "../EventTransformer";
+import { eventEndpoints } from "../../adapters/config";
 
 class RuleDeletionProposedTransformer extends EventTransformer<RuleDeletionProposedRequestBody> {
     public transformEvent(

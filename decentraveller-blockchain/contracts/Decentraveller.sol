@@ -50,7 +50,8 @@ contract Decentraveller {
     event DecentravellerReviewCensored(
         uint256 indexed placeId,
         uint256 indexed reviewId,
-        uint256 brokenRuleId
+        uint256 brokenRuleId,
+        address moderator
     );
 
     event DecentravellerReviewUncesored(
@@ -252,7 +253,12 @@ contract Decentraveller {
 
         DecentravellerReview(reviewAddress).censor();
 
-        emit DecentravellerReviewCensored(_placeId, _reviewId, _brokenRuleId);
+        emit DecentravellerReviewCensored(
+            _placeId,
+            _reviewId,
+            _brokenRuleId,
+            msg.sender
+        );
 
         censoredReviewsByBrokenRuleId[_brokenRuleId].push(
             ReviewIdData({placeId: _placeId, reviewId: _reviewId})

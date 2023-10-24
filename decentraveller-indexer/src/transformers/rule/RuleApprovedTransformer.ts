@@ -1,8 +1,8 @@
 import { BigNumber } from "ethers";
-import { HTTPMethod } from "../adapters/AxiosRequestBuilder";
-import { EventRequest, RuleApprovedRequestBody } from "../adapters/types";
-import EventTransformer from "./EventTransformer";
-import { eventEndpoints } from "../adapters/config";
+import { HTTPMethod } from "../../adapters/AxiosRequestBuilder";
+import { EventRequest, RuleApprovedRequestBody } from "../../adapters/types";
+import EventTransformer from "../EventTransformer";
+import { eventEndpoints } from "../../adapters/config";
 
 class RuleApprovedTransformer extends EventTransformer<RuleApprovedRequestBody> {
     public transformEvent(event: any[]): EventRequest<RuleApprovedRequestBody> {

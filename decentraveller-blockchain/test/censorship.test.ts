@@ -63,7 +63,7 @@ describe("Decentraveller censorship", function () {
             decentraveller.connect(thirdUserSigner).censorReview(1, 1, 1)
         )
             .to.emit(decentraveller, "DecentravellerReviewCensored")
-            .withArgs(1, 1, 1);
+            .withArgs(1, 1, 1, await thirdUserSigner.getAddress());
 
         const reviewAddress = await decentraveller.getReviewAddress(1, 1);
         const review: DecentravellerReview = await ethers.getContractAt(
