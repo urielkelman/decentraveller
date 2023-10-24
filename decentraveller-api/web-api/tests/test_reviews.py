@@ -37,7 +37,8 @@ def test_create_review_no_profile(cleanup):
                            json={"owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                  "nickname": "test",
                                  "country": "AR",
-                                 "interest": "ACCOMMODATION"},
+                                 "interest": "ACCOMMODATION",
+                                 "role": "NORMAL"},
                            )
     assert response.status_code == 201
 
@@ -70,7 +71,8 @@ def test_create_review_no_place(cleanup):
                            json={"owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                  "nickname": "test",
                                  "country": "AR",
-                                 "interest": "ACCOMMODATION"},
+                                 "interest": "ACCOMMODATION",
+                                 "role": "NORMAL"},
                            )
     assert response.status_code == 201
 
@@ -91,7 +93,8 @@ def test_create_review(cleanup):
                            json={"owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                  "nickname": "test",
                                  "country": "AR",
-                                 "interest": "ACCOMMODATION"},
+                                 "interest": "ACCOMMODATION",
+                                 "role": "NORMAL"},
                            )
     assert response.status_code == 201
 
@@ -123,7 +126,7 @@ def test_create_review(cleanup):
 
     response = client.get("/review", params={'id': 1, 'place_id': 0})
     assert response.status_code == 200
-    assert {k: {a: b for a,b in v.items() if a!= "createdAt"} if isinstance(v, dict) else v
+    assert {k: {a: b for a, b in v.items() if a != "createdAt"} if isinstance(v, dict) else v
             for k, v
             in response.json().items()
             if k != "createdAt"} == {"id": 1,
@@ -133,7 +136,8 @@ def test_create_review(cleanup):
                                      "owner": {"owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                                "nickname": "test",
                                                "country": "AR",
-                                               "interest": "ACCOMMODATION"},
+                                               "interest": "ACCOMMODATION",
+                                               "role": "NORMAL"},
                                      "text": "Muy bueno el combo de sebastian yatra",
                                      "state": "UNCENSORED"}
     assert datetime.fromisoformat(response.json()['createdAt']).date() == datetime.utcnow().date()
@@ -147,7 +151,8 @@ def test_get_reviews_by_place(cleanup):
                            json={"owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                  "nickname": "test",
                                  "country": "AR",
-                                 "interest": "ACCOMMODATION"},
+                                 "interest": "ACCOMMODATION",
+                                 "role": "NORMAL"},
                            )
     assert response.status_code == 201
 
@@ -203,7 +208,7 @@ def test_get_reviews_by_place(cleanup):
     assert response.status_code == 200
     assert len(response.json()['reviews']) == 2
     assert response.json()['total'] == 3
-    assert {k: {a: b for a,b in v.items() if a!= "createdAt"} if isinstance(v, dict) else v
+    assert {k: {a: b for a, b in v.items() if a != "createdAt"} if isinstance(v, dict) else v
             for k, v
             in response.json()['reviews'][0].items()
             if k != "createdAt"} == {"id": 1,
@@ -213,11 +218,12 @@ def test_get_reviews_by_place(cleanup):
                                      "owner": {"owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                                "nickname": "test",
                                                "country": "AR",
-                                               "interest": "ACCOMMODATION"},
+                                               "interest": "ACCOMMODATION",
+                                               "role": "NORMAL"},
                                      "text": "Muy bueno el combo de sebastian yatra",
                                      "state": "UNCENSORED"}
     assert datetime.fromisoformat(response.json()['reviews'][0]['createdAt']).date() == datetime.utcnow().date()
-    assert {k: {a: b for a,b in v.items() if a!= "createdAt"} if isinstance(v, dict) else v
+    assert {k: {a: b for a, b in v.items() if a != "createdAt"} if isinstance(v, dict) else v
             for k, v
             in response.json()['reviews'][1].items()
             if k != "createdAt"} == {"id": 2,
@@ -227,7 +233,8 @@ def test_get_reviews_by_place(cleanup):
                                      "owner": {"owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                                "nickname": "test",
                                                "country": "AR",
-                                               "interest": "ACCOMMODATION"},
+                                               "interest": "ACCOMMODATION",
+                                               "role": "NORMAL"},
                                      "text": "Me pedi un mcflurry oreo",
                                      "state": "UNCENSORED"}
     assert datetime.fromisoformat(response.json()['reviews'][1]['createdAt']).date() == datetime.utcnow().date()
@@ -236,7 +243,7 @@ def test_get_reviews_by_place(cleanup):
     assert response.status_code == 200
     assert len(response.json()['reviews']) == 1
     assert response.json()['total'] == 3
-    assert {k: {a: b for a,b in v.items() if a!= "createdAt"} if isinstance(v, dict) else v
+    assert {k: {a: b for a, b in v.items() if a != "createdAt"} if isinstance(v, dict) else v
             for k, v
             in response.json()['reviews'][0].items()
             if k != "createdAt"} == {"id": 3,
@@ -246,7 +253,8 @@ def test_get_reviews_by_place(cleanup):
                                      "owner": {"owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                                "nickname": "test",
                                                "country": "AR",
-                                               "interest": "ACCOMMODATION"},
+                                               "interest": "ACCOMMODATION",
+                                               "role": "NORMAL"},
                                      "text": "Me atendieron mal",
                                      "state": "UNCENSORED"}
     assert datetime.fromisoformat(response.json()['reviews'][0]['createdAt']).date() == datetime.utcnow().date()
@@ -257,7 +265,8 @@ def test_get_reviews_by_owner(cleanup):
                            json={"owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                  "nickname": "test",
                                  "country": "AR",
-                                 "interest": "ACCOMMODATION"},
+                                 "interest": "ACCOMMODATION",
+                                 "role": "NORMAL"},
                            )
     assert response.status_code == 201
 
@@ -314,7 +323,7 @@ def test_get_reviews_by_owner(cleanup):
     assert response.status_code == 200
     assert len(response.json()['reviews']) == 2
     assert response.json()['total'] == 3
-    assert {k: {a: b for a,b in v.items() if a!= "createdAt"} if isinstance(v, dict) else v
+    assert {k: {a: b for a, b in v.items() if a != "createdAt"} if isinstance(v, dict) else v
             for k, v
             in response.json()['reviews'][0].items()
             if k != "createdAt"} == {"id": 1,
@@ -324,11 +333,12 @@ def test_get_reviews_by_owner(cleanup):
                                      "owner": {"owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                                "nickname": "test",
                                                "country": "AR",
-                                               "interest": "ACCOMMODATION"},
+                                               "interest": "ACCOMMODATION",
+                                               "role": "NORMAL"},
                                      "text": "Muy bueno el combo de sebastian yatra",
                                      "state": "UNCENSORED"}
     assert datetime.fromisoformat(response.json()['reviews'][0]['createdAt']).date() == datetime.utcnow().date()
-    assert {k: {a: b for a,b in v.items() if a!= "createdAt"} if isinstance(v, dict) else v
+    assert {k: {a: b for a, b in v.items() if a != "createdAt"} if isinstance(v, dict) else v
             for k, v
             in response.json()['reviews'][1].items()
             if k != "createdAt"} == {"id": 2,
@@ -338,7 +348,8 @@ def test_get_reviews_by_owner(cleanup):
                                      "owner": {"owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                                "nickname": "test",
                                                "country": "AR",
-                                               "interest": "ACCOMMODATION"},
+                                               "interest": "ACCOMMODATION",
+                                               "role": "NORMAL"},
                                      "text": "Me pedi un mcflurry oreo",
                                      "state": "UNCENSORED"}
     assert datetime.fromisoformat(response.json()['reviews'][1]['createdAt']).date() == datetime.utcnow().date()
@@ -348,7 +359,7 @@ def test_get_reviews_by_owner(cleanup):
     assert response.status_code == 200
     assert len(response.json()['reviews']) == 1
     assert response.json()['total'] == 3
-    assert {k: {a: b for a,b in v.items() if a!= "createdAt"} if isinstance(v, dict) else v
+    assert {k: {a: b for a, b in v.items() if a != "createdAt"} if isinstance(v, dict) else v
             for k, v
             in response.json()['reviews'][0].items()
             if k != "createdAt"} == {"id": 3,
@@ -358,17 +369,20 @@ def test_get_reviews_by_owner(cleanup):
                                      "owner": {"owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                                "nickname": "test",
                                                "country": "AR",
-                                               "interest": "ACCOMMODATION"},
+                                               "interest": "ACCOMMODATION",
+                                               "role": "NORMAL"},
                                      "text": "Me atendieron mal",
                                      "state": "UNCENSORED"}
     assert datetime.fromisoformat(response.json()['reviews'][0]['createdAt']).date() == datetime.utcnow().date()
+
 
 def test_create_review_with_image(cleanup):
     response = client.post("/profile",
                            json={"owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                  "nickname": "test",
                                  "country": "AR",
-                                 "interest": "ACCOMMODATION"},
+                                 "interest": "ACCOMMODATION",
+                                 "role": "NORMAL"},
                            )
     assert response.status_code == 201
 
@@ -405,7 +419,7 @@ def test_create_review_with_image(cleanup):
 
     response = client.get("/review", params={'id': 1, 'place_id': 0})
     assert response.status_code == 200
-    assert {k: {a: b for a,b in v.items() if a!= "createdAt"} if isinstance(v, dict) else v
+    assert {k: {a: b for a, b in v.items() if a != "createdAt"} if isinstance(v, dict) else v
             for k, v
             in response.json().items()
             if k != "createdAt"} == {"id": 1,
@@ -415,7 +429,8 @@ def test_create_review_with_image(cleanup):
                                      "owner": {"owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                                "nickname": "test",
                                                "country": "AR",
-                                               "interest": "ACCOMMODATION"},
+                                               "interest": "ACCOMMODATION",
+                                               "role": "NORMAL"},
                                      "text": "Muy bueno el combo de sebastian yatra",
                                      "state": "UNCENSORED"}
     assert datetime.fromisoformat(response.json()['createdAt']).date() == datetime.utcnow().date()
@@ -425,12 +440,14 @@ def test_create_review_with_image(cleanup):
     image = Image.open(BytesIO(response.content))
     assert image.size == (392, 450)
 
+
 def test_create_review_with_images(cleanup):
     response = client.post("/profile",
                            json={"owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                  "nickname": "test",
                                  "country": "AR",
-                                 "interest": "ACCOMMODATION"},
+                                 "interest": "ACCOMMODATION",
+                                 "role": "NORMAL"},
                            )
     assert response.status_code == 201
 
@@ -472,7 +489,7 @@ def test_create_review_with_images(cleanup):
 
     response = client.get("/review", params={'id': 1, 'place_id': 0})
     assert response.status_code == 200
-    assert {k: {a: b for a,b in v.items() if a!= "createdAt"} if isinstance(v, dict) else v
+    assert {k: {a: b for a, b in v.items() if a != "createdAt"} if isinstance(v, dict) else v
             for k, v
             in response.json().items()
             if k != "createdAt"} == {"id": 1,
@@ -482,7 +499,8 @@ def test_create_review_with_images(cleanup):
                                      "owner": {"owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                                "nickname": "test",
                                                "country": "AR",
-                                               "interest": "ACCOMMODATION"},
+                                               "interest": "ACCOMMODATION",
+                                               "role": "NORMAL"},
                                      "text": "Muy bueno el combo de sebastian yatra",
                                      "state": "UNCENSORED"}
     assert datetime.fromisoformat(response.json()['createdAt']).date() == datetime.utcnow().date()
@@ -497,12 +515,14 @@ def test_create_review_with_images(cleanup):
     image = Image.open(BytesIO(response.content))
     assert image.size == (1080, 1080)
 
+
 def test_place_image(cleanup):
     response = client.post("/profile",
                            json={"owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                  "nickname": "test",
                                  "country": "AR",
-                                 "interest": "ACCOMMODATION"},
+                                 "interest": "ACCOMMODATION",
+                                 "role": "NORMAL"},
                            )
     assert response.status_code == 201
 
@@ -539,7 +559,7 @@ def test_place_image(cleanup):
 
     response = client.get("/review", params={'id': 1, 'place_id': 0})
     assert response.status_code == 200
-    assert {k: {a: b for a,b in v.items() if a!= "createdAt"} if isinstance(v, dict) else v
+    assert {k: {a: b for a, b in v.items() if a != "createdAt"} if isinstance(v, dict) else v
             for k, v
             in response.json().items()
             if k != "createdAt"} == {"id": 1,
@@ -549,7 +569,8 @@ def test_place_image(cleanup):
                                      "owner": {"owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                                "nickname": "test",
                                                "country": "AR",
-                                               "interest": "ACCOMMODATION"},
+                                               "interest": "ACCOMMODATION",
+                                               "role": "NORMAL"},
                                      "text": "Muy bueno el combo de sebastian yatra",
                                      "state": "UNCENSORED"}
     assert datetime.fromisoformat(response.json()['createdAt']).date() == datetime.utcnow().date()
@@ -565,7 +586,8 @@ def test_upload_image_twice(cleanup):
                            json={"owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                  "nickname": "test",
                                  "country": "AR",
-                                 "interest": "ACCOMMODATION"},
+                                 "interest": "ACCOMMODATION",
+                                 "role": "NORMAL"},
                            )
     assert response.status_code == 201
 
@@ -632,7 +654,8 @@ def test_place_image_not_bytes(cleanup):
                            json={"owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                  "nickname": "test",
                                  "country": "AR",
-                                 "interest": "ACCOMMODATION"},
+                                 "interest": "ACCOMMODATION",
+                                 "role": "NORMAL"},
                            )
     assert response.status_code == 201
 
@@ -669,7 +692,7 @@ def test_place_image_not_bytes(cleanup):
 
     response = client.get("/review", params={'id': 1, 'place_id': 0})
     assert response.status_code == 200
-    assert {k: {a: b for a,b in v.items() if a!= "createdAt"} if isinstance(v, dict) else v
+    assert {k: {a: b for a, b in v.items() if a != "createdAt"} if isinstance(v, dict) else v
             for k, v
             in response.json().items()
             if k != "createdAt"} == {"id": 1,
@@ -679,7 +702,8 @@ def test_place_image_not_bytes(cleanup):
                                      "owner": {"owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                                "nickname": "test",
                                                "country": "AR",
-                                               "interest": "ACCOMMODATION"},
+                                               "interest": "ACCOMMODATION",
+                                               "role": "NORMAL"},
                                      "text": "Muy bueno el combo de sebastian yatra",
                                      "state": "UNCENSORED"}
     assert datetime.fromisoformat(response.json()['createdAt']).date() == datetime.utcnow().date()
@@ -695,7 +719,8 @@ def test_upload_multiple_images(cleanup):
                            json={"owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                  "nickname": "test",
                                  "country": "AR",
-                                 "interest": "ACCOMMODATION"},
+                                 "interest": "ACCOMMODATION",
+                                 "role": "NORMAL"},
                            )
     assert response.status_code == 201
 
@@ -733,7 +758,7 @@ def test_upload_multiple_images(cleanup):
 
     response = client.get("/review", params={'id': 1, 'place_id': 0})
     assert response.status_code == 200
-    assert {k: {a: b for a,b in v.items() if a!= "createdAt"} if isinstance(v, dict) else v
+    assert {k: {a: b for a, b in v.items() if a != "createdAt"} if isinstance(v, dict) else v
             for k, v
             in response.json().items()
             if k != "createdAt"} == {"id": 1,
@@ -743,7 +768,8 @@ def test_upload_multiple_images(cleanup):
                                      "owner": {"owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                                "nickname": "test",
                                                "country": "AR",
-                                               "interest": "ACCOMMODATION"},
+                                               "interest": "ACCOMMODATION",
+                                               "role": "NORMAL"},
                                      "text": "Muy bueno el combo de sebastian yatra",
                                      "state": "UNCENSORED"}
     assert datetime.fromisoformat(response.json()['createdAt']).date() == datetime.utcnow().date()
@@ -758,12 +784,14 @@ def test_upload_multiple_images(cleanup):
     image = Image.open(BytesIO(response.content))
     assert image.size == (1080, 1080)
 
+
 def test_upload_multiple_images_bytes(cleanup):
     response = client.post("/profile",
                            json={"owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                  "nickname": "test",
                                  "country": "AR",
-                                 "interest": "ACCOMMODATION"},
+                                 "interest": "ACCOMMODATION",
+                                 "role": "NORMAL"},
                            )
     assert response.status_code == 201
 
@@ -801,7 +829,7 @@ def test_upload_multiple_images_bytes(cleanup):
 
     response = client.get("/review", params={'id': 1, 'place_id': 0})
     assert response.status_code == 200
-    assert {k: {a: b for a,b in v.items() if a!= "createdAt"} if isinstance(v, dict) else v
+    assert {k: {a: b for a, b in v.items() if a != "createdAt"} if isinstance(v, dict) else v
             for k, v
             in response.json().items()
             if k != "createdAt"} == {"id": 1,
@@ -811,7 +839,8 @@ def test_upload_multiple_images_bytes(cleanup):
                                      "owner": {"owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                                "nickname": "test",
                                                "country": "AR",
-                                               "interest": "ACCOMMODATION"},
+                                               "interest": "ACCOMMODATION",
+                                               "role": "NORMAL"},
                                      "text": "Muy bueno el combo de sebastian yatra",
                                      "state": "UNCENSORED"}
     assert datetime.fromisoformat(response.json()['createdAt']).date() == datetime.utcnow().date()
