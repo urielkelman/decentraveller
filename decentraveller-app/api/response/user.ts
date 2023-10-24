@@ -4,4 +4,5 @@ export type UserResponse = {
     country: string;
     interest: string;
     createdAt: string;
+    role: string;
 };
