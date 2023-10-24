@@ -97,13 +97,13 @@ const deployFunction: DeployFunction = async function (
     const placeRegistrationRole =
         await decentravellerReviewFactory.PLACE_REG_ROLE();
 
-    const addPlaceAggregatorRoleTx =
+    const addPlaceRegistrationRoleTx =
         await decentravellerReviewFactory.grantRole(
             placeRegistrationRole,
             decentravellerPlaceFactoryDeployment.address
         );
 
-    await addPlaceAggregatorRoleTx.wait();
+    await addPlaceRegistrationRoleTx.wait();
 
     const transferReviewFactoryOwnershipTx =
         await decentravellerReviewFactory.transferOwnership(

@@ -67,6 +67,16 @@ describe("Decentraveller censorship", function () {
     });
 
     it("should not allow a review to be censored twice", async function () {
-        //const reviewAddress = decentraveller.getR
+        const reviewAddress = await decentraveller.getReviewAddress(1, 1);
+        const review = await ethers.getContractAt(
+            "DecentravellerReview",
+            reviewAddress,
+            userSigner
+        );
+        await decentraveller.censorReview(1, 1, 1);
+
+        await expect(
+            decentraveller.connect(thirdUserSigner).censorReview(1, 1, 1)
+        ).to.be.revertedWithCustomError(review, "Review__AlreadyCensored");
     });
 });
