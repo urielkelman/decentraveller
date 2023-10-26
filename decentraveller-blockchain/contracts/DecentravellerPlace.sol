@@ -5,18 +5,19 @@ import "./Decentraveller.sol";
 import "./DecentravellerDataTypes.sol";
 import "./DecentravellerReviewCloneFactory.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
 error Review__NonExistent(uint256 reviewId);
 error Review__InvalidScore(uint8 score);
 
-contract DecentravellerPlace is Initializable {
-    uint256 public placeId;
-    string public name;
-    string public latitude;
-    string public longitude;
-    string public physicalAddress;
+contract DecentravellerPlace is Initializable, Ownable {
+    uint256 private placeId;
+    string private name;
+    string private latitude;
+    string private longitude;
+    string private physicalAddress;
     DecentravellerDataTypes.DecentravellerPlaceCategory public category;
-    address public placeCreator;
+    address private placeCreator;
     mapping(uint256 => address) reviewAddressByReviewId;
 
     DecentravellerReviewCloneFactory private reviewFactory;
@@ -30,7 +31,8 @@ contract DecentravellerPlace is Initializable {
         string memory _physicalAddress,
         DecentravellerDataTypes.DecentravellerPlaceCategory _category,
         address _placeCreator,
-        address _reviewFactory
+        address _reviewFactory,
+        address _owner
     ) public initializer {
         placeId = _placeId;
         name = _name;
@@ -40,13 +42,15 @@ contract DecentravellerPlace is Initializable {
         category = _category;
         placeCreator = _placeCreator;
         reviewFactory = DecentravellerReviewCloneFactory(_reviewFactory);
+        _transferOwnership(_owner);
     }
 
     function addReview(
         string memory _reviewText,
         string[] memory _imagesHashes,
-        uint8 _score
-    ) public {
+        uint8 _score,
+        address _reviewCreator
+    ) external onlyOwner {
         if (_score > 5) {
             revert Review__InvalidScore(_score);
         }
@@ -54,7 +58,7 @@ contract DecentravellerPlace is Initializable {
         address reviewAddress = reviewFactory.createNewReview(
             currentReviewId,
             placeId,
-            msg.sender,
+            _reviewCreator,
             _reviewText,
             _imagesHashes,
             _score
@@ -74,5 +78,9 @@ contract DecentravellerPlace is Initializable {
 
     function getCurrentReviewId() external view returns (uint256) {
         return currentReviewId;
+    }
+
+    function getPlaceId() external view returns (uint256) {
+        return placeId;
     }
 }

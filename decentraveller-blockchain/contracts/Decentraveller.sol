@@ -109,10 +109,14 @@ contract Decentraveller {
         }
 
         ownersByNicknames[_nickname] = msg.sender;
-        profilesByOwner[msg.sender].owner = msg.sender;
-        profilesByOwner[msg.sender].nickname = _nickname;
-        profilesByOwner[msg.sender].country = _country;
-        profilesByOwner[msg.sender].interest = _interest;
+        profilesByOwner[msg.sender] = DecentravellerDataTypes
+            .DecentravellerProfile({
+                owner: msg.sender,
+                nickname: _nickname,
+                country: _country,
+                interest: _interest,
+                role: DecentravellerDataTypes.DecentravellerUserRole.NORMAL
+            });
 
         emit UpdatedProfile(msg.sender, _nickname, _country, _interest);
 
@@ -149,12 +153,27 @@ contract Decentraveller {
         return currentPlaceId;
     }
 
-    function getPlaceAddress(uint256 placeId) external view returns (address) {
+    function getPlaceAddress(uint256 placeId) public view returns (address) {
         address placeAddress = placeAddressByPlaceId[placeId];
         if (placeAddress == address(0)) {
             revert Place__NonExistent(placeId);
         }
         return placeAddress;
+    }
+
+    function addReview(
+        uint256 placeId,
+        string memory _reviewText,
+        string[] memory _imagesHashes,
+        uint8 _score
+    ) external onlyRegisteredAddress {
+        address placeAddress = getPlaceAddress(placeId);
+        DecentravellerPlace(placeAddress).addReview(
+            _reviewText,
+            _imagesHashes,
+            _score,
+            msg.sender
+        );
     }
 
     function getCurrentPlaceId() external view returns (uint256) {

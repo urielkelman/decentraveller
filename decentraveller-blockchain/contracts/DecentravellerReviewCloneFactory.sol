@@ -4,10 +4,14 @@ pragma solidity ^0.8.17;
 import "@openzeppelin/contracts/proxy/Clones.sol";
 import "./DecentravellerReview.sol";
 import "./DecentravellerToken.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract DecentravellerReviewCloneFactory {
-    address immutable decentravellerReviewImplementation;
-    DecentravellerToken decentravellerToken;
+error Place__NonRegistered(address placeAddress);
+
+contract DecentravellerReviewCloneFactory is Ownable {
+    address private immutable decentravellerReviewImplementation;
+    DecentravellerToken private decentravellerToken;
+    mapping(address => bool) private placeAddressesRegistered;
 
     event NewReview(
         uint256 indexed reviewId,
@@ -17,6 +21,14 @@ contract DecentravellerReviewCloneFactory {
         string[] imagesHashes,
         uint8 score
     );
+
+    modifier onlyRegisteredPlace() {
+        bool isRegistered = placeAddressesRegistered[msg.sender];
+        if (!isRegistered) {
+            revert Place__NonRegistered(msg.sender);
+        }
+        _;
+    }
 
     constructor(address _decentravellerReviewImplementation, address _token) {
         decentravellerReviewImplementation = _decentravellerReviewImplementation;
@@ -30,7 +42,7 @@ contract DecentravellerReviewCloneFactory {
         string memory _reviewText,
         string[] memory _imagesHashes,
         uint8 _score
-    ) external returns (address) {
+    ) external onlyRegisteredPlace returns (address) {
         address reviewCloneAddress = Clones.clone(
             decentravellerReviewImplementation
         );
@@ -54,5 +66,9 @@ contract DecentravellerReviewCloneFactory {
             _score
         );
         return reviewCloneAddress;
+    }
+
+    function registerPlaceAddress(address _placeAddress) external onlyOwner {
+        placeAddressesRegistered[_placeAddress] = true;
     }
 }
