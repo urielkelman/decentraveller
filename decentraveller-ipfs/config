@@ -4,17 +4,15 @@
   },
   "Addresses": {
     "API": "/ip4/0.0.0.0/tcp/5001",
-    "Announce": [],
-    "AppendAnnounce": [],
+    "Announce": null,
+    "AppendAnnounce": null,
     "Gateway": "/ip4/0.0.0.0/tcp/8080",
-    "NoAnnounce": [],
+    "NoAnnounce": null,
     "Swarm": [
       "/ip4/0.0.0.0/tcp/4001",
       "/ip6/::/tcp/4001",
-      "/ip4/0.0.0.0/udp/4001/quic",
       "/ip4/0.0.0.0/udp/4001/quic-v1",
       "/ip4/0.0.0.0/udp/4001/quic-v1/webtransport",
-      "/ip6/::/udp/4001/quic",
       "/ip6/::/udp/4001/quic-v1",
       "/ip6/::/udp/4001/quic-v1/webtransport"
     ]
@@ -125,7 +123,9 @@
   },
   "Swarm": {
     "AddrFilters": null,
-    "ConnMgr": {"type": "none"},
+    "ConnMgr": {
+      "type": "none"
+    },
     "DisableBandwidthMetrics": false,
     "DisableNatPortMap": true,
     "RelayClient": {},

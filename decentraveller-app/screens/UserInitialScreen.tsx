@@ -5,7 +5,6 @@ import WrongChainModal from './login/WrongChainModal';
 import LoginNavigator from './login/LoginNavigator';
 import RegistrationNavigator from './users/registration/RegistrationNavigator';
 import { apiAdapter } from '../api/apiAdapter';
-import { mockApiAdapter } from '../api/mockApiAdapter';
 import HomeNavigator from './home/HomeNavigator';
 import { useWalletConnectModal } from '@walletconnect/modal-react-native';
 
@@ -15,6 +14,7 @@ import * as Linking from 'expo-linking';
 import LoadingComponent from '../commons/components/DecentravellerLoading';
 import { DECENTRAVELLER_DEFAULT_BACKGROUND_COLOR } from '../commons/global';
 import { View } from 'react-native';
+import { BlockchainProposalStatus } from '../blockchain/types';
 
 const prefix = Linking.createURL('/');
 const DecentravellerInitialScreen = () => {
@@ -114,6 +114,13 @@ const DecentravellerInitialScreen = () => {
                                 address: (address) => `${address}`,
                                 score: (score) => Number(score),
                                 reviewCount: (reviewCount) => Number(reviewCount),
+                            },
+                        },
+                        RuleDetailScreen: {
+                            path: 'rule/:ruleId/:blockchainStatus',
+                            parse: {
+                                ruleId: (ruleId) => Number(ruleId),
+                                blockchainStatus: (blockchainStatus) => BlockchainProposalStatus[blockchainStatus],
                             },
                         },
                     },

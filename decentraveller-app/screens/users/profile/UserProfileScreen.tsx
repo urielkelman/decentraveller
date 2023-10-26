@@ -6,6 +6,8 @@ import LoadingComponent from '../../../commons/components/DecentravellerLoading'
 import { useNavigation } from '@react-navigation/native';
 import { UserProfileScreenProps } from './types';
 import { ImageGallery } from '@georstat/react-native-image-gallery';
+import { blockchainAdapter } from '../../../blockchain/blockhainAdapter';
+import { useAppContext } from '../../../context/AppContext';
 
 export type UserProfileScreens = {
     UserProfileScreen: undefined;
@@ -17,11 +19,11 @@ export type UserShowProps = {
     walletAddress: string;
     createdAt: string;
     interest: string;
-    sharedLocation: string;
     tokens: number;
 };
 
 const adapter = apiAdapter;
+const contractAdapter = blockchainAdapter;
 
 const UserProfileScreen: React.FC<UserProfileScreenProps> = ({ route }) => {
     const [isModalVisible, setIsModalVisible] = useState(false);
@@ -30,6 +32,7 @@ const UserProfileScreen: React.FC<UserProfileScreenProps> = ({ route }) => {
     const { walletId } = route.params;
     const navigation = useNavigation<UserProfileScreenProps>();
     const [isOpen, setIsOpen] = useState(false);
+    const { web3Provider } = useAppContext();
 
     const openGallery = () => setIsOpen(true);
 
@@ -49,8 +52,7 @@ const UserProfileScreen: React.FC<UserProfileScreenProps> = ({ route }) => {
                 walletAddress: walletId,
                 createdAt: userData.createdAt,
                 interest: userData.interest,
-                sharedLocation: 'Yes',
-                tokens: 67,
+                tokens: Number(await contractAdapter.getTokens(web3Provider, walletId)),
             };
             setUser(user);
             setLoading(false);
@@ -85,10 +87,6 @@ const UserProfileScreen: React.FC<UserProfileScreenProps> = ({ route }) => {
                 <View style={userProfileMainStyles.spacedBetweenView}>
                     <Text style={userProfileMainStyles.leftText}>Main interest</Text>
                     <Text style={userProfileMainStyles.rightText}>{user.interest}</Text>
-                </View>
-                <View style={userProfileMainStyles.spacedBetweenView}>
-                    <Text style={userProfileMainStyles.leftText}>Shared Location</Text>
-                    <Text style={userProfileMainStyles.rightText}>{user.sharedLocation}</Text>
                 </View>
                 <View style={userProfileMainStyles.spacedBetweenView}>
                     <Text style={userProfileMainStyles.leftText}>DT Tokens</Text>

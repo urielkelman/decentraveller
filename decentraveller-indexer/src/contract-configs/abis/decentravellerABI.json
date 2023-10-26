@@ -259,6 +259,34 @@
     "inputs": [
       {
         "internalType": "uint256",
+        "name": "placeId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "_reviewText",
+        "type": "string"
+      },
+      {
+        "internalType": "string[]",
+        "name": "_imagesHashes",
+        "type": "string[]"
+      },
+      {
+        "internalType": "uint8",
+        "name": "_score",
+        "type": "uint8"
+      }
+    ],
+    "name": "addReview",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
         "name": "ruleId",
         "type": "uint256"
       }
@@ -316,6 +344,19 @@
   {
     "inputs": [],
     "name": "getCurrentPlaceId",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getCurrentRuleId",
     "outputs": [
       {
         "internalType": "uint256",
@@ -391,6 +432,25 @@
         "internalType": "struct DecentravellerDataTypes.DecentravellerRule",
         "name": "",
         "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      }
+    ],
+    "name": "getTokens",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",

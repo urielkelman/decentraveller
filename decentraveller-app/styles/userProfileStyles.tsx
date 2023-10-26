@@ -64,20 +64,18 @@ const userProfileMainStyles = StyleSheet.create({
         borderRadius: 10,
         marginHorizontal: 13,
         marginTop: 10,
-        width: 338,
-        height: 100,
     },
     spacedBetweenView: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         paddingHorizontal: 10,
-        marginTop: 10,
+        paddingVertical: 5,
     },
     spacedButtonBetweenView: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         paddingHorizontal: 10,
-        marginTop: 40,
+        paddingVertical: 20,
     },
     leftText: {
         fontFamily: 'Montserrat_700Bold',

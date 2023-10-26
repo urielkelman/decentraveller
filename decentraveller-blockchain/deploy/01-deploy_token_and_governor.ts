@@ -12,7 +12,7 @@ const deployFunction: DeployFunction = async function (
     const tokenDeployment: DeployResult = await deploy("DecentravellerToken", {
         from: tokenOwner,
         log: true,
-        args: [1, 2],
+        args: [2, 5],
     });
 
     const token: DecentravellerToken = await ethers.getContractAt(

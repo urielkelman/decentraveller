@@ -1,5 +1,5 @@
 import { ethers, run, network, getNamedAccounts } from "hardhat";
-import { Decentraveller, DecentravellerPlace } from "../typechain-types";
+import { Decentraveller, DecentravellerPlace } from "../../typechain-types";
 
 const DEFAULT_MOCK_HASHES = ["0xhash1", "0xhash2", "0xhash3"];
 

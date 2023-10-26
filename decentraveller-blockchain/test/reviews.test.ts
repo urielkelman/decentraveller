@@ -18,7 +18,7 @@ describe("Places and Reviews", function () {
     let reviewerUserAddress: string;
     let reviewerSigner: Signer;
 
-    const rewardNewReviewTokensAmount = 1;
+    const rewardNewReviewTokensAmount = 2;
 
     beforeEach(async function () {
         await deployments.fixture(["all"]);

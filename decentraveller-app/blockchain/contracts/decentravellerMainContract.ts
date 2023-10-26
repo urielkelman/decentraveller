@@ -34,6 +34,10 @@ const decentravellerMainContract: DecentravellerContract = {
             functionName: 'addReview',
             fullContractABI: mainContractStringfiedABI,
         },
+        getTokens: {
+            functionName: 'getTokens',
+            fullContractABI: mainContractStringfiedABI,
+        },
     },
 };
 

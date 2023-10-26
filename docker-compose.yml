@@ -36,6 +36,7 @@ services:
       - PYTHONHASHSEED=0
       - INDEXER_API_KEY=asd123
       - BLOCKCHAIN_RPC_URL=http://blockchain:8545
+      - DEEP_LINK_SCHEME=exp://192.168.1.115:19000/--/
     env_file:
       - decentraveller-api/geocoding.env
     depends_on:

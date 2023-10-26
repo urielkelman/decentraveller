@@ -15,6 +15,8 @@ async def load_initial_rules():
     blockchain_adapter = BlockchainAdapter()
     stop_fetching_rules = False
     rule_id = 1
+    if database.get_rule_by_id(rule_id):
+        return
     while not stop_fetching_rules:
         rule = blockchain_adapter.get_rule_by_id(rule_id)
         if rule is not None:
