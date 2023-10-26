@@ -26,7 +26,6 @@ export interface NewReviewRequestBody extends EventRequestBody {
     score: number;
     text: string;
     images: string[];
-    state: string;
 }
 
 export interface NewProfileRequestBody extends EventRequestBody {

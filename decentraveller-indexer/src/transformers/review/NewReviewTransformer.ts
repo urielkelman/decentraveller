@@ -16,7 +16,6 @@ class NewReviewTransformer extends EventTransformer<NewReviewRequestBody> {
                 text: event[3],
                 images: event[4],
                 score: event[5],
-                state: "asd",
             },
         };
     }

@@ -4,17 +4,17 @@ from datetime import datetime
 from fastapi import HTTPException
 from sqlalchemy import func, case, tuple_, and_
 from sqlalchemy.orm import Session
-from starlette.status import HTTP_400_BAD_REQUEST
+from starlette.status import HTTP_400_BAD_REQUEST, HTTP_404_NOT_FOUND
 
 from src.api_models.bulk_results import PaginatedReviews, PaginatedPlaces
 from src.api_models.place import PlaceID, PlaceInDB, PlaceWithStats
 from src.api_models.profile import ProfileInDB, WalletID
-from src.api_models.review import ReviewID, ReviewInDB, ReviewWithProfile, ReviewInput
+from src.api_models.review import ReviewID, ReviewInDB, ReviewWithProfile, ReviewInput, CensorReviewInput
 from src.api_models.rule import RuleInput, RuleInDB, RuleId, RuleProposedDeletionInput, RuleProposalQueuedInput
 from src.orms.image import ImageORM
 from src.orms.place import PlaceORM
 from src.orms.profile import ProfileORM
-from src.orms.review import ReviewORM
+from src.orms.review import ReviewORM, ReviewStatus
 from src.orms.review_image import ReviewImageORM
 from src.orms.rule import RuleORM, RuleStatus
 import logging
@@ -208,7 +208,7 @@ class RelationalDatabase:
         """
         review_orm = ReviewORM(id=review.id, place_id=review.place_id,
                                score=review.score, owner=review.owner,
-                               text=review.text, state=review.state)
+                               text=review.text, status=ReviewStatus.PUBLIC)
         self.session.add(review_orm)
         for h in review.images:
             image_orm = self.session.query(ImageORM).get(h)
@@ -312,8 +312,8 @@ class RelationalDatabase:
         :return: a filehash or None if the image does not exist
         """
         image_query = self.session.query(ReviewImageORM.hash). \
-            join(ImageORM, ImageORM.hash == ReviewImageORM.hash).\
-            filter(and_(ReviewImageORM.review_id == review_id, ReviewImageORM.place_id == place_id)).\
+            join(ImageORM, ImageORM.hash == ReviewImageORM.hash). \
+            filter(and_(ReviewImageORM.review_id == review_id, ReviewImageORM.place_id == place_id)). \
             order_by(ImageORM.created_at.asc()).offset(image_number - 1).limit(1).all()
         if not image_query:
             return None
@@ -326,8 +326,8 @@ class RelationalDatabase:
         :return: the image bytes or None if there is no image
         """
         image_query = self.session.query(ReviewImageORM.hash). \
-            join(ImageORM, ImageORM.hash == ReviewImageORM.hash).\
-            filter(ReviewImageORM.place_id == place_id).\
+            join(ImageORM, ImageORM.hash == ReviewImageORM.hash). \
+            filter(ReviewImageORM.place_id == place_id). \
             order_by(ImageORM.score.desc()).limit(1).all()
         if not image_query:
             return None
@@ -448,7 +448,7 @@ class RelationalDatabase:
         rule = self.session.query(RuleORM).filter(RuleORM.proposal_id == rule_proposal_input.proposal_id).first()
 
         if rule is None:
-            rule = self.session.query(RuleORM)\
+            rule = self.session.query(RuleORM) \
                 .filter(RuleORM.deletion_proposal_id == rule_proposal_input.proposal_id).first()
 
             if rule is None:
@@ -464,12 +464,22 @@ class RelationalDatabase:
 
         return RuleInDB.from_orm(rule)
 
+    def censor_review(self, censor_review_input: CensorReviewInput):
+        """
+        Updates a rule to censored state.
+        """
+        review = self.session.query(ReviewORM) \
+            .filter(ReviewORM.place_id == censor_review_input.place_id) \
+            .filter(ReviewORM.id == censor_review_input.review_id) \
+            .first()
 
+        if review is None:
+            raise HTTPException(status_code=HTTP_404_NOT_FOUND)
 
+        if review.status != ReviewStatus.PUBLIC:
+            raise HTTPException(status_code=HTTP_400_BAD_REQUEST)
 
-
-
-
-
-
-
+        review.status = ReviewStatus.CENSORED
+        review.censor_moderator = censor_review_input.moderator
+        review.broken_rule_id = censor_review_input.broken_rule_id
+        self.session.commit()
