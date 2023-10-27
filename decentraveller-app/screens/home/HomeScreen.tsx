@@ -11,6 +11,7 @@ import LoadingComponent from '../../commons/components/DecentravellerLoading';
 import { registerForPushNotificationsAsync } from '../../commons/notifications/notifications';
 import { useWalletConnectModal } from '@walletconnect/modal-react-native';
 import MapView, { Marker } from 'react-native-maps';
+import {mockApiAdapter} from "../../api/mockApiAdapter";
 
 const adapter = apiAdapter;
 
@@ -108,7 +109,7 @@ const HomeScreen = ({ navigation }) => {
         console.log('register');
         const pushNotificationToken = await registerForPushNotificationsAsync();
         console.log('push token');
-        await apiAdapter.sendPushNotificationToken(address, pushNotificationToken);
+        await adapter.sendPushNotificationToken(address, pushNotificationToken);
     };
 
     useEffect(() => {
@@ -190,7 +191,7 @@ const HomeScreen = ({ navigation }) => {
                 >
                     <View style={homeStyle.mapMarker}>
                         <Image source={require('../../assets/bubble.png')} style={homeStyle.bubbleImage} />
-                        <Image source={{ uri: apiAdapter.getPlaceThumbailUrl(item.id) }} style={homeStyle.mapImage} />
+                        <Image source={{ uri: adapter.getPlaceThumbailUrl(item.id) }} style={homeStyle.mapImage} />
                     </View>
                 </Marker>
             ))}

@@ -9,8 +9,8 @@ if (Constants.deviceName === 'Simulator' || Constants.deviceName.includes('Emula
     API_ENDPOINT = 'http://10.0.2.2:8000';
     JSON_RPC_URL = 'http://10.0.2.2:8545';
 } else {
-    //API_ENDPOINT = 'http://192.168.0.95:8000';
-    API_ENDPOINT = 'http://192.168.1.115:8000';
+    API_ENDPOINT = 'http://192.168.0.95:8000';
+    //API_ENDPOINT = 'http://192.168.1.115:8000';
     JSON_RPC_URL = 'https://dtblockchain.loca.lt';
 }
 

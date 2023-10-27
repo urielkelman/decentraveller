@@ -15,6 +15,7 @@ export type ReviewShowProps = {
     ownerWallet: string;
     avatarUrl: string;
     createdAt: string;
+    censorStatus?: string
 };
 
 const renderReviewItem = ({ item, summarized }: { item: ReviewShowProps; summarized: boolean }) => (
@@ -30,6 +31,7 @@ const renderReviewItem = ({ item, summarized }: { item: ReviewShowProps; summari
         avatarUrl={item.avatarUrl}
         createdAt={item.createdAt}
         summarized={summarized}
+        censorStatus={item.censorStatus}
     />
 );
 

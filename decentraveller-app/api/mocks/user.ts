@@ -8,6 +8,7 @@ const UriUserResponse: UserResponse = {
     country: 'Argentina',
     interest: 'Entertainment',
     createdAt: '10/05/2025',
+    role: 'MODERATOR'
 };
 
 const GianUserResponse: UserResponse = {
@@ -16,6 +17,7 @@ const GianUserResponse: UserResponse = {
     country: 'Israel',
     interest: 'Comunismo',
     createdAt: '02/04/2023',
+    role: 'NORMAL'
 };
 
 export { MatiUserResponse, UriUserResponse, GianUserResponse };

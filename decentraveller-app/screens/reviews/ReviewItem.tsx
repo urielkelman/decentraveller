@@ -24,6 +24,7 @@ const ReviewItem: React.FC<ReviewItemProps> = ({
     avatarUrl,
     createdAt,
     summarized,
+    censorStatus
 }) => {
     const [showMore, setshowMore] = React.useState<boolean>(!summarized);
     const navigation = useNavigation<UserProfileScreenProps>();

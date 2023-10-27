@@ -15,6 +15,7 @@ import LoadingComponent from '../commons/components/DecentravellerLoading';
 import { DECENTRAVELLER_DEFAULT_BACKGROUND_COLOR } from '../commons/global';
 import { View } from 'react-native';
 import { BlockchainProposalStatus } from '../blockchain/types';
+import {mockApiAdapter} from "../api/mockApiAdapter";
 
 const prefix = Linking.createURL('/');
 const DecentravellerInitialScreen = () => {
@@ -23,6 +24,7 @@ const DecentravellerInitialScreen = () => {
     const [loadingUserProfile, setLoadingUserProfile] = React.useState<boolean>(false);
     const appContext = useAppContext();
     const setUserNickname = appContext.userNickname.setValue;
+    const setUserRole = appContext.userRole.setValue;
     const setUserCreatedAt = appContext.userCreatedAt.setValue;
     const setUserInterest = appContext.userInterest.setValue;
 
@@ -43,6 +45,7 @@ const DecentravellerInitialScreen = () => {
             setUserNickname(user.nickname);
             setUserCreatedAt(user.createdAt);
             setUserInterest(user.interest);
+            setUserRole(user.role)
             setStackToRender('Home');
         } finally {
             setLoadingUserProfile(false);
@@ -78,6 +81,7 @@ const DecentravellerInitialScreen = () => {
                 </View>
             );
         }
+
         switch (stackToRender) {
             case 'Home':
                 return <HomeNavigator />;

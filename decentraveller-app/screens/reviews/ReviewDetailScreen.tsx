@@ -11,6 +11,7 @@ import { reviewDetailStyles } from '../../styles/reviewDetailStyles';
 import ReviewItem from './ReviewItem';
 import { placeDetailStyles } from '../../styles/placeDetailStyles';
 import ReviewImageContainer from './ReviewImageContainer';
+import {useAppContext} from "../../context/AppContext";
 
 const adapter = apiAdapter;
 
@@ -19,6 +20,7 @@ const ReviewDetailScreen: React.FC<ReviewScreenProps> = ({ route }) => {
     const [loading, setLoading] = React.useState<boolean>(true);
     const [review, setReview] = React.useState<ReviewShowProps>(null);
     const [place, setPlace] = React.useState<PlaceShowProps>(null);
+    const { userRole} = useAppContext()
 
     const parsePlaceResponse = (placeResponse: PlaceResponse): PlaceShowProps => {
         return {
@@ -39,7 +41,7 @@ const ReviewDetailScreen: React.FC<ReviewScreenProps> = ({ route }) => {
             const placeData = await adapter.getPlace(placeId, () => {});
             const placeToShow = parsePlaceResponse(placeData);
             const reviewData = await adapter.getReview(placeId, reviewId, () => {});
-            const avatarUrl = await adapter.getProfileAvatarUrl(reviewData.owner.owner);
+            const avatarUrl = adapter.getProfileAvatarUrl(reviewData.owner.owner);
             const reviewToShow: ReviewShowProps = {
                 id: reviewData.id,
                 placeId: reviewData.placeId,

@@ -41,11 +41,30 @@ class ModerationService {
 
     /**
      * Returns the status of the review, that can be one of the following options:
-     * UNCENSORED, CENSORED, NON_DISPUTE, ON_DISPUTE, CHALLENGER_WON, MODERATOR_WON, UNCENSORED_BY_DISPUTE
+         * UNCENSORED, CENSORED, NON_DISPUTE, ON_DISPUTE, CHALLENGER_WON, MODERATOR_WON, UNCENSORED_BY_DISPUTE
      * @param web3Provider
      * @param reviewAddress
      */
-    async getReviewCensorStatus(web3Provider: ethers.providers.Web3Provider, reviewAddress: string): Promise<any> {}
+    async getReviewCensorStatus(web3Provider: ethers.providers.Web3Provider, reviewAddress: string): Promise<string> {
+        if (reviewAddress != "") {
+            return reviewAddress
+        }
+        return "UNCENSORED"
+    }
+
+
+    /**
+     * Returns the address of the review
+     * @param web3Provider
+     * @param placeId
+     * @param reviewId
+     */
+    async getReviewAddress(web3Provider: ethers.providers.Web3Provider, placeId: number, reviewId: number): Promise<string> {
+        if ((placeId == 7 || placeId == 64) && (reviewId == 2 || reviewId == 4)){
+            return "CENSORED"
+        }
+        return ""
+    }
 
     /**
      * For a review that was censored and then disputed, returns the amount of votes supporting the challenger and against the challenger.
