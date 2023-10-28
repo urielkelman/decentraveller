@@ -9,6 +9,7 @@ import {apiAdapter} from '../../../api/apiAdapter';
 import {ReviewItemProps} from '../../reviews/ReviewItem';
 import {moderationService} from "../../../blockchain/service/moderationService";
 import {useAppContext} from "../../../context/AppContext";
+import {BlockchainReviewStatus} from "../../../blockchain/types";
 
 const adapter = apiAdapter;
 
@@ -120,7 +121,12 @@ const PlaceReviewsBox = ({ placeId, summarized }) => {
     }
 
     const shouldReviewVisible = (review: ReviewItemProps) => {
-        return (review.censorStatus != "MODERATOR_WON" && (["PUBLIC", "UNCENSORED_BY_DISPUTE"].includes(review.censorStatus)) ||
+        return (review.censorStatus !== BlockchainReviewStatus.MODERATOR_WON && (
+            [
+                BlockchainReviewStatus.PUBLIC,
+                BlockchainReviewStatus.ON_DISPUTE,
+                BlockchainReviewStatus.UNCENSORED_BY_DISPUTE
+            ].includes(review.censorStatus)) ||
             (review.ownerWallet === connectedAddress))
     }
     const loadMoreReviews = async () => {

@@ -30,25 +30,10 @@ const reviewDetailStyles = StyleSheet.create({
     reviewContainer: {
         paddingHorizontal: 5,
     },
-    optionsContainer: {
+    optionButtonContainer: {
         paddingHorizontal: 10,
-        alignItems: 'flex-end',
-    },
-    optionDenounce: {
-        flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'center',
-    },
-    denounceText: {
-        fontSize: 18,
-        fontFamily: 'Montserrat_400Regular',
-        fontWeight: 'bold',
-        color: DECENTRAVELLER_DEFAULT_CONTRAST_COLOR,
-    },
-    denounceIcon: {
-        fontSize: 24,
-        fontFamily: 'Montserrat_400Regular',
-        color: DECENTRAVELLER_DEFAULT_CONTRAST_COLOR,
+
     },
 });
 

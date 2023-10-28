@@ -1,17 +1,21 @@
-import { View, Image, Text, ScrollView, TouchableOpacity } from 'react-native';
-import React, { useEffect, useState } from 'react';
-import { ReviewScreenProps } from './types';
-import { apiAdapter } from '../../api/apiAdapter';
+import {Image, Text, View} from 'react-native';
+import React, {useEffect} from 'react';
+import {ReviewScreenProps} from './types';
+import {apiAdapter} from '../../api/apiAdapter';
 import LoadingComponent from '../../commons/components/DecentravellerLoading';
-import { PlaceResponse } from '../../api/response/places';
-import { PlaceShowProps } from '../../commons/components/DecentravellerPlacesList';
-import { ReviewShowProps } from '../../commons/components/DecentravellerReviewsList';
+import {PlaceResponse} from '../../api/response/places';
+import {PlaceShowProps} from '../../commons/components/DecentravellerPlacesList';
+import {ReviewShowProps} from '../../commons/components/DecentravellerReviewsList';
 import PlaceItem from '../home/place/PlaceItem';
-import { reviewDetailStyles } from '../../styles/reviewDetailStyles';
+import {reviewDetailStyles} from '../../styles/reviewDetailStyles';
 import ReviewItem from './ReviewItem';
-import { placeDetailStyles } from '../../styles/placeDetailStyles';
-import ReviewImageContainer from './ReviewImageContainer';
 import {useAppContext} from "../../context/AppContext";
+import {moderationService} from "../../blockchain/service/moderationService";
+import DecentravellerButton from "../../commons/components/DecentravellerButton";
+import {communityScreenStyles, ruleDetailStyles} from "../../styles/communityStyles";
+import {reviewDetailScreenWordings} from "./wording";
+import {BlockchainReviewStatus} from "../../blockchain/types";
+import {UserRole} from "../users/profile/types";
 
 const adapter = apiAdapter;
 
@@ -20,7 +24,8 @@ const ReviewDetailScreen: React.FC<ReviewScreenProps> = ({ route }) => {
     const [loading, setLoading] = React.useState<boolean>(true);
     const [review, setReview] = React.useState<ReviewShowProps>(null);
     const [place, setPlace] = React.useState<PlaceShowProps>(null);
-    const { userRole} = useAppContext()
+    const { web3Provider, userRole, connectionContext} = useAppContext()
+    const { connectedAddress } = connectionContext
 
     const parsePlaceResponse = (placeResponse: PlaceResponse): PlaceShowProps => {
         return {
@@ -42,6 +47,8 @@ const ReviewDetailScreen: React.FC<ReviewScreenProps> = ({ route }) => {
             const placeToShow = parsePlaceResponse(placeData);
             const reviewData = await adapter.getReview(placeId, reviewId, () => {});
             const avatarUrl = adapter.getProfileAvatarUrl(reviewData.owner.owner);
+            const reviewAddress = await moderationService.getReviewAddress(web3Provider, placeId, reviewId)
+            const censorStatus = await moderationService.getReviewCensorStatus(web3Provider, reviewAddress)
             const reviewToShow: ReviewShowProps = {
                 id: reviewData.id,
                 placeId: reviewData.placeId,
@@ -53,12 +60,117 @@ const ReviewDetailScreen: React.FC<ReviewScreenProps> = ({ route }) => {
                 ownerWallet: reviewData.owner.owner,
                 avatarUrl: avatarUrl,
                 createdAt: reviewData.createdAt,
+                censorStatus: censorStatus
             };
             setPlace(placeToShow);
             setReview(reviewToShow);
             setLoading(false);
         })();
     }, []);
+
+    const renderCensorComponent = () => {
+        const role = userRole.value
+        const status = review.censorStatus
+
+        if (role == "MODERATOR" && status == "PUBLIC") {
+            return (
+                <View>
+                    <View style={reviewDetailStyles.optionButtonContainer}>
+                        <DecentravellerButton
+                            text={"Censor ⚑"}
+                            onPress={() => {}}
+                            loading={false}
+                            enabled={true}
+                        />
+                    </View>
+                    <View style={communityScreenStyles.cardContainer}>
+                        <View style={ruleDetailStyles.cardContent}>
+                            <Image source={require('../../assets/images/info.png')} style={ruleDetailStyles.icon} />
+                            <View style={ruleDetailStyles.textContainer}>
+                                <Text style={ruleDetailStyles.headerText}>Why do I see this?</Text>
+                                <View style={{ maxWidth: '95%' }}>
+                                    <Text style={ruleDetailStyles.explanationText}>{reviewDetailScreenWordings.CENSOR_STATUS_LABEL}</Text>
+                                </View>
+                            </View>
+                        </View>
+                    </View>
+                </View>
+            );
+        }
+    };
+
+    const renderOnDisputeComponent = () => {
+        const role = userRole.value
+        const status = review.censorStatus
+
+        if (role == UserRole.NORMAL && status == BlockchainReviewStatus.ON_DISPUTE && review.ownerWallet != connectedAddress) {
+            return (
+                <View>
+                    <View style={communityScreenStyles.cardContainer}>
+                        <View style={ruleDetailStyles.cardContent}>
+                            <Image source={require('../../assets/images/exclamation.png')} style={ruleDetailStyles.icon} />
+                            <View style={ruleDetailStyles.textContainer}>
+                                <Text style={ruleDetailStyles.headerText}>Censor under dispute</Text>
+                            </View>
+                        </View>
+                    </View>
+                    <View style={communityScreenStyles.cardContainer}>
+                        <View style={ruleDetailStyles.cardContent}>
+                            <Image source={require('../../assets/images/info.png')} style={ruleDetailStyles.icon} />
+                            <View style={ruleDetailStyles.textContainer}>
+                                <Text style={ruleDetailStyles.headerText}>Why do I see this?</Text>
+                                <View style={{ maxWidth: '95%' }}>
+                                    <Text style={ruleDetailStyles.explanationText}>{reviewDetailScreenWordings.ON_DISPUTE_STATUS_LABEL}</Text>
+                                </View>
+                            </View>
+                        </View>
+                    </View>
+                </View>
+            );
+        }
+    }
+
+    const renderDisputeComponent = () => {
+        const role = userRole.value
+        const status = review.censorStatus
+
+        if (role == UserRole.NORMAL && status == BlockchainReviewStatus.CENSORED && review.ownerWallet == connectedAddress) {
+            return (
+                <View>
+                    <View style={communityScreenStyles.cardContainer}>
+                        <View style={ruleDetailStyles.cardContent}>
+                            <Image source={require('../../assets/images/exclamation.png')} style={ruleDetailStyles.icon} />
+                            <View style={ruleDetailStyles.textContainer}>
+                                <Text style={ruleDetailStyles.headerText}>Review not visible</Text>
+                                <View style={{ maxWidth: '95%' }}>
+                                    <Text style={ruleDetailStyles.explanationText}>{"You have been censored by moderator"}</Text>
+                                </View>
+                            </View>
+                        </View>
+                        <View style={reviewDetailStyles.optionButtonContainer}>
+                            <DecentravellerButton
+                                text={"Dispute"}
+                                onPress={() => {}}
+                                loading={false}
+                                enabled={true}
+                            />
+                        </View>
+                    </View>
+                    <View style={communityScreenStyles.cardContainer}>
+                        <View style={ruleDetailStyles.cardContent}>
+                            <Image source={require('../../assets/images/info.png')} style={ruleDetailStyles.icon} />
+                            <View style={ruleDetailStyles.textContainer}>
+                                <Text style={ruleDetailStyles.headerText}>Why do I see this?</Text>
+                                <View style={{ maxWidth: '95%' }}>
+                                    <Text style={ruleDetailStyles.explanationText}>{reviewDetailScreenWordings.DISPUTE_STATUS_LABEL}</Text>
+                                </View>
+                            </View>
+                        </View>
+                    </View>
+                </View>
+            );
+        }
+    };
 
     const componentToRender = loading ? (
         <LoadingComponent />
@@ -93,14 +205,11 @@ const ReviewDetailScreen: React.FC<ReviewScreenProps> = ({ route }) => {
                     summarized={false}
                 />
             </View>
-            <View style={reviewDetailStyles.optionsContainer}>
-                <TouchableOpacity>
-                    <View style={reviewDetailStyles.optionDenounce}>
-                        <Text style={reviewDetailStyles.denounceIcon}>⚑ </Text>
-                        <Text style={reviewDetailStyles.denounceText}>Report</Text>
-                    </View>
-                </TouchableOpacity>
-            </View>
+
+            {renderCensorComponent()}
+            {renderDisputeComponent()}
+            {renderOnDisputeComponent()}
+
         </View>
     );
 

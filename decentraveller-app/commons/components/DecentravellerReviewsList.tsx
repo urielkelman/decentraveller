@@ -3,6 +3,7 @@ import { ActivityIndicator, FlatList, Text, View } from 'react-native';
 import React, { useEffect } from 'react';
 import { placeReviewsBoxStyles } from '../../styles/placeDetailStyles';
 import LoadingComponent from './DecentravellerLoading';
+import {BlockchainReviewStatus} from "../../blockchain/types";
 
 export type ReviewShowProps = {
     id: number;
@@ -15,7 +16,7 @@ export type ReviewShowProps = {
     ownerWallet: string;
     avatarUrl: string;
     createdAt: string;
-    censorStatus?: string
+    censorStatus?: BlockchainReviewStatus
 };
 
 const renderReviewItem = ({ item, summarized }: { item: ReviewShowProps; summarized: boolean }) => (

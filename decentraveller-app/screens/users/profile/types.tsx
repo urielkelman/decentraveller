@@ -25,3 +25,8 @@ export type UserProfileScreenProps = NavigationProp<HomeStackScreens, 'UserProfi
         params: WalletIdProps;
     };
 };
+
+export enum UserRole {
+    NORMAL = "NORMAL",
+    MODERATOR = "MODERATOR",
+}

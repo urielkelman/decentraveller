@@ -1,6 +1,7 @@
 import { blockchainAdapter, BlockchainAdapter } from '../blockhainAdapter';
 import { apiAdapter, ApiAdapter } from '../../api/apiAdapter';
 import { ethers } from 'ethers';
+import {BlockchainReviewStatus} from "../types";
 
 class ModerationService {
     private blockchainAdapter: BlockchainAdapter;
@@ -45,11 +46,11 @@ class ModerationService {
      * @param web3Provider
      * @param reviewAddress
      */
-    async getReviewCensorStatus(web3Provider: ethers.providers.Web3Provider, reviewAddress: string): Promise<string> {
+    async getReviewCensorStatus(web3Provider: ethers.providers.Web3Provider, reviewAddress: string): Promise<BlockchainReviewStatus> {
         if (reviewAddress != "") {
-            return reviewAddress
+            return BlockchainReviewStatus[reviewAddress]
         }
-        return "PUBLIC"
+        return BlockchainReviewStatus.PUBLIC
     }
 
 
@@ -60,8 +61,13 @@ class ModerationService {
      * @param reviewId
      */
     async getReviewAddress(web3Provider: ethers.providers.Web3Provider, placeId: number, reviewId: number): Promise<string> {
-        if ((placeId == 7 || placeId == 64) && (reviewId == 2 || reviewId == 4)){
-            return "CENSORED"
+        if (placeId == 64 &&  reviewId == 4){
+            // mi comentario en La fabrica del taco
+            return BlockchainReviewStatus.CENSORED
+        }
+        if (placeId == 11 && reviewId == 1){
+            // comentario de David en Sarkis
+            return BlockchainReviewStatus.ON_DISPUTE
         }
         return ""
     }

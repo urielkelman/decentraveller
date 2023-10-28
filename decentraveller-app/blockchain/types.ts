@@ -29,3 +29,12 @@ export type BlockchainProposalResult = {
     ForVotes: number;
     AgainstVotes: number;
 };
+
+export enum BlockchainReviewStatus {
+    PUBLIC = 'PUBLIC',
+    ON_DISPUTE = 'ON_DISPUTE',
+    CENSORED = 'CENSORED',
+    CHALLENGER_WON = 'CHALLENGER_WON',
+    MODERATOR_WON = 'MODERATOR_WON',
+    UNCENSORED_BY_DISPUTE = 'UNCENSORED_BY_DISPUTE',
+}
