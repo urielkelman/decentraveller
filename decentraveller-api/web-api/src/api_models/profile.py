@@ -5,6 +5,8 @@ from src.api_models.place_category import PlaceCategory
 from pydantic import validator
 import re
 
+from src.api_models.user_role import ProfileRole
+
 
 class InvalidWalletAddressException(Exception):
     """
@@ -35,6 +37,7 @@ class ProfileBody(APIModel):
     nickname: str
     country: str
     interest: PlaceCategory
+    role: ProfileRole
 
     @validator('owner')
     def wallet_id_validator(cls, v):

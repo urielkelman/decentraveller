@@ -26,7 +26,6 @@ export interface NewReviewRequestBody extends EventRequestBody {
     score: number;
     text: string;
     images: string[];
-    state: string;
 }
 
 export interface NewProfileRequestBody extends EventRequestBody {
@@ -62,4 +61,16 @@ export interface RuleDeletedRequestBody extends EventRequestBody {
 export interface RuleProposalQueuedBody extends EventRequestBody {
     proposalId: string;
     executionTimestamp: number;
+}
+
+export interface ReviewCensoredRequestBody extends EventRequestBody {
+    placeId: number;
+    reviewId: number;
+    brokenRuleId: number;
+    moderator: string;
+}
+
+export interface ReviewUncesoredRequestBody extends EventRequestBody {
+    placeId: number;
+    reviewId: number;
 }

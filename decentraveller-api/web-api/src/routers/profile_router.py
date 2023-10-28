@@ -151,7 +151,8 @@ class ProfileCBV:
 
             profile_orm = ProfileORM(owner=profile.owner.lower(), nickname=profile.nickname,
                                      country=profile.country,
-                                     interest=profile.interest)
+                                     interest=profile.interest,
+                                     role=profile.role)
             self.database.session.add(profile_orm)
         try:
             self.database.session.commit()

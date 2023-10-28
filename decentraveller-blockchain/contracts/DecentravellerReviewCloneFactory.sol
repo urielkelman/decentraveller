@@ -5,10 +5,13 @@ import "@openzeppelin/contracts/proxy/Clones.sol";
 import "./DecentravellerReview.sol";
 import "./DecentravellerToken.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/access/AccessControl.sol";
 
 error Place__NonRegistered(address placeAddress);
 
-contract DecentravellerReviewCloneFactory is Ownable {
+contract DecentravellerReviewCloneFactory is Ownable, AccessControl {
+    bytes32 public constant PLACE_REG_ROLE = keccak256("PLACE_REG_ROLE");
+
     address private immutable decentravellerReviewImplementation;
     DecentravellerToken private decentravellerToken;
     mapping(address => bool) private placeAddressesRegistered;
@@ -33,6 +36,7 @@ contract DecentravellerReviewCloneFactory is Ownable {
     constructor(address _decentravellerReviewImplementation, address _token) {
         decentravellerReviewImplementation = _decentravellerReviewImplementation;
         decentravellerToken = DecentravellerToken(_token);
+        _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
     }
 
     function createNewReview(
@@ -52,7 +56,8 @@ contract DecentravellerReviewCloneFactory is Ownable {
             _owner,
             _reviewText,
             _imagesHashes,
-            _score
+            _score,
+            owner()
         );
 
         decentravellerToken.rewardNewReview(_owner);
@@ -65,10 +70,13 @@ contract DecentravellerReviewCloneFactory is Ownable {
             _imagesHashes,
             _score
         );
+
         return reviewCloneAddress;
     }
 
-    function registerPlaceAddress(address _placeAddress) external onlyOwner {
+    function registerPlaceAddress(
+        address _placeAddress
+    ) external onlyRole(PLACE_REG_ROLE) {
         placeAddressesRegistered[_placeAddress] = true;
     }
 }

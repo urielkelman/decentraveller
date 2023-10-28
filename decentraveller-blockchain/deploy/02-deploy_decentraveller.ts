@@ -68,6 +68,7 @@ const deployFunction: DeployFunction = async function (
                 "Do not insult any person.",
                 "If it is a gastronomic place, you should specify what you ate.",
             ],
+            3,
         ],
         log: true,
     });
@@ -93,9 +94,20 @@ const deployFunction: DeployFunction = async function (
             deployer
         );
 
+    const placeRegistrationRole =
+        await decentravellerReviewFactory.PLACE_REG_ROLE();
+
+    const addPlaceRegistrationRoleTx =
+        await decentravellerReviewFactory.grantRole(
+            placeRegistrationRole,
+            decentravellerPlaceFactoryDeployment.address
+        );
+
+    await addPlaceRegistrationRoleTx.wait();
+
     const transferReviewFactoryOwnershipTx =
         await decentravellerReviewFactory.transferOwnership(
-            decentravellerPlaceFactory.address
+            decentravellerDeployment.address
         );
 
     await transferReviewFactoryOwnershipTx.wait();
