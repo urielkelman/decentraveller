@@ -15,6 +15,14 @@ import SuccessAddReviewScreen from '../reviews/SuccessAddReviewScreen';
 import AddReviewImages from '../reviews/AddReviewImages';
 import * as Linking from 'expo-linking';
 import ReviewDetailScreen from '../reviews/ReviewDetailScreen';
+import DecentravellerRulesList from './community/DecentravellerRulesList';
+import { Rule } from './community/types';
+import RuleDetailScreen from './community/RuleDetailScreen';
+import ProposeRuleScreen from './community/ProposeRuleScreen';
+import VotingResultsScreen from './community/VotingResultsScreen';
+import { RuleResponse } from '../../api/response/rules';
+import RulesScreen from './community/RulesScreen';
+import { BlockchainProposalStatus } from '../../blockchain/types';
 
 export type HomeStackScreens = {
     LeftSideBar: undefined;
@@ -30,6 +38,11 @@ export type HomeStackScreens = {
     SuccessAddReviewScreen: undefined;
     UserProfileScreen: { walletId: string };
     ReviewDetailScreen: { reviewId: number; placeId: number };
+    RulesScreen: undefined;
+    DecentravellerRulesList: { ruleList: RuleResponse[]; minified: boolean; horizontal: boolean };
+    RuleDetailScreen: { ruleId: number; blockchainStatus: BlockchainProposalStatus; rule?: Rule };
+    ProposeRuleScreen: undefined;
+    VotingResultsScreen: { rule: Rule };
 };
 
 const HomeStackNavigator = createStackNavigator<HomeStackScreens>();
@@ -129,6 +142,46 @@ const HomeNavigator = () => {
                     component={SuccessAddReviewScreen}
                     options={{
                         title: 'Thank you!',
+                        headerShown: true,
+                    }}
+                />
+                <HomeStackNavigator.Screen
+                    name="RulesScreen"
+                    component={RulesScreen}
+                    options={{
+                        title: 'Rules screen',
+                        headerShown: true,
+                    }}
+                />
+                <HomeStackNavigator.Screen
+                    name="DecentravellerRulesList"
+                    component={DecentravellerRulesList}
+                    options={{
+                        title: 'Rules list',
+                        headerShown: true,
+                    }}
+                />
+                <HomeStackNavigator.Screen
+                    name="RuleDetailScreen"
+                    component={RuleDetailScreen}
+                    options={{
+                        title: 'Rule',
+                        headerShown: true,
+                    }}
+                />
+                <HomeStackNavigator.Screen
+                    name="ProposeRuleScreen"
+                    component={ProposeRuleScreen}
+                    options={{
+                        title: 'Propose rule',
+                        headerShown: true,
+                    }}
+                />
+                <HomeStackNavigator.Screen
+                    name="VotingResultsScreen"
+                    component={VotingResultsScreen}
+                    options={{
+                        title: 'Voting results',
                         headerShown: true,
                     }}
                 />

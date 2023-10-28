@@ -9,7 +9,23 @@ export enum BlockchainProposalStatus {
     EXECUTED = 7,
 }
 
+export enum BlockchainUserStatus {
+    PENDING = 'Vote pending opening',
+    ACTIVE = 'Active voting',
+    QUEUED = 'Queued',
+    TO_QUEUE = 'To enqueue',
+    TO_EXECUTE = 'To execute',
+}
+
+export enum BlockchainProposalStatusNames {
+    PENDING = 'PENDING',
+    ACTIVE = 'ACTIVE',
+    QUEUED = 'QUEUED',
+    EXECUTED = 'EXECUTED',
+    SUCCEEDED = 'SUCCEEDED',
+}
+
 export type BlockchainProposalResult = {
     ForVotes: number;
     AgainstVotes: number;
-}
+};

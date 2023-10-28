@@ -5,7 +5,7 @@ import React from 'react';
 import { useDeviceDimensions } from '../../context/AppContext';
 import HomeScreen from './HomeScreen';
 import ExplorePlacesScreen from './explore/ExplorePlacesScreen';
-import CommunityScreen from './CommunityScreen';
+import CommunityScreen from './community/CommunityScreen';
 import { TouchableOpacity } from 'react-native';
 
 type RootStackScreens = {

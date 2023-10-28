@@ -51,7 +51,7 @@ const CreatePlaceNameScreen = () => {
                 setTextValue={setPlaceName}
                 placeholder={addPlaceScreenWordings.CREATE_PLACE_PLACE_NAME_INPUT_PLACEHOLDER}
             />
-            <DecentravellerButton loading={false} text={'Next'} onPress={onClickContinue} />
+            <DecentravellerButton loading={false} text={'Next'} onPress={onClickContinue} style={{ marginTop: 30 }} />
             <DecentravellerInformativeModal
                 informativeText={'Please, provide both the place type and the name.'}
                 visible={showInformativeModal}

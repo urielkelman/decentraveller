@@ -35,3 +35,5 @@ export type PlaceDetailScreenProp = NavigationProp<HomeStackScreens, 'PlaceDetai
 export type PlaceDetailScreenProps = {
     route: RouteProp<Record<string, PlaceDetailParams>, string>;
 };
+
+export type CreateProposeScreenProp = StackNavigationProp<HomeStackScreens, 'ProposeRuleScreen'>;

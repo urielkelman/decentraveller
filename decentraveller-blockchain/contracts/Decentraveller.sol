@@ -272,6 +272,10 @@ contract Decentraveller {
         emit DecentravellerReviewUncesored(_placeId, _reviewId);
     }
 
+    function getCurrentRuleId() external view returns (uint256) {
+        return currentRuleId;
+    }
+
     function approveProposedRule(uint256 ruleId) external onlyGovernance {
         ruleById[ruleId].status = DecentravellerDataTypes
             .DecentravellerRuleStatus
@@ -419,5 +423,9 @@ contract Decentraveller {
 
     function getCurrentPlaceId() external view returns (uint256) {
         return currentPlaceId;
+    }
+
+    function getTokens(address account) external view returns (uint256) {
+        return governance.currentVotes(account);
     }
 }

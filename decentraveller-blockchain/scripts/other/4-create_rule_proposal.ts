@@ -1,5 +1,5 @@
 import { ethers, getNamedAccounts } from "hardhat";
-import { Decentraveller, DecentravellerToken } from "../typechain-types";
+import { Decentraveller, DecentravellerToken } from "../../typechain-types";
 import { createAndFundUserWallets } from "./set_up_dao_participants";
 
 const WALLET_PRIVATE_KEY =

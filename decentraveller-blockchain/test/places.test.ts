@@ -12,7 +12,7 @@ describe("Decentraveller and places ", function () {
     let decentravellerToken: DecentravellerToken;
     let userAddress: string;
 
-    const rewardNewPlaceTokensAmount = 2;
+    const rewardNewPlaceTokensAmount = 5;
 
     beforeEach(async function () {
         await deployments.fixture(["all"]);
