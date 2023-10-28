@@ -113,18 +113,16 @@ const PlaceReviewsBox = ({ placeId, summarized }) => {
             };
         });
 
-        const reviewStatusResults = await Promise.all(reviewStatusPromises);
+        const reviewStatusResults: ReviewItemProps[] = await Promise.all(reviewStatusPromises);
 
-        const filteredReviews = reviewStatusResults.filter((r) => (
-            (["UNCENSORED", "UNCENSORED_BY_DISPUTE"].includes(r.censorStatus)) ||
-            (r.ownerWallet === connectedAddress)
-        ));
+        return  reviewStatusResults.filter((r) => (shouldReviewVisible(r)));
 
-        return filteredReviews;
     }
 
-
-
+    const shouldReviewVisible = (review: ReviewItemProps) => {
+        return (review.censorStatus != "MODERATOR_WON" && (["PUBLIC", "UNCENSORED_BY_DISPUTE"].includes(review.censorStatus)) ||
+            (review.ownerWallet === connectedAddress))
+    }
     const loadMoreReviews = async () => {
         if (!summarized && hasReviews() && reviewCount > reviews.length) {
             setLoadingReviews(true);

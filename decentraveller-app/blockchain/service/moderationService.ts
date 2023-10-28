@@ -41,7 +41,7 @@ class ModerationService {
 
     /**
      * Returns the status of the review, that can be one of the following options:
-         * UNCENSORED, CENSORED, NON_DISPUTE, ON_DISPUTE, CHALLENGER_WON, MODERATOR_WON, UNCENSORED_BY_DISPUTE
+         * PUBLIC, CENSORED, ON_DISPUTE, CHALLENGER_WON, MODERATOR_WON, UNCENSORED_BY_DISPUTE
      * @param web3Provider
      * @param reviewAddress
      */
@@ -49,7 +49,7 @@ class ModerationService {
         if (reviewAddress != "") {
             return reviewAddress
         }
-        return "UNCENSORED"
+        return "PUBLIC"
     }
 
 
