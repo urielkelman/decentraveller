@@ -54,7 +54,7 @@ contract Decentraveller {
         address moderator
     );
 
-    event DecentravellerReviewUncesored(
+    event DecentravellerReviewUncensored(
         uint256 indexed placeId,
         uint256 indexed reviewId
     );
@@ -269,7 +269,7 @@ contract Decentraveller {
         address reviewAddress = _getReviewAddress(_placeId, _reviewId);
         DecentravellerReview(reviewAddress).uncensor();
 
-        emit DecentravellerReviewUncesored(_placeId, _reviewId);
+        emit DecentravellerReviewUncensored(_placeId, _reviewId);
     }
 
     function getCurrentRuleId() external view returns (uint256) {

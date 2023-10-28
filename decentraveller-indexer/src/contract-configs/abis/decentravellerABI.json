@@ -159,7 +159,7 @@
         "type": "uint256"
       }
     ],
-    "name": "DecentravellerReviewUncesored",
+    "name": "DecentravellerReviewUncensored",
     "type": "event"
   },
   {

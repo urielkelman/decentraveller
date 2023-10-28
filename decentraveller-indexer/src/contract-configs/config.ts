@@ -74,7 +74,7 @@ export const eventsToListen: Array<EventToListen<any>> = [
     },
     {
         contract: decentraveller,
-        eventName: "UpdatedProfile",
+        eventName: "ProfileCreated",
         transformer: registeredProfileTransformer,
     },
     {
