@@ -3,8 +3,9 @@ pragma solidity ^0.8.17;
 import "./DecentravellerPlace.sol";
 import "./DecentravellerDataTypes.sol";
 import "@openzeppelin/contracts/proxy/Clones.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract DecentravellerPlaceCloneFactory {
+contract DecentravellerPlaceCloneFactory is Ownable {
     address immutable decentravellerPlaceImplementation;
     address immutable decentravellerReviewCloneFactory;
     DecentravellerToken decentravellerToken;
@@ -37,11 +38,14 @@ contract DecentravellerPlaceCloneFactory {
         string memory _physicalAddress,
         DecentravellerDataTypes.DecentravellerPlaceCategory _category,
         address _placeCreator
-    ) external returns (address) {
+    ) external onlyOwner returns (address) {
         address placeCloneAddress = Clones.clone(
             decentravellerPlaceImplementation
         );
-        DecentravellerPlace(placeCloneAddress).initialize(
+        DecentravellerPlace decentravellerPlace = DecentravellerPlace(
+            placeCloneAddress
+        );
+        decentravellerPlace.initialize(
             _placeId,
             _name,
             _latitude,
@@ -49,9 +53,9 @@ contract DecentravellerPlaceCloneFactory {
             _physicalAddress,
             _category,
             _placeCreator,
-            decentravellerReviewCloneFactory
+            decentravellerReviewCloneFactory,
+            owner()
         );
-
         decentravellerToken.rewardNewPlace(_placeCreator);
 
         emit NewPlace(
@@ -63,6 +67,10 @@ contract DecentravellerPlaceCloneFactory {
             _latitude,
             _longitude
         );
+
+        DecentravellerReviewCloneFactory(decentravellerReviewCloneFactory)
+            .registerPlaceAddress(placeCloneAddress);
+
         return placeCloneAddress;
     }
 }

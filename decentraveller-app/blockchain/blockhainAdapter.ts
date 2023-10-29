@@ -4,7 +4,6 @@ import { ContractFunction, DecentravellerContract } from './contractTypes';
 import { Blockchain, BlockchainByChainId } from './config';
 import { withTimeout } from '../commons/functions/utils';
 import { DEFAULT_CHAIN_ID } from '../context/AppContext';
-import { decentravellerPlaceContract } from './contracts/decentravellerPlaceContract';
 import { decentravellerMainContract } from './contracts/decentravellerMainContract';
 import { decentravellerPlaceFactoryContract } from './contracts/decentravellerPlaceFactoryABI';
 import { BlockchainProposalResult, BlockchainProposalStatus } from './types';
@@ -142,21 +141,12 @@ class BlockchainAdapter {
         rating: number,
         images: string[],
     ): Promise<string> {
-        const blockchain: Blockchain = BlockchainByChainId[DEFAULT_CHAIN_ID];
-        const contractFunction: ContractFunction = decentravellerMainContract.functions['getPlaceAddress'];
-        const mainContractAddress: string = decentravellerMainContract.addressesByBlockchain[blockchain];
-        const decentravellerMain = new ethers.Contract(
-            mainContractAddress,
-            contractFunction.fullContractABI,
-            web3Provider,
-        );
-        const placeAddress = await decentravellerMain.getPlaceAddress(placeId);
         try {
-            return await this.populateAndSendWithAddress(
+            return await this.populateAndSend(
                 web3Provider,
-                decentravellerPlaceContract,
+                decentravellerMainContract,
                 'addReview',
-                placeAddress,
+                placeId,
                 comment,
                 images,
                 rating,

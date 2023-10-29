@@ -3,7 +3,7 @@ import { eventEndpoints } from "../adapters/config";
 import { EventRequest, NewProfileRequestBody } from "../adapters/types";
 import EventTransformer from "./EventTransformer";
 
-class UpdatedProfileTransformer extends EventTransformer<NewProfileRequestBody> {
+class RegisteredProfileTransformer extends EventTransformer<NewProfileRequestBody> {
     public transformEvent(event: any[]): EventRequest<NewProfileRequestBody> {
         return {
             endpoint: eventEndpoints.NEW_PROFILE_ENDPOINT,
@@ -13,6 +13,7 @@ class UpdatedProfileTransformer extends EventTransformer<NewProfileRequestBody> 
                 nickname: event[1],
                 country: event[2],
                 interest: this.interestNumberToString(event[3]),
+                role: this.roleNumberToString(event[4]),
             },
         };
     }
@@ -31,8 +32,19 @@ class UpdatedProfileTransformer extends EventTransformer<NewProfileRequestBody> 
                 return "UNKNOWN";
         }
     }
+
+    private roleNumberToString(role: number): string {
+        switch (role) {
+            case 0:
+                return "NORMAL";
+            case 1:
+                return "MODERATOR";
+            default:
+                return "NORMAL";
+        }
+    }
 }
 
-const updatedProfileTransformer = new UpdatedProfileTransformer();
+const registeredProfileTransformer = new RegisteredProfileTransformer();
 
-export { updatedProfileTransformer };
+export { registeredProfileTransformer };
