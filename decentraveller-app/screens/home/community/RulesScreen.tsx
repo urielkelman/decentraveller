@@ -153,6 +153,7 @@ const RulesScreen = ({ navigation }) => {
                                         ruleList: communityRules,
                                         minified: false,
                                         horizontal: false,
+                                        selectionCallback: null,
                                     })
                                 }
                             />

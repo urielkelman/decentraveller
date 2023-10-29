@@ -46,7 +46,8 @@ const DecentravellerInitialScreen = () => {
             setUserNickname(user.nickname);
             setUserCreatedAt(user.createdAt);
             setUserInterest(user.interest);
-            setUserRole(user.role);
+            //setUserRole(user.role)
+            setUserRole(UserRole.MODERATOR)
             setStackToRender('Home');
         } finally {
             setLoadingUserProfile(false);

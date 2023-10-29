@@ -26,6 +26,8 @@ type RulesListParams = {
     loadRules?: RuleLoadFunction | null | undefined;
     minified: boolean;
     horizontal: boolean;
+    selectionCallback: (id: number, statement: string) => void;
+
 };
 
 export type RuleListProps = {

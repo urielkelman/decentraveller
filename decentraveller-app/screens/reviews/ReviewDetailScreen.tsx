@@ -16,7 +16,8 @@ import {communityScreenStyles, ruleDetailStyles} from "../../styles/communitySty
 import {reviewDetailScreenWordings} from "./wording";
 import {BlockchainReviewStatus} from "../../blockchain/types";
 import {UserRole} from "../users/profile/types";
-import {FontAwesome} from "@expo/vector-icons";
+import {NavigationProp, useNavigation} from "@react-navigation/native";
+import {HomeStackScreens} from "../home/HomeNavigator";
 
 const adapter = apiAdapter;
 
@@ -27,6 +28,8 @@ const ReviewDetailScreen: React.FC<ReviewScreenProps> = ({ route }) => {
     const [place, setPlace] = React.useState<PlaceShowProps>(null);
     const { web3Provider, userRole, connectionContext} = useAppContext()
     const { connectedAddress } = connectionContext
+    const navigation = useNavigation<NavigationProp<HomeStackScreens>>()
+
 
     const parsePlaceResponse = (placeResponse: PlaceResponse): PlaceShowProps => {
         return {
@@ -75,7 +78,7 @@ const ReviewDetailScreen: React.FC<ReviewScreenProps> = ({ route }) => {
                 <View style={reviewDetailStyles.optionButtonContainer}>
                     <DecentravellerButton
                         text={"Censor ⚑"}
-                        onPress={() => {}}
+                        onPress={() => {navigation.navigate('SelectBrokenRuleScreen', { reviewId: reviewId, placeId: placeId })}}
                         loading={false}
                         enabled={true}
                     />
@@ -137,7 +140,7 @@ const ReviewDetailScreen: React.FC<ReviewScreenProps> = ({ route }) => {
                     <View style={reviewDetailStyles.optionButtonContainer}>
                         <DecentravellerButton
                             text={"Dispute"}
-                            onPress={() => {}}
+                            onPress={() => { navigation.navigate('AddReviewComment') }}
                             loading={false}
                             enabled={true}
                         />
@@ -173,8 +176,8 @@ const ReviewDetailScreen: React.FC<ReviewScreenProps> = ({ route }) => {
                 return null
         };
     }
-    const componentToRender = loading ? (
-        <LoadingComponent />
+    return loading ? (
+        <LoadingComponent/>
     ) : (
         <View style={reviewDetailStyles.container}>
             <View style={reviewDetailStyles.placeDataContainer}>
@@ -210,8 +213,6 @@ const ReviewDetailScreen: React.FC<ReviewScreenProps> = ({ route }) => {
 
         </View>
     );
-
-    return componentToRender;
 };
 
 export default ReviewDetailScreen;

@@ -23,6 +23,7 @@ import VotingResultsScreen from './community/VotingResultsScreen';
 import { RuleResponse } from '../../api/response/rules';
 import RulesScreen from './community/RulesScreen';
 import { BlockchainProposalStatus } from '../../blockchain/types';
+import SelectBrokenRuleScreen from "../reviews/SelectBrokenRuleScreen";
 
 export type HomeStackScreens = {
     LeftSideBar: undefined;
@@ -39,10 +40,12 @@ export type HomeStackScreens = {
     UserProfileScreen: { walletId: string };
     ReviewDetailScreen: { reviewId: number; placeId: number };
     RulesScreen: undefined;
-    DecentravellerRulesList: { ruleList: RuleResponse[]; minified: boolean; horizontal: boolean };
+    DecentravellerRulesList: { ruleList: RuleResponse[]; minified: boolean; horizontal: boolean; selectionCallback: (id: number, statement: string) => void; };
     RuleDetailScreen: { ruleId: number; blockchainStatus: BlockchainProposalStatus; rule?: Rule };
     ProposeRuleScreen: undefined;
     VotingResultsScreen: { rule: Rule };
+    SelectBrokenRuleScreen: { reviewId: number; placeId: number };
+
 };
 
 const HomeStackNavigator = createStackNavigator<HomeStackScreens>();
@@ -182,6 +185,14 @@ const HomeNavigator = () => {
                     component={VotingResultsScreen}
                     options={{
                         title: 'Voting results',
+                        headerShown: true,
+                    }}
+                />
+                <HomeStackNavigator.Screen
+                    name="SelectBrokenRuleScreen"
+                    component={SelectBrokenRuleScreen}
+                    options={{
+                        title: 'Select broken rule',
                         headerShown: true,
                     }}
                 />
