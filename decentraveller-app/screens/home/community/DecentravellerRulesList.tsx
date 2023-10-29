@@ -61,11 +61,7 @@ const DecentravellerRulesList: React.FC<RuleListProps> = ({ route }) => {
                 });
             };
             const navigateToScreen = () => {
-                if (selectionCallback != null) {
-                    selectionCallback(item.ruleId, item.ruleStatement)
-                } else {
-                    navigateToDetail()
-                }
+                selectionCallback != null ? selectionCallback(item.ruleId, item.ruleStatement) : navigateToDetail()
             }
 
             return (
