@@ -54,7 +54,9 @@ class ModerationService {
      * @param placeId
      * @param reviewId
      */
-    async getReviewAddress(web3Provider: ethers.providers.Web3Provider, placeId: number, reviewId: number): Promise<string> {}
+    async getReviewAddress(web3Provider: ethers.providers.Web3Provider, placeId: number, reviewId: number): Promise<string> {
+        return ""
+    }
 
     /**
      * For a review that was censored and then disputed, returns the amount of votes supporting the challenger and against the challenger.
