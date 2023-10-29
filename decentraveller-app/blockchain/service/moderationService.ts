@@ -46,13 +46,7 @@ class ModerationService {
      * @param web3Provider
      * @param reviewAddress
      */
-    async getReviewCensorStatus(web3Provider: ethers.providers.Web3Provider, reviewAddress: string): Promise<BlockchainReviewStatus> {
-        if (reviewAddress != "") {
-            return BlockchainReviewStatus[reviewAddress]
-        }
-        return BlockchainReviewStatus.PUBLIC
-    }
-
+    async getReviewCensorStatus(web3Provider: ethers.providers.Web3Provider, reviewAddress: string): Promise<any> {}
 
     /**
      * Returns the address of the review
@@ -60,17 +54,7 @@ class ModerationService {
      * @param placeId
      * @param reviewId
      */
-    async getReviewAddress(web3Provider: ethers.providers.Web3Provider, placeId: number, reviewId: number): Promise<string> {
-        if (placeId == 64 &&  reviewId == 4){
-            // mi comentario en La fabrica del taco
-            return BlockchainReviewStatus.CENSORED
-        }
-        if (placeId == 11 && reviewId == 1){
-            // comentario de David en Sarkis
-            return BlockchainReviewStatus.ON_DISPUTE
-        }
-        return ""
-    }
+    async getReviewAddress(web3Provider: ethers.providers.Web3Provider, placeId: number, reviewId: number): Promise<string> {}
 
     /**
      * For a review that was censored and then disputed, returns the amount of votes supporting the challenger and against the challenger.
