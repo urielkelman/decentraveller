@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Image, Text, TouchableOpacity, Alert } from 'react-native';
+import { Alert, Image, Text, TouchableOpacity, View } from 'react-native';
 import { addReviewsScreenWordings } from './wording';
 import DecentravellerButton from '../../commons/components/DecentravellerButton';
 import { addReviewImagesStyles } from '../../styles/addReviewStyles';

@@ -1,12 +1,12 @@
-import { Image, Text, View, StyleSheet, TouchableOpacity } from 'react-native';
+import { Image, Text, TouchableOpacity, View } from 'react-native';
 import CountryFlag from 'react-native-country-flag';
 import { DecentravellerPlaceCategory } from '../../../context/types';
 import React from 'react';
 import {
     countryFlagSize,
+    placeItemMinifiedStyle,
     placeItemStyle,
     rateReviewIcon,
-    placeItemMinifiedStyle,
 } from '../../../styles/placeItemstyle';
 // @ts-ignore
 import { ISOCodeByCountry } from './countriesConfig';

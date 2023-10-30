@@ -1,20 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import RulesList from './RulesList';
-import DecentravellerButton from '../../../commons/components/DecentravellerButton';
+import React from 'react';
+import { Text, TouchableOpacity, View } from 'react-native';
 import { communityScreenStyles } from '../../../styles/communityStyles';
-import { RuleResponse, RuleStatus } from '../../../api/response/rules';
 import { useAppContext } from '../../../context/AppContext';
-import { Rule } from './types';
-import {
-    BlockchainProposalStatus,
-    BlockchainProposalStatusNames,
-    BlockchainUserStatus,
-} from '../../../blockchain/types';
-import { communityWording } from './wording';
-import { rulesService } from '../../../blockchain/service/rulesService';
-import LoadingComponent from '../../../commons/components/DecentravellerLoading';
-import { Picker } from '@react-native-picker/picker';
 
 const CommunityScreen = ({ navigation }) => {
     const { web3Provider } = useAppContext();

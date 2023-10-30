@@ -232,18 +232,19 @@ class RelationalDatabase:
         profile: Optional[ProfileORM] = self.session.query(ProfileORM).get(owner)
         return profile
 
-    def query_reviews_by_place(self, place_id: PlaceID,
-                               page: int, per_page: int) -> PaginatedReviews:
+    def query_active_reviews_by_place(self, place_id: PlaceID,
+                                      page: int, per_page: int) -> PaginatedReviews:
         """
-        Gets all the reviews from a place as a query
+        Gets all the active reviews from a place as a query
 
         :param place_id: the id of the place
         :param page: page of the reviews
         :param per_page: items per page
         :return: the paginated reviews
         """
-        query = self.session.query(ReviewORM.id, ReviewORM.place_id). \
-            filter(ReviewORM.place_id == place_id)
+        query = (self.session.query(ReviewORM.id, ReviewORM.place_id).
+                 filter(ReviewORM.place_id == place_id).
+                 filter((ReviewORM.status == ReviewStatus.PUBLIC) | (ReviewORM.status == ReviewStatus.UNCENSORED)))
         total_count = query.count()
         query = query.limit(per_page).offset(page * per_page)
         ids = [(r[0], r[1]) for r in query.all()]
@@ -261,8 +262,9 @@ class RelationalDatabase:
         :param per_page: items per page
         :return: the paginated reviews
         """
-        query = self.session.query(ReviewORM.id, ReviewORM.place_id). \
-            filter(ReviewORM.owner == owner)
+        query = (self.session.query(ReviewORM.id, ReviewORM.place_id).
+                 filter(ReviewORM.owner == owner).
+                 filter((ReviewORM.status == ReviewStatus.PUBLIC) | (ReviewORM.status == ReviewStatus.UNCENSORED)))
         total_count = query.count()
         query = query.limit(per_page).offset(page * per_page)
         ids = [(r[0], r[1]) for r in query.all()]

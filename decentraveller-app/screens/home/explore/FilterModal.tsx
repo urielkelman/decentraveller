@@ -1,13 +1,10 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import Slider from '@react-native-community/slider';
 import { FilterModalProps } from './types';
 import { Ionicons } from '@expo/vector-icons';
-import { PickerItem } from '../../../commons/types';
 import { DECENTRAVELLER_DEFAULT_CONTRAST_COLOR, interestsItemsApi } from '../../../commons/global';
-import DecentravellerPicker from '../../../commons/components/DecentravellerPicker';
 import { Picker } from '@react-native-picker/picker';
-import { bottomTabIndicationTextStyles } from '../../../styles/bottomTabScreensStyles';
 
 const Bullet = ({ label, selected, onPress }) => {
     return (

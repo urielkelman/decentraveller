@@ -1,4 +1,4 @@
-import { Text, TouchableOpacity, View, Image } from 'react-native';
+import { Image, Text, TouchableOpacity, View } from 'react-native';
 import { useAppContext } from '../../context/AppContext';
 import React, { useEffect } from 'react';
 import { apiAdapter } from '../../api/apiAdapter';
@@ -11,7 +11,6 @@ import LoadingComponent from '../../commons/components/DecentravellerLoading';
 import { registerForPushNotificationsAsync } from '../../commons/notifications/notifications';
 import { useWalletConnectModal } from '@walletconnect/modal-react-native';
 import MapView, { Marker } from 'react-native-maps';
-import {mockApiAdapter} from "../../api/mockApiAdapter";
 
 const adapter = apiAdapter;
 

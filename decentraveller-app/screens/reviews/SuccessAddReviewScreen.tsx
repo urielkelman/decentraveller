@@ -1,8 +1,8 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { Text, View } from 'react-native';
 import DecentravellerButton from '../../commons/components/DecentravellerButton';
 import { addReviewsScreenWordings } from './wording';
-import { successAddRegisterStyles, subTitleTextStyle } from '../../styles/addReviewStyles';
+import { subTitleTextStyle, successAddRegisterStyles } from '../../styles/addReviewStyles';
 
 const SCREENS_TO_TOP = 3;
 

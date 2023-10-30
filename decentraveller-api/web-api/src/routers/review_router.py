@@ -73,7 +73,7 @@ class ReviewCBV:
         :return: the reviews data
         """
 
-        reviews = self.database.query_reviews_by_place(place_id, page, per_page)
+        reviews = self.database.query_active_reviews_by_place(place_id, page, per_page)
         if not reviews:
             raise HTTPException(status_code=HTTP_404_NOT_FOUND)
         return reviews

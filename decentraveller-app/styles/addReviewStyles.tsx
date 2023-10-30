@@ -1,5 +1,5 @@
 import { Dimensions, StyleSheet, TextStyle } from 'react-native';
-import {DECENTRAVELLER_DEFAULT_BACKGROUND_COLOR} from "../commons/global";
+import { DECENTRAVELLER_DEFAULT_BACKGROUND_COLOR } from '../commons/global';
 
 const { height, width } = Dimensions.get('window');
 
@@ -212,13 +212,12 @@ const selectBrokenRuleScreenStyles = StyleSheet.create({
         paddingBottom: height * 0.027,
         textAlign: 'left',
         fontFamily: 'Montserrat_500Medium',
-        marginTop: 10
+        marginTop: 10,
     },
     buttonContainer: {
         marginTop: 550,
         position: 'absolute',
     },
-
 });
 const subTitleTextStyle: TextStyle = {
     fontSize: height * 0.025,
@@ -228,4 +227,10 @@ const subTitleTextStyle: TextStyle = {
     fontWeight: '200',
 };
 
-export { addReviewCommentStyles, addReviewImagesStyles, successAddRegisterStyles, subTitleTextStyle, selectBrokenRuleScreenStyles };
+export {
+    addReviewCommentStyles,
+    addReviewImagesStyles,
+    successAddRegisterStyles,
+    subTitleTextStyle,
+    selectBrokenRuleScreenStyles,
+};

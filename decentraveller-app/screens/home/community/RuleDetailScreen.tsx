@@ -14,7 +14,6 @@ import DecentravellerInformativeModal from '../../../commons/components/Decentra
 import { rulesService } from '../../../blockchain/service/rulesService';
 import { blockchainAdapter } from '../../../blockchain/blockhainAdapter';
 import LoadingComponent from '../../../commons/components/DecentravellerLoading';
-import rulesScreen from './RulesScreen';
 
 type RuleDetailScreenProp = StackNavigationProp<HomeStackScreens, 'VotingResultsScreen'>;
 

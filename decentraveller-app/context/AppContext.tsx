@@ -88,7 +88,7 @@ const AppContextProvider: React.FC<React.ReactNode> = ({ children }) => {
 
     const userNickname: AppContextStateArg<string> = memoFactory(nickname, setUserNickname);
 
-    const userRole : AppContextStateArg<string> = memoFactory(role, setUserRole);
+    const userRole: AppContextStateArg<string> = memoFactory(role, setUserRole);
 
     const userCreatedAt: AppContextStateArg<string> = memoFactory(createdAt, setUserCreatedAt);
 

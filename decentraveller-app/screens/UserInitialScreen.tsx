@@ -7,16 +7,13 @@ import RegistrationNavigator from './users/registration/RegistrationNavigator';
 import { apiAdapter } from '../api/apiAdapter';
 import HomeNavigator from './home/HomeNavigator';
 import { useWalletConnectModal } from '@walletconnect/modal-react-native';
-
-const adapter = apiAdapter;
-
 import * as Linking from 'expo-linking';
 import LoadingComponent from '../commons/components/DecentravellerLoading';
 import { DECENTRAVELLER_DEFAULT_BACKGROUND_COLOR } from '../commons/global';
 import { View } from 'react-native';
 import { BlockchainProposalStatus } from '../blockchain/types';
-import {mockApiAdapter} from "../api/mockApiAdapter";
-import {UserRole} from "./users/profile/types";
+
+const adapter = apiAdapter;
 
 const prefix = Linking.createURL('/');
 const DecentravellerInitialScreen = () => {
@@ -46,7 +43,7 @@ const DecentravellerInitialScreen = () => {
             setUserNickname(user.nickname);
             setUserCreatedAt(user.createdAt);
             setUserInterest(user.interest);
-            setUserRole(user.role)
+            setUserRole(user.role);
             setStackToRender('Home');
         } finally {
             setLoadingUserProfile(false);

@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, Text, View } from 'react-native';
 import RulesList from './RulesList';
 import DecentravellerButton from '../../../commons/components/DecentravellerButton';
 import { communityScreenStyles } from '../../../styles/communityStyles';

@@ -1,4 +1,4 @@
-import { Modal, Pressable, View, Text, StyleSheet } from 'react-native';
+import { Modal, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useAppContext } from '../../context/AppContext';
 
 const styles = StyleSheet.create({

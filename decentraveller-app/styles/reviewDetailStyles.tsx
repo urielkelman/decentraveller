@@ -33,7 +33,6 @@ const reviewDetailStyles = StyleSheet.create({
     optionButtonContainer: {
         paddingHorizontal: 10,
         alignItems: 'center',
-
     },
 });
 

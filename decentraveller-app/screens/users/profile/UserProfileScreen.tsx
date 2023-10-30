@@ -34,7 +34,7 @@ const UserProfileScreen: React.FC<UserProfileScreenProps> = ({ route }) => {
     const [isOpen, setIsOpen] = useState(false);
     const { web3Provider } = useAppContext();
 
-    console.log("wallet=", walletId)
+    console.log('wallet=', walletId);
 
     const openGallery = () => setIsOpen(true);
 

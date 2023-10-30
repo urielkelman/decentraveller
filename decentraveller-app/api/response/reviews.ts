@@ -1,4 +1,5 @@
 import { UserResponse } from './user';
+import { BackendReviewStatus } from '../../blockchain/types';
 
 export type ReviewImageResponse = {
     hashes: string[];
@@ -10,7 +11,7 @@ export type ReviewResponse = {
     score: number;
     text: string;
     imageCount: number;
-    state: string;
+    status: BackendReviewStatus;
     owner: UserResponse;
     createdAt: string;
 };
