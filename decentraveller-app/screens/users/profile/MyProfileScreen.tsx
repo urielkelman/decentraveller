@@ -9,6 +9,7 @@ import { ImageGallery } from '@georstat/react-native-image-gallery';
 import { UserShowProps } from './UserProfileScreen';
 import LoadingComponent from '../../../commons/components/DecentravellerLoading';
 import { blockchainAdapter } from '../../../blockchain/blockhainAdapter';
+import { UserRole } from './types';
 
 export type UserProfileScreens = {
     UserProfileScreen: undefined;
@@ -20,7 +21,8 @@ const adapter = apiAdapter;
 const contractAdapter = blockchainAdapter;
 
 const MyProfileScreen = ({ navigation }) => {
-    const { userNickname, connectionContext, userCreatedAt, userInterest } = useAppContext();
+    const { userNickname, connectionContext, userCreatedAt,
+        userInterest, userRole } = useAppContext();
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
     const [loading, setLoading] = React.useState<boolean>(true);
@@ -68,6 +70,7 @@ const MyProfileScreen = ({ navigation }) => {
                     interest: userData.interest,
                     tokens: Number(await contractAdapter.getTokens(web3Provider, connectionContext.connectedAddress)),
                     profileImageUrl: apiAdapter.getProfileAvatarUrl(connectionContext.connectedAddress, true),
+                    role: userData.role
                 };
                 setUser(user);
                 setLoading(false);
@@ -79,8 +82,8 @@ const MyProfileScreen = ({ navigation }) => {
                 createdAt: userCreatedAt.value,
                 interest: userInterest.value,
                 tokens: Number(await contractAdapter.getTokens(web3Provider, connectionContext.connectedAddress)),
-                sharedLocation: 'Yes',
                 profileImageUrl: apiAdapter.getProfileAvatarUrl(connectionContext.connectedAddress, true),
+                role: userRole.value
             };
             setUser(user);
             setLoading(false);
@@ -111,6 +114,9 @@ const MyProfileScreen = ({ navigation }) => {
                 </View>
                 <View style={userProfileMainStyles.titleContainer}>
                     <Text style={userProfileMainStyles.nicknameTitle}>{user.name}</Text>
+                    {
+                        user.role == UserRole.MODERATOR ? (<Text style={userProfileMainStyles.moderatorBadge}>🛡️ Moderator</Text>) : null
+                    }
                     <Text style={userProfileMainStyles.walletSubtitle}>{user.walletAddress}</Text>
                 </View>
                 <View style={userProfileMainStyles.joinedAtContainer}>

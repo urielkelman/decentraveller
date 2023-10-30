@@ -11,13 +11,11 @@ const userProfileMainStyles = StyleSheet.create({
         borderRadius: 10,
         marginHorizontal: 13,
         marginTop: 20,
-        width: 338,
-        height: 247,
+        paddingVertical: 24,
     },
     imageContainer: {
         alignItems: 'center',
         justifyContent: 'center',
-        marginTop: 24,
     },
     imageCircle: {
         backgroundColor: 'lightgray',
@@ -40,6 +38,11 @@ const userProfileMainStyles = StyleSheet.create({
         fontSize: 18,
         textAlign: 'center',
     },
+    moderatorBadge: {
+        fontFamily: 'Montserrat_700Bold',
+        fontSize: 14,
+        marginVertical: 5
+    },
     walletSubtitle: {
         fontFamily: 'Montserrat_500Medium',
         fontSize: 11,
@@ -50,7 +53,7 @@ const userProfileMainStyles = StyleSheet.create({
         borderRadius: 5,
         marginHorizontal: 14,
         marginTop: 15,
-        height: 41,
+        paddingVertical: 5,
         justifyContent: 'center',
     },
     joinedAtText: {
