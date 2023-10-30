@@ -1,5 +1,4 @@
-import { ethers, getNamedAccounts } from "hardhat";
-import { DecentravellerToken } from "../typechain-types";
+import { ethers } from "hardhat";
 
 //const SIMULATOR_WALLET_ADDRESS = "0x968C99f227a5D5015d3c50501C91353096AD7931";
 const SIMULATOR_WALLET_ADDRESS = "0x1C48e99E1de65A9D005A8C07933863569e34CeCB";

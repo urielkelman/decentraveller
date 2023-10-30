@@ -12,14 +12,24 @@
         "type": "address"
       },
       {
+        "internalType": "address",
+        "name": "_token",
+        "type": "address"
+      },
+      {
         "internalType": "string[]",
         "name": "initialRules",
         "type": "string[]"
       },
       {
         "internalType": "uint8",
-        "name": "_moderatorsAmount",
+        "name": "_minModeratorsAmount",
         "type": "uint8"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_moderatorCost",
+        "type": "uint256"
       }
     ],
     "stateMutability": "nonpayable",
@@ -44,6 +54,11 @@
   {
     "inputs": [],
     "name": "OnlyModerator__Execution",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "OnlyNonModerator__Execution",
     "type": "error"
   },
   {
@@ -291,6 +306,25 @@
       }
     ],
     "name": "ProfileCreated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "owner",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "enum DecentravellerDataTypes.DecentravellerUserRole",
+        "name": "userRole",
+        "type": "uint8"
+      }
+    ],
+    "name": "ProfileRoleChange",
     "type": "event"
   },
   {
@@ -578,6 +612,13 @@
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "promoteToModerator",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {

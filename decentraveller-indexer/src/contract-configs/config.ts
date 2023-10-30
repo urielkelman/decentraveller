@@ -8,6 +8,7 @@ import { newPlaceTransformer } from "../transformers/NewPlaceTransformer";
 import { EventRequestBody } from "../adapters/types";
 import { newReviewTransformer } from "../transformers/review/NewReviewTransformer";
 import { registeredProfileTransformer } from "../transformers/RegisteredProfileTransformer";
+import { profileRoleChangeTransformer } from "../transformers/ProfileRoleChangeTransformer";
 import { ruleProposedTransformer } from "../transformers/rule/RuleProposedTransformer";
 import { ruleApprovedTransformer } from "../transformers/rule/RuleApprovedTransformer";
 import { ruleDeletionProposedTransformer } from "../transformers/rule/RuleDeletionProposedTransformer";
@@ -111,5 +112,10 @@ export const eventsToListen: Array<EventToListen<any>> = [
         contract: decentraveller,
         eventName: "DecentravellerReviewUncensored",
         transformer: reviewUncensoredTransformer,
+    },
+    {
+        contract: decentraveller,
+        eventName: "ProfileRoleChange",
+        transformer: profileRoleChangeTransformer,
     },
 ];

@@ -46,6 +46,10 @@ contract DecentravellerToken is ERC20Votes, AccessControl {
         reward(to, newReviewRewardAmount);
     }
 
+    function burn(uint256 value) public {
+        _burn(msg.sender, value);
+    }
+
     function delegate(address) public pure override {
         revert Delegation__Fobidden();
     }

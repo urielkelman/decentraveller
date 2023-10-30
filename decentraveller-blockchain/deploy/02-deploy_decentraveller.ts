@@ -64,11 +64,13 @@ const deployFunction: DeployFunction = async function (
         args: [
             governanceDeployment.address,
             decentravellerPlaceFactoryDeployment.address,
+            tokenDeployment.address,
             [
                 "Do not insult any person.",
                 "If it is a gastronomic place, you should specify what you ate.",
             ],
             3,
+            500,
         ],
         log: true,
     });

@@ -2,6 +2,7 @@ export const eventEndpoints = {
     NEW_PLACE_ENDPOINT: "/place",
     NEW_REVIEW_ENDPOINT: "/review",
     NEW_PROFILE_ENDPOINT: "/profile",
+    UPDATE_ROLE_ENDPOINT: "/profile/role",
     NEW_RULE_ENDPOINT: "/rule",
     RULE_APPROVED_ENDPOINT: "/rule/approve",
     NEW_RULE_DELETION_ENDPOINT: "/rule-deletion",

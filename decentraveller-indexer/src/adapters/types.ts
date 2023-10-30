@@ -33,6 +33,12 @@ export interface NewProfileRequestBody extends EventRequestBody {
     nickname: string;
     country: string;
     interest: string;
+    role: string;
+}
+
+export interface RoleChangeBody extends EventRequestBody {
+    owner: string;
+    role: string;
 }
 
 export interface RuleProposedRequestBody extends EventRequestBody {

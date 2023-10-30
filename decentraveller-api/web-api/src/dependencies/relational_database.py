@@ -252,8 +252,8 @@ class RelationalDatabase:
         return PaginatedReviews(page=page, per_page=per_page,
                                 total=total_count, reviews=reviews)
 
-    def query_reviews_by_profile(self, owner: WalletID,
-                                 page: int, per_page: int) -> PaginatedReviews:
+    def query_active_reviews_by_profile(self, owner: WalletID,
+                                        page: int, per_page: int) -> PaginatedReviews:
         """
         Gets all the reviews from a profile as a query
 

@@ -18,6 +18,7 @@ error OnlyGovernance__Execution();
 error Rule__NonExistent(uint256 ruleId);
 error Rule__AlreadyDeleted(uint256 ruleId);
 error OnlyModerator__Execution();
+error OnlyNonModerator__Execution();
 
 contract Decentraveller {
     event ProfileCreated(
@@ -59,14 +60,21 @@ contract Decentraveller {
         uint256 indexed reviewId
     );
 
+    event ProfileRoleChange(
+        address indexed owner,
+        DecentravellerDataTypes.DecentravellerUserRole userRole
+    );
+
+    DecentravellerToken token;
     DecentravellerGovernance governance;
     DecentravellerPlaceCloneFactory placeFactory;
 
     uint256 private currentPlaceId;
     uint256 private currentRuleId;
 
-    uint8 moderatorsAmount;
+    uint8 minModeratorsAmount;
     uint8 currentModeratorsAmount;
+    uint256 moderatorCost;
 
     address timelockGovernanceAddress;
 
@@ -85,9 +93,12 @@ contract Decentraveller {
     constructor(
         address _governance,
         address _placesFactory,
+        address _token,
         string[] memory initialRules,
-        uint8 _moderatorsAmount
+        uint8 _minModeratorsAmount,
+        uint256 _moderatorCost
     ) {
+        token = DecentravellerToken(_token);
         governance = DecentravellerGovernance(payable(_governance));
         timelockGovernanceAddress = governance.timelock();
         placeFactory = DecentravellerPlaceCloneFactory(_placesFactory);
@@ -103,8 +114,9 @@ contract Decentraveller {
         }
         currentRuleId = initialRulesLength;
         currentPlaceId = 0;
-        moderatorsAmount = _moderatorsAmount;
+        minModeratorsAmount = _minModeratorsAmount;
         currentModeratorsAmount = 0;
+        moderatorCost = _moderatorCost;
     }
 
     modifier onlyGovernance() {
@@ -131,6 +143,16 @@ contract Decentraveller {
         _;
     }
 
+    modifier onlyNonModerator() {
+        if (
+            profilesByOwner[msg.sender].role ==
+            DecentravellerDataTypes.DecentravellerUserRole.MODERATOR
+        ) {
+            revert OnlyNonModerator__Execution();
+        }
+        _;
+    }
+
     function registerProfile(
         string calldata _nickname,
         string calldata _country,
@@ -152,7 +174,7 @@ contract Decentraveller {
 
         DecentravellerDataTypes.DecentravellerUserRole role;
 
-        if (currentModeratorsAmount < moderatorsAmount) {
+        if (currentModeratorsAmount < minModeratorsAmount) {
             role = DecentravellerDataTypes.DecentravellerUserRole.MODERATOR;
             currentModeratorsAmount++;
         } else {
@@ -171,6 +193,17 @@ contract Decentraveller {
         emit ProfileCreated(msg.sender, _nickname, _country, _interest, role);
 
         return msg.sender;
+    }
+
+    function promoteToModerator() external onlyNonModerator {
+        token.burn(moderatorCost);
+        profilesByOwner[msg.sender].role = DecentravellerDataTypes.DecentravellerUserRole.MODERATOR;
+        currentModeratorsAmount++;
+        emit ProfileRoleChange(msg.sender, DecentravellerDataTypes.DecentravellerUserRole.MODERATOR);
+    }
+
+    function moderatorPromotionCost() external view returns (uint256){
+        return moderatorCost;
     }
 
     function addPlace(
