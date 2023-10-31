@@ -4,18 +4,31 @@ pragma solidity ^0.8.17;
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "./DecentravellerDataTypes.sol";
+import "hardhat/console.sol";
 
 error Review__AlreadyCensored();
 error Review__IsPublic();
+error Review__BadStateForOperation(
+    DecentravellerDataTypes.DecentravellerReviewState currentState
+);
+error OnlyReviewOwner__Execution();
 
 contract DecentravellerReview is Initializable, Ownable {
-    uint256 reviewId;
-    uint256 placeId;
-    address reviewOwner;
-    string reviewText;
-    string[] imagesHashes;
-    uint8 score;
-    DecentravellerDataTypes.DecentravellerReviewState state;
+    uint256 constant CHALLENGE_PERIOD = 1 days;
+
+    struct CensorhipChallenge {
+        uint256 challengeDeadline;
+        bool executedUncensor;
+        address[] juries;
+    }
+
+    uint256 private reviewId;
+    uint256 private placeId;
+    address private reviewOwner;
+    string private reviewText;
+    string[] private imagesHashes;
+    uint8 private score;
+    DecentravellerDataTypes.DecentravellerReviewState private state;
 
     function initialize(
         uint256 _reviewId,
@@ -50,6 +63,24 @@ contract DecentravellerReview is Initializable, Ownable {
             revert Review__IsPublic();
         }
         state = DecentravellerDataTypes.DecentravellerReviewState.PUBLIC;
+    }
+
+    function challengeCensorship(
+        address _challenger,
+        address _decentravellerToken
+    ) external onlyOwner {
+        if (reviewOwner != _challenger) {
+            revert OnlyReviewOwner__Execution();
+        }
+
+        DecentravellerDataTypes.DecentravellerReviewState currentState = getState();
+
+        if (
+            currentState !=
+            DecentravellerDataTypes.DecentravellerReviewState.CENSORED
+        ) {
+            revert Review__BadStateForOperation(currentState);
+        }
     }
 
     function getState()

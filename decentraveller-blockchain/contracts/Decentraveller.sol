@@ -179,7 +179,7 @@ contract Decentraveller {
         string memory _longitude,
         string memory _physicalAddress,
         DecentravellerDataTypes.DecentravellerPlaceCategory category
-    ) public onlyRegisteredAddress returns (uint256 placeId) {
+    ) external onlyRegisteredAddress returns (uint256 placeId) {
         string memory locationIdentifier = string.concat(_latitude, _longitude);
         uint256 placeIdForLocation = placeIdByPlaceLocation[locationIdentifier];
 
@@ -270,6 +270,15 @@ contract Decentraveller {
         DecentravellerReview(reviewAddress).uncensor();
 
         emit DecentravellerReviewUncensored(_placeId, _reviewId);
+    }
+
+    function challengeReviewCensorship(
+        uint256 _placeId,
+        uint256 _reviewId
+    ) external onlyRegisteredAddress {
+        address reviewAddress = _getReviewAddress(_placeId, _reviewId);
+        DecentravellerReview review = DecentravellerReview(reviewAddress);
+        review.challengeCensorship(msg.sender, address(governance.token()));
     }
 
     function getCurrentRuleId() external view returns (uint256) {

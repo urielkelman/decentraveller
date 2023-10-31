@@ -11,6 +11,8 @@ error Transfer__Forbidden();
 contract DecentravellerToken is ERC20Votes, AccessControl {
     uint8 private newReviewRewardAmount;
     uint8 private newPlaceRewardAmount;
+    address[] private tokenHolders;
+    mapping(address => bool) isHolder;
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
     bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
 
@@ -35,11 +37,14 @@ contract DecentravellerToken is ERC20Votes, AccessControl {
     function reward(address to, uint amount) internal {
         _mint(to, amount);
         _delegate(to, to);
+        if (!isHolder[to]) {
+            tokenHolders.push(to);
+            isHolder[to] = true;
+        }
     }
 
     function rewardNewPlace(address to) external onlyRole(MINTER_ROLE) {
         reward(to, newPlaceRewardAmount);
-        _delegate(to, to);
     }
 
     function rewardNewReview(address to) external onlyRole(MINTER_ROLE) {

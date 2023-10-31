@@ -90,4 +90,40 @@ describe("Decentraveller censorship", function () {
             decentraveller.connect(thirdUserSigner).censorReview(1, 1, 1)
         ).to.be.revertedWithCustomError(review, "Review__AlreadyCensored");
     });
+
+    it("should not allow a review censorship to be challenged by a user that is not the review owner", async function () {
+        const reviewAddress = await decentraveller.getReviewAddress(1, 1);
+        const review = await ethers.getContractAt(
+            "DecentravellerReview",
+            reviewAddress,
+            userSigner
+        );
+        await decentraveller.connect(thirdUserSigner).censorReview(1, 1, 1);
+
+        await expect(
+            decentraveller
+                .connect(fourthUserSigner)
+                .challengeReviewCensorship(1, 1)
+        ).to.be.revertedWithCustomError(review, "OnlyReviewOwner__Execution");
+    });
+
+    it("should not allow to challenge a review that is not in censored state", async function () {
+        const reviewAddress = await decentraveller.getReviewAddress(1, 1);
+        const review = await ethers.getContractAt(
+            "DecentravellerReview",
+            reviewAddress,
+            userSigner
+        );
+
+        await expect(
+            decentraveller
+                .connect(secondUserSigner)
+                .challengeReviewCensorship(1, 1)
+        )
+            .to.be.revertedWithCustomError(
+                review,
+                "Review__BadStateForOperation"
+            )
+            .withArgs(0);
+    });
 });

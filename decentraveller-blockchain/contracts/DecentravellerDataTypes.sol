@@ -23,7 +23,11 @@ library DecentravellerDataTypes {
 
     enum DecentravellerReviewState {
         PUBLIC,
-        CENSORED
+        CENSORED,
+        CENSORSHIP_CHALLENGED,
+        CHALLENGE_WON,
+        MODERATOR_WON,
+        UNCESORED_BY_CHALLENGE
     }
 
     struct DecentravellerProfile {
