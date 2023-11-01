@@ -4,9 +4,11 @@ import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Votes.sol";
 import "@openzeppelin/contracts/governance/extensions/GovernorVotes.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/draft-ERC20Permit.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
+import "hardhat/console.sol";
 
 error Delegation__Fobidden();
 error Transfer__Forbidden();
+error Holders__NotEnough(uint256 currentHolders);
 
 contract DecentravellerToken is ERC20Votes, AccessControl {
     uint8 private newReviewRewardAmount;
@@ -89,5 +91,40 @@ contract DecentravellerToken is ERC20Votes, AccessControl {
 
     function CLOCK_MODE() public pure override returns (string memory) {
         return "mode=timestamp";
+    }
+
+    function getRandomHolders(
+        uint8 amount
+    ) external view returns (address[] memory) {
+        uint256 tokenHoldersLenght = tokenHolders.length;
+
+        if (amount > tokenHoldersLenght) {
+            revert Holders__NotEnough(tokenHoldersLenght);
+        }
+
+        uint256 randomSeed = uint256(
+            keccak256(
+                abi.encodePacked(
+                    block.timestamp,
+                    block.difficulty,
+                    block.coinbase,
+                    block.gaslimit
+                )
+            )
+        );
+
+        address[] memory randomHolders = new address[](amount);
+
+        for (uint i = 0; i < amount; i++) {
+            /* TODO: Check if is a repeated address. */
+            uint256 randomIndex = (uint256(
+                keccak256(abi.encode(randomSeed, i))
+            ) % tokenHoldersLenght);
+            console.log(randomIndex);
+            randomHolders[i] = tokenHolders[randomIndex];
+            console.log("tutu", randomIndex);
+        }
+
+        return randomHolders;
     }
 }

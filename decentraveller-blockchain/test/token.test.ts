@@ -1,7 +1,7 @@
 import { expect, assert } from "chai";
 import { deployments, ethers, getNamedAccounts } from "hardhat";
 import { DecentravellerToken } from "../typechain-types";
-import { token } from "../typechain-types/@openzeppelin/contracts";
+
 describe("Decentraveller token", function () {
     let decentravellerToken: DecentravellerToken;
     let tokenOwnerAddress: string;
@@ -94,5 +94,46 @@ describe("Decentraveller token", function () {
             decentravellerToken,
             "Transfer__Forbidden"
         );
+    });
+
+    it("Should revert if amount of token holders asked is less that current holders", async function () {
+        const signers = await ethers.getSigners();
+        const tokenMinterSigner = await ethers.getSigner(tokenMinterAddress);
+
+        await decentravellerToken
+            .connect(tokenMinterSigner)
+            .rewardNewPlace(signers[0].address);
+
+        await decentravellerToken
+            .connect(tokenMinterSigner)
+            .rewardNewPlace(signers[1].address);
+
+        await expect(decentravellerToken.getRandomHolders(3))
+            .to.be.revertedWithCustomError(
+                decentravellerToken,
+                "Holders__NotEnough"
+            )
+            .withArgs(2);
+    });
+
+    it("Should allow getting a random amount of token holders", async function () {
+        const signers = await ethers.getSigners();
+        const tokenMinterSigner = await ethers.getSigner(tokenMinterAddress);
+
+        await decentravellerToken
+            .connect(tokenMinterSigner)
+            .rewardNewPlace(signers[0].address);
+
+        await decentravellerToken
+            .connect(tokenMinterSigner)
+            .rewardNewPlace(signers[1].address);
+
+        await decentravellerToken
+            .connect(tokenMinterSigner)
+            .rewardNewPlace(signers[2].address);
+
+        const randomHolders = await decentravellerToken.getRandomHolders(2);
+
+        assert.equal(randomHolders.length, 2);
     });
 });

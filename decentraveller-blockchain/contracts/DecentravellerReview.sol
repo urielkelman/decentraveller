@@ -4,6 +4,7 @@ pragma solidity ^0.8.17;
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "./DecentravellerDataTypes.sol";
+import "./DecentravellerToken.sol";
 import "hardhat/console.sol";
 
 error Review__AlreadyCensored();
@@ -15,6 +16,7 @@ error OnlyReviewOwner__Execution();
 
 contract DecentravellerReview is Initializable, Ownable {
     uint256 constant CHALLENGE_PERIOD = 1 days;
+    uint8 constant JURIES_AMOUNT = 5;
 
     struct CensorhipChallenge {
         uint256 challengeDeadline;
@@ -81,6 +83,9 @@ contract DecentravellerReview is Initializable, Ownable {
         ) {
             revert Review__BadStateForOperation(currentState);
         }
+
+        address[] memory juries = DecentravellerToken(_decentravellerToken)
+            .getRandomHolders(JURIES_AMOUNT);
     }
 
     function getState()
