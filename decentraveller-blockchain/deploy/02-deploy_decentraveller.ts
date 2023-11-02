@@ -75,6 +75,9 @@ const deployFunction: DeployFunction = async function (
         log: true,
     });
 
+    const setSpenderTxResponse = await token.addSpenders([decentravellerDeployment.address]);
+    setSpenderTxResponse.wait();
+
     const decentravellerPlaceFactory: DecentravellerPlaceCloneFactory =
         await ethers.getContractAt(
             "DecentravellerPlaceCloneFactory",

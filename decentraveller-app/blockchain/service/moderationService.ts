@@ -24,8 +24,12 @@ class ModerationService {
      * @param web3Provider
      * @param placeId
      * @param reviewId
+     * @param ruleId
      */
-    async censorReview(web3Provider: ethers.providers.Web3Provider, placeId: number, reviewId: number): Promise<any> {}
+    async censorReview(web3Provider: ethers.providers.Web3Provider, placeId: number,
+                       reviewId: number, ruleId: number) {
+        return blockchainAdapter.censorReview(web3Provider, placeId, reviewId, ruleId);
+    }
 
     /**
      * Creates a transaction creating a dispute on a censored transaction so other users can participate in moderation.

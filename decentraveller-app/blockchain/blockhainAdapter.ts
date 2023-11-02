@@ -134,6 +134,41 @@ class BlockchainAdapter {
         }
     }
 
+    async getModeratorCost(
+        web3Provider: ethers.providers.Web3Provider,
+    ): Promise<number> {
+        try {
+            const blockchain: Blockchain = BlockchainByChainId[DEFAULT_CHAIN_ID];
+            const contractFunction: ContractFunction = decentravellerMainContract.functions['moderatorPromotionCost'];
+
+            const contractAddress: string = decentravellerMainContract.addressesByBlockchain[blockchain];
+            const decentraveller = new ethers.Contract(
+                contractAddress,
+                contractFunction.fullContractABI,
+                web3Provider,
+            );
+            return Number(await decentraveller.moderatorPromotionCost());
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    async promoteToModerator(
+        web3Provider: ethers.providers.Web3Provider,
+        onError: () => void,
+    ) {
+        try {
+            return await this.populateAndSend(
+                web3Provider,
+                decentravellerMainContract,
+                'promoteToModerator',
+            );
+        } catch (e) {
+            console.log(e);
+            onError();
+        }
+    }
+
     async addPlaceReviewTransaction(
         web3Provider: ethers.providers.Web3Provider,
         placeId: number,
@@ -372,6 +407,22 @@ class BlockchainAdapter {
                 ForVotes: Number(result[1]),
                 AgainstVotes: Number(result[0]),
             };
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    async censorReview(web3Provider: ethers.providers.Web3Provider, placeId: number,
+                       reviewId: number, ruleId: number) {
+        try {
+            return await this.populateAndSend(
+                web3Provider,
+                decentravellerMainContract,
+                'censorReview',
+                placeId,
+                reviewId,
+                ruleId,
+            );
         } catch (e) {
             console.log(e);
         }

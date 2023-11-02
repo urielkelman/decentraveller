@@ -122,3 +122,21 @@ class ReviewCBV:
         """
         self.database.censor_review(censor_review_input)
         return
+
+    @review_router.post("/review/censor", status_code=201, dependencies=[Depends(indexer_auth)])
+    def censor_review(self, censor_review_input: CensorReviewInput):
+        """
+        Change the status of the review to censored.
+        :param censor_review_input: the object containing the information of the review to censor.
+        """
+        self.database.censor_review(censor_review_input)
+        return
+
+    @review_router.post("/review/uncensor", status_code=201, dependencies=[Depends(indexer_auth)])
+    def censor_review(self, censor_review_input: CensorReviewInput):
+        """
+        Change the status of the review to censored.
+        :param censor_review_input: the object containing the information of the review to censor.
+        """
+        self.database.uncensor_review(censor_review_input)
+        return

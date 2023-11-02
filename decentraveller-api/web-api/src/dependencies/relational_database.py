@@ -485,3 +485,22 @@ class RelationalDatabase:
         review.censor_moderator = censor_review_input.moderator
         review.broken_rule_id = censor_review_input.broken_rule_id
         self.session.commit()
+
+    def uncensor_review(self, censor_review_input: CensorReviewInput):
+        """
+        Updates a rule to censored state.
+        """
+        review = self.session.query(ReviewORM) \
+            .filter(ReviewORM.place_id == censor_review_input.place_id) \
+            .filter(ReviewORM.id == censor_review_input.review_id) \
+            .first()
+
+        if review is None:
+            raise HTTPException(status_code=HTTP_404_NOT_FOUND)
+
+        if review.status != ReviewStatus.PUBLIC:
+            raise HTTPException(status_code=HTTP_400_BAD_REQUEST)
+
+        review.status = ReviewStatus.UNCENSORED
+        self.session.commit()
+

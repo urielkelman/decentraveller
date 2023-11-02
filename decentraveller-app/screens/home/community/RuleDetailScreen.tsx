@@ -266,7 +266,10 @@ const RuleDetailScreen: React.FC<RuleDetailProps> = ({ route }) => {
                 ruleStatement: ruleResponse.ruleStatement,
                 ruleStatus: ruleResponse.ruleStatus,
                 ruleSubStatus: blockchainStatus,
-                proposedAt: ruleResponse.proposedAt,
+                proposedAt: ruleResponse.ruleStatus == RuleStatus.PENDING_DELETED ||
+                ruleResponse.ruleStatus == RuleStatus.DELETED
+                    ? ruleResponse.deletionProposedAt
+                    : ruleResponse.proposedAt,
                 executionTimeAt:
                     ruleResponse.ruleStatus == RuleStatus.PENDING_DELETED ||
                     ruleResponse.ruleStatus == RuleStatus.DELETED

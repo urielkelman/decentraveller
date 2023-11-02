@@ -24,6 +24,12 @@ const userProfileMainStyles = StyleSheet.create({
         height: 100,
         overflow: 'hidden',
     },
+    moderatorButton: {
+        fontFamily: 'Montserrat_500Medium',
+        alignItems: "center",
+        alignSelf: 'center',
+        fontSize:14
+    },
     circleDimensions: {
         width: 100,
         height: 100,

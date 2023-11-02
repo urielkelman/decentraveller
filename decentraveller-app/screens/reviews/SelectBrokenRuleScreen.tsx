@@ -23,7 +23,8 @@ const SelectBrokenRuleScreen: React.FC<SelectBrokenRuleScreenProps> = ({ route }
     const { reviewId, placeId } = route.params;
     const { web3Provider } = useAppContext();
     const onClickCensor = async () => {
-        await moderationService.censorReview(web3Provider, placeId, reviewId);
+        await moderationService.censorReview(web3Provider, placeId, reviewId, ruleId);
+        navigation.goBack(); // TODO: Improve this
     };
     const onTapStatement = async () => {
         navigation.navigate('DecentravellerRulesList', {

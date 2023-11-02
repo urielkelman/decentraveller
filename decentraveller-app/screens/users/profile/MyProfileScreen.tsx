@@ -10,6 +10,8 @@ import { UserShowProps } from './UserProfileScreen';
 import LoadingComponent from '../../../commons/components/DecentravellerLoading';
 import { blockchainAdapter } from '../../../blockchain/blockhainAdapter';
 import { UserRole } from './types';
+import DecentravellerButton from '../../../commons/components/DecentravellerButton';
+import DecentravellerInformativeModal from '../../../commons/components/DecentravellerInformativeModal';
 
 export type UserProfileScreens = {
     UserProfileScreen: undefined;
@@ -26,7 +28,9 @@ const MyProfileScreen = ({ navigation }) => {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
     const [loading, setLoading] = React.useState<boolean>(true);
+    const [moderatorCost, setModeratorCost] = React.useState<number>(0);
     const [user, setUser] = React.useState<UserShowProps>(null);
+    const [showErrorModal, setShowErrorModal] = React.useState<boolean>(false);
     const { web3Provider } = useAppContext();
 
     const openGallery = () => setIsOpen(true);
@@ -55,24 +59,41 @@ const MyProfileScreen = ({ navigation }) => {
         }
     };
 
+    const makeModerator = async () => {
+        const transactionHash = await contractAdapter.promoteToModerator(web3Provider, () => {});
+        if (!transactionHash){
+            setShowErrorModal(true);
+            return;
+        }
+        setLoading(true);
+        await loadUserData();
+        userRole.setValue(UserRole.MODERATOR);
+        setLoading(false);
+    }
+
+    const loadUserData = async () => {
+        const userData = await adapter.getUser(connectionContext.connectedAddress, () => {});
+        userNickname.setValue(userData.nickname);
+        userCreatedAt.setValue(userData.createdAt);
+        userInterest.setValue(userData.interest);
+        const user = {
+            name: userData.nickname,
+            walletAddress: connectionContext.connectedAddress,
+            createdAt: userData.createdAt,
+            interest: userData.interest,
+            tokens: Number(await contractAdapter.getTokens(web3Provider, connectionContext.connectedAddress)),
+            profileImageUrl: apiAdapter.getProfileAvatarUrl(connectionContext.connectedAddress, true),
+            role: userData.role
+        };
+        setUser(user);
+    }
+
     useEffect(() => {
         (async () => {
             setLoading(true);
+            setModeratorCost(await contractAdapter.getModeratorCost(web3Provider));
             if (userNickname.value == '') {
-                const userData = await adapter.getUser(connectionContext.connectedAddress, () => {});
-                userNickname.setValue(userData.nickname);
-                userCreatedAt.setValue(userData.createdAt);
-                userInterest.setValue(userData.interest);
-                const user = {
-                    name: userData.nickname,
-                    walletAddress: connectionContext.connectedAddress,
-                    createdAt: userData.createdAt,
-                    interest: userData.interest,
-                    tokens: Number(await contractAdapter.getTokens(web3Provider, connectionContext.connectedAddress)),
-                    profileImageUrl: apiAdapter.getProfileAvatarUrl(connectionContext.connectedAddress, true),
-                    role: userData.role
-                };
-                setUser(user);
+                await loadUserData();
                 setLoading(false);
                 return;
             }
@@ -122,6 +143,14 @@ const MyProfileScreen = ({ navigation }) => {
                 <View style={userProfileMainStyles.joinedAtContainer}>
                     <Text style={userProfileMainStyles.joinedAtText}>Joined Decentraveller on: {user.createdAt}</Text>
                 </View>
+                {
+                    user.role != UserRole.MODERATOR && user.tokens >= moderatorCost ? (
+                            <DecentravellerButton text={`Convert to moderator (${moderatorCost} DT)`}
+                                                    onPress={makeModerator}
+                                                    loading={false} style={userProfileMainStyles.moderatorButton}/>
+
+                    ) : null
+                }
             </View>
 
             <View style={userProfileMainStyles.informationContainer}>
@@ -171,6 +200,12 @@ const MyProfileScreen = ({ navigation }) => {
                 isOpen={isOpen}
                 images={[{ id: 1, url: user.profileImageUrl }]}
                 hideThumbs={true}
+            />
+            <DecentravellerInformativeModal
+                informativeText={'Unexpected error'}
+                visible={showErrorModal}
+                closeModalText={'Go back'}
+                handleCloseModal={() => setShowErrorModal(false)}
             />
         </View>
     );

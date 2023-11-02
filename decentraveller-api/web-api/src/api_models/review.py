@@ -56,9 +56,12 @@ class ReviewWithProfile(ReviewInDB):
         return v
 
 
-class CensorReviewInput(APIModel):
+class UncensorCensorReviewInput(APIModel):
     review_id: ReviewID
     place_id: PlaceID
+
+
+class CensorReviewInput(UncensorCensorReviewInput):
     broken_rule_id: RuleId
     moderator: WalletID
 

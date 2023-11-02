@@ -66,7 +66,7 @@ const VotingResultsScreen: React.FC<RuleDetailProps> = ({ route }) => {
         } catch (e) {
             setShowError(true);
             console.log(e);
-        }
+        };
         setLoading(false);
     };
 

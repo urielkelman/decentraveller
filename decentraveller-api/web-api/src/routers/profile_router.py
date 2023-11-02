@@ -149,6 +149,8 @@ class ProfileCBV:
             raise HTTPException(status_code=HTTP_404_NOT_FOUND)
 
         profile.role = body.role
+        self.database.session.add(profile)
+        self.database.session.commit()
 
         return ProfileInDB.from_orm(profile)
 

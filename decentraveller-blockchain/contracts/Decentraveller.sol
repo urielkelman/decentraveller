@@ -196,7 +196,7 @@ contract Decentraveller {
     }
 
     function promoteToModerator() external onlyNonModerator {
-        token.burn(moderatorCost);
+        token.burn(msg.sender, moderatorCost);
         profilesByOwner[msg.sender].role = DecentravellerDataTypes.DecentravellerUserRole.MODERATOR;
         currentModeratorsAmount++;
         emit ProfileRoleChange(msg.sender, DecentravellerDataTypes.DecentravellerUserRole.MODERATOR);

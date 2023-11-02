@@ -11,8 +11,10 @@ error Transfer__Forbidden();
 contract DecentravellerToken is ERC20Votes, AccessControl {
     uint8 private newReviewRewardAmount;
     uint8 private newPlaceRewardAmount;
+    address private spenderContract;
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
     bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
+    bytes32 public constant SPENDER_ROLE = keccak256("SPENDER_ROLE");
 
     constructor(
         uint8 _newReviewRewardAmount,
@@ -32,6 +34,15 @@ contract DecentravellerToken is ERC20Votes, AccessControl {
         }
     }
 
+    function addSpenders(
+        address[] memory spenders
+    ) external onlyRole(ADMIN_ROLE) {
+        uint spendersLength = spenders.length;
+        for (uint i = 0; i < spendersLength; i++) {
+            _grantRole(SPENDER_ROLE, spenders[i]);
+        }
+    }
+
     function reward(address to, uint amount) internal {
         _mint(to, amount);
         _delegate(to, to);
@@ -46,8 +57,8 @@ contract DecentravellerToken is ERC20Votes, AccessControl {
         reward(to, newReviewRewardAmount);
     }
 
-    function burn(uint256 value) public {
-        _burn(msg.sender, value);
+    function burn(address account, uint256 value) external onlyRole(SPENDER_ROLE) {
+        _burn(account, value);
     }
 
     function delegate(address) public pure override {
