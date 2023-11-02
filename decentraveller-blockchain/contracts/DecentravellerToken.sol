@@ -5,6 +5,7 @@ import "@openzeppelin/contracts/governance/extensions/GovernorVotes.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/draft-ERC20Permit.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
 import "hardhat/console.sol";
+import "./DecentravellerUtils.sol";
 
 error Delegation__Fobidden();
 error Transfer__Forbidden();
@@ -115,14 +116,25 @@ contract DecentravellerToken is ERC20Votes, AccessControl {
 
         address[] memory randomHolders = new address[](amount);
 
-        for (uint i = 0; i < amount; i++) {
-            /* TODO: Check if is a repeated address. */
+        uint8 alreadySelected = 0;
+        uint8 iteration = 0;
+
+        while (alreadySelected < amount) {
             uint256 randomIndex = (uint256(
-                keccak256(abi.encode(randomSeed, i))
+                keccak256(abi.encode(randomSeed, iteration))
             ) % tokenHoldersLenght);
-            console.log(randomIndex);
-            randomHolders[i] = tokenHolders[randomIndex];
-            console.log("tutu", randomIndex);
+            address selectedAddres = tokenHolders[randomIndex];
+            if (
+                !DecentravellerUtils.isAddressSelected(
+                    randomHolders,
+                    selectedAddres,
+                    alreadySelected
+                )
+            ) {
+                randomHolders[alreadySelected] = tokenHolders[randomIndex];
+                alreadySelected++;
+            }
+            iteration++;
         }
 
         return randomHolders;

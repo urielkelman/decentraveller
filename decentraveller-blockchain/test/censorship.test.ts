@@ -1,6 +1,11 @@
 import { deployments, getNamedAccounts, ethers } from "hardhat";
 import { expect, assert } from "chai";
-import { Decentraveller, DecentravellerReview } from "../typechain-types";
+import { anyValue } from "@nomicfoundation/hardhat-chai-matchers/withArgs";
+import {
+    Decentraveller,
+    DecentravellerReview,
+    DecentravellerToken,
+} from "../typechain-types";
 import { Signer } from "ethers";
 
 describe("Decentraveller censorship", function () {
@@ -88,7 +93,12 @@ describe("Decentraveller censorship", function () {
 
         await expect(
             decentraveller.connect(thirdUserSigner).censorReview(1, 1, 1)
-        ).to.be.revertedWithCustomError(review, "Review__AlreadyCensored");
+        )
+            .to.be.revertedWithCustomError(
+                review,
+                "Review__BadStateForOperation"
+            )
+            .withArgs(1);
     });
 
     it("should not allow a review censorship to be challenged by a user that is not the review owner", async function () {
@@ -125,5 +135,45 @@ describe("Decentraveller censorship", function () {
                 "Review__BadStateForOperation"
             )
             .withArgs(0);
+    });
+
+    it("should emit event and change review status when censorship is challegned", async function () {
+        const signers = (await ethers.getSigners()).slice(0, 10);
+        const { tokenMinter } = await getNamedAccounts();
+        const decentravellerToken: DecentravellerToken =
+            await ethers.getContract("DecentravellerToken", tokenMinter);
+
+        for (const signer of signers) {
+            decentravellerToken.rewardNewPlace(signer.address);
+        }
+
+        const reviewAddress = await decentraveller.getReviewAddress(1, 1);
+        const review: DecentravellerReview = await ethers.getContractAt(
+            "DecentravellerReview",
+            reviewAddress,
+            userSigner
+        );
+
+        await decentraveller.connect(thirdUserSigner).censorReview(1, 1, 1);
+
+        await expect(
+            decentraveller
+                .connect(secondUserSigner)
+                .challengeReviewCensorship(1, 1)
+        )
+            .to.emit(decentraveller, "DecentravellerReviewCensorshipChallenged")
+            .withArgs(
+                1,
+                1,
+                (await ethers.provider.getBlock("latest")).timestamp +
+                    86400 +
+                    // We have to add 1 second since the value of the timestamp is calculated before the call.
+                    1,
+                anyValue
+            );
+
+        const reviewStatus = await review.getState();
+
+        assert.equal(reviewStatus, 2);
     });
 });

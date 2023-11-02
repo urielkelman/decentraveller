@@ -46,4 +46,12 @@ library DecentravellerDataTypes {
         address deletionProposer;
         string statement;
     }
+
+    struct CensorshipChallenge {
+        uint256 challengeDeadline;
+        bool executedUncensor;
+        uint8 forVotes;
+        uint8 againstVotes;
+        address[] juries;
+    }
 }

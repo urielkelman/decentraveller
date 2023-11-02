@@ -135,5 +135,23 @@ describe("Decentraveller token", function () {
         const randomHolders = await decentravellerToken.getRandomHolders(2);
 
         assert.equal(randomHolders.length, 2);
+
+        assert.isTrue(
+            [
+                signers[0].address,
+                signers[1].address,
+                signers[2].address,
+            ].includes(randomHolders[0])
+        );
+
+        assert.isTrue(
+            [
+                signers[0].address,
+                signers[1].address,
+                signers[2].address,
+            ].includes(randomHolders[1])
+        );
+
+        assert.notEqual(randomHolders[0], randomHolders[1]);
     });
 });

@@ -59,6 +59,13 @@ contract Decentraveller {
         uint256 indexed reviewId
     );
 
+    event DecentravellerReviewCensorshipChallenged(
+        uint256 indexed placeId,
+        uint256 indexed reviewId,
+        uint256 challengeDeadline,
+        address[] juries
+    );
+
     DecentravellerGovernance governance;
     DecentravellerPlaceCloneFactory placeFactory;
 
@@ -278,7 +285,15 @@ contract Decentraveller {
     ) external onlyRegisteredAddress {
         address reviewAddress = _getReviewAddress(_placeId, _reviewId);
         DecentravellerReview review = DecentravellerReview(reviewAddress);
-        review.challengeCensorship(msg.sender, address(governance.token()));
+        DecentravellerDataTypes.CensorshipChallenge memory challenge = review
+            .challengeCensorship(msg.sender, address(governance.token()));
+
+        emit DecentravellerReviewCensorshipChallenged(
+            _placeId,
+            _reviewId,
+            challenge.challengeDeadline,
+            challenge.juries
+        );
     }
 
     function getCurrentRuleId() external view returns (uint256) {
