@@ -7,7 +7,8 @@ from starlette.status import HTTP_404_NOT_FOUND, HTTP_400_BAD_REQUEST
 from src.api_models.bulk_results import PaginatedReviews
 from src.api_models.place import PlaceID
 from src.api_models.profile import WalletID, wallet_id_validator
-from src.api_models.review import ReviewID, ReviewInput, ReviewWithProfile, CensorReviewInput
+from src.api_models.review import (ReviewID, ReviewInput, ReviewWithProfile, CensorReviewInput,
+                                   UncensorReviewInput)
 from src.dependencies.indexer_auth import indexer_auth
 from src.dependencies.ipfs_service import IPFSService
 from src.dependencies.push_notification_adapter import PushNotificationAdapter
@@ -123,20 +124,12 @@ class ReviewCBV:
         self.database.censor_review(censor_review_input)
         return
 
-    @review_router.post("/review/censor", status_code=201, dependencies=[Depends(indexer_auth)])
-    def censor_review(self, censor_review_input: CensorReviewInput):
-        """
-        Change the status of the review to censored.
-        :param censor_review_input: the object containing the information of the review to censor.
-        """
-        self.database.censor_review(censor_review_input)
-        return
 
     @review_router.post("/review/uncensor", status_code=201, dependencies=[Depends(indexer_auth)])
-    def censor_review(self, censor_review_input: CensorReviewInput):
+    def uncensor_review(self, uncensor_review_input: UncensorReviewInput):
         """
         Change the status of the review to censored.
-        :param censor_review_input: the object containing the information of the review to censor.
+        :param uncensor_review_input: the object containing the information of the review to censor.
         """
-        self.database.uncensor_review(censor_review_input)
+        self.database.uncensor_review(uncensor_review_input)
         return

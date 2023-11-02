@@ -26,9 +26,9 @@ const userProfileMainStyles = StyleSheet.create({
     },
     moderatorButton: {
         fontFamily: 'Montserrat_500Medium',
-        alignItems: "center",
+        alignItems: 'center',
         alignSelf: 'center',
-        fontSize:14
+        fontSize: 14,
     },
     circleDimensions: {
         width: 100,
@@ -47,7 +47,7 @@ const userProfileMainStyles = StyleSheet.create({
     moderatorBadge: {
         fontFamily: 'Montserrat_700Bold',
         fontSize: 14,
-        marginVertical: 5
+        marginVertical: 5,
     },
     walletSubtitle: {
         fontFamily: 'Montserrat_500Medium',

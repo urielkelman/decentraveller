@@ -56,7 +56,7 @@ const UserProfileScreen: React.FC<UserProfileScreenProps> = ({ route }) => {
                 createdAt: userData.createdAt,
                 interest: userData.interest,
                 tokens: Number(await contractAdapter.getTokens(web3Provider, walletId)),
-                role: userData.role
+                role: userData.role,
             };
             setUser(user);
             setLoading(false);
@@ -80,9 +80,9 @@ const UserProfileScreen: React.FC<UserProfileScreenProps> = ({ route }) => {
                 </View>
                 <View style={userProfileMainStyles.titleContainer}>
                     <Text style={userProfileMainStyles.nicknameTitle}>{user.name}</Text>
-                    {
-                        user.role == UserRole.MODERATOR ? (<Text style={userProfileMainStyles.moderatorBadge}>🛡️ Moderator</Text>) : null
-                    }
+                    {user.role == UserRole.MODERATOR ? (
+                        <Text style={userProfileMainStyles.moderatorBadge}>🛡️ Moderator</Text>
+                    ) : null}
                     <Text style={userProfileMainStyles.walletSubtitle}>{user.walletAddress}</Text>
                 </View>
                 <View style={userProfileMainStyles.joinedAtContainer}>

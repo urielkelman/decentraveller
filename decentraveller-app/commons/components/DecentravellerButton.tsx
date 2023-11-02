@@ -24,7 +24,11 @@ const DecentravellerButton: React.FC<CreatePlaceButtonProps> = ({
             disabled={!enabled}
         >
             <View style={[bottomTabButtonStyle.buttonTextView]}>
-                {loading ? <ActivityIndicator color="white" /> : <Text style={[bottomTabButtonStyle.text, style]}>{text}</Text>}
+                {loading ? (
+                    <ActivityIndicator color="white" />
+                ) : (
+                    <Text style={[bottomTabButtonStyle.text, style]}>{text}</Text>
+                )}
             </View>
         </TouchableOpacity>
     );

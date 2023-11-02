@@ -23,8 +23,7 @@ const adapter = apiAdapter;
 const contractAdapter = blockchainAdapter;
 
 const MyProfileScreen = ({ navigation }) => {
-    const { userNickname, connectionContext, userCreatedAt,
-        userInterest, userRole } = useAppContext();
+    const { userNickname, connectionContext, userCreatedAt, userInterest, userRole } = useAppContext();
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
     const [loading, setLoading] = React.useState<boolean>(true);
@@ -61,7 +60,7 @@ const MyProfileScreen = ({ navigation }) => {
 
     const makeModerator = async () => {
         const transactionHash = await contractAdapter.promoteToModerator(web3Provider, () => {});
-        if (!transactionHash){
+        if (!transactionHash) {
             setShowErrorModal(true);
             return;
         }
@@ -69,7 +68,7 @@ const MyProfileScreen = ({ navigation }) => {
         await loadUserData();
         userRole.setValue(UserRole.MODERATOR);
         setLoading(false);
-    }
+    };
 
     const loadUserData = async () => {
         const userData = await adapter.getUser(connectionContext.connectedAddress, () => {});
@@ -83,10 +82,10 @@ const MyProfileScreen = ({ navigation }) => {
             interest: userData.interest,
             tokens: Number(await contractAdapter.getTokens(web3Provider, connectionContext.connectedAddress)),
             profileImageUrl: apiAdapter.getProfileAvatarUrl(connectionContext.connectedAddress, true),
-            role: userData.role
+            role: userData.role,
         };
         setUser(user);
-    }
+    };
 
     useEffect(() => {
         (async () => {
@@ -104,7 +103,7 @@ const MyProfileScreen = ({ navigation }) => {
                 interest: userInterest.value,
                 tokens: Number(await contractAdapter.getTokens(web3Provider, connectionContext.connectedAddress)),
                 profileImageUrl: apiAdapter.getProfileAvatarUrl(connectionContext.connectedAddress, true),
-                role: userRole.value
+                role: userRole.value,
             };
             setUser(user);
             setLoading(false);
@@ -135,22 +134,22 @@ const MyProfileScreen = ({ navigation }) => {
                 </View>
                 <View style={userProfileMainStyles.titleContainer}>
                     <Text style={userProfileMainStyles.nicknameTitle}>{user.name}</Text>
-                    {
-                        user.role == UserRole.MODERATOR ? (<Text style={userProfileMainStyles.moderatorBadge}>🛡️ Moderator</Text>) : null
-                    }
+                    {user.role == UserRole.MODERATOR ? (
+                        <Text style={userProfileMainStyles.moderatorBadge}>🛡️ Moderator</Text>
+                    ) : null}
                     <Text style={userProfileMainStyles.walletSubtitle}>{user.walletAddress}</Text>
                 </View>
                 <View style={userProfileMainStyles.joinedAtContainer}>
                     <Text style={userProfileMainStyles.joinedAtText}>Joined Decentraveller on: {user.createdAt}</Text>
                 </View>
-                {
-                    user.role != UserRole.MODERATOR && user.tokens >= moderatorCost ? (
-                            <DecentravellerButton text={`Convert to moderator (${moderatorCost} DT)`}
-                                                    onPress={makeModerator}
-                                                    loading={false} style={userProfileMainStyles.moderatorButton}/>
-
-                    ) : null
-                }
+                {user.role != UserRole.MODERATOR && user.tokens >= moderatorCost ? (
+                    <DecentravellerButton
+                        text={`Convert to moderator (${moderatorCost} DT)`}
+                        onPress={makeModerator}
+                        loading={false}
+                        style={userProfileMainStyles.moderatorButton}
+                    />
+                ) : null}
             </View>
 
             <View style={userProfileMainStyles.informationContainer}>

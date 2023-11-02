@@ -108,9 +108,10 @@ const RulesScreen = ({ navigation }) => {
             ruleStatement: ruleResponse.ruleStatement,
             ruleStatus: ruleResponse.ruleStatus,
             ruleSubStatus: BlockchainProposalStatus[status],
-            proposedAt: ruleResponse.ruleStatus == RuleStatus.PENDING_DELETED || ruleResponse.ruleStatus == RuleStatus.DELETED
-                ? ruleResponse.deletionProposedAt
-                : ruleResponse.proposedAt,
+            proposedAt:
+                ruleResponse.ruleStatus == RuleStatus.PENDING_DELETED || ruleResponse.ruleStatus == RuleStatus.DELETED
+                    ? ruleResponse.deletionProposedAt
+                    : ruleResponse.proposedAt,
             executionTimeAt:
                 ruleResponse.ruleStatus == RuleStatus.PENDING_DELETED || ruleResponse.ruleStatus == RuleStatus.DELETED
                     ? ruleResponse.deletionExecutionTimeAt

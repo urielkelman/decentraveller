@@ -977,4 +977,102 @@ def test_censor_same_review_twice(cleanup):
                                          })
     assert second_censor_response.status_code == 400
 
+def test_censor_and_uncensor_review(cleanup):
+    client.post("/profile",
+                json={"owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
+                      "nickname": "test",
+                      "country": "AR",
+                      "interest": "ACCOMMODATION",
+                      "role": "NORMAL"},
+                )
+
+    client.post("/profile",
+                json={"owner": "0xcd3B766CCDd6AE721141F452C550Ca635964ce71",
+                      "nickname": "test2",
+                      "country": "AR",
+                      "interest": "ACCOMMODATION",
+                      "role": "MODERATOR"}
+                )
+
+    client.post("/place",
+                json={"id": 1,
+                      "owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
+                      "name": "McDonalds",
+                      "address": "Av. Callao & Av. Santa Fe",
+                      "latitude": -34.595983,
+                      "longitude": -58.393329,
+                      "openHours": {"Monday - Monday": "24hs"},
+                      "categories": "Fast food"},
+                )
+
+    client.post("/rule",
+                json={
+                    "rule_id": 1,
+                    "proposal_id": "101",
+                    "rule_statement": "You should not insult other users.",
+                    "proposer": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
+                    "timestamp": 1694493442
+                })
+
+    client.post("/review",
+                json={"id": 1,
+                      "placeId": 1,
+                      "score": 5,
+                      "owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
+                      "text": "Muy bueno el combo de sebastian yatra",
+                      "images": []},
+                )
+
+    censor_response = client.post("/review/censor",
+                                  json={
+                                      "placeId": 1,
+                                      "reviewId": 1,
+                                      "broken_rule_id": 1,
+                                      "moderator": "0xcd3B766CCDd6AE721141F452C550Ca635964ce71"
+                                  })
+    assert censor_response.status_code == 201
+
+    response = client.get("/review", params={'id': 1, 'place_id': 1})
+    assert response.status_code == 200
+    assert {k: {a: b for a, b in v.items() if a != "createdAt"} if isinstance(v, dict) else v
+            for k, v
+            in response.json().items()
+            if k != "createdAt"} == {"id": 1,
+                                     "placeId": 1,
+                                     "imageCount": 0,
+                                     "score": 5,
+                                     "owner": {"owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
+                                               "nickname": "test",
+                                               "country": "AR",
+                                               "interest": "ACCOMMODATION",
+                                               "role": "NORMAL"},
+                                     "text": "Muy bueno el combo de sebastian yatra",
+                                     "status": "CENSORED"}
+    assert datetime.fromisoformat(response.json()['createdAt']).date() == datetime.utcnow().date()
+
+    censor_response = client.post("/review/uncensor",
+                                  json={
+                                      "placeId": 1,
+                                      "reviewId": 1,
+                                  })
+    assert censor_response.status_code == 201
+
+    response = client.get("/review", params={'id': 1, 'place_id': 1})
+    assert response.status_code == 200
+    assert {k: {a: b for a, b in v.items() if a != "createdAt"} if isinstance(v, dict) else v
+            for k, v
+            in response.json().items()
+            if k != "createdAt"} == {"id": 1,
+                                     "placeId": 1,
+                                     "imageCount": 0,
+                                     "score": 5,
+                                     "owner": {"owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
+                                               "nickname": "test",
+                                               "country": "AR",
+                                               "interest": "ACCOMMODATION",
+                                               "role": "NORMAL"},
+                                     "text": "Muy bueno el combo de sebastian yatra",
+                                     "status": "UNCENSORED"}
+    assert datetime.fromisoformat(response.json()['createdAt']).date() == datetime.utcnow().date()
+
 

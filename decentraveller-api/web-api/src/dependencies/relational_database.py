@@ -9,7 +9,8 @@ from starlette.status import HTTP_400_BAD_REQUEST, HTTP_404_NOT_FOUND
 from src.api_models.bulk_results import PaginatedReviews, PaginatedPlaces
 from src.api_models.place import PlaceID, PlaceInDB, PlaceWithStats
 from src.api_models.profile import ProfileInDB, WalletID
-from src.api_models.review import ReviewID, ReviewInDB, ReviewWithProfile, ReviewInput, CensorReviewInput
+from src.api_models.review import (ReviewID, ReviewInDB, ReviewWithProfile, ReviewInput,
+                                   CensorReviewInput, UncensorReviewInput)
 from src.api_models.rule import RuleInput, RuleInDB, RuleId, RuleProposedDeletionInput, RuleProposalQueuedInput
 from src.orms.image import ImageORM
 from src.orms.place import PlaceORM
@@ -486,19 +487,19 @@ class RelationalDatabase:
         review.broken_rule_id = censor_review_input.broken_rule_id
         self.session.commit()
 
-    def uncensor_review(self, censor_review_input: CensorReviewInput):
+    def uncensor_review(self, uncensor_review_input: UncensorReviewInput):
         """
         Updates a rule to censored state.
         """
         review = self.session.query(ReviewORM) \
-            .filter(ReviewORM.place_id == censor_review_input.place_id) \
-            .filter(ReviewORM.id == censor_review_input.review_id) \
+            .filter(ReviewORM.place_id == uncensor_review_input.place_id) \
+            .filter(ReviewORM.id == uncensor_review_input.review_id) \
             .first()
 
         if review is None:
             raise HTTPException(status_code=HTTP_404_NOT_FOUND)
 
-        if review.status != ReviewStatus.PUBLIC:
+        if review.status != ReviewStatus.CENSORED:
             raise HTTPException(status_code=HTTP_400_BAD_REQUEST)
 
         review.status = ReviewStatus.UNCENSORED

@@ -26,8 +26,7 @@ class ModerationService {
      * @param reviewId
      * @param ruleId
      */
-    async censorReview(web3Provider: ethers.providers.Web3Provider, placeId: number,
-                       reviewId: number, ruleId: number) {
+    async censorReview(web3Provider: ethers.providers.Web3Provider, placeId: number, reviewId: number, ruleId: number) {
         return blockchainAdapter.censorReview(web3Provider, placeId, reviewId, ruleId);
     }
 
@@ -50,7 +49,10 @@ class ModerationService {
      * @param web3Provider
      * @param reviewAddress
      */
-    async getReviewCensorStatus(web3Provider: ethers.providers.Web3Provider, reviewAddress: string): Promise<BlockchainReviewStatus> {
+    async getReviewCensorStatus(
+        web3Provider: ethers.providers.Web3Provider,
+        reviewAddress: string,
+    ): Promise<BlockchainReviewStatus> {
         return BlockchainReviewStatus.PUBLIC;
     }
 
