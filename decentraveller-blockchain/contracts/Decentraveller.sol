@@ -54,16 +54,16 @@ contract Decentraveller {
         address moderator
     );
 
-    event DecentravellerReviewUncensored(
-        uint256 indexed placeId,
-        uint256 indexed reviewId
-    );
-
     event DecentravellerReviewCensorshipChallenged(
         uint256 indexed placeId,
         uint256 indexed reviewId,
         uint256 challengeDeadline,
         address[] juries
+    );
+
+    event DecentravellerReviewUncensored(
+        uint256 indexed placeId,
+        uint256 indexed reviewId
     );
 
     DecentravellerGovernance governance;
@@ -286,6 +286,7 @@ contract Decentraveller {
         address reviewAddress = _getReviewAddress(_placeId, _reviewId);
         DecentravellerReview review = DecentravellerReview(reviewAddress);
         review.executeUncensorship();
+        emit DecentravellerReviewUncensored(_placeId, _reviewId);
     }
 
     function getCurrentRuleId() external view returns (uint256) {

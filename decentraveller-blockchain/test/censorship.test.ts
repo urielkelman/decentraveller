@@ -7,6 +7,8 @@ import {
     DecentravellerToken,
 } from "../typechain-types";
 import { Signer } from "ethers";
+import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
+import { time } from "@nomicfoundation/hardhat-network-helpers";
 
 describe("Decentraveller censorship", function () {
     let decentraveller: Decentraveller;
@@ -14,6 +16,9 @@ describe("Decentraveller censorship", function () {
     let secondUserSigner: Signer;
     let thirdUserSigner: Signer;
     let fourthUserSigner: Signer;
+    let signers: SignerWithAddress[];
+    let reviewAddress: string;
+    let review: DecentravellerReview;
 
     beforeEach(async function () {
         await deployments.fixture(["all"]);
@@ -52,6 +57,23 @@ describe("Decentraveller censorship", function () {
                 ["image_1", "image_2"],
                 5
             );
+
+        signers = (await ethers.getSigners()).slice(0, 10);
+        const { tokenMinter } = await getNamedAccounts();
+        const decentravellerToken: DecentravellerToken =
+            await ethers.getContract("DecentravellerToken", tokenMinter);
+
+        for (const signer of signers) {
+            decentravellerToken.rewardNewPlace(signer.address);
+        }
+
+        reviewAddress = await decentraveller.getReviewAddress(1, 1);
+
+        review = await ethers.getContractAt(
+            "DecentravellerReview",
+            reviewAddress,
+            userSigner
+        );
     });
 
     it("should not allow non admin user to censor review", async function () {
@@ -70,25 +92,12 @@ describe("Decentraveller censorship", function () {
             .to.emit(decentraveller, "DecentravellerReviewCensored")
             .withArgs(1, 1, 1, await thirdUserSigner.getAddress());
 
-        const reviewAddress = await decentraveller.getReviewAddress(1, 1);
-        const review: DecentravellerReview = await ethers.getContractAt(
-            "DecentravellerReview",
-            reviewAddress,
-            userSigner
-        );
-
         const reviewState = await review.getState();
 
         assert.equal(reviewState, 1);
     });
 
     it("should not allow a review to be censored twice", async function () {
-        const reviewAddress = await decentraveller.getReviewAddress(1, 1);
-        const review = await ethers.getContractAt(
-            "DecentravellerReview",
-            reviewAddress,
-            userSigner
-        );
         await decentraveller.censorReview(1, 1, 1);
 
         await expect(
@@ -102,12 +111,6 @@ describe("Decentraveller censorship", function () {
     });
 
     it("should not allow a review censorship to be challenged by a user that is not the review owner", async function () {
-        const reviewAddress = await decentraveller.getReviewAddress(1, 1);
-        const review = await ethers.getContractAt(
-            "DecentravellerReview",
-            reviewAddress,
-            userSigner
-        );
         await decentraveller.connect(thirdUserSigner).censorReview(1, 1, 1);
 
         await expect(
@@ -118,13 +121,6 @@ describe("Decentraveller censorship", function () {
     });
 
     it("should not allow to challenge a review that is not in censored state", async function () {
-        const reviewAddress = await decentraveller.getReviewAddress(1, 1);
-        const review = await ethers.getContractAt(
-            "DecentravellerReview",
-            reviewAddress,
-            userSigner
-        );
-
         await expect(
             decentraveller
                 .connect(secondUserSigner)
@@ -138,22 +134,6 @@ describe("Decentraveller censorship", function () {
     });
 
     it("should emit event and change review status when censorship is challenged", async function () {
-        const signers = (await ethers.getSigners()).slice(0, 10);
-        const { tokenMinter } = await getNamedAccounts();
-        const decentravellerToken: DecentravellerToken =
-            await ethers.getContract("DecentravellerToken", tokenMinter);
-
-        for (const signer of signers) {
-            decentravellerToken.rewardNewPlace(signer.address);
-        }
-
-        const reviewAddress = await decentraveller.getReviewAddress(1, 1);
-        const review: DecentravellerReview = await ethers.getContractAt(
-            "DecentravellerReview",
-            reviewAddress,
-            userSigner
-        );
-
         await decentraveller.connect(thirdUserSigner).censorReview(1, 1, 1);
 
         await expect(
@@ -175,5 +155,197 @@ describe("Decentraveller censorship", function () {
         const reviewStatus = await review.getState();
 
         assert.equal(reviewStatus, 2);
+    });
+
+    it("should not allow a review to be challenged twice", async function () {
+        await decentraveller.connect(thirdUserSigner).censorReview(1, 1, 1);
+        await decentraveller
+            .connect(secondUserSigner)
+            .challengeReviewCensorship(1, 1);
+
+        await expect(
+            decentraveller
+                .connect(secondUserSigner)
+                .challengeReviewCensorship(1, 1)
+        )
+            .to.be.revertedWithCustomError(
+                review,
+                "Review__BadStateForOperation"
+            )
+            .withArgs(2);
+    });
+
+    it("should allow a voter to vote only once in a non expired challenge", async function () {
+        await decentraveller.connect(thirdUserSigner).censorReview(1, 1, 1);
+        await decentraveller
+            .connect(secondUserSigner)
+            .challengeReviewCensorship(1, 1);
+
+        const juries = await review.getJuries();
+
+        const signerToVote = signers.find(
+            (signer) => signer.address == juries[0]
+        )!;
+
+        await review.connect(signerToVote).voteAgainstCensorship();
+
+        const votes = await review.getChallengeVotingResults();
+        const votesFor = votes[0];
+        const votesAgainst = votes[1];
+
+        assert.equal(votesFor, 0);
+        assert.equal(votesAgainst, 1);
+        assert.equal(await review.getState(), 2);
+    });
+
+    it("should show a challenge was lost when quorum is not met and voting reaches deadline", async function () {
+        await decentraveller.connect(thirdUserSigner).censorReview(1, 1, 1);
+        await decentraveller
+            .connect(secondUserSigner)
+            .challengeReviewCensorship(1, 1);
+
+        const juries = await review.getJuries();
+
+        const signerToVote = signers.find(
+            (signer) => signer.address == juries[0]
+        )!;
+        const secondSignerToVote = signers.find(
+            (signer) => signer.address == juries[1]
+        )!;
+
+        await review.connect(signerToVote).voteAgainstCensorship();
+        await review.connect(secondSignerToVote).voteAgainstCensorship();
+
+        await time.increase(await review.CHALLENGE_PERIOD());
+
+        assert.equal(await review.getState(), 4);
+    });
+
+    it("should show that the challenge was lost when absolute majority vote for censorship", async function () {
+        await decentraveller.connect(thirdUserSigner).censorReview(1, 1, 1);
+        await decentraveller
+            .connect(secondUserSigner)
+            .challengeReviewCensorship(1, 1);
+
+        const juries = await review.getJuries();
+
+        const signerToVote = signers.find(
+            (signer) => signer.address == juries[0]
+        )!;
+        const secondSignerToVote = signers.find(
+            (signer) => signer.address == juries[1]
+        )!;
+        const thirdSignerToVote = signers.find(
+            (signer) => signer.address == juries[2]
+        )!;
+        const fourthSignerToVote = signers.find(
+            (signer) => signer.address == juries[3]
+        )!;
+
+        await review.connect(signerToVote).voteAgainstCensorship();
+        await review.connect(secondSignerToVote).voteForCensorship();
+        await review.connect(thirdSignerToVote).voteForCensorship();
+
+        assert.equal(await review.getState(), 2);
+
+        await review.connect(fourthSignerToVote).voteForCensorship();
+
+        assert.equal(await review.getState(), 4);
+    });
+
+    it("should show that the challenge was won when quorum is met, deadline is reached, and simple majority is accomplished", async function () {
+        await decentraveller.connect(thirdUserSigner).censorReview(1, 1, 1);
+        await decentraveller
+            .connect(secondUserSigner)
+            .challengeReviewCensorship(1, 1);
+
+        const juries = await review.getJuries();
+
+        const signerToVote = signers.find(
+            (signer) => signer.address == juries[0]
+        )!;
+        const secondSignerToVote = signers.find(
+            (signer) => signer.address == juries[1]
+        )!;
+        const thirdSignerToVote = signers.find(
+            (signer) => signer.address == juries[2]
+        )!;
+
+        await review.connect(signerToVote).voteAgainstCensorship();
+        await review.connect(secondSignerToVote).voteAgainstCensorship();
+        await review.connect(thirdSignerToVote).voteForCensorship();
+
+        await time.increase(await review.CHALLENGE_PERIOD());
+
+        assert.equal(await review.getState(), 3);
+    });
+
+    it("should not allow executing uncensorhip in defeated challenge", async function () {
+        await decentraveller.connect(thirdUserSigner).censorReview(1, 1, 1);
+        await decentraveller
+            .connect(secondUserSigner)
+            .challengeReviewCensorship(1, 1);
+
+        const juries = await review.getJuries();
+
+        const signerToVote = signers.find(
+            (signer) => signer.address == juries[0]
+        )!;
+        const secondSignerToVote = signers.find(
+            (signer) => signer.address == juries[1]
+        )!;
+        const thirdSignerToVote = signers.find(
+            (signer) => signer.address == juries[2]
+        )!;
+
+        await review.connect(signerToVote).voteAgainstCensorship();
+        await review.connect(secondSignerToVote).voteForCensorship();
+        await review.connect(thirdSignerToVote).voteForCensorship();
+
+        await time.increase(await review.CHALLENGE_PERIOD());
+
+        await expect(
+            decentraveller
+                .connect(secondUserSigner)
+                .executeReviewUncensorship(1, 1)
+        )
+            .to.be.revertedWithCustomError(
+                review,
+                "Review__BadStateForOperation"
+            )
+            .withArgs(4);
+    });
+
+    it("should allow executing uncebsorship when challenge is won by absolute majority", async function () {
+        await decentraveller.connect(thirdUserSigner).censorReview(1, 1, 1);
+        await decentraveller
+            .connect(secondUserSigner)
+            .challengeReviewCensorship(1, 1);
+
+        const juries = await review.getJuries();
+
+        const signerToVote = signers.find(
+            (signer) => signer.address == juries[0]
+        )!;
+        const secondSignerToVote = signers.find(
+            (signer) => signer.address == juries[1]
+        )!;
+        const thirdSignerToVote = signers.find(
+            (signer) => signer.address == juries[2]
+        )!;
+
+        await review.connect(signerToVote).voteAgainstCensorship();
+        await review.connect(secondSignerToVote).voteAgainstCensorship();
+        await review.connect(thirdSignerToVote).voteAgainstCensorship();
+
+        await expect(
+            decentraveller
+                .connect(secondUserSigner)
+                .executeReviewUncensorship(1, 1)
+        )
+            .to.emit(decentraveller, "DecentravellerReviewUncensored")
+            .withArgs(1, 1);
+
+        assert.equal(await review.getState(), 5);
     });
 });

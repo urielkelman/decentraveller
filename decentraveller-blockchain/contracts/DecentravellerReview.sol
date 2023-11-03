@@ -16,7 +16,7 @@ error OnlyJury__Execution();
 error Jury__AlreadyVoted();
 
 contract DecentravellerReview is Initializable, Ownable {
-    uint256 constant CHALLENGE_PERIOD = 1 days;
+    uint256 public constant CHALLENGE_PERIOD = 1 days;
     uint8 constant JURIES_AMOUNT = 5;
 
     mapping(address => bool) hasVoted;
@@ -90,15 +90,13 @@ contract DecentravellerReview is Initializable, Ownable {
         return challenge;
     }
 
-    function voteForCensorship(address _voter) external {
-        _checkVotingIsValid(_voter);
-        hasVoted[_voter] = true;
+    function voteForCensorship() external {
+        _checkVotingIsValidAndRegisterVote(msg.sender);
         challenge.forCensorshipVotes++;
     }
 
-    function voteAgainstCensorhip(address _voter) external {
-        _checkVotingIsValid(_voter);
-        hasVoted[_voter] = true;
+    function voteAgainstCensorship() external {
+        _checkVotingIsValidAndRegisterVote(msg.sender);
         challenge.againstCensorshipVotes++;
     }
 
@@ -143,25 +141,33 @@ contract DecentravellerReview is Initializable, Ownable {
             return state;
         }
 
-        bool quorumReached = _quorumReached();
+        bool deadlineReached = block.timestamp > challenge.challengeDeadline;
 
-        if (quorumReached) {
-            if (challenge.forCensorshipVotes == (JURIES_AMOUNT % 2) + 1) {
-                return
-                    DecentravellerDataTypes
-                        .DecentravellerReviewState
-                        .MODERATOR_WON;
-            } else {
-                return
-                    DecentravellerDataTypes
-                        .DecentravellerReviewState
-                        .CHALLENGE_WON;
+        if (deadlineReached) {
+            bool quorumReached = _quorumReached();
+            if (quorumReached) {
+                if (
+                    challenge.againstCensorshipVotes >
+                    challenge.forCensorshipVotes
+                ) {
+                    return
+                        DecentravellerDataTypes
+                            .DecentravellerReviewState
+                            .CHALLENGE_WON;
+                }
             }
-        }
-
-        if (block.timestamp > challenge.challengeDeadline) {
             return
                 DecentravellerDataTypes.DecentravellerReviewState.MODERATOR_WON;
+        }
+
+        if (_isAbsoluteMajority(challenge.forCensorshipVotes)) {
+            return
+                DecentravellerDataTypes.DecentravellerReviewState.MODERATOR_WON;
+        }
+
+        if (_isAbsoluteMajority(challenge.againstCensorshipVotes)) {
+            return
+                DecentravellerDataTypes.DecentravellerReviewState.CHALLENGE_WON;
         }
 
         return
@@ -170,7 +176,11 @@ contract DecentravellerReview is Initializable, Ownable {
                 .CENSORSHIP_CHALLENGED;
     }
 
-    function _checkVotingIsValid(address _voter) internal view {
+    function getJuries() external view returns (address[] memory) {
+        return challenge.juries;
+    }
+
+    function _checkVotingIsValidAndRegisterVote(address _voter) internal {
         _checkReviewOperationState(
             DecentravellerDataTypes
                 .DecentravellerReviewState
@@ -190,11 +200,17 @@ contract DecentravellerReview is Initializable, Ownable {
         if (hasVoted[_voter]) {
             revert Jury__AlreadyVoted();
         }
+
+        hasVoted[_voter] = true;
+    }
+
+    function _isAbsoluteMajority(uint8 _votes) internal pure returns (bool) {
+        return _votes >= (JURIES_AMOUNT + 1) / 2;
     }
 
     function _quorumReached() internal view returns (bool) {
         return
             challenge.forCensorshipVotes + challenge.againstCensorshipVotes >=
-            (JURIES_AMOUNT % 2) + 1;
+            (JURIES_AMOUNT + 1) / 2;
     }
 }
