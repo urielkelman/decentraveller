@@ -15,6 +15,7 @@ import { ruleDeletedTransformer } from "../transformers/rule/RuleDeletedTransfor
 import { proposalQueuedTransformer } from "../transformers/rule/ProposalQueuedTransformer";
 import { reviewCensoredTransformer } from "../transformers/review/ReviewCensoredTransformer";
 import { reviewUncensoredTransformer } from "../transformers/review/ReviewUncensoredTransformer";
+import { reviewCensorshipChallengedTransformer } from "../transformers/review/ReviewCensorshipChallengedTransformer";
 
 const blockchainUri = process.env.BLOCKCHAIN_URI || "http://127.0.0.1:8545";
 
@@ -106,6 +107,11 @@ export const eventsToListen: Array<EventToListen<any>> = [
         contract: decentraveller,
         eventName: "DecentravellerReviewCensored",
         transformer: reviewCensoredTransformer,
+    },
+    {
+        contract: decentraveller,
+        eventName: "DecentravellerReviewCensorshipChallenged",
+        transformer: reviewCensorshipChallengedTransformer,
     },
     {
         contract: decentraveller,
