@@ -27,7 +27,7 @@ library DecentravellerDataTypes {
         CENSORSHIP_CHALLENGED,
         CHALLENGE_WON,
         MODERATOR_WON,
-        UNCESORED_BY_CHALLENGE
+        UNCENSORED_BY_CHALLENGE
     }
 
     struct DecentravellerProfile {
@@ -50,8 +50,8 @@ library DecentravellerDataTypes {
     struct CensorshipChallenge {
         uint256 challengeDeadline;
         bool executedUncensor;
-        uint8 forVotes;
-        uint8 againstVotes;
+        uint8 forCensorshipVotes;
+        uint8 againstCensorshipVotes;
         address[] juries;
     }
 }

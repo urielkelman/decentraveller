@@ -5,12 +5,15 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "./DecentravellerDataTypes.sol";
 import "./DecentravellerToken.sol";
+import "./DecentravellerUtils.sol";
 import "hardhat/console.sol";
 
 error Review__BadStateForOperation(
     DecentravellerDataTypes.DecentravellerReviewState currentState
 );
 error OnlyReviewOwner__Execution();
+error OnlyJury__Execution();
+error Jury__AlreadyVoted();
 
 contract DecentravellerReview is Initializable, Ownable {
     uint256 constant CHALLENGE_PERIOD = 1 days;
@@ -24,6 +27,7 @@ contract DecentravellerReview is Initializable, Ownable {
     string private reviewText;
     string[] private imagesHashes;
     uint8 private score;
+
     DecentravellerDataTypes.DecentravellerReviewState private state;
     DecentravellerDataTypes.CensorshipChallenge challenge;
 
@@ -53,13 +57,6 @@ contract DecentravellerReview is Initializable, Ownable {
         state = DecentravellerDataTypes.DecentravellerReviewState.CENSORED;
     }
 
-    function uncensor() external onlyOwner {
-        _checkReviewOperationState(
-            DecentravellerDataTypes.DecentravellerReviewState.CENSORED
-        );
-        state = DecentravellerDataTypes.DecentravellerReviewState.PUBLIC;
-    }
-
     function challengeCensorship(
         address _challenger,
         address _decentravellerToken
@@ -82,8 +79,8 @@ contract DecentravellerReview is Initializable, Ownable {
 
         challenge.challengeDeadline = block.timestamp + CHALLENGE_PERIOD;
         challenge.executedUncensor = false;
-        challenge.forVotes = 0;
-        challenge.againstVotes = 0;
+        challenge.forCensorshipVotes = 0;
+        challenge.againstCensorshipVotes = 0;
         challenge.juries = challengeJuries;
 
         state = DecentravellerDataTypes
@@ -93,12 +90,30 @@ contract DecentravellerReview is Initializable, Ownable {
         return challenge;
     }
 
-    function voteForOwner(address _voter) external onlyOwner {
+    function voteForCensorship(address _voter) external {
+        _checkVotingIsValid(_voter);
+        hasVoted[_voter] = true;
+        challenge.forCensorshipVotes++;
+    }
+
+    function voteAgainstCensorhip(address _voter) external {
+        _checkVotingIsValid(_voter);
+        hasVoted[_voter] = true;
+        challenge.againstCensorshipVotes++;
+    }
+
+    function executeUncensorship() external onlyOwner {
         _checkReviewOperationState(
-            DecentravellerDataTypes
-                .DecentravellerReviewState
-                .CENSORSHIP_CHALLENGED
+            DecentravellerDataTypes.DecentravellerReviewState.CHALLENGE_WON
         );
+
+        state = DecentravellerDataTypes
+            .DecentravellerReviewState
+            .UNCENSORED_BY_CHALLENGE;
+    }
+
+    function getChallengeVotingResults() external view returns (uint8, uint8) {
+        return (challenge.forCensorshipVotes, challenge.againstCensorshipVotes);
     }
 
     function _checkReviewOperationState(
@@ -116,6 +131,70 @@ contract DecentravellerReview is Initializable, Ownable {
         view
         returns (DecentravellerDataTypes.DecentravellerReviewState)
     {
-        return state;
+        if (
+            state == DecentravellerDataTypes.DecentravellerReviewState.PUBLIC ||
+            state ==
+            DecentravellerDataTypes.DecentravellerReviewState.CENSORED ||
+            state ==
+            DecentravellerDataTypes
+                .DecentravellerReviewState
+                .UNCENSORED_BY_CHALLENGE
+        ) {
+            return state;
+        }
+
+        bool quorumReached = _quorumReached();
+
+        if (quorumReached) {
+            if (challenge.forCensorshipVotes == (JURIES_AMOUNT % 2) + 1) {
+                return
+                    DecentravellerDataTypes
+                        .DecentravellerReviewState
+                        .MODERATOR_WON;
+            } else {
+                return
+                    DecentravellerDataTypes
+                        .DecentravellerReviewState
+                        .CHALLENGE_WON;
+            }
+        }
+
+        if (block.timestamp > challenge.challengeDeadline) {
+            return
+                DecentravellerDataTypes.DecentravellerReviewState.MODERATOR_WON;
+        }
+
+        return
+            DecentravellerDataTypes
+                .DecentravellerReviewState
+                .CENSORSHIP_CHALLENGED;
+    }
+
+    function _checkVotingIsValid(address _voter) internal view {
+        _checkReviewOperationState(
+            DecentravellerDataTypes
+                .DecentravellerReviewState
+                .CENSORSHIP_CHALLENGED
+        );
+
+        if (
+            !DecentravellerUtils.isAddressSelected(
+                challenge.juries,
+                _voter,
+                JURIES_AMOUNT
+            )
+        ) {
+            revert OnlyJury__Execution();
+        }
+
+        if (hasVoted[_voter]) {
+            revert Jury__AlreadyVoted();
+        }
+    }
+
+    function _quorumReached() internal view returns (bool) {
+        return
+            challenge.forCensorshipVotes + challenge.againstCensorshipVotes >=
+            (JURIES_AMOUNT % 2) + 1;
     }
 }

@@ -77,17 +77,11 @@ contract Decentraveller {
 
     address timelockGovernanceAddress;
 
-    struct ReviewIdData {
-        uint256 placeId;
-        uint256 reviewId;
-    }
-
     mapping(uint256 => address) private placeAddressByPlaceId;
     mapping(string => uint) private placeIdByPlaceLocation;
     mapping(address => DecentravellerDataTypes.DecentravellerProfile) profilesByOwner;
     mapping(string => address) ownersByNicknames;
     mapping(uint256 => DecentravellerDataTypes.DecentravellerRule) ruleById;
-    mapping(uint256 => ReviewIdData[]) censoredReviewsByBrokenRuleId;
 
     constructor(
         address _governance,
@@ -266,17 +260,6 @@ contract Decentraveller {
             _brokenRuleId,
             msg.sender
         );
-
-        censoredReviewsByBrokenRuleId[_brokenRuleId].push(
-            ReviewIdData({placeId: _placeId, reviewId: _reviewId})
-        );
-    }
-
-    function _uncensorReview(uint256 _placeId, uint256 _reviewId) internal {
-        address reviewAddress = _getReviewAddress(_placeId, _reviewId);
-        DecentravellerReview(reviewAddress).uncensor();
-
-        emit DecentravellerReviewUncensored(_placeId, _reviewId);
     }
 
     function challengeReviewCensorship(
@@ -294,6 +277,15 @@ contract Decentraveller {
             challenge.challengeDeadline,
             challenge.juries
         );
+    }
+
+    function executeReviewUncensorship(
+        uint256 _placeId,
+        uint256 _reviewId
+    ) external onlyRegisteredAddress {
+        address reviewAddress = _getReviewAddress(_placeId, _reviewId);
+        DecentravellerReview review = DecentravellerReview(reviewAddress);
+        review.executeUncensorship();
     }
 
     function getCurrentRuleId() external view returns (uint256) {
@@ -366,18 +358,6 @@ contract Decentraveller {
         );
         rule.status = DecentravellerDataTypes.DecentravellerRuleStatus.DELETED;
         emit DecentravellerRuleDeleted(ruleId);
-
-        ReviewIdData[]
-            memory censoredReviewsOfDeletedRule = censoredReviewsByBrokenRuleId[
-                ruleId
-            ];
-
-        uint256 censoredReviewsAmount = censoredReviewsOfDeletedRule.length;
-
-        for (uint i = 0; i < censoredReviewsAmount; i++) {
-            ReviewIdData memory reviewIdData = censoredReviewsOfDeletedRule[i];
-            _uncensorReview(reviewIdData.placeId, reviewIdData.reviewId);
-        }
     }
 
     function createRuleDeletionProposal(

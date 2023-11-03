@@ -137,7 +137,7 @@ describe("Decentraveller censorship", function () {
             .withArgs(0);
     });
 
-    it("should emit event and change review status when censorship is challegned", async function () {
+    it("should emit event and change review status when censorship is challenged", async function () {
         const signers = (await ethers.getSigners()).slice(0, 10);
         const { tokenMinter } = await getNamedAccounts();
         const decentravellerToken: DecentravellerToken =
