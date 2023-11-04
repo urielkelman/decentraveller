@@ -1,9 +1,13 @@
 import { ethers, getNamedAccounts } from "hardhat";
-import { Decentraveller, DecentravellerGovernance, DecentravellerToken } from "../typechain-types";
+import {
+    Decentraveller,
+    DecentravellerGovernance,
+    DecentravellerToken,
+} from "../typechain-types";
 import { readFileSync, createReadStream } from "fs";
-import axios from 'axios';
-import fs from 'fs';
-import FormData from 'form-data'
+import axios from "axios";
+import fs from "fs";
+import FormData from "form-data";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { time } from "@nomicfoundation/hardhat-network-helpers";
 
@@ -26,21 +30,23 @@ const main = async () => {
         )
     );
 
-    const usersData = readFileSync("data/ba_users.json", "utf-8").split(/\r?\n/);
+    const usersData = readFileSync("data/ba_users.json", "utf-8").split(
+        /\r?\n/
+    );
     var userId2Contract = new Map<string, Decentraveller>();
     var userId2Signer = new Map<string, SignerWithAddress>();
     var registeredContracts = [];
-    for(let i=0; i<usersData.length; i++){
+    for (let i = 0; i < usersData.length; i++) {
         const userData = JSON.parse(usersData[i]);
         const c = decentravellerContracts[i];
-        const result = await c.registerProfile(userData['name'], "AR", 0);
+        const result = await c.registerProfile(userData["name"], "AR", 0);
         if (await result.wait(1)) {
             console.log(
                 `Profile registered for signer ${await c.signer.getAddress()}`
             );
-            userId2Contract.set(userData['user_id'], c);
-            userId2Signer.set(userData['user_id'], signers[i]);
-            registeredContracts.push(c)
+            userId2Contract.set(userData["user_id"], c);
+            userId2Signer.set(userData["user_id"], signers[i]);
+            registeredContracts.push(c);
         } else {
             throw Error("Error registering profile");
         }
@@ -48,16 +54,17 @@ const main = async () => {
 
     const { tokenOwner, tokenMinter } = await getNamedAccounts();
 
-    let decentravellerGovContracts: DecentravellerGovernance[] = await Promise.all(
-        signers.map(
-            async (signer) =>
-                await ethers.getContractAt(
-                    "DecentravellerGovernance",
-                    "0xe7f1725e7734ce288f8367e1bb143e90bb3f0512",
-                    signer
-                )
-        )
-    );
+    let decentravellerGovContracts: DecentravellerGovernance[] =
+        await Promise.all(
+            signers.map(
+                async (signer) =>
+                    await ethers.getContractAt(
+                        "DecentravellerGovernance",
+                        "0xe7f1725e7734ce288f8367e1bb143e90bb3f0512",
+                        signer
+                    )
+            )
+        );
     const decentravellerToken: DecentravellerToken = await ethers.getContractAt(
         "DecentravellerToken",
         "0x057ef64e23666f000b34ae31332854acbd1c8544",
@@ -69,33 +76,39 @@ const main = async () => {
     await setNewRewardTx.wait();
 
     console.log("Uploading business images");
-    const files = fs.readdirSync('data/place_images/')
+    const files = fs.readdirSync("data/place_images/");
     const formData = new FormData();
-    files.forEach(file => {
-        formData.append("files", createReadStream("data/place_images/"+file));
+    files.forEach((file) => {
+        formData.append("files", createReadStream("data/place_images/" + file));
     });
-    const imageHashes = await httpClient.post('http://api:8000/uploads', formData, 
-    {
-        headers: {
-            'Content-Type': 'multipart/form-data'
-        }
-    }).then(
-        function (response) {
+    const imageHashes = await httpClient
+        .post("http://api:8000/uploads", formData, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+        })
+        .then(function (response) {
             var imageHashes = new Map<string, string[]>();
-            for(let i=0; i<files.length; i++){
+            for (let i = 0; i < files.length; i++) {
                 const fileHeader = files[i].split(".")[0];
                 const filePlace = fileHeader.split("_").slice(1).join("_");
-                if(imageHashes.has(filePlace)){
-                    imageHashes.set(filePlace, imageHashes.get(filePlace)!.concat([response.data['hashes'][i]]));
+                if (imageHashes.has(filePlace)) {
+                    imageHashes.set(
+                        filePlace,
+                        imageHashes
+                            .get(filePlace)!
+                            .concat([response.data["hashes"][i]])
+                    );
                 } else {
-                    imageHashes.set(filePlace, [response.data['hashes'][i]]);
+                    imageHashes.set(filePlace, [response.data["hashes"][i]]);
                 }
             }
             return imageHashes;
-    }).catch(function (error) {
-        console.log(`Error uploading place images: ${error}`)
-        return new Map<string, string[]>();;
-    });
+        })
+        .catch(function (error) {
+            console.log(`Error uploading place images: ${error}`);
+            return new Map<string, string[]>();
+        });
 
     console.log("Starting business load");
     const businessFile = readFileSync("data/ba_places.json", "utf-8");
@@ -134,9 +147,9 @@ const main = async () => {
         const blockchainBusId = yelp2id.get(reviewData["business_id"])!;
 
         let reviewImages: string[] = [];
-        if (imageHashes.has(reviewData['business_id'])){
-            reviewImages = imageHashes.get(reviewData['business_id'])!;
-            imageHashes.delete(reviewData['business_id']);
+        if (imageHashes.has(reviewData["business_id"])) {
+            reviewImages = imageHashes.get(reviewData["business_id"])!;
+            imageHashes.delete(reviewData["business_id"]);
         }
         const result = await signerContract.addReview(
             blockchainBusId,
@@ -158,18 +171,26 @@ const main = async () => {
     }
 
     console.log("Uploading avatars");
-    const avatarFiles = fs.readdirSync('data/user_images/')
+    const avatarFiles = fs.readdirSync("data/user_images/");
     for (const file of avatarFiles) {
         const userId = file.split(".")[0];
-        const c = userId2Contract.get(userId)!
+        const c = userId2Contract.get(userId)!;
         const address = await c.signer.getAddress();
-        await axios.post(`http://api:8000/profile/${address}/avatar.jpg`, axios.toFormData({"file": createReadStream("data/user_images/"+file)}), {
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            }
-        }).catch(function (error) {
-            console.log(`Error uploading ${file}`)
-        });
+        await axios
+            .post(
+                `http://api:8000/profile/${address}/avatar.jpg`,
+                axios.toFormData({
+                    file: createReadStream("data/user_images/" + file),
+                }),
+                {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    },
+                }
+            )
+            .catch(function (error) {
+                console.log(`Error uploading ${file}`);
+            });
     }
 
     console.log("Creating site rules");
@@ -178,7 +199,7 @@ const main = async () => {
 
     tx = await decentravellerContracts[0].createNewRuleProposal(
         "No se habla de Decentraveller."
-    )
+    );
     tx = await tx.wait();
 
     const ruleId = await decentravellerContracts[0].getCurrentRuleId();
@@ -203,18 +224,30 @@ const main = async () => {
     await time.increase(votingPeriod);
 
     const approveTxCalldata = (
-        await decentravellerContracts[0].populateTransaction.approveProposedRule(ruleId)
+        await decentravellerContracts[0].populateTransaction.approveProposedRule(
+            ruleId
+        )
     ).data!;
 
     const proposalHash = ethers.utils.id("No se habla de Decentraveller.");
     tx = await decentravellerGovContracts[0][
         "queue(address[],uint256[],bytes[],bytes32)"
-    ]([decentravellerContracts[0].address], [0], [approveTxCalldata], proposalHash);
+    ](
+        [decentravellerContracts[0].address],
+        [0],
+        [approveTxCalldata],
+        proposalHash
+    );
     await tx.wait();
     await time.increase(1 * 24 * 60 * 60);
     tx = await decentravellerGovContracts[0][
         "execute(address[],uint256[],bytes[],bytes32)"
-    ]([decentravellerContracts[0].address], [0], [approveTxCalldata], proposalHash);
+    ](
+        [decentravellerContracts[0].address],
+        [0],
+        [approveTxCalldata],
+        proposalHash
+    );
     await tx.wait();
 };
 

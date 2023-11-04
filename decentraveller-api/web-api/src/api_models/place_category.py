@@ -1,5 +1,6 @@
 import enum
 
+
 class PlaceCategory(str, enum.Enum):
     """
     Categories for places
