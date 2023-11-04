@@ -4,14 +4,18 @@ import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Votes.sol";
 import "@openzeppelin/contracts/governance/extensions/GovernorVotes.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/draft-ERC20Permit.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
+import "hardhat/console.sol";
+import "./DecentravellerUtils.sol";
 
 error Delegation__Fobidden();
 error Transfer__Forbidden();
+error Holders__NotEnough(uint256 currentHolders);
 
 contract DecentravellerToken is ERC20Votes, AccessControl {
     uint8 private newReviewRewardAmount;
     uint8 private newPlaceRewardAmount;
-    address private spenderContract;
+    address[] private tokenHolders;
+    mapping(address => bool) isHolder;
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
     bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
     bytes32 public constant SPENDER_ROLE = keccak256("SPENDER_ROLE");
@@ -46,11 +50,14 @@ contract DecentravellerToken is ERC20Votes, AccessControl {
     function reward(address to, uint amount) internal {
         _mint(to, amount);
         _delegate(to, to);
+        if (!isHolder[to]) {
+            tokenHolders.push(to);
+            isHolder[to] = true;
+        }
     }
 
     function rewardNewPlace(address to) external onlyRole(MINTER_ROLE) {
         reward(to, newPlaceRewardAmount);
-        _delegate(to, to);
     }
 
     function rewardNewReview(address to) external onlyRole(MINTER_ROLE) {
@@ -99,5 +106,51 @@ contract DecentravellerToken is ERC20Votes, AccessControl {
 
     function CLOCK_MODE() public pure override returns (string memory) {
         return "mode=timestamp";
+    }
+
+    function getRandomHolders(
+        uint8 amount
+    ) external view returns (address[] memory) {
+        uint256 tokenHoldersLenght = tokenHolders.length;
+
+        if (amount > tokenHoldersLenght) {
+            revert Holders__NotEnough(tokenHoldersLenght);
+        }
+
+        uint256 randomSeed = uint256(
+            keccak256(
+                abi.encodePacked(
+                    block.timestamp,
+                    block.difficulty,
+                    block.coinbase,
+                    block.gaslimit
+                )
+            )
+        );
+
+        address[] memory randomHolders = new address[](amount);
+
+        uint8 alreadySelected = 0;
+        uint8 iteration = 0;
+
+        while (alreadySelected < amount) {
+            uint256 randomIndex = (uint256(
+                keccak256(abi.encode(randomSeed, iteration))
+            ) % tokenHoldersLenght);
+            address selectedAddres = tokenHolders[randomIndex];
+            if (
+                !DecentravellerUtils.isAddressSelected(
+                    randomHolders,
+                    selectedAddres,
+                    alreadySelected
+                )
+            ) {
+                randomHolders[alreadySelected] = tokenHolders[randomIndex];
+                alreadySelected++;
+            }
+            iteration++;
+        }
+
+        return randomHolders;
     }
 }

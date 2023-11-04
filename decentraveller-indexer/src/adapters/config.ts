@@ -9,5 +9,6 @@ export const eventEndpoints = {
     RULE_DELETION_ENDPOINT: "/rule-deletion/delete",
     UPDATE_RULE_EXEC_TIMESTAMP_ENDPOINT: "/rule/proposal",
     CENSOR_REVIEW_ENDPOINT: "/review/censor",
+    CENSOR_REVIEW_CHALLENGED_ENDPOINT: "/review/censor/challenge",
     UNCENSORED_REVIEW_ENDPOINT: "/review/uncensor",
 };

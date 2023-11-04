@@ -34,7 +34,12 @@ contract DecentravellerGovernance is
         return tx.origin;
     }
 
-    function proposalThreshold() public view override(Governor, GovernorSettings) returns (uint256){
+    function proposalThreshold()
+        public
+        view
+        override(Governor, GovernorSettings)
+        returns (uint256)
+    {
         return super.proposalThreshold();
     }
 
@@ -79,16 +84,11 @@ contract DecentravellerGovernance is
 
     function supportsInterface(
         bytes4 interfaceId
-    )
-        public
-        view
-        override(Governor, GovernorTimelockControl)
-        returns (bool)
-    {
+    ) public view override(Governor, GovernorTimelockControl) returns (bool) {
         return super.supportsInterface(interfaceId);
     }
 
-    function currentVotes(address account) external view returns (uint256){
+    function currentVotes(address account) external view returns (uint256) {
         return token.getVotes(account);
     }
 }

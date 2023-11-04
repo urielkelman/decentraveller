@@ -76,6 +76,14 @@ export interface ReviewCensoredRequestBody extends EventRequestBody {
     moderator: string;
 }
 
+export interface ReviewCensorshipChallengedRequestBody
+    extends EventRequestBody {
+    placeId: number;
+    reviewId: number;
+    deadlineTimestamp: number;
+    juries: string[];
+}
+
 export interface ReviewUncesoredRequestBody extends EventRequestBody {
     placeId: number;
     reviewId: number;
