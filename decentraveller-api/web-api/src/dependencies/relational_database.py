@@ -9,8 +9,8 @@ from starlette.status import HTTP_400_BAD_REQUEST, HTTP_404_NOT_FOUND
 from src.api_models.bulk_results import PaginatedReviews, PaginatedPlaces
 from src.api_models.place import PlaceID, PlaceInDB, PlaceWithStats
 from src.api_models.profile import ProfileInDB, WalletID
-from src.api_models.review import (ReviewID, ReviewInDB, ReviewWithProfile, ReviewInput,
-                                   CensorReviewInput, UncensorReviewInput)
+from src.api_models.review import ReviewID, ReviewInDB, ReviewWithProfile, ReviewInput, CensorReviewInput, \
+    ReviewChallengeCensorshipInput, UncensorReviewInput
 from src.api_models.rule import RuleInput, RuleInDB, RuleId, RuleProposedDeletionInput, RuleProposalQueuedInput
 from src.orms.image import ImageORM
 from src.orms.place import PlaceORM
@@ -508,20 +508,28 @@ class RelationalDatabase:
 
         return RuleInDB.from_orm(rule)
 
-    def censor_review(self, censor_review_input: CensorReviewInput):
-        """
-        Updates a rule to censored state.
-        """
+    def __get_review_and_check_status__(self, place_id: PlaceID, review_id: ReviewID,
+                                        expected_status: ReviewStatus) -> ReviewORM:
         review = self.session.query(ReviewORM) \
-            .filter(ReviewORM.place_id == censor_review_input.place_id) \
-            .filter(ReviewORM.id == censor_review_input.review_id) \
+            .filter(ReviewORM.place_id == place_id) \
+            .filter(ReviewORM.id == review_id) \
             .first()
 
         if review is None:
             raise HTTPException(status_code=HTTP_404_NOT_FOUND)
 
-        if review.status != ReviewStatus.PUBLIC:
+        if review.status != expected_status:
             raise HTTPException(status_code=HTTP_400_BAD_REQUEST)
+
+        return review
+
+    def censor_review(self, censor_review_input: CensorReviewInput):
+        """
+        Updates a rule to censored state.
+        """
+        review = self.__get_review_and_check_status__(
+            censor_review_input.place_id, censor_review_input.review_id, ReviewStatus.PUBLIC
+        )
 
         review.status = ReviewStatus.CENSORED
         review.censor_moderator = censor_review_input.moderator
@@ -530,7 +538,7 @@ class RelationalDatabase:
 
     def uncensor_review(self, uncensor_review_input: UncensorReviewInput):
         """
-        Updates a rule to censored state.
+        Updates a rule to uncensored state.
         """
         review = self.session.query(ReviewORM) \
             .filter(ReviewORM.place_id == uncensor_review_input.place_id) \
@@ -544,4 +552,16 @@ class RelationalDatabase:
             raise HTTPException(status_code=HTTP_400_BAD_REQUEST)
 
         review.status = ReviewStatus.UNCENSORED
+
+    def challenge_review_censorship(self, challenge_censorship_input: ReviewChallengeCensorshipInput):
+        """
+        Updates a rule to censorship challenged state.
+        """
+        review = self.__get_review_and_check_status__(
+            challenge_censorship_input.place_id, challenge_censorship_input.review_id, ReviewStatus.CENSORED
+        )
+
+        review.status = ReviewStatus.CENSORSHIP_CHALLENGED
+        review.challenge_deadline = datetime.utcfromtimestamp(challenge_censorship_input.deadline_timestamp)
+        review.juries = challenge_censorship_input.juries
         self.session.commit()

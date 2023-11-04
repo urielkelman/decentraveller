@@ -1,5 +1,5 @@
 import { ethers, run, network } from "hardhat";
-import { Decentraveller, DecentravellerPlace } from "../typechain-types";
+import { Decentraveller, DecentravellerPlace } from "....//typechain-types";
 
 const PLACE_CONTRACT_ADDRESS = "0xd8058efe0198ae9dD7D563e1b4938Dcbc86A1F81";
 
