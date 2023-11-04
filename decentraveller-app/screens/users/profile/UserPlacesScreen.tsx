@@ -1,22 +1,13 @@
-import React, { useEffect } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import React from 'react';
+import { View } from 'react-native';
 import {
     DecentravellerPlacesList,
     LoadPlaceResponse,
     PlaceShowProps,
 } from '../../../commons/components/DecentravellerPlacesList';
 import { PlaceResponse, PlacesResponse } from '../../../api/response/places';
-import { mockApiAdapter } from '../../../api/mockApiAdapter';
 import { apiAdapter } from '../../../api/apiAdapter';
-import { useAppContext } from '../../../context/AppContext';
-import { DECENTRAVELLER_DEFAULT_BACKGROUND_COLOR } from '../../../commons/global';
-import LoadingComponent from '../../../commons/components/DecentravellerLoading';
 import { WalletIdProps } from './types';
-import { useNavigation } from '@react-navigation/native';
-import { ReviewResponse, ReviewsResponse } from '../../../api/response/reviews';
-import { ReviewItemProps } from '../../reviews/ReviewItem';
-import { LoadReviewResponse, ReviewShowProps } from '../../../commons/components/DecentravellerReviewsList';
-import { DecentravellerPlaceCategory } from '../../../context/types';
 
 const adapter = apiAdapter;
 

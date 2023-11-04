@@ -9,7 +9,6 @@ import "@openzeppelin/contracts/governance/extensions/GovernorTimelockControl.so
 import "@openzeppelin/contracts/governance/extensions/GovernorCountingSimple.sol";
 import "@openzeppelin/contracts/governance/compatibility/GovernorCompatibilityBravo.sol";
 import "@openzeppelin/contracts/utils/Context.sol";
-import "hardhat/console.sol";
 
 contract DecentravellerGovernance is
     Context,

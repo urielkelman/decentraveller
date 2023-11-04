@@ -7,7 +7,8 @@ from fastapi_utils.inferring_router import InferringRouter
 from sqlalchemy.exc import IntegrityError
 from starlette.status import HTTP_400_BAD_REQUEST, HTTP_404_NOT_FOUND
 
-from src.api_models.profile import ProfileInDB, ProfileBody, WalletID, wallet_id_validator, ProfilePushTokenBody
+from src.api_models.profile import ProfileInDB, ProfileBody, WalletID, wallet_id_validator, ProfilePushTokenBody, \
+    RoleChangeBody
 from src.dependencies.avatar_generator import AvatarGenerator
 from src.dependencies.ipfs_service import IPFSService, MaximumUploadSizeExceeded
 from src.dependencies.indexer_auth import indexer_auth
@@ -134,6 +135,25 @@ class ProfileCBV:
         self.database.session.commit()
         return ProfileInDB.from_orm(profile)
 
+    @profile_router.patch("/profile/role", dependencies=[Depends(indexer_auth)])
+    def change_role(self, body: RoleChangeBody) -> ProfileInDB:
+        """
+        Gets a profile given either the owner or the nickname
+
+        :param body: the wallet and role of the user
+        :return: a profile orm
+        """
+        profile = self.database.get_profile_orm(body.owner)
+
+        if profile is None:
+            raise HTTPException(status_code=HTTP_404_NOT_FOUND)
+
+        profile.role = body.role
+        self.database.session.add(profile)
+        self.database.session.commit()
+
+        return ProfileInDB.from_orm(profile)
+
     @profile_router.post("/profile", status_code=201, dependencies=[Depends(indexer_auth)])
     def post_profile(self, profile: ProfileBody) -> ProfileInDB:
         """
@@ -151,7 +171,8 @@ class ProfileCBV:
 
             profile_orm = ProfileORM(owner=profile.owner.lower(), nickname=profile.nickname,
                                      country=profile.country,
-                                     interest=profile.interest)
+                                     interest=profile.interest,
+                                     role=profile.role)
             self.database.session.add(profile_orm)
         try:
             self.database.session.commit()

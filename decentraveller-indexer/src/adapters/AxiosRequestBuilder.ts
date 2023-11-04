@@ -3,6 +3,7 @@ import { AxiosRequestConfig } from "axios";
 export enum HTTPMethod {
     GET = "get",
     POST = "post",
+    PATCH = "patch"
 }
 
 const API_ENDPOINT = process.env.API_ENDPOINT;

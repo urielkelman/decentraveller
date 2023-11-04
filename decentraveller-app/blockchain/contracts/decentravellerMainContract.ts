@@ -30,8 +30,24 @@ const decentravellerMainContract: DecentravellerContract = {
             functionName: 'createRuleDeletionProposal',
             fullContractABI: mainContractStringfiedABI,
         },
+        addReview: {
+            functionName: 'addReview',
+            fullContractABI: mainContractStringfiedABI,
+        },
         getTokens: {
             functionName: 'getTokens',
+            fullContractABI: mainContractStringfiedABI,
+        },
+        moderatorPromotionCost: {
+            functionName: 'moderatorPromotionCost',
+            fullContractABI: mainContractStringfiedABI,
+        },
+        promoteToModerator: {
+            functionName: 'promoteToModerator',
+            fullContractABI: mainContractStringfiedABI,
+        },
+        censorReview: {
+            functionName: 'censorReview',
             fullContractABI: mainContractStringfiedABI,
         },
     },

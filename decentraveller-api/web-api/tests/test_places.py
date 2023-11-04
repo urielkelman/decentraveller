@@ -17,7 +17,8 @@ def setup_dataset():
                                json={"owner": '0x{:040X}'.format(i),
                                      "nickname": f"test{i}",
                                      "country": "AR",
-                                     "interest": "ACCOMMODATION"},
+                                     "interest": "ACCOMMODATION",
+                                     "role": "NORMAL"},
                                )
         assert response.status_code == 201
 
@@ -51,7 +52,8 @@ def test_create_place_same_key(cleanup):
                            json={"owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                  "nickname": "test",
                                  "country": "AR",
-                                 "interest": "ACCOMMODATION"},
+                                 "interest": "ACCOMMODATION",
+                                     "role": "NORMAL"},
                            )
     assert response.status_code == 201
 
@@ -86,7 +88,8 @@ def test_create_place(cleanup):
                            json={"owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                  "nickname": "test",
                                  "country": "AR",
-                                 "interest": "ACCOMMODATION"},
+                                 "interest": "ACCOMMODATION",
+                                     "role": "NORMAL"},
                            )
     assert response.status_code == 201
 
@@ -122,7 +125,8 @@ def test_overwrite_place(cleanup):
                            json={"owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                  "nickname": "test",
                                  "country": "AR",
-                                 "interest": "ACCOMMODATION"},
+                                 "interest": "ACCOMMODATION",
+                                     "role": "NORMAL"},
                            )
     assert response.status_code == 201
 
@@ -166,7 +170,8 @@ def test_update_place(cleanup):
                            json={"owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                  "nickname": "test",
                                  "country": "AR",
-                                 "interest": "ACCOMMODATION"},
+                                 "interest": "ACCOMMODATION",
+                                     "role": "NORMAL"},
                            )
     assert response.status_code == 201
 
@@ -205,7 +210,8 @@ def test_get_paginated_places(cleanup):
                            json={"owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                  "nickname": "test",
                                  "country": "AR",
-                                 "interest": "ACCOMMODATION"},
+                                 "interest": "ACCOMMODATION",
+                                     "role": "NORMAL"},
                            )
     assert response.status_code == 201
 
@@ -326,7 +332,8 @@ def test_create_place_no_image(cleanup):
                            json={"owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                  "nickname": "test",
                                  "country": "AR",
-                                 "interest": "ACCOMMODATION"},
+                                 "interest": "ACCOMMODATION",
+                                     "role": "NORMAL"},
                            )
     assert response.status_code == 201
 

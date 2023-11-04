@@ -14,7 +14,6 @@ import DecentravellerInformativeModal from '../../../commons/components/Decentra
 import { rulesService } from '../../../blockchain/service/rulesService';
 import { blockchainAdapter } from '../../../blockchain/blockhainAdapter';
 import LoadingComponent from '../../../commons/components/DecentravellerLoading';
-import rulesScreen from './RulesScreen';
 
 type RuleDetailScreenProp = StackNavigationProp<HomeStackScreens, 'VotingResultsScreen'>;
 
@@ -267,7 +266,11 @@ const RuleDetailScreen: React.FC<RuleDetailProps> = ({ route }) => {
                 ruleStatement: ruleResponse.ruleStatement,
                 ruleStatus: ruleResponse.ruleStatus,
                 ruleSubStatus: blockchainStatus,
-                proposedAt: ruleResponse.proposedAt,
+                proposedAt:
+                    ruleResponse.ruleStatus == RuleStatus.PENDING_DELETED ||
+                    ruleResponse.ruleStatus == RuleStatus.DELETED
+                        ? ruleResponse.deletionProposedAt
+                        : ruleResponse.proposedAt,
                 executionTimeAt:
                     ruleResponse.ruleStatus == RuleStatus.PENDING_DELETED ||
                     ruleResponse.ruleStatus == RuleStatus.DELETED

@@ -1,6 +1,5 @@
 import { NavigationProp, RouteProp } from '@react-navigation/native';
 import { HomeStackScreens } from '../home/HomeNavigator';
-import { DecentravellerPlaceCategory } from '../../context/types';
 
 type PlaceIdParams = {
     placeId: number;
@@ -10,6 +9,7 @@ export interface ReviewDetailParams {
     reviewId: number;
     placeId: number;
 }
+
 export interface SelectBrokenRuleParams {
     reviewId: number;
     placeId: number;

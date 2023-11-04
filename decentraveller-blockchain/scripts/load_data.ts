@@ -1,5 +1,5 @@
 import { ethers, getNamedAccounts } from "hardhat";
-import { Decentraveller, DecentravellerPlace, DecentravellerGovernance, DecentravellerToken } from "../typechain-types";
+import { Decentraveller, DecentravellerGovernance, DecentravellerToken } from "../typechain-types";
 import { readFileSync, createReadStream } from "fs";
 import axios from 'axios';
 import fs from 'fs';
@@ -131,23 +131,15 @@ const main = async () => {
     for (const line of reviewFile.split(/\r?\n/)) {
         const reviewData = JSON.parse(line);
         const signerContract = userId2Contract.get(reviewData["user_id"])!;
-        const signerConnectedToContract = userId2Signer.get(reviewData["user_id"])!;
         const blockchainBusId = yelp2id.get(reviewData["business_id"])!;
-        const placeContractAddress = await signerContract.getPlaceAddress(
-            blockchainBusId
-        );
 
-        const placeContract: DecentravellerPlace = await ethers.getContractAt(
-            "DecentravellerPlace",
-            placeContractAddress,
-            signerConnectedToContract
-        );
         let reviewImages: string[] = [];
         if (imageHashes.has(reviewData['business_id'])){
             reviewImages = imageHashes.get(reviewData['business_id'])!;
             imageHashes.delete(reviewData['business_id']);
         }
-        const result = await placeContract.addReview(
+        const result = await signerContract.addReview(
+            blockchainBusId,
             reviewData["text"],
             reviewImages,
             Math.round(parseFloat(reviewData["stars"]))

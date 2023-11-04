@@ -1,4 +1,4 @@
-import { Image, Text, View, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
+import { FlatList, Image, TouchableOpacity } from 'react-native';
 import React, { useState } from 'react';
 // @ts-ignore
 import { useNavigation } from '@react-navigation/native';

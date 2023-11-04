@@ -4,7 +4,6 @@ import { ContractFunction, DecentravellerContract } from './contractTypes';
 import { Blockchain, BlockchainByChainId } from './config';
 import { withTimeout } from '../commons/functions/utils';
 import { DEFAULT_CHAIN_ID } from '../context/AppContext';
-import { decentravellerPlaceContract } from './contracts/decentravellerPlaceContract';
 import { decentravellerMainContract } from './contracts/decentravellerMainContract';
 import { decentravellerPlaceFactoryContract } from './contracts/decentravellerPlaceFactoryABI';
 import { BlockchainProposalResult, BlockchainProposalStatus } from './types';
@@ -135,6 +134,28 @@ class BlockchainAdapter {
         }
     }
 
+    async getModeratorCost(web3Provider: ethers.providers.Web3Provider): Promise<number> {
+        try {
+            const blockchain: Blockchain = BlockchainByChainId[DEFAULT_CHAIN_ID];
+            const contractFunction: ContractFunction = decentravellerMainContract.functions['moderatorPromotionCost'];
+
+            const contractAddress: string = decentravellerMainContract.addressesByBlockchain[blockchain];
+            const decentraveller = new ethers.Contract(contractAddress, contractFunction.fullContractABI, web3Provider);
+            return Number(await decentraveller.moderatorPromotionCost());
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    async promoteToModerator(web3Provider: ethers.providers.Web3Provider, onError: () => void) {
+        try {
+            return await this.populateAndSend(web3Provider, decentravellerMainContract, 'promoteToModerator');
+        } catch (e) {
+            console.log(e);
+            onError();
+        }
+    }
+
     async addPlaceReviewTransaction(
         web3Provider: ethers.providers.Web3Provider,
         placeId: number,
@@ -142,21 +163,12 @@ class BlockchainAdapter {
         rating: number,
         images: string[],
     ): Promise<string> {
-        const blockchain: Blockchain = BlockchainByChainId[DEFAULT_CHAIN_ID];
-        const contractFunction: ContractFunction = decentravellerMainContract.functions['getPlaceAddress'];
-        const mainContractAddress: string = decentravellerMainContract.addressesByBlockchain[blockchain];
-        const decentravellerMain = new ethers.Contract(
-            mainContractAddress,
-            contractFunction.fullContractABI,
-            web3Provider,
-        );
-        const placeAddress = await decentravellerMain.getPlaceAddress(placeId);
         try {
-            return await this.populateAndSendWithAddress(
+            return await this.populateAndSend(
                 web3Provider,
-                decentravellerPlaceContract,
+                decentravellerMainContract,
                 'addReview',
-                placeAddress,
+                placeId,
                 comment,
                 images,
                 rating,
@@ -382,6 +394,21 @@ class BlockchainAdapter {
                 ForVotes: Number(result[1]),
                 AgainstVotes: Number(result[0]),
             };
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    async censorReview(web3Provider: ethers.providers.Web3Provider, placeId: number, reviewId: number, ruleId: number) {
+        try {
+            return await this.populateAndSend(
+                web3Provider,
+                decentravellerMainContract,
+                'censorReview',
+                placeId,
+                reviewId,
+                ruleId,
+            );
         } catch (e) {
             console.log(e);
         }

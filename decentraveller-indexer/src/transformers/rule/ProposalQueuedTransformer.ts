@@ -1,8 +1,8 @@
 import { BigNumber, ethers } from "ethers";
-import { HTTPMethod } from "../adapters/AxiosRequestBuilder";
-import { eventEndpoints } from "../adapters/config";
-import { EventRequest, RuleProposalQueuedBody } from "../adapters/types";
-import EventTransformer from "./EventTransformer";
+import { HTTPMethod } from "../../adapters/AxiosRequestBuilder";
+import { eventEndpoints } from "../../adapters/config";
+import { EventRequest, RuleProposalQueuedBody } from "../../adapters/types";
+import EventTransformer from "../EventTransformer";
 
 class ProposalQueuedTransformer extends EventTransformer<RuleProposalQueuedBody> {
     public transformEvent(event: any[]): EventRequest<RuleProposalQueuedBody> {

@@ -1,7 +1,7 @@
 import { blockchainAdapter, BlockchainAdapter } from '../blockhainAdapter';
 import { apiAdapter, ApiAdapter } from '../../api/apiAdapter';
 import { ethers } from 'ethers';
-import {BlockchainReviewStatus} from "../types";
+import { BlockchainReviewStatus } from '../types';
 
 class ModerationService {
     private blockchainAdapter: BlockchainAdapter;
@@ -24,8 +24,11 @@ class ModerationService {
      * @param web3Provider
      * @param placeId
      * @param reviewId
+     * @param ruleId
      */
-    async censorReview(web3Provider: ethers.providers.Web3Provider, placeId: number, reviewId: number): Promise<any> {}
+    async censorReview(web3Provider: ethers.providers.Web3Provider, placeId: number, reviewId: number, ruleId: number) {
+        return blockchainAdapter.censorReview(web3Provider, placeId, reviewId, ruleId);
+    }
 
     /**
      * Creates a transaction creating a dispute on a censored transaction so other users can participate in moderation.
@@ -42,11 +45,16 @@ class ModerationService {
 
     /**
      * Returns the status of the review, that can be one of the following options:
-         * PUBLIC, CENSORED, ON_DISPUTE, CHALLENGER_WON, MODERATOR_WON, UNCENSORED_BY_DISPUTE
+     * PUBLIC, CENSORED, ON_DISPUTE, CHALLENGER_WON, MODERATOR_WON, UNCENSORED_BY_DISPUTE
      * @param web3Provider
      * @param reviewAddress
      */
-    async getReviewCensorStatus(web3Provider: ethers.providers.Web3Provider, reviewAddress: string): Promise<any> {}
+    async getReviewCensorStatus(
+        web3Provider: ethers.providers.Web3Provider,
+        reviewAddress: string,
+    ): Promise<BlockchainReviewStatus> {
+        return BlockchainReviewStatus.PUBLIC;
+    }
 
     /**
      * Returns the address of the review
@@ -54,8 +62,12 @@ class ModerationService {
      * @param placeId
      * @param reviewId
      */
-    async getReviewAddress(web3Provider: ethers.providers.Web3Provider, placeId: number, reviewId: number): Promise<string> {
-        return ""
+    async getReviewAddress(
+        web3Provider: ethers.providers.Web3Provider,
+        placeId: number,
+        reviewId: number,
+    ): Promise<string> {
+        return '';
     }
 
     /**

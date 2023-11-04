@@ -38,3 +38,10 @@ export enum BlockchainReviewStatus {
     MODERATOR_WON = 'MODERATOR_WON',
     UNCENSORED_BY_DISPUTE = 'UNCENSORED_BY_DISPUTE',
 }
+
+export enum BackendReviewStatus {
+    PUBLIC = 'PUBLIC',
+    ON_DISPUTE = 'IN_DISPUTE',
+    CENSORED = 'CENSORED',
+    UNCENSORED = 'UNCENSORED',
+}

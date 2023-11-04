@@ -22,7 +22,6 @@ const deployFunction: DeployFunction = async function (
     );
 
     const addMintersTxResponse = await token.addMinters([tokenMinter]);
-
     addMintersTxResponse.wait();
 
     const timeLockDeployment: DeployResult = await deploy(

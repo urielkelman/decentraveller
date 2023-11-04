@@ -24,7 +24,8 @@ def test_create_profile(cleanup):
                            json={"owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                  "nickname": "test",
                                  "country": "AR",
-                                 "interest": "ACCOMMODATION"},
+                                 "interest": "ACCOMMODATION",
+                                 "role": "NORMAL"}
                            )
     assert response.status_code == 201
 
@@ -35,7 +36,8 @@ def test_create_profile(cleanup):
             if k != "createdAt"} == {"owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                      "nickname": "test",
                                      "country": "AR",
-                                     "interest": "ACCOMMODATION"}
+                                     "interest": "ACCOMMODATION",
+                                     "role": "NORMAL"}
     assert datetime.fromisoformat(response.json()['createdAt']).date() == datetime.utcnow().date()
 
     response = client.get("/profile/0xeB7C917821796eb627C0719A23a139ce51226CD2")
@@ -45,18 +47,21 @@ def test_create_profile(cleanup):
             if k != "createdAt"} == {"owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                      "nickname": "test",
                                      "country": "AR",
-                                     "interest": "ACCOMMODATION"}
+                                     "interest": "ACCOMMODATION",
+                                     "role": "NORMAL"}
     assert datetime.fromisoformat(response.json()['createdAt']).date() == datetime.utcnow().date()
 
     response = client.get("/profile/0xeB7C917821796eb627C0719A23a139ce51226CD2/avatar.jpg")
     assert response.status_code == 200
+
 
 def test_profile_change_avatar(cleanup):
     response = client.post("/profile",
                            json={"owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                  "nickname": "test",
                                  "country": "AR",
-                                 "interest": "ACCOMMODATION"},
+                                 "interest": "ACCOMMODATION",
+                                 "role": "NORMAL"},
                            )
     assert response.status_code == 201
 
@@ -67,7 +72,8 @@ def test_profile_change_avatar(cleanup):
             if k != "createdAt"} == {"owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                      "nickname": "test",
                                      "country": "AR",
-                                     "interest": "ACCOMMODATION"}
+                                     "interest": "ACCOMMODATION",
+                                     "role": "NORMAL"}
     assert datetime.fromisoformat(response.json()['createdAt']).date() == datetime.utcnow().date()
 
     response = client.get("/profile/0xeB7C917821796eb627C0719A23a139ce51226CD2/avatar.jpg")
@@ -88,7 +94,8 @@ def test_create_profile_case_insensitive(cleanup):
                            json={"owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                  "nickname": "test",
                                  "country": "AR",
-                                 "interest": "ACCOMMODATION"},
+                                 "interest": "ACCOMMODATION",
+                                 "role": "NORMAL"},
                            )
     assert response.status_code == 201
 
@@ -99,7 +106,8 @@ def test_create_profile_case_insensitive(cleanup):
             if k != "createdAt"} == {"owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                      "nickname": "test",
                                      "country": "AR",
-                                     "interest": "ACCOMMODATION"}
+                                     "interest": "ACCOMMODATION",
+                                     "role": "NORMAL"}
     assert datetime.fromisoformat(response.json()['createdAt']).date() == datetime.utcnow().date()
 
     response = client.get("/profile/0xEB7C917821796eb627C0719A23a139ce51226CD2")
@@ -109,7 +117,8 @@ def test_create_profile_case_insensitive(cleanup):
             if k != "createdAt"} == {"owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                      "nickname": "test",
                                      "country": "AR",
-                                     "interest": "ACCOMMODATION"}
+                                     "interest": "ACCOMMODATION",
+                                     "role": "NORMAL"}
     assert datetime.fromisoformat(response.json()['createdAt']).date() == datetime.utcnow().date()
 
     response = client.get("/profile/0xeB7C917821796eb627C0719A23a139ce51226CD2/avatar.jpg")
@@ -122,7 +131,8 @@ def test_create_profile_case_insensitive(cleanup):
                            json={"owner": "0xFb7c917821796eb627c0719a23a139ce51226cd2",
                                  "nickname": "test2",
                                  "country": "AR",
-                                 "interest": "ACCOMMODATION"},
+                                 "interest": "ACCOMMODATION",
+                                 "role": "NORMAL"},
                            )
     assert response.status_code == 201
 
@@ -133,7 +143,8 @@ def test_create_profile_case_insensitive(cleanup):
             if k != "createdAt"} == {"owner": "0xfb7c917821796eb627c0719a23a139ce51226cd2",
                                      "nickname": "test2",
                                      "country": "AR",
-                                     "interest": "ACCOMMODATION"}
+                                     "interest": "ACCOMMODATION",
+                                     "role": "NORMAL"}
     assert datetime.fromisoformat(response.json()['createdAt']).date() == datetime.utcnow().date()
 
     response = client.get("/profile/0xFb7c917821796eb627c0719a23a139ce51226cd2")
@@ -143,7 +154,8 @@ def test_create_profile_case_insensitive(cleanup):
             if k != "createdAt"} == {"owner": "0xfb7c917821796eb627c0719a23a139ce51226cd2",
                                      "nickname": "test2",
                                      "country": "AR",
-                                     "interest": "ACCOMMODATION"}
+                                     "interest": "ACCOMMODATION",
+                                     "role": "NORMAL"}
     assert datetime.fromisoformat(response.json()['createdAt']).date() == datetime.utcnow().date()
 
     response = client.get("/profile/0xFB7C917821796eb627C0719a23a139ce51226CD2/avatar.jpg")
@@ -158,7 +170,8 @@ def test_profile_overwrite(cleanup):
                            json={"owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                  "nickname": "test",
                                  "country": "AR",
-                                 "interest": "ACCOMMODATION"},
+                                 "interest": "ACCOMMODATION",
+                                 "role": "NORMAL"},
                            )
     assert response.status_code == 201
 
@@ -166,7 +179,8 @@ def test_profile_overwrite(cleanup):
                            json={"owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                  "nickname": "test2",
                                  "country": "AR",
-                                 "interest": "ACCOMMODATION"},
+                                 "interest": "ACCOMMODATION",
+                                 "role": "NORMAL"},
                            )
     assert response.status_code == 201
 
@@ -177,7 +191,8 @@ def test_profile_overwrite(cleanup):
             if k != "createdAt"} == {"owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                      "nickname": "test2",
                                      "country": "AR",
-                                     "interest": "ACCOMMODATION"}
+                                     "interest": "ACCOMMODATION",
+                                     "role": "NORMAL"}
     assert datetime.fromisoformat(response.json()['createdAt']).date() == datetime.utcnow().date()
 
 
@@ -186,7 +201,8 @@ def test_profile_create_repeated_nickname_400(cleanup):
                            json={"owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                                  "nickname": "test",
                                  "country": "AR",
-                                 "interest": "ACCOMMODATION"},
+                                 "interest": "ACCOMMODATION",
+                                 "role": "NORMAL"},
                            )
     assert response.status_code == 201
 
@@ -194,7 +210,8 @@ def test_profile_create_repeated_nickname_400(cleanup):
                            json={"owner": "of49d9adf8b",
                                  "nickname": "test",
                                  "country": "AR",
-                                 "interest": "ACCOMMODATION"},
+                                 "interest": "ACCOMMODATION",
+                                 "role": "NORMAL"},
                            )
     assert response.status_code == 400
 
@@ -210,10 +227,11 @@ def test_profile_create_push_token_for_non_existent_profile_returns_error(cleanu
 
 
 def test_profile_create_push_token_for_existent_user_returns_201(cleanup):
-    client.post("/profile",json={"owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
-                                 "nickname": "test",
-                                 "country": "AR",
-                                 "interest": "ACCOMMODATION"}
+    client.post("/profile", json={"owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
+                                  "nickname": "test",
+                                  "country": "AR",
+                                  "interest": "ACCOMMODATION",
+                                  "role": "NORMAL"}
                 )
 
     response = client.post("/profile/push-token",
@@ -223,4 +241,3 @@ def test_profile_create_push_token_for_existent_user_returns_201(cleanup):
                            })
 
     assert response.status_code == 201
-

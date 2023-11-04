@@ -16,12 +16,22 @@ library DecentravellerDataTypes {
         DELETED
     }
 
+    enum DecentravellerUserRole {
+        NORMAL,
+        MODERATOR
+    }
+
+    enum DecentravellerReviewState {
+        PUBLIC,
+        CENSORED
+    }
+
     struct DecentravellerProfile {
         address owner;
         string nickname;
-        string name;
         string country;
         DecentravellerPlaceCategory interest;
+        DecentravellerUserRole role;
     }
 
     struct DecentravellerRule {

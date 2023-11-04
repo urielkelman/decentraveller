@@ -34,7 +34,8 @@ def test_create_rule_correctly(cleanup):
                 json={"owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                       "nickname": "test",
                       "country": "AR",
-                      "interest": "ACCOMMODATION"}
+                      "interest": "ACCOMMODATION",
+                      "role": "NORMAL"}
                 )
 
     response = client.post("/rule",
@@ -77,7 +78,8 @@ def test_approved_rule_correctly(cleanup):
                 json={"owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                       "nickname": "test",
                       "country": "AR",
-                      "interest": "ACCOMMODATION"}
+                      "interest": "ACCOMMODATION",
+                      "role": "NORMAL"}
                 )
 
     client.post("/rule",
@@ -121,7 +123,8 @@ def test_approved_rule_already_approved(cleanup):
                 json={"owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                       "nickname": "test",
                       "country": "AR",
-                      "interest": "ACCOMMODATION"}
+                      "interest": "ACCOMMODATION",
+                      "role": "NORMAL"}
                 )
 
     client.post("/rule",
@@ -152,14 +155,16 @@ def test_propose_rule_deletion(cleanup):
                 json={"owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                       "nickname": "test",
                       "country": "AR",
-                      "interest": "ACCOMMODATION"}
+                      "interest": "ACCOMMODATION",
+                      "role": "NORMAL"}
                 )
 
     client.post("/profile",
                 json={"owner": "0xcd3B766CCDd6AE721141F452C550Ca635964ce71",
                       "nickname": "test2",
                       "country": "AR",
-                      "interest": "ACCOMMODATION"}
+                      "interest": "ACCOMMODATION",
+                      "role": "NORMAL"}
                 )
 
     client.post("/rule",
@@ -205,14 +210,16 @@ def test_propose_rule_deletion_for_pending_approval_is_bad_request(cleanup):
                 json={"owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                       "nickname": "test",
                       "country": "AR",
-                      "interest": "ACCOMMODATION"}
+                      "interest": "ACCOMMODATION",
+                      "role": "NORMAL"}
                 )
 
     client.post("/profile",
                 json={"owner": "0xcd3B766CCDd6AE721141F452C550Ca635964ce71",
                       "nickname": "test2",
                       "country": "AR",
-                      "interest": "ACCOMMODATION"}
+                      "interest": "ACCOMMODATION",
+                      "role": "NORMAL"}
                 )
 
     client.post("/rule",
@@ -239,14 +246,16 @@ def test_delete_rule(cleanup):
                 json={"owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                       "nickname": "test",
                       "country": "AR",
-                      "interest": "ACCOMMODATION"}
+                      "interest": "ACCOMMODATION",
+                      "role": "NORMAL"}
                 )
 
     client.post("/profile",
                 json={"owner": "0xcd3B766CCDd6AE721141F452C550Ca635964ce71",
                       "nickname": "test2",
                       "country": "AR",
-                      "interest": "ACCOMMODATION"}
+                      "interest": "ACCOMMODATION",
+                      "role": "NORMAL"}
                 )
 
     client.post("/rule",
@@ -299,7 +308,8 @@ def test_delete_rule_in_incorrect_status_is_bad_request(cleanup):
                 json={"owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                       "nickname": "test",
                       "country": "AR",
-                      "interest": "ACCOMMODATION"}
+                      "interest": "ACCOMMODATION",
+                      "role": "NORMAL"}
                 )
 
     client.post("/rule",
@@ -329,7 +339,8 @@ def test_update_new_rule_execution_timestamp(cleanup):
                 json={"owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                       "nickname": "test",
                       "country": "AR",
-                      "interest": "ACCOMMODATION"}
+                      "interest": "ACCOMMODATION",
+                      "role": "NORMAL"}
                 )
 
     client.post("/rule",
@@ -370,14 +381,16 @@ def test_update_rule_to_delete_execution_timestamp(cleanup):
                 json={"owner": "0xeb7c917821796eb627c0719a23a139ce51226cd2",
                       "nickname": "test",
                       "country": "AR",
-                      "interest": "ACCOMMODATION"}
+                      "interest": "ACCOMMODATION",
+                      "role": "NORMAL"}
                 )
 
     client.post("/profile",
                 json={"owner": "0xcd3B766CCDd6AE721141F452C550Ca635964ce71",
                       "nickname": "test2",
                       "country": "AR",
-                      "interest": "ACCOMMODATION"}
+                      "interest": "ACCOMMODATION",
+                      "role": "NORMAL"}
                 )
 
     client.post("/rule",

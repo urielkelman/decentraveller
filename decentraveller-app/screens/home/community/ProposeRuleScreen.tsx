@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, ScrollView } from 'react-native';
+import { Text, TextInput, View } from 'react-native';
 import DecentravellerButton from '../../../commons/components/DecentravellerButton';
 import { useAppContext } from '../../../context/AppContext';
 import { proposeRuleStyles } from '../../../styles/communityStyles';

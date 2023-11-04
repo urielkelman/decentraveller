@@ -3,7 +3,7 @@ import { ActivityIndicator, FlatList, Text, View } from 'react-native';
 import React, { useEffect } from 'react';
 import { placeReviewsBoxStyles } from '../../styles/placeDetailStyles';
 import LoadingComponent from './DecentravellerLoading';
-import {BlockchainReviewStatus} from "../../blockchain/types";
+import { BackendReviewStatus, BlockchainProposalStatus, BlockchainReviewStatus } from '../../blockchain/types';
 
 export type ReviewShowProps = {
     id: number;
@@ -11,12 +11,11 @@ export type ReviewShowProps = {
     score: number;
     text: string;
     imageCount: number;
-    state: string;
+    status: BackendReviewStatus;
     ownerNickname: string;
     ownerWallet: string;
     avatarUrl: string;
     createdAt: string;
-    censorStatus?: BlockchainReviewStatus
 };
 
 const renderReviewItem = ({ item, summarized }: { item: ReviewShowProps; summarized: boolean }) => (
@@ -26,13 +25,12 @@ const renderReviewItem = ({ item, summarized }: { item: ReviewShowProps; summari
         score={item.score}
         text={item.text}
         imageCount={item.imageCount}
-        state={item.state}
+        status={item.status}
         ownerNickname={item.ownerNickname}
         ownerWallet={item.ownerWallet}
         avatarUrl={item.avatarUrl}
         createdAt={item.createdAt}
         summarized={summarized}
-        censorStatus={item.censorStatus}
     />
 );
 

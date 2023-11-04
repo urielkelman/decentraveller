@@ -1,5 +1,5 @@
 import React from 'react';
-import { createStackNavigator, StackScreenProps } from '@react-navigation/stack';
+import { createStackNavigator } from '@react-navigation/stack';
 import CreatePlaceNameScreen from './place/CreatePlaceNameScreen';
 import CreatePlaceLocationScreen from './place/CreatePlaceLocationScreen';
 import CreatePlaceProvider from './place/CreatePlaceContext';
@@ -13,7 +13,6 @@ import UserReviewsScreen from '../users/profile/UserReviewsScreen';
 import AddReviewComment from '../reviews/AddReviewComment';
 import SuccessAddReviewScreen from '../reviews/SuccessAddReviewScreen';
 import AddReviewImages from '../reviews/AddReviewImages';
-import * as Linking from 'expo-linking';
 import ReviewDetailScreen from '../reviews/ReviewDetailScreen';
 import DecentravellerRulesList from './community/DecentravellerRulesList';
 import { Rule } from './community/types';
@@ -23,7 +22,7 @@ import VotingResultsScreen from './community/VotingResultsScreen';
 import { RuleResponse } from '../../api/response/rules';
 import RulesScreen from './community/RulesScreen';
 import { BlockchainProposalStatus } from '../../blockchain/types';
-import SelectBrokenRuleScreen from "../reviews/SelectBrokenRuleScreen";
+import SelectBrokenRuleScreen from '../reviews/SelectBrokenRuleScreen';
 
 export type HomeStackScreens = {
     LeftSideBar: undefined;
@@ -40,12 +39,16 @@ export type HomeStackScreens = {
     UserProfileScreen: { walletId: string };
     ReviewDetailScreen: { reviewId: number; placeId: number };
     RulesScreen: undefined;
-    DecentravellerRulesList: { ruleList: RuleResponse[]; minified: boolean; horizontal: boolean; selectionCallback: (id: number, statement: string) => void; };
+    DecentravellerRulesList: {
+        ruleList: RuleResponse[];
+        minified: boolean;
+        horizontal: boolean;
+        selectionCallback: (id: number, statement: string) => void;
+    };
     RuleDetailScreen: { ruleId: number; blockchainStatus: BlockchainProposalStatus; rule?: Rule };
     ProposeRuleScreen: undefined;
     VotingResultsScreen: { rule: Rule };
     SelectBrokenRuleScreen: { reviewId: number; placeId: number };
-
 };
 
 const HomeStackNavigator = createStackNavigator<HomeStackScreens>();

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { Text, View } from 'react-native';
 import { subTitleTextStyle, WelcomeStyles } from '../../../styles/registrationScreensStyles';
 import DecentravellerButton from '../../../commons/components/DecentravellerButton';
 import { registerUserScreenWordings } from './wording';

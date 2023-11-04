@@ -1,4 +1,4 @@
-import { Image, Text, View, StyleSheet, TouchableOpacity } from 'react-native';
+import { Image, Text, TouchableOpacity, View } from 'react-native';
 import React from 'react';
 // @ts-ignore
 import { useNavigation } from '@react-navigation/native';
@@ -18,13 +18,12 @@ const ReviewItem: React.FC<ReviewItemProps> = ({
     score,
     text,
     imageCount,
-    state,
+    status,
     ownerNickname,
     ownerWallet,
     avatarUrl,
     createdAt,
     summarized,
-    censorStatus
 }) => {
     const [showMore, setshowMore] = React.useState<boolean>(!summarized);
     const navigation = useNavigation<UserProfileScreenProps>();

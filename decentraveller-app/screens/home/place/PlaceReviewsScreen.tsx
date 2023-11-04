@@ -1,7 +1,7 @@
-import { View, Image, Text, ScrollView } from 'react-native';
+import { View } from 'react-native';
 import PlaceReviewsBox from './PlaceReviewsBox';
 import { placeDetailStyles } from '../../../styles/placeDetailStyles';
-import React, { useState } from 'react';
+import React from 'react';
 import { PlaceReviewsScreenProps } from '../../reviews/types';
 
 const PlaceReviewsScreen: React.FC<PlaceReviewsScreenProps> = ({ route }) => {

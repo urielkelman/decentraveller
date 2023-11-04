@@ -1,12 +1,12 @@
 import React from 'react';
-import { TouchableOpacity, Text, View, ImageBackground, Image } from 'react-native';
+import { Image, ImageBackground, Text, TouchableOpacity, View } from 'react-native';
 import {
+    connectWalletButtonStyle,
     connectWalletScreenTextStyle,
     connectWalletScreenViewStyle,
     discoverTextStyle,
-    connectWalletButtonStyle,
-    wholeScreenViewStyle,
     imageViewStyle,
+    wholeScreenViewStyle,
 } from '../../styles/conectWalletStyles';
 import { useWalletConnectModal, WalletConnectModal } from '@walletconnect/modal-react-native';
 import { providerMetadata, sessionParams, WALLET_CONNECT_PROJECT_ID } from '../../config/walletConnectConfig';

@@ -30,6 +30,7 @@ function needsMultipleLines(str: string, lines: number): boolean {
     const words = str.trim().split(/\s+/);
     return str.length > lines && words.length > 1;
 }
+
 const bulletItemComponent: React.FC<BulletItemProps> = ({ iconPath, title, value, marginTop }) => {
     return (
         <View style={[placeDetailStyles.bulletItem, { marginTop: marginTop }]}>

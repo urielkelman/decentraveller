@@ -1,22 +1,20 @@
-import React, {useCallback} from 'react';
-import {ActivityIndicator, FlatList, Text, TouchableOpacity, View} from 'react-native';
-import {placeReviewsBoxStyles} from '../../../styles/placeDetailStyles';
-import {ReviewResponse, ReviewsResponse} from '../../../api/response/reviews';
-import {renderReviewItem} from '../../../commons/components/DecentravellerReviewsList';
-import {useFocusEffect, useNavigation} from '@react-navigation/native';
-import {AddReviewImagesScreenProp} from './types';
-import {apiAdapter} from '../../../api/apiAdapter';
-import {ReviewItemProps} from '../../reviews/ReviewItem';
-import {moderationService} from "../../../blockchain/service/moderationService";
-import {useAppContext} from "../../../context/AppContext";
-import {BlockchainReviewStatus} from "../../../blockchain/types";
+import React, { useCallback } from 'react';
+import { ActivityIndicator, FlatList, Text, TouchableOpacity, View } from 'react-native';
+import { placeReviewsBoxStyles } from '../../../styles/placeDetailStyles';
+import { ReviewResponse, ReviewsResponse } from '../../../api/response/reviews';
+import { renderReviewItem } from '../../../commons/components/DecentravellerReviewsList';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { AddReviewImagesScreenProp } from './types';
+import { apiAdapter } from '../../../api/apiAdapter';
+import { ReviewItemProps } from '../../reviews/ReviewItem';
+import { useAppContext } from '../../../context/AppContext';
 
 const adapter = apiAdapter;
 
 const PlaceReviewsBox = ({ placeId, summarized }) => {
     const navigation = useNavigation<AddReviewImagesScreenProp>();
-    const { web3Provider, connectionContext } = useAppContext()
-    const { connectedAddress } = connectionContext
+    const { web3Provider, connectionContext } = useAppContext();
+    const { connectedAddress } = connectionContext;
     const [loadingReviews, setLoadingReviews] = React.useState<boolean>(false);
     const [reviews, setReviews] = React.useState<ReviewItemProps[]>(null);
     const [reviewCount, setReviewsCount] = React.useState<number>(0);
@@ -26,7 +24,7 @@ const PlaceReviewsBox = ({ placeId, summarized }) => {
             (async () => {
                 setLoadingReviews(true);
                 const reviewsResponse: ReviewsResponse = await adapter.getPlaceReviews(placeId, 0, 5);
-                const reviewsToShow = await mapReviews(reviewsResponse.reviews)
+                const reviewsToShow = await mapReviews(reviewsResponse.reviews);
                 setReviews(reviewsToShow);
                 setReviewsCount(reviewsResponse.total);
                 setLoadingReviews(false);
@@ -94,41 +92,23 @@ const PlaceReviewsBox = ({ placeId, summarized }) => {
             return adapter.getProfileAvatarUrl(r.owner.owner);
         });
 
-        const reviewStatusPromises = reviews.map(async (r, i) => {
-            const address = await moderationService.getReviewAddress(web3Provider, r.placeId, r.id);
-            const status = await moderationService.getReviewCensorStatus(web3Provider, address);
-
+        return reviews.map((r, i) => {
             return {
                 id: r.id,
                 placeId: r.placeId,
                 score: r.score,
                 text: r.text,
                 imageCount: r.imageCount,
-                state: r.state,
+                status: r.status,
                 ownerNickname: r.owner.nickname,
                 ownerWallet: r.owner.owner,
                 avatarUrl: avatarUrls[i],
                 createdAt: r.createdAt,
-                censorStatus: status,
                 summarized: summarized,
             };
         });
+    };
 
-        const reviewStatusResults: ReviewItemProps[] = await Promise.all(reviewStatusPromises);
-
-        return  reviewStatusResults.filter((r) => (shouldReviewVisible(r)));
-
-    }
-
-    const shouldReviewVisible = (review: ReviewItemProps) => {
-        return (review.censorStatus !== BlockchainReviewStatus.MODERATOR_WON && (
-            [
-                BlockchainReviewStatus.PUBLIC,
-                BlockchainReviewStatus.ON_DISPUTE,
-                BlockchainReviewStatus.UNCENSORED_BY_DISPUTE
-            ].includes(review.censorStatus)) ||
-            (review.ownerWallet === connectedAddress))
-    }
     const loadMoreReviews = async () => {
         if (!summarized && hasReviews() && reviewCount > reviews.length) {
             setLoadingReviews(true);
@@ -137,7 +117,7 @@ const PlaceReviewsBox = ({ placeId, summarized }) => {
                 (reviews.length / 5) | 0,
                 5,
             );
-            const reviewsToShow = await mapReviews(reviewsResponse.reviews)
+            const reviewsToShow = await mapReviews(reviewsResponse.reviews);
             reviews.push.apply(reviews, reviewsToShow);
             setLoadingReviews(false);
         }
