@@ -14,6 +14,8 @@ export type ReviewResponse = {
     status: BackendReviewStatus;
     owner: UserResponse;
     createdAt: string;
+    censor_moderator: string;
+    broken_rule_id: number;
 };
 
 export type ReviewsResponse = {

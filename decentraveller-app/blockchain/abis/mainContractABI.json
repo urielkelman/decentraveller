@@ -172,6 +172,37 @@
                 "internalType": "uint256",
                 "name": "reviewId",
                 "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "challengeDeadline",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "address[]",
+                "name": "juries",
+                "type": "address[]"
+            }
+        ],
+        "name": "DecentravellerReviewCensorshipChallenged",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "internalType": "uint256",
+                "name": "placeId",
+                "type": "uint256"
+            },
+            {
+                "indexed": true,
+                "internalType": "uint256",
+                "name": "reviewId",
+                "type": "uint256"
             }
         ],
         "name": "DecentravellerReviewUncensored",
@@ -433,6 +464,24 @@
     {
         "inputs": [
             {
+                "internalType": "uint256",
+                "name": "_placeId",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "_reviewId",
+                "type": "uint256"
+            }
+        ],
+        "name": "challengeReviewCensorship",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
                 "internalType": "string",
                 "name": "ruleStatement",
                 "type": "string"
@@ -471,6 +520,24 @@
             }
         ],
         "name": "deleteRule",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "_placeId",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "_reviewId",
+                "type": "uint256"
+            }
+        ],
+        "name": "executeReviewUncensorship",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"

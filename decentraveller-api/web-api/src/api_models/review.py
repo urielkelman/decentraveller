@@ -1,4 +1,4 @@
-from typing import NewType
+from typing import NewType, Optional
 from datetime import datetime
 
 from fastapi_utils.api_model import APIModel
@@ -42,6 +42,8 @@ class ReviewInDB(ReviewBody):
     image_count: int
     created_at: datetime
     status: ReviewStatus
+    censor_moderator: Optional[WalletID]
+    broken_rule_id: Optional[RuleId]
 
 
 class ReviewWithProfile(ReviewInDB):

@@ -144,6 +144,7 @@ const placeReviewsBoxStyles = StyleSheet.create({
     },
     reviewsHeader: {
         paddingVertical: 8,
+        backgroundColor: DECENTRAVELLER_DEFAULT_BACKGROUND_COLOR,
     },
     titleContainer: {
         flexDirection: 'row',

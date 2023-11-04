@@ -2,6 +2,7 @@ import { blockchainAdapter, BlockchainAdapter } from '../blockhainAdapter';
 import { apiAdapter, ApiAdapter } from '../../api/apiAdapter';
 import { ethers } from 'ethers';
 import { BlockchainReviewStatus } from '../types';
+import { decentravellerReviewContract } from '../contracts/decentravellerReviewContract';
 
 class ModerationService {
     private blockchainAdapter: BlockchainAdapter;
@@ -47,13 +48,16 @@ class ModerationService {
      * Returns the status of the review, that can be one of the following options:
      * PUBLIC, CENSORED, ON_DISPUTE, CHALLENGER_WON, MODERATOR_WON, UNCENSORED_BY_DISPUTE
      * @param web3Provider
-     * @param reviewAddress
+     * @param placeId
+     * @param reviewId
      */
     async getReviewCensorStatus(
         web3Provider: ethers.providers.Web3Provider,
-        reviewAddress: string,
+        placeId: number,
+        reviewId: number,
     ): Promise<BlockchainReviewStatus> {
-        return BlockchainReviewStatus.PUBLIC;
+        const reviewContract = await this.getReviewContract(web3Provider, placeId, reviewId)
+        return await reviewContract.getState()
     }
 
     /**
@@ -62,12 +66,21 @@ class ModerationService {
      * @param placeId
      * @param reviewId
      */
-    async getReviewAddress(
+    async getReviewContract(
         web3Provider: ethers.providers.Web3Provider,
         placeId: number,
         reviewId: number,
-    ): Promise<string> {
-        return '';
+    ): Promise<ethers.Contract> {
+        try {
+            const address = await blockchainAdapter.getReviewAddress(web3Provider, placeId, reviewId);
+            return new ethers.Contract(
+                address,
+                decentravellerReviewContract.fullContractABI,
+                web3Provider,
+            )
+        } catch (e) {
+            console.log(e);
+        }
     }
 
     /**

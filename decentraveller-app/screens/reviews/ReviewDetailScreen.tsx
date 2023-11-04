@@ -26,6 +26,7 @@ const ReviewDetailScreen: React.FC<ReviewScreenProps> = ({ route }) => {
     const [loading, setLoading] = React.useState<boolean>(true);
     const [review, setReview] = React.useState<ReviewShowProps>(null);
     const [place, setPlace] = React.useState<PlaceShowProps>(null);
+    const [blockchainStatus, setBlockchainStatus] = React.useState<BlockchainReviewStatus>(null);
     const { web3Provider, userRole, connectionContext , userNickname} = useAppContext();
     const { connectedAddress } = connectionContext;
     const navigation = useNavigation<NavigationProp<HomeStackScreens>>();
@@ -50,7 +51,9 @@ const ReviewDetailScreen: React.FC<ReviewScreenProps> = ({ route }) => {
             const placeToShow = parsePlaceResponse(placeData);
             const reviewData = await adapter.getReview(placeId, reviewId, () => {});
             const avatarUrl = adapter.getProfileAvatarUrl(reviewData.owner.owner);
-            const reviewAddress = await moderationService.getReviewAddress(web3Provider, placeId, reviewId);
+            const blockchainReviewStatus = reviewData.status == BackendReviewStatus.PUBLIC ?
+                BlockchainReviewStatus.PUBLIC : await moderationService.getReviewCensorStatus(web3Provider, placeId, reviewId)
+            setBlockchainStatus(blockchainReviewStatus)
             const reviewToShow: ReviewShowProps = {
                 id: reviewData.id,
                 placeId: reviewData.placeId,
@@ -173,12 +176,12 @@ const ReviewDetailScreen: React.FC<ReviewScreenProps> = ({ route }) => {
     const renderByStatusAndRole = () => {
         const role = userRole.value;
 
-        switch (review.status) {
-            case BackendReviewStatus.PUBLIC:
+        switch (blockchainStatus) {
+            case BlockchainReviewStatus.PUBLIC:
                 return role == UserRole.MODERATOR ? censorComponent() : null;
-            case BackendReviewStatus.ON_DISPUTE:
+            case BlockchainReviewStatus.CENSORSHIP_CHALLENGED:
                 return role == UserRole.NORMAL && review.ownerNickname != userNickname.value ? onDisputeComponent() : null;
-            case BackendReviewStatus.CENSORED:
+            case BlockchainReviewStatus.CENSORED:
                 return review.ownerNickname == userNickname.value ? disputeComponent() : null;
             default:
                 return null;

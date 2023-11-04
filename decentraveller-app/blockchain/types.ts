@@ -31,12 +31,12 @@ export type BlockchainProposalResult = {
 };
 
 export enum BlockchainReviewStatus {
-    PUBLIC = 'PUBLIC',
-    ON_DISPUTE = 'ON_DISPUTE',
-    CENSORED = 'CENSORED',
-    CHALLENGER_WON = 'CHALLENGER_WON',
-    MODERATOR_WON = 'MODERATOR_WON',
-    UNCENSORED_BY_DISPUTE = 'UNCENSORED_BY_DISPUTE',
+    PUBLIC = 0,
+    CENSORED = 1,
+    CENSORSHIP_CHALLENGED = 2,
+    CHALLENGER_WON = 3,
+    MODERATOR_WON = 4,
+    UNCENSORED_BY_DISPUTE = 5,
 }
 
 export enum BackendReviewStatus {

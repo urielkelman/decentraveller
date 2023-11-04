@@ -260,6 +260,22 @@ class BlockchainAdapter {
         }
     }
 
+    async getReviewAddress(web3Provider: ethers.providers.Web3Provider, placeId: number,
+                           reviewId: number): Promise<string> {
+        try {
+            const blockchain: Blockchain = BlockchainByChainId[DEFAULT_CHAIN_ID];
+            const decentravellerAddress: string = decentravellerMainContract.addressesByBlockchain[blockchain];
+            const decentravellerContract = new ethers.Contract(
+                decentravellerAddress,
+                decentravellerMainContract.fullContractABI,
+                web3Provider,
+            );
+            return await decentravellerContract.getReviewAddress(placeId, reviewId);
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
     async proposeRuleDeletion(web3Provider: ethers.providers.Web3Provider, ruleId: number): Promise<string> {
         try {
             return this.populateAndSend(web3Provider, decentravellerMainContract, 'createRuleDeletionProposal', ruleId);
