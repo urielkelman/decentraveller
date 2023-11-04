@@ -1,5 +1,6 @@
 import { Dimensions, StyleSheet } from 'react-native';
-import { DECENTRAVELLER_DEFAULT_BACKGROUND_COLOR } from '../commons/global';
+import { DECENTRAVELLER_DEFAULT_BACKGROUND_COLOR, DECENTRAVELLER_DEFAULT_CONTRAST_COLOR } from '../commons/global';
+import { Montserrat_700Bold } from '@expo-google-fonts/montserrat';
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
@@ -134,7 +135,7 @@ const placeReviewsBoxStyles = StyleSheet.create({
     container: {
         flex: 1,
         flexDirection: 'column',
-        backgroundColor: '#FFFFFF',
+        backgroundColor: DECENTRAVELLER_DEFAULT_BACKGROUND_COLOR,
         borderTopLeftRadius: 10,
         borderTopRightRadius: 10,
         borderBottomEndRadius: 0,
@@ -143,7 +144,6 @@ const placeReviewsBoxStyles = StyleSheet.create({
     },
     reviewsHeader: {
         paddingVertical: 8,
-        backgroundColor: '#FFFFFF',
     },
     titleContainer: {
         flexDirection: 'row',
@@ -171,6 +171,20 @@ const placeReviewsBoxStyles = StyleSheet.create({
         marginTop: 6,
         marginBottom: 6,
         borderRadius: 10,
+        borderColor: 'rgba(0, 0, 0, 0.2)',
+        borderWidth: 1,
+    },
+    reviewStatusRibbon: {
+        backgroundColor: DECENTRAVELLER_DEFAULT_CONTRAST_COLOR,
+        alignItems: 'center',
+        borderBottomLeftRadius: 10,
+        borderBottomRightRadius: 10,
+        marginTop: 5,
+        paddingVertical: 5
+    },
+    reviewStatusRibbonText: {
+        color: '#F0F0F0',
+        fontFamily: 'Montserrat_700Bold',
     },
     imagesContainer: {
         paddingHorizontal: 10,

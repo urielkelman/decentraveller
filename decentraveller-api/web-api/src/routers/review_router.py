@@ -96,6 +96,39 @@ class ReviewCBV:
             raise HTTPException(status_code=HTTP_404_NOT_FOUND)
         return reviews
 
+    @review_router.get("/profile/{owner}/reviews/censored")
+    def get_censored_reviews_by_profile(self, per_page: int, page: int,
+                                        owner: WalletID = Depends(wallet_id_validator)) -> PaginatedReviews:
+        """
+        Gets the censored reviews from a user paginated
+
+        :param owner: the profile
+        :param per_page: items per page
+        :param page: number of page
+        :return: the reviews data
+        """
+
+        reviews = self.database.query_censored_reviews_by_profile(owner, page, per_page)
+        if not reviews:
+            raise HTTPException(status_code=HTTP_404_NOT_FOUND)
+        return reviews
+
+    @review_router.get("/reviews/censored")
+    def get_censored_reviews(self, per_page: int, page: int) -> PaginatedReviews:
+        """
+        Gets the censored reviews
+
+        :param per_page: items per page
+        :param page: number of page
+        :return: the reviews data
+        """
+
+        reviews = self.database.query_censored_reviews(page, per_page)
+        if not reviews:
+            raise HTTPException(status_code=HTTP_404_NOT_FOUND)
+        return reviews
+
+
     @review_router.get("/review/{image_number}.jpg")
     def get_review_image(self, id: ReviewID,
                          place_id: PlaceID,

@@ -98,28 +98,26 @@ const DecentravellerReviewsItems: React.FC<ReviewItemsProps> = ({ reviewList, lo
     );
 
     const hasReviews = () => {
-        return reviews != null && reviews.length > 0;
+        return reviews && reviews.length > 0;
     };
 
     const footerComponent = () => {
-        if (footer != null) {
-        }
         return (
             <View>
-                {!hasReviews() ? <Text style={{ padding: 5, fontSize: 18 }}>No reviews found.</Text> : null}
-                {hasReviews() && reviewCount > reviews.length ? <LoadingComponent /> : null}
+                {!hasReviews() ? <Text style={{ padding: 5, fontSize: 18 }}>No reviews found.</Text> :
+                    reviewCount > reviews.length ? <LoadingComponent /> : null}
             </View>
         );
     };
 
     const headerComponent = () => {
-        return (
-            <View style={placeReviewsBoxStyles.reviewsHeader}>
+        return hasReviews() ?
+            (<View style={placeReviewsBoxStyles.reviewsHeader}>
                 <View style={placeReviewsBoxStyles.titleContainer}>
                     <Text style={placeReviewsBoxStyles.titleText}>Reviews ({reviewCount})</Text>
                 </View>
             </View>
-        );
+        ) : null;
     };
 
     const reviewsBoxComponent = () => {
@@ -141,7 +139,7 @@ const DecentravellerReviewsItems: React.FC<ReviewItemsProps> = ({ reviewList, lo
                 keyExtractor={(item, index) => String(index)}
                 ListHeaderComponent={headerComponent}
                 stickyHeaderIndices={[0]}
-                ListFooterComponent={footerComponent}
+                ListFooterComponent={footer != null ? footer : footerComponent}
                 renderItem={internalRenderReviewItem}
                 scrollEnabled={true}
             ></FlatList>

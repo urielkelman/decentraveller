@@ -1,5 +1,5 @@
 import { Dimensions, StyleSheet } from 'react-native';
-import { DECENTRAVELLER_DEFAULT_CONTRAST_COLOR } from '../commons/global';
+import { DECENTRAVELLER_DEFAULT_BACKGROUND_COLOR, DECENTRAVELLER_DEFAULT_CONTRAST_COLOR } from '../commons/global';
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
@@ -8,7 +8,7 @@ const reviewDetailStyles = StyleSheet.create({
     container: {
         flex: 1,
         flexDirection: 'column',
-        backgroundColor: '#F0F0F0',
+        backgroundColor: DECENTRAVELLER_DEFAULT_BACKGROUND_COLOR,
     },
     title: {
         fontFamily: 'Montserrat_400Regular',
@@ -29,6 +29,7 @@ const reviewDetailStyles = StyleSheet.create({
     },
     reviewContainer: {
         paddingHorizontal: 5,
+        paddingTop: 10,
     },
     optionButtonContainer: {
         paddingHorizontal: 10,

@@ -245,7 +245,8 @@ class RelationalDatabase:
         """
         query = (self.session.query(ReviewORM.id, ReviewORM.place_id).
                  filter(ReviewORM.place_id == place_id).
-                 filter((ReviewORM.status == ReviewStatus.PUBLIC) | (ReviewORM.status == ReviewStatus.UNCENSORED)))
+                 filter((ReviewORM.status == ReviewStatus.PUBLIC) | (ReviewORM.status == ReviewStatus.UNCENSORED)).
+                 order_by(ReviewORM.created_at.desc()))
         total_count = query.count()
         query = query.limit(per_page).offset(page * per_page)
         ids = [(r[0], r[1]) for r in query.all()]
@@ -265,7 +266,47 @@ class RelationalDatabase:
         """
         query = (self.session.query(ReviewORM.id, ReviewORM.place_id).
                  filter(ReviewORM.owner == owner).
-                 filter((ReviewORM.status == ReviewStatus.PUBLIC) | (ReviewORM.status == ReviewStatus.UNCENSORED)))
+                 filter((ReviewORM.status == ReviewStatus.PUBLIC) | (ReviewORM.status == ReviewStatus.UNCENSORED)).
+                 order_by(ReviewORM.status.asc(), ReviewORM.created_at.desc()))
+        total_count = query.count()
+        query = query.limit(per_page).offset(page * per_page)
+        ids = [(r[0], r[1]) for r in query.all()]
+        reviews = self._get_reviews_by_ids(ids)
+        return PaginatedReviews(page=page, per_page=per_page,
+                                total=total_count, reviews=reviews)
+
+    def query_censored_reviews_by_profile(self, owner: WalletID,
+                                          page: int, per_page: int) -> PaginatedReviews:
+        """
+        Gets all the censored reviews from a profile as a query
+
+        :param owner: the author of the review
+        :param page: page of the reviews
+        :param per_page: items per page
+        :return: the paginated reviews
+        """
+        query = (self.session.query(ReviewORM.id, ReviewORM.place_id).
+                 filter(ReviewORM.owner == owner).
+                 filter((ReviewORM.status == ReviewStatus.CENSORED) | (ReviewORM.status == ReviewStatus.IN_DISPUTE)).
+                 order_by(ReviewORM.status.asc(), ReviewORM.created_at.desc()))
+        total_count = query.count()
+        query = query.limit(per_page).offset(page * per_page)
+        ids = [(r[0], r[1]) for r in query.all()]
+        reviews = self._get_reviews_by_ids(ids)
+        return PaginatedReviews(page=page, per_page=per_page,
+                                total=total_count, reviews=reviews)
+
+    def query_censored_reviews(self, page: int, per_page: int) -> PaginatedReviews:
+        """
+        Gets all the censored reviews
+
+        :param page: page of the reviews
+        :param per_page: items per page
+        :return: the paginated reviews
+        """
+        query = (self.session.query(ReviewORM.id, ReviewORM.place_id).
+                 filter((ReviewORM.status == ReviewStatus.CENSORED) | (ReviewORM.status == ReviewStatus.IN_DISPUTE)).
+                 order_by(ReviewORM.status.asc(), ReviewORM.created_at.desc()))
         total_count = query.count()
         query = query.limit(per_page).offset(page * per_page)
         ids = [(r[0], r[1]) for r in query.all()]
@@ -504,4 +545,3 @@ class RelationalDatabase:
 
         review.status = ReviewStatus.UNCENSORED
         self.session.commit()
-

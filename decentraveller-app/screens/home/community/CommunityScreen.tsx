@@ -15,8 +15,11 @@ const CommunityScreen = ({ navigation }) => {
                 <Text style={communityScreenStyles.title}>Rules</Text>
                 <Text style={communityScreenStyles.subtitle}>See and manage Decentraveller rules.</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={[communityScreenStyles.cardContainer, communityScreenStyles.halfScreenCard]}>
+            <TouchableOpacity
+                onPress={() => navigation.navigate('ModerationsScreen')}
+                style={[communityScreenStyles.cardContainer, communityScreenStyles.halfScreenCard]}>
                 <Text style={communityScreenStyles.title}>Moderations</Text>
+                <Text style={communityScreenStyles.subtitle}>My censored reviews and my disputes to vote.</Text>
             </TouchableOpacity>
         </View>
     );

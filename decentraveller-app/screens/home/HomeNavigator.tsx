@@ -23,6 +23,9 @@ import { RuleResponse } from '../../api/response/rules';
 import RulesScreen from './community/RulesScreen';
 import { BlockchainProposalStatus } from '../../blockchain/types';
 import SelectBrokenRuleScreen from '../reviews/SelectBrokenRuleScreen';
+import ModerationsScreen from './community/ModerationsScreen';
+import MyCensoredReviews from './community/MyCensoredReviews';
+import CensoredReviews from './community/CensoredReviews';
 
 export type HomeStackScreens = {
     LeftSideBar: undefined;
@@ -39,6 +42,9 @@ export type HomeStackScreens = {
     UserProfileScreen: { walletId: string };
     ReviewDetailScreen: { reviewId: number; placeId: number };
     RulesScreen: undefined;
+    ModerationsScreen: undefined;
+    MyCensoredReviews: undefined;
+    CensoredReviews: undefined;
     DecentravellerRulesList: {
         ruleList: RuleResponse[];
         minified: boolean;
@@ -155,7 +161,31 @@ const HomeNavigator = () => {
                     name="RulesScreen"
                     component={RulesScreen}
                     options={{
-                        title: 'Rules screen',
+                        title: 'Rules',
+                        headerShown: true,
+                    }}
+                />
+                <HomeStackNavigator.Screen
+                    name="ModerationsScreen"
+                    component={ModerationsScreen}
+                    options={{
+                        title: 'Moderations',
+                        headerShown: true,
+                    }}
+                />
+                <HomeStackNavigator.Screen
+                    name="MyCensoredReviews"
+                    component={MyCensoredReviews}
+                    options={{
+                        title: 'My censored reviews',
+                        headerShown: true,
+                    }}
+                />
+                <HomeStackNavigator.Screen
+                    name="CensoredReviews"
+                    component={CensoredReviews}
+                    options={{
+                        title: 'Censored reviews',
                         headerShown: true,
                     }}
                 />

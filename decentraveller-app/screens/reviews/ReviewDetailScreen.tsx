@@ -14,7 +14,7 @@ import { moderationService } from '../../blockchain/service/moderationService';
 import DecentravellerButton from '../../commons/components/DecentravellerButton';
 import { communityScreenStyles, ruleDetailStyles } from '../../styles/communityStyles';
 import { reviewDetailScreenWordings } from './wording';
-import { BlockchainReviewStatus } from '../../blockchain/types';
+import { BackendReviewStatus, BlockchainReviewStatus } from '../../blockchain/types';
 import { UserRole } from '../users/profile/types';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { HomeStackScreens } from '../home/HomeNavigator';
@@ -26,8 +26,7 @@ const ReviewDetailScreen: React.FC<ReviewScreenProps> = ({ route }) => {
     const [loading, setLoading] = React.useState<boolean>(true);
     const [review, setReview] = React.useState<ReviewShowProps>(null);
     const [place, setPlace] = React.useState<PlaceShowProps>(null);
-    const [censorStatus, setCensorStatus] = React.useState<BlockchainReviewStatus>(null);
-    const { web3Provider, userRole, connectionContext } = useAppContext();
+    const { web3Provider, userRole, connectionContext , userNickname} = useAppContext();
     const { connectedAddress } = connectionContext;
     const navigation = useNavigation<NavigationProp<HomeStackScreens>>();
 
@@ -52,7 +51,6 @@ const ReviewDetailScreen: React.FC<ReviewScreenProps> = ({ route }) => {
             const reviewData = await adapter.getReview(placeId, reviewId, () => {});
             const avatarUrl = adapter.getProfileAvatarUrl(reviewData.owner.owner);
             const reviewAddress = await moderationService.getReviewAddress(web3Provider, placeId, reviewId);
-            const blockchainCensorStatus = await moderationService.getReviewCensorStatus(web3Provider, reviewAddress);
             const reviewToShow: ReviewShowProps = {
                 id: reviewData.id,
                 placeId: reviewData.placeId,
@@ -67,7 +65,6 @@ const ReviewDetailScreen: React.FC<ReviewScreenProps> = ({ route }) => {
             };
             setPlace(placeToShow);
             setReview(reviewToShow);
-            setCensorStatus(blockchainCensorStatus);
             setLoading(false);
         })();
     }, []);
@@ -176,13 +173,13 @@ const ReviewDetailScreen: React.FC<ReviewScreenProps> = ({ route }) => {
     const renderByStatusAndRole = () => {
         const role = userRole.value;
 
-        switch (censorStatus) {
-            case BlockchainReviewStatus.PUBLIC:
+        switch (review.status) {
+            case BackendReviewStatus.PUBLIC:
                 return role == UserRole.MODERATOR ? censorComponent() : null;
-            case BlockchainReviewStatus.ON_DISPUTE:
-                return role == UserRole.NORMAL && review.ownerWallet != connectedAddress ? onDisputeComponent() : null;
-            case BlockchainReviewStatus.CENSORED:
-                return role == UserRole.NORMAL && review.ownerWallet == connectedAddress ? disputeComponent() : null;
+            case BackendReviewStatus.ON_DISPUTE:
+                return role == UserRole.NORMAL && review.ownerNickname != userNickname.value ? onDisputeComponent() : null;
+            case BackendReviewStatus.CENSORED:
+                return review.ownerNickname == userNickname.value ? disputeComponent() : null;
             default:
                 return null;
         }
