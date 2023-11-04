@@ -1,6 +1,6 @@
 from enum import Enum
 
-from sqlalchemy import Column, String, Integer, ForeignKey, func, DateTime, Enum as DBEnum
+from sqlalchemy import Column, String, Integer, ForeignKey, func, DateTime, Enum as DBEnum, JSON
 
 from src.orms import Base
 
@@ -8,8 +8,8 @@ from src.orms import Base
 class ReviewStatus(str, Enum):
     PUBLIC = 'PUBLIC'
     CENSORED = 'CENSORED'
-    IN_DISPUTE = 'IN_DISPUTE'
-    UNCENSORED = 'UNCENSORED'
+    CENSORSHIP_CHALLENGED = 'CENSORSHIP_CHALLENGED'
+    UNCENSORED_BY_CHALLENGE = 'UNCENSORED_BY_CHALLENGE'
 
 
 class ReviewORM(Base):
@@ -27,3 +27,5 @@ class ReviewORM(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     censor_moderator = Column(ForeignKey("profiles.owner"), nullable=True, default=None)
     broken_rule_id = Column(ForeignKey("rules.rule_id"), nullable=True, default=None)
+    challenge_deadline = Column(DateTime, nullable=True, default=None)
+    juries = Column(JSON, nullable=True, default=None)
