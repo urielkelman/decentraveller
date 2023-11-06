@@ -204,7 +204,7 @@ def test_at_least_stars(cleanup, setup_dataset):
                                      "owner": '0x{:040X}'.format(i),
                                      "text": "Muy bueno",
                                      "images": [],
-                                     "state": "UNCENSORED"},
+                                     "state": "UNCENSORED_BY_CHALLENGE"},
                                )
         assert response.status_code == 201
 
@@ -217,7 +217,7 @@ def test_at_least_stars(cleanup, setup_dataset):
                                      "owner": '0x{:040X}'.format(i),
                                      "text": "Muy bueno",
                                      "images": [],
-                                     "state": "UNCENSORED"},
+                                     "state": "UNCENSORED_BY_CHALLENGE"},
                                )
         assert response.status_code == 201
 
@@ -230,7 +230,7 @@ def test_at_least_stars(cleanup, setup_dataset):
                                      "owner": '0x{:040X}'.format(i),
                                      "text": "Cucarachas en la cocina",
                                      "images": [],
-                                     "state": "UNCENSORED"},
+                                     "state": "UNCENSORED_BY_CHALLENGE"},
                                )
         assert response.status_code == 201
 
@@ -258,7 +258,7 @@ def test_sort_reviews(cleanup, setup_dataset):
                                      "owner": '0x{:040X}'.format(i),
                                      "text": "Muy bueno",
                                      "images": [],
-                                     "state": "UNCENSORED"},
+                                     "state": "UNCENSORED_BY_CHALLENGE"},
                                )
         assert response.status_code == 201
 
@@ -271,7 +271,7 @@ def test_sort_reviews(cleanup, setup_dataset):
                                      "owner": '0x{:040X}'.format(i),
                                      "text": "Muy bueno",
                                      "images": [],
-                                     "state": "UNCENSORED"},
+                                     "state": "UNCENSORED_BY_CHALLENGE"},
                                )
         assert response.status_code == 201
 
@@ -284,7 +284,7 @@ def test_sort_reviews(cleanup, setup_dataset):
                                      "owner": '0x{:040X}'.format(i),
                                      "text": "Cucarachas en la cocina",
                                      "images": [],
-                                     "state": "UNCENSORED"},
+                                     "state": "UNCENSORED_BY_CHALLENGE"},
                                )
         assert response.status_code == 201
 
@@ -312,7 +312,7 @@ def test_sort_stars(cleanup, setup_dataset):
                                      "owner": '0x{:040X}'.format(i),
                                      "text": "Muy bueno",
                                      "images": [],
-                                     "state": "UNCENSORED"},
+                                     "state": "UNCENSORED_BY_CHALLENGE"},
                                )
         assert response.status_code == 201
 
@@ -325,7 +325,7 @@ def test_sort_stars(cleanup, setup_dataset):
                                      "owner": '0x{:040X}'.format(i),
                                      "text": "Muy bueno",
                                      "images": [],
-                                     "state": "UNCENSORED"},
+                                     "state": "UNCENSORED_BY_CHALLENGE"},
                                )
         assert response.status_code == 201
 
@@ -338,7 +338,7 @@ def test_sort_stars(cleanup, setup_dataset):
                                      "owner": '0x{:040X}'.format(i),
                                      "text": "Cucarachas en la cocina",
                                      "images": [],
-                                     "state": "UNCENSORED"},
+                                     "state": "UNCENSORED_BY_CHALLENGE"},
                                )
         assert response.status_code == 201
 
@@ -365,7 +365,7 @@ def test_sort_relevancy(cleanup, setup_dataset):
                                      "owner": '0x{:040X}'.format(i),
                                      "text": "Muy bueno",
                                      "images": [],
-                                     "state": "UNCENSORED"},
+                                     "state": "UNCENSORED_BY_CHALLENGE"},
                                )
         assert response.status_code == 201
 
@@ -378,7 +378,7 @@ def test_sort_relevancy(cleanup, setup_dataset):
                                      "owner": '0x{:040X}'.format(i),
                                      "text": "Muy bueno",
                                      "images": [],
-                                     "state": "UNCENSORED"},
+                                     "state": "UNCENSORED_BY_CHALLENGE"},
                                )
         assert response.status_code == 201
 
@@ -391,7 +391,7 @@ def test_sort_relevancy(cleanup, setup_dataset):
                                      "owner": '0x{:040X}'.format(i),
                                      "text": "Cucarachas en la cocina",
                                      "images": [],
-                                     "state": "UNCENSORED"},
+                                     "state": "UNCENSORED_BY_CHALLENGE"},
                                )
         assert response.status_code == 201
 

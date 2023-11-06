@@ -105,7 +105,7 @@ def test_recommendation_near(cleanup, setup_dataset):
                                      "owner": '0x{:040X}'.format(i),
                                      "text": "Muy bueno",
                                      "images": [],
-                                     "state": "UNCENSORED"},
+                                     "state": "UNCENSORED_BY_CHALLENGE"},
                                )
         assert response.status_code == 201
 
@@ -135,7 +135,7 @@ def test_recommendation_few_reviews_404(cleanup, setup_dataset):
                                      "owner": '0x{:040X}'.format(i),
                                      "text": "Muy bueno",
                                      "images": [],
-                                     "state": "UNCENSORED"},
+                                     "state": "UNCENSORED_BY_CHALLENGE"},
                                )
         assert response.status_code == 201
 
@@ -152,7 +152,7 @@ def test_recommendation_not_near_404(cleanup, setup_dataset):
                                      "owner": '0x{:040X}'.format(i),
                                      "text": "Muy bueno",
                                      "images": [],
-                                     "state": "UNCENSORED"},
+                                     "state": "UNCENSORED_BY_CHALLENGE"},
                                )
         assert response.status_code == 201
 
@@ -169,7 +169,7 @@ def test_recommendation_near_ordered(cleanup, setup_dataset):
                                      "owner": '0x{:040X}'.format(i),
                                      "text": "Muy bueno",
                                      "images": [],
-                                     "state": "UNCENSORED"},
+                                     "state": "UNCENSORED_BY_CHALLENGE"},
                                )
         assert response.status_code == 201
 
@@ -181,7 +181,7 @@ def test_recommendation_near_ordered(cleanup, setup_dataset):
                                      "owner": '0x{:040X}'.format(i),
                                      "text": "Muy bueno",
                                      "images": [],
-                                     "state": "UNCENSORED"},
+                                     "state": "UNCENSORED_BY_CHALLENGE"},
                                )
         assert response.status_code == 201
 
@@ -217,7 +217,7 @@ def test_recommendation_not_enough_reviewers(cleanup, setup_dataset):
                                      "owner": '0x{:040X}'.format(1),
                                      "text": "Muy bueno",
                                      "images": [],
-                                     "state": "UNCENSORED"},
+                                     "state": "UNCENSORED_BY_CHALLENGE"},
                                )
         assert response.status_code == 201
 
@@ -239,7 +239,7 @@ def test_recommendation_profile_no_reviews(cleanup, setup_dataset):
                                      "owner": '0x{:040X}'.format(i),
                                      "text": "Muy bueno",
                                      "images": [],
-                                     "state": "UNCENSORED"},
+                                     "state": "UNCENSORED_BY_CHALLENGE"},
                                )
         assert response.status_code == 201
 
@@ -251,7 +251,7 @@ def test_recommendation_profile_no_reviews(cleanup, setup_dataset):
                                      "owner": '0x{:040X}'.format(i),
                                      "text": "Muy bueno",
                                      "images": [],
-                                     "state": "UNCENSORED"},
+                                     "state": "UNCENSORED_BY_CHALLENGE"},
                                )
         assert response.status_code == 201
 
@@ -287,7 +287,7 @@ def test_recommendation_profile_no_reviews_location_priority(cleanup, setup_data
                                      "owner": '0x{:040X}'.format(i),
                                      "text": "Muy bueno",
                                      "images": [],
-                                     "state": "UNCENSORED"},
+                                     "state": "UNCENSORED_BY_CHALLENGE"},
                                )
         assert response.status_code == 201
 
@@ -299,7 +299,7 @@ def test_recommendation_profile_no_reviews_location_priority(cleanup, setup_data
                                      "owner": '0x{:040X}'.format(i),
                                      "text": "Muy bueno",
                                      "images": [],
-                                     "state": "UNCENSORED"},
+                                     "state": "UNCENSORED_BY_CHALLENGE"},
                                )
         assert response.status_code == 201
 
@@ -311,7 +311,7 @@ def test_recommendation_profile_no_reviews_location_priority(cleanup, setup_data
                                      "owner": '0x{:040X}'.format(i),
                                      "text": "Muy bueno",
                                      "images": [],
-                                     "state": "UNCENSORED"},
+                                     "state": "UNCENSORED_BY_CHALLENGE"},
                                )
         assert response.status_code == 201
 
@@ -357,7 +357,7 @@ def test_recommendation_profile_wont_repeat_with_reviews(cleanup, setup_dataset)
                                      "owner": '0x{:040X}'.format(i),
                                      "text": "Muy bueno",
                                      "images": [],
-                                     "state": "UNCENSORED"},
+                                     "state": "UNCENSORED_BY_CHALLENGE"},
                                )
         assert response.status_code == 201
 
@@ -369,7 +369,7 @@ def test_recommendation_profile_wont_repeat_with_reviews(cleanup, setup_dataset)
                                      "owner": '0x{:040X}'.format(i),
                                      "text": "Muy bueno",
                                      "images": [],
-                                     "state": "UNCENSORED"},
+                                     "state": "UNCENSORED_BY_CHALLENGE"},
                                )
         assert response.status_code == 201
 
@@ -381,7 +381,7 @@ def test_recommendation_profile_wont_repeat_with_reviews(cleanup, setup_dataset)
                                      "owner": '0x{:040X}'.format(i),
                                      "text": "Muy bueno",
                                      "images": [],
-                                     "state": "UNCENSORED"},
+                                     "state": "UNCENSORED_BY_CHALLENGE"},
                                )
         assert response.status_code == 201
 
@@ -426,7 +426,7 @@ def test_recommendation_home_best_places(cleanup, setup_dataset):
                                      "owner": '0x{:040X}'.format(i),
                                      "text": "Muy bueno",
                                      "images": [],
-                                     "state": "UNCENSORED"},
+                                     "state": "UNCENSORED_BY_CHALLENGE"},
                                )
         assert response.status_code == 201
 
@@ -438,7 +438,7 @@ def test_recommendation_home_best_places(cleanup, setup_dataset):
                                      "owner": '0x{:040X}'.format(i),
                                      "text": "Muy bueno",
                                      "images": [],
-                                     "state": "UNCENSORED"},
+                                     "state": "UNCENSORED_BY_CHALLENGE"},
                                )
         assert response.status_code == 201
 
@@ -450,7 +450,7 @@ def test_recommendation_home_best_places(cleanup, setup_dataset):
                                      "owner": '0x{:040X}'.format(i),
                                      "text": "Muy bueno",
                                      "images": [],
-                                     "state": "UNCENSORED"},
+                                     "state": "UNCENSORED_BY_CHALLENGE"},
                                )
         assert response.status_code == 201
 
@@ -495,7 +495,7 @@ def test_recommendation_home_nearby_priority(cleanup, setup_dataset):
                                      "owner": '0x{:040X}'.format(i),
                                      "text": "Muy bueno",
                                      "images": [],
-                                     "state": "UNCENSORED"},
+                                     "state": "UNCENSORED_BY_CHALLENGE"},
                                )
         assert response.status_code == 201
 
@@ -507,7 +507,7 @@ def test_recommendation_home_nearby_priority(cleanup, setup_dataset):
                                      "owner": '0x{:040X}'.format(i),
                                      "text": "Muy bueno",
                                      "images": [],
-                                     "state": "UNCENSORED"},
+                                     "state": "UNCENSORED_BY_CHALLENGE"},
                                )
         assert response.status_code == 201
 
@@ -519,7 +519,7 @@ def test_recommendation_home_nearby_priority(cleanup, setup_dataset):
                                      "owner": '0x{:040X}'.format(i),
                                      "text": "Muy bueno",
                                      "images": [],
-                                     "state": "UNCENSORED"},
+                                     "state": "UNCENSORED_BY_CHALLENGE"},
                                )
         assert response.status_code == 201
 
