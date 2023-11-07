@@ -188,12 +188,12 @@ class ReviewCBV:
         """
         self.database.challenge_review_censorship(challenge_censorship_input)
 
-        for juror in challenge_censorship_input.juries:
-            juror_orm = self.database.get_profile_orm(juror)
-            if juror_orm.push_token:
-                self.push_notification_adapter.send_notify_juror(juror_orm.push_token,
-                                                                 challenge_censorship_input.place_id,
-                                                                 challenge_censorship_input.review_id)
+        # for juror in challenge_censorship_input.juries:
+        #     juror_orm = self.database.get_profile_orm(juror)
+        #     if juror_orm.push_token:
+        #         self.push_notification_adapter.send_notify_juror(juror_orm.push_token,
+        #                                                          challenge_censorship_input.place_id,
+        #                                                          challenge_censorship_input.review_id)
         return
 
     @review_router.post("/review/uncensor", status_code=201, dependencies=[Depends(indexer_auth)])

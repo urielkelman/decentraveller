@@ -1181,9 +1181,9 @@ def test_challenge_censorship_and_uncensor(cleanup):
                                                     "reviewId": 1,
                                                     "deadline_timestamp": 1699072713,
                                                     "juries": [
-                                                        "0xcd3B766CCDd6AE721141F452C550Ca635964ce71",
-                                                        "0x95222290DD7278Aa3Ddd389Cc1E1d165CC4BAfe5",
-                                                        "0x388C818CA8B9251b393131C08a736A67ccB19297"
+                                                        "0xcd3B766CCDd6AE721141F452C550Ca635964ce71".lower(),
+                                                        "0x95222290DD7278Aa3Ddd389Cc1E1d165CC4BAfe5".lower(),
+                                                        "0x388C818CA8B9251b393131C08a736A67ccB19297".lower()
                                                     ]
                                                 })
     assert censorship_challenge_response.status_code == 201
@@ -1206,9 +1206,9 @@ def test_challenge_censorship_and_uncensor(cleanup):
                                      "text": "Muy bueno el combo de sebastian yatra",
                                      "status": "CENSORSHIP_CHALLENGED",
                                      "juries": [
-                                         "0xcd3B766CCDd6AE721141F452C550Ca635964ce71",
-                                         "0x95222290DD7278Aa3Ddd389Cc1E1d165CC4BAfe5",
-                                         "0x388C818CA8B9251b393131C08a736A67ccB19297"
+                                         "0xcd3B766CCDd6AE721141F452C550Ca635964ce71".lower(),
+                                         "0x95222290DD7278Aa3Ddd389Cc1E1d165CC4BAfe5".lower(),
+                                         "0x388C818CA8B9251b393131C08a736A67ccB19297".lower()
                                      ],
                                      "brokenRuleId": 1,
                                      "challengeDeadline": datetime.utcfromtimestamp(1699072713).strftime(
@@ -1241,9 +1241,9 @@ def test_challenge_censorship_and_uncensor(cleanup):
                                      "text": "Muy bueno el combo de sebastian yatra",
                                      "status": "UNCENSORED_BY_CHALLENGE",
                                      "juries": [
-                                         "0xcd3B766CCDd6AE721141F452C550Ca635964ce71",
-                                         "0x95222290DD7278Aa3Ddd389Cc1E1d165CC4BAfe5",
-                                         "0x388C818CA8B9251b393131C08a736A67ccB19297"
+                                         "0xcd3B766CCDd6AE721141F452C550Ca635964ce71".lower(),
+                                         "0x95222290DD7278Aa3Ddd389Cc1E1d165CC4BAfe5".lower(),
+                                         "0x388C818CA8B9251b393131C08a736A67ccB19297".lower()
                                      ],
                                      "brokenRuleId": 1,
                                      "challengeDeadline": datetime.utcfromtimestamp(1699072713).strftime(
