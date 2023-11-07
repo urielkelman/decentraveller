@@ -125,6 +125,13 @@ const DecentravellerInitialScreen = () => {
                                 blockchainStatus: (blockchainStatus) => BlockchainProposalStatus[blockchainStatus],
                             },
                         },
+                        ReviewDetailScreen: {
+                            path: 'review/:placeId/:reviewId',
+                            parse: {
+                                placeId: (placeId) => Number(placeId),
+                                reviewId: (reviewId) => Number(reviewId),
+                            },
+                        },
                     },
                 },
             }}

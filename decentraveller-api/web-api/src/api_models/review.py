@@ -63,7 +63,6 @@ class UncensorReviewInput(APIModel):
     review_id: ReviewID
     place_id: PlaceID
 
-
 class CensorReviewInput(APIModel):
     review_id: ReviewID
     place_id: PlaceID
@@ -80,8 +79,3 @@ class ReviewChallengeCensorshipInput(APIModel):
     place_id: PlaceID
     deadline_timestamp: int
     juries: List[str]
-
-
-class UncensorReviewInput(APIModel):
-    review_id: ReviewID
-    place_id: PlaceID

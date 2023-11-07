@@ -14,8 +14,11 @@ const MyCensoredReviews = ({ navigation }) => {
     const { web3Provider, connectionContext } = useAppContext();
 
     const loadReviews = async (offset, limit): Promise<LoadReviewResponse> => {
-        const reviewsResponse: ReviewsResponse =
-            await adapter.getProfileCensoredReviews(connectionContext.connectedAddress, offset, limit);
+        const reviewsResponse: ReviewsResponse = await adapter.getProfileCensoredReviews(
+            connectionContext.connectedAddress,
+            offset,
+            limit,
+        );
         const avatarUrl = adapter.getProfileAvatarUrl(connectionContext.connectedAddress);
         const reviewsToShow: ReviewShowProps[] = reviewsResponse.reviews.map(function (r, i) {
             return {

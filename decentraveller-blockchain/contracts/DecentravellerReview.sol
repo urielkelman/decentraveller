@@ -19,7 +19,7 @@ contract DecentravellerReview is Initializable, Ownable {
     uint256 public constant CHALLENGE_PERIOD = 1 days;
     uint8 constant JURIES_AMOUNT = 5;
 
-    mapping(address => bool) hasVoted;
+    mapping(address => bool) _hasVoted;
 
     uint256 private reviewId;
     uint256 private placeId;
@@ -98,6 +98,10 @@ contract DecentravellerReview is Initializable, Ownable {
     function voteAgainstCensorship() external {
         _checkVotingIsValidAndRegisterVote(msg.sender);
         challenge.againstCensorshipVotes++;
+    }
+
+    function hasVoted() external view returns (bool) {
+        return _hasVoted[msg.sender];
     }
 
     function executeUncensorship() external onlyOwner {
@@ -197,11 +201,11 @@ contract DecentravellerReview is Initializable, Ownable {
             revert OnlyJury__Execution();
         }
 
-        if (hasVoted[_voter]) {
+        if (_hasVoted[_voter]) {
             revert Jury__AlreadyVoted();
         }
 
-        hasVoted[_voter] = true;
+        _hasVoted[_voter] = true;
     }
 
     function _isAbsoluteMajority(uint8 _votes) internal pure returns (bool) {

@@ -1089,7 +1089,8 @@ def test_censor_and_uncensor_review(cleanup):
                                                "interest": "ACCOMMODATION",
                                                "role": "NORMAL"},
                                      "text": "Muy bueno el combo de sebastian yatra",
-                                     "status": "CENSORED"}
+                                     "status": "CENSORED",
+                                     'brokenRuleId': 1, 'challengeDeadline': None, 'juries': None}
     assert datetime.fromisoformat(response.json()['createdAt']).date() == datetime.utcnow().date()
 
     censor_response = client.post("/review/uncensor",
@@ -1114,7 +1115,8 @@ def test_censor_and_uncensor_review(cleanup):
                                                "interest": "ACCOMMODATION",
                                                "role": "NORMAL"},
                                      "text": "Muy bueno el combo de sebastian yatra",
-                                     "status": "UNCENSORED"}
+                                     "status": "UNCENSORED_BY_CHALLENGE",
+                                     'brokenRuleId': 1, 'challengeDeadline': None, 'juries': None}
     assert datetime.fromisoformat(response.json()['createdAt']).date() == datetime.utcnow().date()
 
 

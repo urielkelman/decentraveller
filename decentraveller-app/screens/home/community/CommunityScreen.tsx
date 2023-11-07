@@ -17,7 +17,8 @@ const CommunityScreen = ({ navigation }) => {
             </TouchableOpacity>
             <TouchableOpacity
                 onPress={() => navigation.navigate('ModerationsScreen')}
-                style={[communityScreenStyles.cardContainer, communityScreenStyles.halfScreenCard]}>
+                style={[communityScreenStyles.cardContainer, communityScreenStyles.halfScreenCard]}
+            >
                 <Text style={communityScreenStyles.title}>Moderations</Text>
                 <Text style={communityScreenStyles.subtitle}>My censored reviews and my disputes to vote.</Text>
             </TouchableOpacity>

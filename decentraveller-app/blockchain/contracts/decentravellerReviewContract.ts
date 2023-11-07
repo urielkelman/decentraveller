@@ -10,6 +10,26 @@ const decentravellerReviewContract: DecentravellerContract = {
             functionName: 'getState',
             fullContractABI: contractStringfiedABI,
         },
+        hasVoted: {
+            functionName: 'hasVoted',
+            fullContractABI: contractStringfiedABI,
+        },
+        voteForCensorship: {
+            functionName: 'voteForCensorship',
+            fullContractABI: contractStringfiedABI,
+        },
+        voteAgainstCensorship: {
+            functionName: 'voteAgainstCensorship',
+            fullContractABI: contractStringfiedABI,
+        },
+        getChallengeVotingResults: {
+            functionName: 'getChallengeVotingResults',
+            fullContractABI: contractStringfiedABI,
+        },
+        getJuries: {
+            functionName: 'getJuries',
+            fullContractABI: contractStringfiedABI,
+        },
     },
 };
 

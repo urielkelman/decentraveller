@@ -36,17 +36,21 @@ const ReviewItem: React.FC<ReviewItemProps> = ({
     const statusComponent = () => {
         switch (status) {
             case BackendReviewStatus.CENSORED:
-                return (<View style={placeReviewsBoxStyles.reviewStatusRibbon}>
-                    <Text style={placeReviewsBoxStyles.reviewStatusRibbonText} >🚫 Censored</Text>
-                </View>)
-            case BackendReviewStatus.ON_DISPUTE:
-                return (<View style={placeReviewsBoxStyles.reviewStatusRibbon}>
-                    <Text style={placeReviewsBoxStyles.reviewStatusRibbonText}>⚔️ Disputed</Text>
-                </View>)
+                return (
+                    <View style={placeReviewsBoxStyles.reviewStatusRibbon}>
+                        <Text style={placeReviewsBoxStyles.reviewStatusRibbonText}>🚫 Censored</Text>
+                    </View>
+                );
+            case BackendReviewStatus.CENSORSHIP_CHALLENGED:
+                return (
+                    <View style={placeReviewsBoxStyles.reviewStatusRibbon}>
+                        <Text style={placeReviewsBoxStyles.reviewStatusRibbonText}>⚔️ Disputed</Text>
+                    </View>
+                );
             default:
                 return null;
         }
-    }
+    };
     return (
         <TouchableOpacity
             style={placeReviewsBoxStyles.reviewItem}

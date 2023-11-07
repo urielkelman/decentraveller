@@ -12,7 +12,7 @@ const BLOCKCHAIN_TIMEOUT_IN_MILLIS = 100000;
 const BLOCKCHAIN_TRANSACTION_TASK_NAME = 'Blockchain transaction';
 
 class BlockchainAdapter {
-    private async populateAndSendWithAddress(
+    public async populateAndSendWithAddress(
         web3Provider: ethers.providers.Web3Provider,
         contract: DecentravellerContract,
         functionName: string,
@@ -260,8 +260,11 @@ class BlockchainAdapter {
         }
     }
 
-    async getReviewAddress(web3Provider: ethers.providers.Web3Provider, placeId: number,
-                           reviewId: number): Promise<string> {
+    async getReviewAddress(
+        web3Provider: ethers.providers.Web3Provider,
+        placeId: number,
+        reviewId: number,
+    ): Promise<string> {
         try {
             const blockchain: Blockchain = BlockchainByChainId[DEFAULT_CHAIN_ID];
             const decentravellerAddress: string = decentravellerMainContract.addressesByBlockchain[blockchain];
@@ -424,6 +427,20 @@ class BlockchainAdapter {
                 placeId,
                 reviewId,
                 ruleId,
+            );
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    async challengeReviewCensorship(web3Provider: ethers.providers.Web3Provider, placeId: number, reviewId: number) {
+        try {
+            return await this.populateAndSend(
+                web3Provider,
+                decentravellerMainContract,
+                'challengeReviewCensorship',
+                placeId,
+                reviewId,
             );
         } catch (e) {
             console.log(e);

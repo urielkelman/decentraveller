@@ -246,7 +246,7 @@ class RelationalDatabase:
         query = (self.session.query(ReviewORM.id, ReviewORM.place_id).
                  filter(ReviewORM.place_id == place_id).
                  filter((ReviewORM.status == ReviewStatus.PUBLIC) | (ReviewORM.status == ReviewStatus.UNCENSORED_BY_CHALLENGE)).
-                 order_by(ReviewORM.created_at.desc()))
+                 order_by(ReviewORM.id.asc()))
         total_count = query.count()
         query = query.limit(per_page).offset(page * per_page)
         ids = [(r[0], r[1]) for r in query.all()]
@@ -266,7 +266,8 @@ class RelationalDatabase:
         """
         query = (self.session.query(ReviewORM.id, ReviewORM.place_id).
                  filter(ReviewORM.owner == owner).
-                 filter((ReviewORM.status == ReviewStatus.PUBLIC) | (ReviewORM.status == ReviewStatus.UNCENSORED)).
+                 filter((ReviewORM.status == ReviewStatus.PUBLIC) |
+                        (ReviewORM.status == ReviewStatus.UNCENSORED_BY_CHALLENGE)).
                  order_by(ReviewORM.status.asc(), ReviewORM.created_at.desc()))
         total_count = query.count()
         query = query.limit(per_page).offset(page * per_page)
@@ -287,7 +288,8 @@ class RelationalDatabase:
         """
         query = (self.session.query(ReviewORM.id, ReviewORM.place_id).
                  filter(ReviewORM.owner == owner).
-                 filter((ReviewORM.status == ReviewStatus.CENSORED) | (ReviewORM.status == ReviewStatus.IN_DISPUTE)).
+                 filter((ReviewORM.status == ReviewStatus.CENSORED) |
+                        (ReviewORM.status == ReviewStatus.CENSORSHIP_CHALLENGED)).
                  order_by(ReviewORM.status.asc(), ReviewORM.created_at.desc()))
         total_count = query.count()
         query = query.limit(per_page).offset(page * per_page)
@@ -305,7 +307,8 @@ class RelationalDatabase:
         :return: the paginated reviews
         """
         query = (self.session.query(ReviewORM.id, ReviewORM.place_id).
-                 filter((ReviewORM.status == ReviewStatus.CENSORED) | (ReviewORM.status == ReviewStatus.IN_DISPUTE)).
+                 filter((ReviewORM.status == ReviewStatus.CENSORED) |
+                        (ReviewORM.status == ReviewStatus.CENSORSHIP_CHALLENGED)).
                  order_by(ReviewORM.status.asc(), ReviewORM.created_at.desc()))
         total_count = query.count()
         query = query.limit(per_page).offset(page * per_page)
@@ -508,6 +511,13 @@ class RelationalDatabase:
 
         return RuleInDB.from_orm(rule)
 
+    def get_review(self, place_id: PlaceID, review_id: ReviewID) -> ReviewORM:
+        review = self.session.query(ReviewORM) \
+            .filter(ReviewORM.place_id == place_id) \
+            .filter(ReviewORM.id == review_id) \
+            .first()
+        return review
+
     def __get_review_and_check_status__(self, place_id: PlaceID, review_id: ReviewID,
                                         expected_status: ReviewStatus) -> ReviewORM:
         review = self.session.query(ReviewORM) \
@@ -547,9 +557,6 @@ class RelationalDatabase:
 
         if review is None:
             raise HTTPException(status_code=HTTP_404_NOT_FOUND)
-
-        if review.status != ReviewStatus.CENSORED:
-            raise HTTPException(status_code=HTTP_400_BAD_REQUEST)
 
         review.status = ReviewStatus.UNCENSORED_BY_CHALLENGE
         self.session.commit()

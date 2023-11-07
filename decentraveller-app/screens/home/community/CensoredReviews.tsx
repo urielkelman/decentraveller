@@ -14,8 +14,7 @@ const CensoredReviews = ({ navigation }) => {
     const { web3Provider, connectionContext } = useAppContext();
 
     const loadReviews = async (offset, limit): Promise<LoadReviewResponse> => {
-        const reviewsResponse: ReviewsResponse =
-            await adapter.getCensoredReviews(offset, limit);
+        const reviewsResponse: ReviewsResponse = await adapter.getCensoredReviews(offset, limit);
         const reviewsToShow: ReviewShowProps[] = reviewsResponse.reviews.map(function (r, i) {
             return {
                 id: r.id,

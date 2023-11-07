@@ -54,6 +54,10 @@ const decentravellerMainContract: DecentravellerContract = {
             functionName: 'getReviewAddress',
             fullContractABI: mainContractStringfiedABI,
         },
+        challengeReviewCensorship: {
+            functionName: 'challengeReviewCensorship',
+            fullContractABI: mainContractStringfiedABI,
+        },
     },
 };
 

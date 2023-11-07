@@ -155,6 +155,13 @@ class ReviewCBV:
         :param censor_review_input: the object containing the information of the review to censor.
         """
         self.database.censor_review(censor_review_input)
+        review = self.database.get_review(censor_review_input.place_id, censor_review_input.review_id)
+
+        owner = self.database.get_profile_orm(review.owner)
+        if owner.push_token:
+            self.push_notification_adapter.send_review_censored(owner.push_token,
+                                                                censor_review_input.place_id,
+                                                                censor_review_input.review_id)
         return
 
     @review_router.post("/review/censor/challenge", status_code=201, dependencies=[Depends(indexer_auth)])
@@ -172,4 +179,11 @@ class ReviewCBV:
         Updates a review to non-censored status.
         """
         self.database.uncensor_review(uncensor_review_input)
+        review = self.database.get_review(uncensor_review_input.place_id, uncensor_review_input.review_id)
+
+        owner = self.database.get_profile_orm(review.owner)
+        if owner.push_token:
+            self.push_notification_adapter.send_review_uncensored(owner.push_token,
+                                                                  uncensor_review_input.place_id,
+                                                                  uncensor_review_input.review_id)
         return

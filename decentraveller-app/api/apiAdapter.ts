@@ -19,7 +19,9 @@ import {
     GET_PLACE_ENDPOINT,
     GET_REVIEW_ENDPOINT,
     PLACE_THUMBNAIL,
-    RULE_ENDPOINT, CENSORED_REVIEWS_PROFILE_ENDPOINT, CENSORED_REVIEWS_ENDPOINT,
+    RULE_ENDPOINT,
+    CENSORED_REVIEWS_PROFILE_ENDPOINT,
+    CENSORED_REVIEWS_ENDPOINT,
 } from './config';
 import { UserResponse } from './response/user';
 import { formatString } from '../commons/functions/utils';
@@ -341,8 +343,6 @@ class ApiAdapter {
 
         return await httpAPIConnector.get(httpRequest);
     }
-
-
 }
 
 const apiAdapter = new ApiAdapter(httpAPIConnector);

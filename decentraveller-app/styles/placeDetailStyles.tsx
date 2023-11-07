@@ -181,7 +181,7 @@ const placeReviewsBoxStyles = StyleSheet.create({
         borderBottomLeftRadius: 10,
         borderBottomRightRadius: 10,
         marginTop: 5,
-        paddingVertical: 5
+        paddingVertical: 5,
     },
     reviewStatusRibbonText: {
         color: '#F0F0F0',

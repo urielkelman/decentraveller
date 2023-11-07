@@ -22,7 +22,7 @@ export const reviewDetailScreenWordings = {
     DISPUTE_STATUS_LABEL:
         'If you consider that this review does not violate any of the community rules, you can put it to a vote. Various random users will vote and that will be the final and immovable decision.',
     ON_DISPUTE_STATUS_LABEL:
-        'Because the moderator and the owner of the review do not agree on whether this review should be public or not, it was submitted to a popular vote. Check in the Community/Moderations section if you are allowed to vote on this review.',
+        'Because the moderator and the owner of the review do not agree on whether this review should be public or not, it was submitted to a popular vote by random jurors. You are not allowed to vote.',
 };
 
 export const selectBrokenRuleScreenWordings = {
