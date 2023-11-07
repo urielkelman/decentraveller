@@ -78,4 +78,8 @@ class ReviewChallengeCensorshipInput(APIModel):
     review_id: ReviewID
     place_id: PlaceID
     deadline_timestamp: int
-    juries: List[str]
+    juries: List[WalletID]
+
+    @validator('juries')
+    def juries_validator(cls, v):
+        return [w.lower() for w in v]

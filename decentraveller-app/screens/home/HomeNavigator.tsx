@@ -26,6 +26,7 @@ import SelectBrokenRuleScreen from '../reviews/SelectBrokenRuleScreen';
 import ModerationsScreen from './community/ModerationsScreen';
 import MyCensoredReviews from './community/MyCensoredReviews';
 import CensoredReviews from './community/CensoredReviews';
+import DisputesToVote from './community/DisputesToVote';
 
 export type HomeStackScreens = {
     LeftSideBar: undefined;
@@ -44,6 +45,7 @@ export type HomeStackScreens = {
     RulesScreen: undefined;
     ModerationsScreen: undefined;
     MyCensoredReviews: undefined;
+    DisputesToVote: undefined;
     CensoredReviews: undefined;
     DecentravellerRulesList: {
         ruleList: RuleResponse[];
@@ -226,6 +228,14 @@ const HomeNavigator = () => {
                     component={SelectBrokenRuleScreen}
                     options={{
                         title: 'Select broken rule',
+                        headerShown: true,
+                    }}
+                />
+                <HomeStackNavigator.Screen
+                    name="DisputesToVote"
+                    component={DisputesToVote}
+                    options={{
+                        title: 'Disputes to vote',
                         headerShown: true,
                     }}
                 />

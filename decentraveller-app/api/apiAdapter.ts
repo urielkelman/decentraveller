@@ -21,7 +21,7 @@ import {
     PLACE_THUMBNAIL,
     RULE_ENDPOINT,
     CENSORED_REVIEWS_PROFILE_ENDPOINT,
-    CENSORED_REVIEWS_ENDPOINT,
+    CENSORED_REVIEWS_ENDPOINT, AS_JUROR_REVIEWS_ENDPOINT,
 } from './config';
 import { UserResponse } from './response/user';
 import { formatString } from '../commons/functions/utils';
@@ -245,6 +245,16 @@ class ApiAdapter {
         const httpRequest: HttpGetRequest = {
             url: CENSORED_REVIEWS_ENDPOINT,
             queryParams: { page: page, per_page: perPage },
+            onUnexpectedError: (e) => console.log('Error'),
+        };
+
+        return await httpAPIConnector.get(httpRequest);
+    }
+
+    async getMyDisputesToVote(juror: string, page: number, perPage: number): Promise<ReviewsResponse> {
+        const httpRequest: HttpGetRequest = {
+            url: AS_JUROR_REVIEWS_ENDPOINT,
+            queryParams: { juror: juror, page: page, per_page: perPage },
             onUnexpectedError: (e) => console.log('Error'),
         };
 

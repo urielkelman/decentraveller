@@ -18,7 +18,9 @@ const ModerationsScreen = ({ navigation }) => {
                 <Text style={communityScreenStyles.subtitle}>See and manage your previously censored reviews.</Text>
             </TouchableOpacity>
             <TouchableOpacity
-                onPress={() => {}}
+                onPress={() => {
+                    navigation.navigate('DisputesToVote');
+                }}
                 style={[communityScreenStyles.cardContainer, communityScreenStyles.thirdScreenCard]}
             >
                 <Text style={communityScreenStyles.title}>Disputes to vote</Text>

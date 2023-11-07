@@ -27,6 +27,7 @@ export const REVIEWS_PLACES_ENDPOINT = '/place/{placeId}/reviews';
 export const REVIEWS_PROFILE_ENDPOINT = '/profile/{walletId}/reviews';
 export const CENSORED_REVIEWS_PROFILE_ENDPOINT = '/profile/{walletId}/reviews/censored';
 export const CENSORED_REVIEWS_ENDPOINT = '/reviews/censored';
+export const AS_JUROR_REVIEWS_ENDPOINT = '/reviews/as_juror';
 export const PROFILE_IMAGE = '/profile/{owner}/avatar.jpg';
 export const PLACE_IMAGE = '/place/{placeId}/image.jpg';
 export const PLACE_THUMBNAIL = '/place/{placeId}/thumbnail.jpg';

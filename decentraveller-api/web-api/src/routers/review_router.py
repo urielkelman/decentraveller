@@ -128,6 +128,22 @@ class ReviewCBV:
             raise HTTPException(status_code=HTTP_404_NOT_FOUND)
         return reviews
 
+    @review_router.get("/reviews/as_juror")
+    def get_as_juror_reviews(self, juror: WalletID, per_page: int, page: int) -> PaginatedReviews:
+        """
+        Gets the reviews on which juror is a juror
+
+        :param juror: the juror of the review
+        :param per_page: items per page
+        :param page: number of page
+        :return: the reviews data
+        """
+
+        reviews = self.database.query_as_juror_reviews(juror, page, per_page)
+        if not reviews:
+            raise HTTPException(status_code=HTTP_404_NOT_FOUND)
+        return reviews
+
 
     @review_router.get("/review/{image_number}.jpg")
     def get_review_image(self, id: ReviewID,
