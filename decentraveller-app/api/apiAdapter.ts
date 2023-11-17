@@ -21,7 +21,8 @@ import {
     PLACE_THUMBNAIL,
     RULE_ENDPOINT,
     CENSORED_REVIEWS_PROFILE_ENDPOINT,
-    CENSORED_REVIEWS_ENDPOINT, AS_JUROR_REVIEWS_ENDPOINT,
+    CENSORED_REVIEWS_ENDPOINT,
+    AS_JUROR_REVIEWS_ENDPOINT,
 } from './config';
 import { UserResponse } from './response/user';
 import { formatString } from '../commons/functions/utils';
