@@ -30,6 +30,10 @@ const decentravellerReviewContract: DecentravellerContract = {
             functionName: 'getJuries',
             fullContractABI: contractStringfiedABI,
         },
+        executeUncensorship: {
+            functionName: 'executeUncensorship',
+            fullContractABI: contractStringfiedABI,
+        },
     },
 };
 

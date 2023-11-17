@@ -1,4 +1,4 @@
-import { Image, Text, View } from 'react-native';
+import {Image, Text, TouchableOpacity, View} from 'react-native';
 import React, { useEffect } from 'react';
 import { ReviewScreenProps } from './types';
 import { apiAdapter } from '../../api/apiAdapter';
@@ -12,12 +12,12 @@ import ReviewItem from './ReviewItem';
 import { useAppContext } from '../../context/AppContext';
 import { moderationService } from '../../blockchain/service/moderationService';
 import DecentravellerButton from '../../commons/components/DecentravellerButton';
-import { communityScreenStyles, ruleDetailStyles } from '../../styles/communityStyles';
 import { reviewDetailScreenWordings } from './wording';
-import { BackendReviewStatus, BlockchainReviewStatus } from '../../blockchain/types';
+import {BackendReviewStatus, BlockchainProposalStatus, BlockchainReviewStatus} from '../../blockchain/types';
 import { UserRole } from '../users/profile/types';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { HomeStackScreens } from '../home/HomeNavigator';
+import {rulesService} from "../../blockchain/service/rulesService";
 
 const adapter = apiAdapter;
 
@@ -27,6 +27,7 @@ const ReviewDetailScreen: React.FC<ReviewScreenProps> = ({ route }) => {
     const [review, setReview] = React.useState<ReviewShowProps>(null);
     const [place, setPlace] = React.useState<PlaceShowProps>(null);
     const [blockchainStatus, setBlockchainStatus] = React.useState<BlockchainReviewStatus>(null);
+    const [alreadyVoted, setAlreadyVoted] = React.useState<boolean>(false);
     const [jurors, setJurors] = React.useState<string[]>(null);
     const { web3Provider, userRole, connectionContext, userNickname } = useAppContext();
     const { connectedAddress } = connectionContext;
@@ -57,6 +58,7 @@ const ReviewDetailScreen: React.FC<ReviewScreenProps> = ({ route }) => {
                 : await moderationService.getReviewCensorStatus(web3Provider, placeId, reviewId);
         setJurors(await moderationService.getJuries(web3Provider, placeId, reviewId));
         setBlockchainStatus(blockchainReviewStatus);
+        setAlreadyVoted(await moderationService.hasVotedOnDispute(web3Provider, placeId, reviewId))
         const reviewToShow: ReviewShowProps = {
             id: reviewData.id,
             placeId: reviewData.placeId,
@@ -84,6 +86,10 @@ const ReviewDetailScreen: React.FC<ReviewScreenProps> = ({ route }) => {
         await moderationService.disputeReviewCensorship(web3Provider, placeId, reviewId);
         await loadData();
     };
+    const executeCensorshipRemoval = async () => {
+        await moderationService.executeCensorshipRemoval(web3Provider, placeId, reviewId);
+        await loadData();
+    };
 
     const censorComponent = () => {
         return (
@@ -98,13 +104,13 @@ const ReviewDetailScreen: React.FC<ReviewScreenProps> = ({ route }) => {
                         enabled={true}
                     />
                 </View>
-                <View style={communityScreenStyles.cardContainer}>
-                    <View style={ruleDetailStyles.cardContent}>
-                        <Image source={require('../../assets/images/info.png')} style={ruleDetailStyles.icon} />
-                        <View style={ruleDetailStyles.textContainer}>
-                            <Text style={ruleDetailStyles.headerText}>Why do I see this?</Text>
+                <View style={reviewDetailStyles.cardContainer}>
+                    <View style={reviewDetailStyles.cardContent}>
+                        <Image source={require('../../assets/images/info.png')} style={reviewDetailStyles.icon} />
+                        <View style={reviewDetailStyles.textContainer}>
+                            <Text style={reviewDetailStyles.headerText}>Why do I see this?</Text>
                             <View style={{ maxWidth: '95%' }}>
-                                <Text style={ruleDetailStyles.explanationText}>
+                                <Text style={reviewDetailStyles.explanationText}>
                                     {reviewDetailScreenWordings.CENSOR_STATUS_LABEL}
                                 </Text>
                             </View>
@@ -118,21 +124,21 @@ const ReviewDetailScreen: React.FC<ReviewScreenProps> = ({ route }) => {
     const onDisputeComponent = () => {
         return (
             <View>
-                <View style={communityScreenStyles.cardContainer}>
-                    <View style={ruleDetailStyles.cardContent}>
-                        <Image source={require('../../assets/images/exclamation.png')} style={ruleDetailStyles.icon} />
-                        <View style={ruleDetailStyles.textContainer}>
-                            <Text style={ruleDetailStyles.headerText}>Censor under dispute</Text>
+                <View style={reviewDetailStyles.cardContainer}>
+                    <View style={reviewDetailStyles.cardContent}>
+                        <Image source={require('../../assets/images/exclamation.png')} style={reviewDetailStyles.icon} />
+                        <View style={reviewDetailStyles.textContainer}>
+                            <Text style={reviewDetailStyles.headerText}>Censor under dispute</Text>
                         </View>
                     </View>
                 </View>
-                <View style={communityScreenStyles.cardContainer}>
-                    <View style={ruleDetailStyles.cardContent}>
-                        <Image source={require('../../assets/images/info.png')} style={ruleDetailStyles.icon} />
-                        <View style={ruleDetailStyles.textContainer}>
-                            <Text style={ruleDetailStyles.headerText}>Why do I see this?</Text>
+                <View style={reviewDetailStyles.cardContainer}>
+                    <View style={reviewDetailStyles.cardContent}>
+                        <Image source={require('../../assets/images/info.png')} style={reviewDetailStyles.icon} />
+                        <View style={reviewDetailStyles.textContainer}>
+                            <Text style={reviewDetailStyles.headerText}>Why do I see this?</Text>
                             <View style={{ maxWidth: '95%' }}>
-                                <Text style={ruleDetailStyles.explanationText}>
+                                <Text style={reviewDetailStyles.explanationText}>
                                     {reviewDetailScreenWordings.ON_DISPUTE_STATUS_LABEL}
                                 </Text>
                             </View>
@@ -146,13 +152,13 @@ const ReviewDetailScreen: React.FC<ReviewScreenProps> = ({ route }) => {
     const disputeComponent = () => {
         return (
             <View>
-                <View style={communityScreenStyles.cardContainer}>
-                    <View style={ruleDetailStyles.cardContent}>
-                        <Image source={require('../../assets/images/exclamation.png')} style={ruleDetailStyles.icon} />
-                        <View style={ruleDetailStyles.textContainer}>
-                            <Text style={ruleDetailStyles.headerText}>Review not visible</Text>
+                <View style={reviewDetailStyles.cardContainer}>
+                    <View style={reviewDetailStyles.cardContent}>
+                        <Image source={require('../../assets/images/exclamation.png')} style={reviewDetailStyles.icon} />
+                        <View style={reviewDetailStyles.textContainer}>
+                            <Text style={reviewDetailStyles.headerText}>Review not visible</Text>
                             <View style={{ maxWidth: '95%' }}>
-                                <Text style={ruleDetailStyles.explanationText}>
+                                <Text style={reviewDetailStyles.explanationText}>
                                     {'You have been censored by moderator'}
                                 </Text>
                             </View>
@@ -167,13 +173,13 @@ const ReviewDetailScreen: React.FC<ReviewScreenProps> = ({ route }) => {
                         />
                     </View>
                 </View>
-                <View style={communityScreenStyles.cardContainer}>
-                    <View style={ruleDetailStyles.cardContent}>
-                        <Image source={require('../../assets/images/info.png')} style={ruleDetailStyles.icon} />
-                        <View style={ruleDetailStyles.textContainer}>
-                            <Text style={ruleDetailStyles.headerText}>Why do I see this?</Text>
+                <View style={reviewDetailStyles.cardContainer}>
+                    <View style={reviewDetailStyles.cardContent}>
+                        <Image source={require('../../assets/images/info.png')} style={reviewDetailStyles.icon} />
+                        <View style={reviewDetailStyles.textContainer}>
+                            <Text style={reviewDetailStyles.headerText}>Why do I see this?</Text>
                             <View style={{ maxWidth: '95%' }}>
-                                <Text style={ruleDetailStyles.explanationText}>
+                                <Text style={reviewDetailStyles.explanationText}>
                                     {reviewDetailScreenWordings.DISPUTE_STATUS_LABEL}
                                 </Text>
                             </View>
@@ -185,7 +191,97 @@ const ReviewDetailScreen: React.FC<ReviewScreenProps> = ({ route }) => {
     };
 
     const voteComponent = () => {
-        return null;
+        return alreadyVoted ? alreadyVotedComponent() : toVoteComponent();
+    };
+
+    const toVoteComponent = () => {
+        return (
+            <View>
+                <View style={reviewDetailStyles.cardContainer}>
+                    <View style={reviewDetailStyles.cardContent}>
+                        <Image source={require('../../assets/images/exclamation.png')} style={reviewDetailStyles.icon} />
+                        <View style={reviewDetailStyles.textContainer}>
+                            <Text style={reviewDetailStyles.headerText}>You are a jury!</Text>
+                            <View style={{ maxWidth: '95%' }}>
+                                <Text style={reviewDetailStyles.explanationText}>
+                                    {reviewDetailScreenWordings.VOTE_STATUS_LABEL}
+                                </Text>
+                            </View>
+                        </View>
+                    </View>
+                </View>
+                <View style={reviewDetailStyles.cardContainer}>
+                    <View style={reviewDetailStyles.textContainer}>
+                        <Text style={reviewDetailStyles.headerText}>You decide about this censorship</Text>
+                        <View style={{ maxWidth: '95%' }}>
+                            <Text style={reviewDetailStyles.explanationText}>
+                                {reviewDetailScreenWordings.VOTE_EXPLANATION_LABEL}
+                            </Text>
+                        </View>
+                    </View>
+                    <View style={reviewDetailStyles.buttonVoteContainer}>
+                        <TouchableOpacity
+                            style={{ marginRight: 25 }}
+                            onPress={voteFavor}
+                        >
+                            <Image source={require('../../assets/images/like.png')} style={reviewDetailStyles.buttonImage} />
+                        </TouchableOpacity>
+
+                        <TouchableOpacity
+                            onPress={voteAgainst}
+                        >
+                            <Image source={require('../../assets/images/dislike.png')} style={reviewDetailStyles.buttonImage} />
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </View>
+        );
+    };
+
+    const alreadyVotedComponent = () => {
+        return (
+                <View style={reviewDetailStyles.cardContainer}>
+                    <View style={reviewDetailStyles.cardContent}>
+                        <Image source={require('../../assets/images/exclamation.png')} style={reviewDetailStyles.icon} />
+                        <View style={reviewDetailStyles.textContainer}>
+                            <Text style={reviewDetailStyles.headerText}>You've already voted on this challenge</Text>
+                        </View>
+                    </View>
+                </View>
+        );
+    };
+    const censorshipRemovalComponent = () => {
+        return (
+            <View style={reviewDetailStyles.cardContainer}>
+                <View style={reviewDetailStyles.cardContent}>
+                    <Image source={require('../../assets/images/favor.png')} style={reviewDetailStyles.icon} />
+                    <View style={reviewDetailStyles.textContainer}>
+                        <Text style={reviewDetailStyles.headerText}>This review could be back</Text>
+                        <View style={{ maxWidth: '95%' }}>
+                            <Text style={reviewDetailStyles.explanationText}>
+                                {reviewDetailScreenWordings.UNCENSOR_LABEL}
+                            </Text>
+                        </View>
+                    </View>
+                </View>
+                <View style={reviewDetailStyles.optionButtonContainer}>
+                    <DecentravellerButton
+                        text={'Execute'}
+                        onPress={executeCensorshipRemoval}
+                        loading={false}
+                        enabled={true}
+                    />
+                </View>
+            </View>
+        );
+    };
+    const voteFavor = async () => {
+        await moderationService.voteForCensorship(web3Provider, placeId, reviewId);
+        await loadData()
+    };
+    const voteAgainst = async () => {
+        await moderationService.voteAgainstCensorship(web3Provider, placeId, reviewId);
+        await loadData()
     };
 
     const renderByStatusAndRole = () => {
@@ -198,6 +294,8 @@ const ReviewDetailScreen: React.FC<ReviewScreenProps> = ({ route }) => {
                 return jurors.includes(review.ownerWallet) ? voteComponent() : onDisputeComponent();
             case BlockchainReviewStatus.CENSORED:
                 return review.ownerWallet == connectedAddress ? disputeComponent() : null;
+            case BlockchainReviewStatus.CHALLENGER_WON:
+                return censorshipRemovalComponent()
             default:
                 return null;
         }

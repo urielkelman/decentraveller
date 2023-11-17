@@ -121,6 +121,11 @@ class ModerationService {
         return await reviewContract.getJuries();
     }
 
+    async executeCensorshipRemoval(web3Provider: ethers.providers.Web3Provider, placeId: number, reviewId: number): Promise<string> {
+        const contractAddress = await this.getReviewContractAddress(web3Provider, placeId, reviewId);
+        return await this.populateAndSend(web3Provider, contractAddress, 'executeUncensorship');
+    }
+
     private async populateAndSend(
         web3Provider: ethers.providers.Web3Provider,
         contractAddress: string,

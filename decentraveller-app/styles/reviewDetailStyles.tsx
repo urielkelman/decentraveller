@@ -35,6 +35,48 @@ const reviewDetailStyles = StyleSheet.create({
         paddingHorizontal: 10,
         alignItems: 'center',
     },
+    buttonVoteContainer: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+    },
+    cardContainer: {
+        backgroundColor: 'white',
+        borderRadius: 10,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 2,
+        elevation: 4,
+        padding: 8,
+        margin: 10,
+    },
+    explanationText: {
+        fontSize: 14,
+        fontFamily: 'Montserrat_400Regular',
+    },
+    cardContent: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    headerText: {
+        fontSize: 18,
+        fontFamily: 'Montserrat_700Bold',
+    },
+    textContainer: {
+        marginLeft: 4,
+    },
+    buttonImage: {
+        width: 60,
+        height: 60,
+        marginTop: 10,
+    },
+    icon: {
+        width: 24,
+        height: 24,
+        marginRight: 8,
+        marginLeft: 4,
+        resizeMode: 'contain',
+    },
 });
 
 export { reviewDetailStyles };

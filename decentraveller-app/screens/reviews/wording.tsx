@@ -23,6 +23,12 @@ export const reviewDetailScreenWordings = {
         'If you consider that this review does not violate any of the community rules, you can put it to a vote. Various random users will vote and that will be the final and immovable decision.',
     ON_DISPUTE_STATUS_LABEL:
         'Because the moderator and the owner of the review do not agree on whether this review should be public or not, it was submitted to a popular vote by random jurors. You are not allowed to vote.',
+    VOTE_STATUS_LABEL:
+        'You were selected as a jury to vote in this challenge.',
+    VOTE_EXPLANATION_LABEL:
+        'If you consider that this review is well censored by the moderator, vote thumbs up, if you consider that it was unfairly censored and complies with the community rules, vote against',
+    UNCENSOR_LABEL:
+        'The challenger of this review won the dispute and this review can be visible again. All that remains is for someone to confirm this transaction. Could you do it?',
 };
 
 export const selectBrokenRuleScreenWordings = {
