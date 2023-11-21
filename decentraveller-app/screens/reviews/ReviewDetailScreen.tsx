@@ -297,6 +297,15 @@ const ReviewDetailScreen: React.FC<ReviewScreenProps> = ({ route }) => {
     const renderByStatusAndRole = () => {
         const role = userRole.value;
 
+        // Votacion
+        // return voteComponent();
+
+        // Challengear
+        // return disputeComponent();
+
+        // Remover censura
+        // return censorshipRemovalComponent();
+
         switch (blockchainStatus) {
             case BlockchainReviewStatus.PUBLIC:
                 return role == UserRole.MODERATOR ? censorComponent() : null;
