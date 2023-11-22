@@ -184,6 +184,10 @@ contract DecentravellerReview is Initializable, Ownable {
         return challenge.juries;
     }
 
+    function getOwner() external view returns (address) {
+        return reviewOwner;
+    }
+
     function _checkVotingIsValidAndRegisterVote(address _voter) internal {
         _checkReviewOperationState(
             DecentravellerDataTypes

@@ -145,7 +145,7 @@ const main = async () => {
     const reviewFile = readFileSync("data/ba_reviews.json", "utf-8");
     for (const line of reviewFile.split(/\r?\n/)) {
         const reviewData = JSON.parse(line);
-        if(!userId2Contract.has(reviewData["user_id"])){
+        if (!userId2Contract.has(reviewData["user_id"])) {
             continue;
         }
         const signerContract = userId2Contract.get(reviewData["user_id"])!;
@@ -179,7 +179,7 @@ const main = async () => {
     const avatarFiles = fs.readdirSync("data/user_images/");
     for (const file of avatarFiles) {
         const userId = file.split(".")[0];
-        if(!userId2Contract.has(userId)){
+        if (!userId2Contract.has(userId)) {
             continue;
         }
         const c = userId2Contract.get(userId)!;
