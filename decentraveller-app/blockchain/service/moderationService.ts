@@ -3,6 +3,7 @@ import { apiAdapter, ApiAdapter } from '../../api/apiAdapter';
 import { ethers } from 'ethers';
 import { BlockchainCensorshipVotes, BlockchainReviewStatus } from '../types';
 import { decentravellerReviewContract } from '../contracts/decentravellerReviewContract';
+import {decentravellerMainContract} from "../contracts/decentravellerMainContract";
 class ModerationService {
     private blockchainAdapter: BlockchainAdapter;
     constructor(blockchainAdapter: BlockchainAdapter, apiAdapter: ApiAdapter) {
@@ -127,7 +128,14 @@ class ModerationService {
         reviewId: number,
     ): Promise<string> {
         const contractAddress = await this.getReviewContractAddress(web3Provider, placeId, reviewId);
-        return await this.populateAndSend(web3Provider, contractAddress, 'executeUncensorship');
+        return await this.blockchainAdapter.populateAndSendWithAddress(
+            web3Provider,
+            decentravellerMainContract,
+            'executeReviewUncensorship',
+            contractAddress,
+            placeId,
+            reviewId
+        );
     }
 
     private async populateAndSend(

@@ -5,8 +5,8 @@ import {
     DecentravellerToken,
 } from "../typechain-types";
 
-const placeId = 4;
-const reviewId = 1;
+const reviewId = 3;
+const placeId = 1;
 
 // Left = reviewId, Right = placeId
 // 2	1
@@ -99,7 +99,7 @@ const main = async () => {
     console.log(secondSignerToVote);
 
     await review.connect(signerToVote).voteAgainstCensorship();
-    await review.connect(secondSignerToVote).voteForCensorship();
+    await review.connect(secondSignerToVote).voteAgainstCensorship();
 };
 
 main()

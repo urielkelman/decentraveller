@@ -58,6 +58,10 @@ const decentravellerMainContract: DecentravellerContract = {
             functionName: 'challengeReviewCensorship',
             fullContractABI: mainContractStringfiedABI,
         },
+        executeReviewUncensorship: {
+            functionName: 'executeReviewUncensorship',
+            fullContractABI: mainContractStringfiedABI,
+        },
     },
 };
 

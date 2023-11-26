@@ -56,7 +56,9 @@ const ReviewDetailScreen: React.FC<ReviewScreenProps> = ({ route }) => {
             reviewData.status == BackendReviewStatus.PUBLIC
                 ? BlockchainReviewStatus.PUBLIC
                 : await moderationService.getReviewCensorStatus(web3Provider, placeId, reviewId);
-        setJurors(await moderationService.getJuries(web3Provider, placeId, reviewId));
+        const juries = await moderationService.getJuries(web3Provider, placeId, reviewId)
+        const lowerJuries = juries.map(jurie =>  jurie.toLowerCase() )
+        setJurors(lowerJuries);
         setBlockchainStatus(blockchainReviewStatus);
         setAlreadyVoted(await moderationService.hasVotedOnDispute(web3Provider, placeId, reviewId));
         const reviewToShow: ReviewShowProps = {
@@ -297,20 +299,11 @@ const ReviewDetailScreen: React.FC<ReviewScreenProps> = ({ route }) => {
     const renderByStatusAndRole = () => {
         const role = userRole.value;
 
-        // Votacion
-        // return voteComponent();
-
-        // Challengear
-        // return disputeComponent();
-
-        // Remover censura
-        // return censorshipRemovalComponent();
-
         switch (blockchainStatus) {
             case BlockchainReviewStatus.PUBLIC:
                 return role == UserRole.MODERATOR ? censorComponent() : null;
             case BlockchainReviewStatus.CENSORSHIP_CHALLENGED:
-                return jurors.includes(review.ownerWallet) ? voteComponent() : onDisputeComponent();
+                return jurors.includes(connectedAddress) ? voteComponent() : onDisputeComponent();
             case BlockchainReviewStatus.CENSORED:
                 return review.ownerWallet == connectedAddress ? disputeComponent() : null;
             case BlockchainReviewStatus.CHALLENGER_WON:
