@@ -127,15 +127,7 @@ class ModerationService {
         placeId: number,
         reviewId: number,
     ): Promise<string> {
-        const contractAddress = await this.getReviewContractAddress(web3Provider, placeId, reviewId);
-        return await this.blockchainAdapter.populateAndSendWithAddress(
-            web3Provider,
-            decentravellerMainContract,
-            'executeReviewUncensorship',
-            contractAddress,
-            placeId,
-            reviewId
-        );
+        return await blockchainAdapter.executeReviewUncensorship(web3Provider, placeId, reviewId)
     }
 
     private async populateAndSend(

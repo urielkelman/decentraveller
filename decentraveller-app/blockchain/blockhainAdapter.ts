@@ -446,6 +446,20 @@ class BlockchainAdapter {
             console.log(e);
         }
     }
+
+    async executeReviewUncensorship(web3Provider: ethers.providers.Web3Provider, placeId: number, reviewId: number) {
+        try {
+            return await this.populateAndSend(
+                web3Provider,
+                decentravellerMainContract,
+                'executeReviewUncensorship',
+                placeId,
+                reviewId,
+            );
+        } catch (e) {
+            console.log(e);
+        }
+    }
 }
 
 const blockchainAdapter = new BlockchainAdapter();
