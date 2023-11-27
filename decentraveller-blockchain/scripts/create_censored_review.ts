@@ -6,7 +6,7 @@ import {
 } from "../typechain-types";
 
 const reviewId = 3;
-const placeId = 1;
+const placeId = 2;
 
 // Left = reviewId, Right = placeId
 // 2	1

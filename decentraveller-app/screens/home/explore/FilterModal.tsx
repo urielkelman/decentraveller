@@ -57,7 +57,7 @@ const FilterModal: React.FC<FilterModalProps> = ({ route }) => {
                     <Picker.Item label="Distance" value="distance" />
                 </Picker>
             </View>
-            <Text style={styles.label}>Interest:</Text>
+            <Text style={styles.label}>Category:</Text>
             <View style={styles.pickerContainer}>
                 <Picker selectedValue={interest} onValueChange={interestOnValueChange}>
                     <Picker.Item label="Any" value={null} />
