@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, KeyboardAvoidingView, Image, Text, TouchableOpacity, TextInput, Platform } from 'react-native';
+import { Image, KeyboardAvoidingView, Platform, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { addReviewsScreenWordings } from './wording';
 import DecentravellerButton from '../../commons/components/DecentravellerButton';
@@ -8,7 +8,6 @@ import { RouteProp, useRoute } from '@react-navigation/native';
 import { blockchainAdapter } from '../../blockchain/blockhainAdapter';
 import { useAppContext } from '../../context/AppContext';
 import { apiAdapter } from '../../api/apiAdapter';
-import { mockApiAdapter } from '../../api/mockApiAdapter';
 import DecentravellerInformativeModal from '../../commons/components/DecentravellerInformativeModal';
 
 const adapter = blockchainAdapter;

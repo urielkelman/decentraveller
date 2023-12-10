@@ -1,6 +1,3 @@
-import { NavigationProp, RouteProp } from '@react-navigation/native';
-import { HomeStackScreens } from '../HomeNavigator';
-
 export interface FilterModalData {
     orderBy: string;
     setOrderBy: (value: string) => void;

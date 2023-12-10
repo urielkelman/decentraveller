@@ -1,4 +1,4 @@
-import { Text, TouchableOpacity, View, Image } from 'react-native';
+import { Image, Text, TouchableOpacity, View } from 'react-native';
 import { useAppContext } from '../../context/AppContext';
 import React, { useEffect } from 'react';
 import { apiAdapter } from '../../api/apiAdapter';
@@ -108,7 +108,7 @@ const HomeScreen = ({ navigation }) => {
         console.log('register');
         const pushNotificationToken = await registerForPushNotificationsAsync();
         console.log('push token');
-        await apiAdapter.sendPushNotificationToken(address, pushNotificationToken);
+        await adapter.sendPushNotificationToken(address, pushNotificationToken);
     };
 
     useEffect(() => {
@@ -190,7 +190,7 @@ const HomeScreen = ({ navigation }) => {
                 >
                     <View style={homeStyle.mapMarker}>
                         <Image source={require('../../assets/bubble.png')} style={homeStyle.bubbleImage} />
-                        <Image source={{ uri: apiAdapter.getPlaceThumbailUrl(item.id) }} style={homeStyle.mapImage} />
+                        <Image source={{ uri: adapter.getPlaceThumbailUrl(item.id) }} style={homeStyle.mapImage} />
                     </View>
                 </Marker>
             ))}

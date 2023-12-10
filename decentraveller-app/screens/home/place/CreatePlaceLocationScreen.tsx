@@ -1,4 +1,4 @@
-import { KeyboardAvoidingView, Text } from 'react-native';
+import { KeyboardAvoidingView } from 'react-native';
 import { bottomTabScreenStyles } from '../../../styles/bottomTabScreensStyles';
 import DecentravellerHeadingText from '../../../commons/components/DecentravellerHeadingText';
 import { addPlaceScreenWordings } from './wording';

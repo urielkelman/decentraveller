@@ -7,7 +7,8 @@ from starlette.status import HTTP_404_NOT_FOUND, HTTP_400_BAD_REQUEST
 from src.api_models.bulk_results import PaginatedReviews
 from src.api_models.place import PlaceID
 from src.api_models.profile import WalletID, wallet_id_validator
-from src.api_models.review import ReviewID, ReviewInput, ReviewWithProfile, CensorReviewInput
+from src.api_models.review import ReviewID, ReviewInput, ReviewWithProfile, CensorReviewInput, \
+    ReviewChallengeCensorshipInput, UncensorReviewInput
 from src.dependencies.indexer_auth import indexer_auth
 from src.dependencies.ipfs_service import IPFSService
 from src.dependencies.push_notification_adapter import PushNotificationAdapter
@@ -73,7 +74,7 @@ class ReviewCBV:
         :return: the reviews data
         """
 
-        reviews = self.database.query_reviews_by_place(place_id, page, per_page)
+        reviews = self.database.query_active_reviews_by_place(place_id, page, per_page)
         if not reviews:
             raise HTTPException(status_code=HTTP_404_NOT_FOUND)
         return reviews
@@ -90,10 +91,59 @@ class ReviewCBV:
         :return: the reviews data
         """
 
-        reviews = self.database.query_reviews_by_profile(owner, page, per_page)
+        reviews = self.database.query_active_reviews_by_profile(owner, page, per_page)
         if not reviews:
             raise HTTPException(status_code=HTTP_404_NOT_FOUND)
         return reviews
+
+    @review_router.get("/profile/{owner}/reviews/censored")
+    def get_censored_reviews_by_profile(self, per_page: int, page: int,
+                                        owner: WalletID = Depends(wallet_id_validator)) -> PaginatedReviews:
+        """
+        Gets the censored reviews from a user paginated
+
+        :param owner: the profile
+        :param per_page: items per page
+        :param page: number of page
+        :return: the reviews data
+        """
+
+        reviews = self.database.query_censored_reviews_by_profile(owner, page, per_page)
+        if not reviews:
+            raise HTTPException(status_code=HTTP_404_NOT_FOUND)
+        return reviews
+
+    @review_router.get("/reviews/censored")
+    def get_censored_reviews(self, per_page: int, page: int) -> PaginatedReviews:
+        """
+        Gets the censored reviews
+
+        :param per_page: items per page
+        :param page: number of page
+        :return: the reviews data
+        """
+
+        reviews = self.database.query_censored_reviews(page, per_page)
+        if not reviews:
+            raise HTTPException(status_code=HTTP_404_NOT_FOUND)
+        return reviews
+
+    @review_router.get("/reviews/as_juror")
+    def get_as_juror_reviews(self, juror: WalletID, per_page: int, page: int) -> PaginatedReviews:
+        """
+        Gets the reviews on which juror is a juror
+
+        :param juror: the juror of the review
+        :param per_page: items per page
+        :param page: number of page
+        :return: the reviews data
+        """
+
+        reviews = self.database.query_as_juror_reviews(juror, page, per_page)
+        if not reviews:
+            raise HTTPException(status_code=HTTP_404_NOT_FOUND)
+        return reviews
+
 
     @review_router.get("/review/{image_number}.jpg")
     def get_review_image(self, id: ReviewID,
@@ -121,4 +171,42 @@ class ReviewCBV:
         :param censor_review_input: the object containing the information of the review to censor.
         """
         self.database.censor_review(censor_review_input)
+        review = self.database.get_review(censor_review_input.place_id, censor_review_input.review_id)
+
+        owner = self.database.get_profile_orm(review.owner)
+        if owner.push_token:
+            self.push_notification_adapter.send_review_censored(owner.push_token,
+                                                                censor_review_input.place_id,
+                                                                censor_review_input.review_id)
+        return
+
+    @review_router.post("/review/censor/challenge", status_code=201, dependencies=[Depends(indexer_auth)])
+    def challenge_review_censorship(self, challenge_censorship_input: ReviewChallengeCensorshipInput):
+        """
+        Updates a review indicating that the censorship was challenged.
+        :param challenge_censorship_input: the object containing the information of the challenge.
+        """
+        self.database.challenge_review_censorship(challenge_censorship_input)
+
+        # for juror in challenge_censorship_input.juries:
+        #     juror_orm = self.database.get_profile_orm(juror)
+        #     if juror_orm.push_token:
+        #         self.push_notification_adapter.send_notify_juror(juror_orm.push_token,
+        #                                                          challenge_censorship_input.place_id,
+        #                                                          challenge_censorship_input.review_id)
+        return
+
+    @review_router.post("/review/uncensor", status_code=201, dependencies=[Depends(indexer_auth)])
+    def uncensor_review(self, uncensor_review_input: UncensorReviewInput):
+        """
+        Updates a review to non-censored status.
+        """
+        self.database.uncensor_review(uncensor_review_input)
+        review = self.database.get_review(uncensor_review_input.place_id, uncensor_review_input.review_id)
+
+        owner = self.database.get_profile_orm(review.owner)
+        if owner.push_token:
+            self.push_notification_adapter.send_review_uncensored(owner.push_token,
+                                                                  uncensor_review_input.place_id,
+                                                                  uncensor_review_input.review_id)
         return

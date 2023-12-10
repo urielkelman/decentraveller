@@ -12,14 +12,24 @@
         "type": "address"
       },
       {
+        "internalType": "address",
+        "name": "_token",
+        "type": "address"
+      },
+      {
         "internalType": "string[]",
         "name": "initialRules",
         "type": "string[]"
       },
       {
         "internalType": "uint8",
-        "name": "_moderatorsAmount",
+        "name": "_minModeratorsAmount",
         "type": "uint8"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_moderatorCost",
+        "type": "uint256"
       }
     ],
     "stateMutability": "nonpayable",
@@ -44,6 +54,11 @@
   {
     "inputs": [],
     "name": "OnlyModerator__Execution",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "OnlyNonModerator__Execution",
     "type": "error"
   },
   {
@@ -141,6 +156,37 @@
       }
     ],
     "name": "DecentravellerReviewCensored",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "placeId",
+        "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "reviewId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "challengeDeadline",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "address[]",
+        "name": "juries",
+        "type": "address[]"
+      }
+    ],
+    "name": "DecentravellerReviewCensorshipChallenged",
     "type": "event"
   },
   {
@@ -294,6 +340,25 @@
     "type": "event"
   },
   {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "owner",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "enum DecentravellerDataTypes.DecentravellerUserRole",
+        "name": "userRole",
+        "type": "uint8"
+      }
+    ],
+    "name": "ProfileRoleChange",
+    "type": "event"
+  },
+  {
     "inputs": [
       {
         "internalType": "string",
@@ -399,6 +464,24 @@
   {
     "inputs": [
       {
+        "internalType": "uint256",
+        "name": "_placeId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_reviewId",
+        "type": "uint256"
+      }
+    ],
+    "name": "challengeReviewCensorship",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "string",
         "name": "ruleStatement",
         "type": "string"
@@ -437,6 +520,24 @@
       }
     ],
     "name": "deleteRule",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_placeId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_reviewId",
+        "type": "uint256"
+      }
+    ],
+    "name": "executeReviewUncensorship",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -578,6 +679,13 @@
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "promoteToModerator",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {

@@ -59,6 +59,39 @@ class PushNotificationAdapter:
             )
         )
 
+    def send_review_censored(self, token: str, place_id: int, review_id: int):
+        self.__send_push_message__(
+            token=token,
+            heading="Your review has been censored!",
+            content="You can challenge the censorship!",
+            deep_link_path="review/{place_id}/{review_id}/".format(
+                place_id=place_id,
+                review_id=review_id
+            )
+        )
+
+    def send_review_uncensored(self, token: str, place_id: int, review_id: int):
+        self.__send_push_message__(
+            token=token,
+            heading="Your review has been uncensored!",
+            content="The review is visible again!",
+            deep_link_path="review/{place_id}/{review_id}/".format(
+                place_id=place_id,
+                review_id=review_id
+            )
+        )
+
+    def send_notify_juror(self, token: str, place_id: int, review_id: int):
+        self.__send_push_message__(
+            token=token,
+            heading="You've selected as juror!",
+            content="You can vote in a censorship challenge!",
+            deep_link_path="review/{place_id}/{review_id}/".format(
+                place_id=place_id,
+                review_id=review_id
+            )
+        )
+
     def __send_push_message__(self, token: str, heading: str, content: str, deep_link_path=None):
         try:
             response = PushClient(session=self.session).publish(

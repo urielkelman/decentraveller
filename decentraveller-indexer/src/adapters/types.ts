@@ -33,6 +33,12 @@ export interface NewProfileRequestBody extends EventRequestBody {
     nickname: string;
     country: string;
     interest: string;
+    role: string;
+}
+
+export interface RoleChangeBody extends EventRequestBody {
+    owner: string;
+    role: string;
 }
 
 export interface RuleProposedRequestBody extends EventRequestBody {
@@ -68,6 +74,14 @@ export interface ReviewCensoredRequestBody extends EventRequestBody {
     reviewId: number;
     brokenRuleId: number;
     moderator: string;
+}
+
+export interface ReviewCensorshipChallengedRequestBody
+    extends EventRequestBody {
+    placeId: number;
+    reviewId: number;
+    deadlineTimestamp: number;
+    juries: string[];
 }
 
 export interface ReviewUncesoredRequestBody extends EventRequestBody {

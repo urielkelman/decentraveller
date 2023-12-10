@@ -2,14 +2,15 @@ from typing import Optional, Dict, List, Union, Callable, Tuple
 from datetime import datetime
 
 from fastapi import HTTPException
-from sqlalchemy import func, case, tuple_, and_
+from sqlalchemy import func, case, tuple_, and_, cast, String
 from sqlalchemy.orm import Session
 from starlette.status import HTTP_400_BAD_REQUEST, HTTP_404_NOT_FOUND
 
 from src.api_models.bulk_results import PaginatedReviews, PaginatedPlaces
 from src.api_models.place import PlaceID, PlaceInDB, PlaceWithStats
 from src.api_models.profile import ProfileInDB, WalletID
-from src.api_models.review import ReviewID, ReviewInDB, ReviewWithProfile, ReviewInput, CensorReviewInput
+from src.api_models.review import ReviewID, ReviewInDB, ReviewWithProfile, ReviewInput, CensorReviewInput, \
+    ReviewChallengeCensorshipInput, UncensorReviewInput
 from src.api_models.rule import RuleInput, RuleInDB, RuleId, RuleProposedDeletionInput, RuleProposalQueuedInput
 from src.orms.image import ImageORM
 from src.orms.place import PlaceORM
@@ -232,18 +233,20 @@ class RelationalDatabase:
         profile: Optional[ProfileORM] = self.session.query(ProfileORM).get(owner)
         return profile
 
-    def query_reviews_by_place(self, place_id: PlaceID,
-                               page: int, per_page: int) -> PaginatedReviews:
+    def query_active_reviews_by_place(self, place_id: PlaceID,
+                                      page: int, per_page: int) -> PaginatedReviews:
         """
-        Gets all the reviews from a place as a query
+        Gets all the active reviews from a place as a query
 
         :param place_id: the id of the place
         :param page: page of the reviews
         :param per_page: items per page
         :return: the paginated reviews
         """
-        query = self.session.query(ReviewORM.id, ReviewORM.place_id). \
-            filter(ReviewORM.place_id == place_id)
+        query = (self.session.query(ReviewORM.id, ReviewORM.place_id).
+                 filter(ReviewORM.place_id == place_id).
+                 filter((ReviewORM.status == ReviewStatus.PUBLIC) | (ReviewORM.status == ReviewStatus.UNCENSORED_BY_CHALLENGE)).
+                 order_by(ReviewORM.id.asc()))
         total_count = query.count()
         query = query.limit(per_page).offset(page * per_page)
         ids = [(r[0], r[1]) for r in query.all()]
@@ -251,8 +254,8 @@ class RelationalDatabase:
         return PaginatedReviews(page=page, per_page=per_page,
                                 total=total_count, reviews=reviews)
 
-    def query_reviews_by_profile(self, owner: WalletID,
-                                 page: int, per_page: int) -> PaginatedReviews:
+    def query_active_reviews_by_profile(self, owner: WalletID,
+                                        page: int, per_page: int) -> PaginatedReviews:
         """
         Gets all the reviews from a profile as a query
 
@@ -261,8 +264,71 @@ class RelationalDatabase:
         :param per_page: items per page
         :return: the paginated reviews
         """
-        query = self.session.query(ReviewORM.id, ReviewORM.place_id). \
-            filter(ReviewORM.owner == owner)
+        query = (self.session.query(ReviewORM.id, ReviewORM.place_id).
+                 filter(ReviewORM.owner == owner).
+                 filter((ReviewORM.status == ReviewStatus.PUBLIC) |
+                        (ReviewORM.status == ReviewStatus.UNCENSORED_BY_CHALLENGE)).
+                 order_by(ReviewORM.status.asc(), ReviewORM.created_at.desc()))
+        total_count = query.count()
+        query = query.limit(per_page).offset(page * per_page)
+        ids = [(r[0], r[1]) for r in query.all()]
+        reviews = self._get_reviews_by_ids(ids)
+        return PaginatedReviews(page=page, per_page=per_page,
+                                total=total_count, reviews=reviews)
+
+    def query_censored_reviews_by_profile(self, owner: WalletID,
+                                          page: int, per_page: int) -> PaginatedReviews:
+        """
+        Gets all the censored reviews from a profile as a query
+
+        :param owner: the author of the review
+        :param page: page of the reviews
+        :param per_page: items per page
+        :return: the paginated reviews
+        """
+        query = (self.session.query(ReviewORM.id, ReviewORM.place_id).
+                 filter(ReviewORM.owner == owner).
+                 filter((ReviewORM.status == ReviewStatus.CENSORED) |
+                        (ReviewORM.status == ReviewStatus.CENSORSHIP_CHALLENGED)).
+                 order_by(ReviewORM.status.asc(), ReviewORM.created_at.desc()))
+        total_count = query.count()
+        query = query.limit(per_page).offset(page * per_page)
+        ids = [(r[0], r[1]) for r in query.all()]
+        reviews = self._get_reviews_by_ids(ids)
+        return PaginatedReviews(page=page, per_page=per_page,
+                                total=total_count, reviews=reviews)
+
+    def query_censored_reviews(self, page: int, per_page: int) -> PaginatedReviews:
+        """
+        Gets all the censored reviews
+
+        :param page: page of the reviews
+        :param per_page: items per page
+        :return: the paginated reviews
+        """
+        query = (self.session.query(ReviewORM.id, ReviewORM.place_id).
+                 filter((ReviewORM.status == ReviewStatus.CENSORED) |
+                        (ReviewORM.status == ReviewStatus.CENSORSHIP_CHALLENGED)).
+                 order_by(ReviewORM.status.asc(), ReviewORM.created_at.desc()))
+        total_count = query.count()
+        query = query.limit(per_page).offset(page * per_page)
+        ids = [(r[0], r[1]) for r in query.all()]
+        reviews = self._get_reviews_by_ids(ids)
+        return PaginatedReviews(page=page, per_page=per_page,
+                                total=total_count, reviews=reviews)
+
+    def query_as_juror_reviews(self, juror: str, page: int, per_page: int) -> PaginatedReviews:
+        """
+        Gets all the censored reviews
+
+        :param juror: the juror of the review
+        :param page: page of the reviews
+        :param per_page: items per page
+        :return: the paginated reviews
+        """
+        query = (self.session.query(ReviewORM.id, ReviewORM.place_id).
+                 filter(cast(ReviewORM.juries, String).contains(juror)).
+                 order_by(ReviewORM.created_at.desc()))
         total_count = query.count()
         query = query.limit(per_page).offset(page * per_page)
         ids = [(r[0], r[1]) for r in query.all()]
@@ -464,22 +530,65 @@ class RelationalDatabase:
 
         return RuleInDB.from_orm(rule)
 
-    def censor_review(self, censor_review_input: CensorReviewInput):
-        """
-        Updates a rule to censored state.
-        """
+    def get_review(self, place_id: PlaceID, review_id: ReviewID) -> ReviewORM:
         review = self.session.query(ReviewORM) \
-            .filter(ReviewORM.place_id == censor_review_input.place_id) \
-            .filter(ReviewORM.id == censor_review_input.review_id) \
+            .filter(ReviewORM.place_id == place_id) \
+            .filter(ReviewORM.id == review_id) \
+            .first()
+        return review
+
+    def __get_review_and_check_status__(self, place_id: PlaceID, review_id: ReviewID,
+                                        expected_status: ReviewStatus) -> ReviewORM:
+        review = self.session.query(ReviewORM) \
+            .filter(ReviewORM.place_id == place_id) \
+            .filter(ReviewORM.id == review_id) \
             .first()
 
         if review is None:
             raise HTTPException(status_code=HTTP_404_NOT_FOUND)
 
-        if review.status != ReviewStatus.PUBLIC:
+        if review.status != expected_status:
             raise HTTPException(status_code=HTTP_400_BAD_REQUEST)
+
+        return review
+
+    def censor_review(self, censor_review_input: CensorReviewInput):
+        """
+        Updates a rule to censored state.
+        """
+        review = self.__get_review_and_check_status__(
+            censor_review_input.place_id, censor_review_input.review_id, ReviewStatus.PUBLIC
+        )
 
         review.status = ReviewStatus.CENSORED
         review.censor_moderator = censor_review_input.moderator
         review.broken_rule_id = censor_review_input.broken_rule_id
+        self.session.commit()
+
+    def uncensor_review(self, uncensor_review_input: UncensorReviewInput):
+        """
+        Updates a rule to uncensored state.
+        """
+        review = self.session.query(ReviewORM) \
+            .filter(ReviewORM.place_id == uncensor_review_input.place_id) \
+            .filter(ReviewORM.id == uncensor_review_input.review_id) \
+            .first()
+
+        if review is None:
+            raise HTTPException(status_code=HTTP_404_NOT_FOUND)
+
+        review.status = ReviewStatus.UNCENSORED_BY_CHALLENGE
+        self.session.commit()
+
+    def challenge_review_censorship(self, challenge_censorship_input: ReviewChallengeCensorshipInput):
+        """
+        Updates a rule to censorship challenged state.
+        """
+        review = self.__get_review_and_check_status__(
+            challenge_censorship_input.place_id, challenge_censorship_input.review_id, ReviewStatus.CENSORED
+        )
+
+        review.status = ReviewStatus.CENSORSHIP_CHALLENGED
+        review.challenge_deadline = datetime.utcfromtimestamp(challenge_censorship_input.deadline_timestamp)
+        review.juries = challenge_censorship_input.juries
         self.session.commit()

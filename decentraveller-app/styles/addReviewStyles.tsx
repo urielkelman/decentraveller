@@ -1,4 +1,5 @@
 import { Dimensions, StyleSheet, TextStyle } from 'react-native';
+import { DECENTRAVELLER_DEFAULT_BACKGROUND_COLOR } from '../commons/global';
 
 const { height, width } = Dimensions.get('window');
 
@@ -174,6 +175,50 @@ const successAddRegisterStyles = StyleSheet.create({
     },
 });
 
+const selectBrokenRuleScreenStyles = StyleSheet.create({
+    container: {
+        alignItems: 'center',
+        flex: 1,
+        backgroundColor: DECENTRAVELLER_DEFAULT_BACKGROUND_COLOR,
+    },
+    title: {
+        fontSize: 20,
+        fontFamily: 'Montserrat_800ExtraBold',
+        textAlign: 'left',
+        marginBottom: 0,
+        marginRight: 10,
+        marginTop: 20,
+    },
+    descriptionContainer: {
+        backgroundColor: 'transparent',
+        padding: 10,
+        borderRadius: 10,
+        marginBottom: 20,
+        borderWidth: 2,
+        borderColor: 'black',
+    },
+    description: {
+        fontSize: 24,
+        textAlign: 'center',
+        fontFamily: 'Montserrat_700Bold',
+    },
+
+    tapHereDescription: {
+        fontSize: 24,
+        textAlign: 'center',
+        fontFamily: 'Montserrat_400Regular',
+    },
+    subtitleText: {
+        paddingBottom: height * 0.027,
+        textAlign: 'left',
+        fontFamily: 'Montserrat_500Medium',
+        marginTop: 10,
+    },
+    buttonContainer: {
+        marginTop: 550,
+        position: 'absolute',
+    },
+});
 const subTitleTextStyle: TextStyle = {
     fontSize: height * 0.025,
     marginTop: height * 0.055,
@@ -182,4 +227,10 @@ const subTitleTextStyle: TextStyle = {
     fontWeight: '200',
 };
 
-export { addReviewCommentStyles, addReviewImagesStyles, successAddRegisterStyles, subTitleTextStyle };
+export {
+    addReviewCommentStyles,
+    addReviewImagesStyles,
+    successAddRegisterStyles,
+    subTitleTextStyle,
+    selectBrokenRuleScreenStyles,
+};

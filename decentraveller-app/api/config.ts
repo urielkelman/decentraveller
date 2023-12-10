@@ -9,8 +9,8 @@ if (Constants.deviceName === 'Simulator' || Constants.deviceName.includes('Emula
     API_ENDPOINT = 'http://10.0.2.2:8000';
     JSON_RPC_URL = 'http://10.0.2.2:8545';
 } else {
-    //API_ENDPOINT = 'http://192.168.0.95:8000';
-    API_ENDPOINT = 'http://192.168.1.115:8000';
+    //API_ENDPOINT = 'http://192.168.0.21:8000';
+    API_ENDPOINT = 'http://192.168.0.95:8000';
     JSON_RPC_URL = 'https://dtblockchain.loca.lt';
 }
 
@@ -25,6 +25,9 @@ export const RECOMMENDED_SIMILAR_PLACES = '/place/{placeId}/similars';
 export const OWNED_PLACES_ENDPOINT = '/profile/{walletId}/places';
 export const REVIEWS_PLACES_ENDPOINT = '/place/{placeId}/reviews';
 export const REVIEWS_PROFILE_ENDPOINT = '/profile/{walletId}/reviews';
+export const CENSORED_REVIEWS_PROFILE_ENDPOINT = '/profile/{walletId}/reviews/censored';
+export const CENSORED_REVIEWS_ENDPOINT = '/reviews/censored';
+export const AS_JUROR_REVIEWS_ENDPOINT = '/reviews/as_juror';
 export const PROFILE_IMAGE = '/profile/{owner}/avatar.jpg';
 export const PLACE_IMAGE = '/place/{placeId}/image.jpg';
 export const PLACE_THUMBNAIL = '/place/{placeId}/thumbnail.jpg';

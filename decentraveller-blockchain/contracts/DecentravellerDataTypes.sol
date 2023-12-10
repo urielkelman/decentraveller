@@ -23,7 +23,11 @@ library DecentravellerDataTypes {
 
     enum DecentravellerReviewState {
         PUBLIC,
-        CENSORED
+        CENSORED,
+        CENSORSHIP_CHALLENGED,
+        CHALLENGE_WON,
+        MODERATOR_WON,
+        UNCENSORED_BY_CHALLENGE
     }
 
     struct DecentravellerProfile {
@@ -41,5 +45,13 @@ library DecentravellerDataTypes {
         uint256 deleteProposalId;
         address deletionProposer;
         string statement;
+    }
+
+    struct CensorshipChallenge {
+        uint256 challengeDeadline;
+        bool executedUncensor;
+        uint8 forCensorshipVotes;
+        uint8 againstCensorshipVotes;
+        address[] juries;
     }
 }

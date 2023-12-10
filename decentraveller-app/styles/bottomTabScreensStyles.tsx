@@ -87,10 +87,9 @@ const bottomTabButtonStyle = StyleSheet.create({
     button: {
         flexDirection: 'row',
         alignItems: 'center',
-        height: height / 12,
         backgroundColor: '#983B46',
         width: width * 0.8,
-        minHeight: height * 0.06,
+        paddingVertical: height * 0.02,
         margin: height * 0.01,
         borderRadius: width * 0.06,
     },

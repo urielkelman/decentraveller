@@ -18,6 +18,7 @@ error OnlyGovernance__Execution();
 error Rule__NonExistent(uint256 ruleId);
 error Rule__AlreadyDeleted(uint256 ruleId);
 error OnlyModerator__Execution();
+error OnlyNonModerator__Execution();
 
 contract Decentraveller {
     event ProfileCreated(
@@ -54,40 +55,51 @@ contract Decentraveller {
         address moderator
     );
 
+    event DecentravellerReviewCensorshipChallenged(
+        uint256 indexed placeId,
+        uint256 indexed reviewId,
+        uint256 challengeDeadline,
+        address[] juries
+    );
+
     event DecentravellerReviewUncensored(
         uint256 indexed placeId,
         uint256 indexed reviewId
     );
 
+    event ProfileRoleChange(
+        address indexed owner,
+        DecentravellerDataTypes.DecentravellerUserRole userRole
+    );
+
+    DecentravellerToken token;
     DecentravellerGovernance governance;
     DecentravellerPlaceCloneFactory placeFactory;
 
     uint256 private currentPlaceId;
     uint256 private currentRuleId;
 
-    uint8 moderatorsAmount;
+    uint8 minModeratorsAmount;
     uint8 currentModeratorsAmount;
+    uint256 moderatorCost;
 
     address timelockGovernanceAddress;
-
-    struct ReviewIdData {
-        uint256 placeId;
-        uint256 reviewId;
-    }
 
     mapping(uint256 => address) private placeAddressByPlaceId;
     mapping(string => uint) private placeIdByPlaceLocation;
     mapping(address => DecentravellerDataTypes.DecentravellerProfile) profilesByOwner;
     mapping(string => address) ownersByNicknames;
     mapping(uint256 => DecentravellerDataTypes.DecentravellerRule) ruleById;
-    mapping(uint256 => ReviewIdData[]) censoredReviewsByBrokenRuleId;
 
     constructor(
         address _governance,
         address _placesFactory,
+        address _token,
         string[] memory initialRules,
-        uint8 _moderatorsAmount
+        uint8 _minModeratorsAmount,
+        uint256 _moderatorCost
     ) {
+        token = DecentravellerToken(_token);
         governance = DecentravellerGovernance(payable(_governance));
         timelockGovernanceAddress = governance.timelock();
         placeFactory = DecentravellerPlaceCloneFactory(_placesFactory);
@@ -103,8 +115,9 @@ contract Decentraveller {
         }
         currentRuleId = initialRulesLength;
         currentPlaceId = 0;
-        moderatorsAmount = _moderatorsAmount;
+        minModeratorsAmount = _minModeratorsAmount;
         currentModeratorsAmount = 0;
+        moderatorCost = _moderatorCost;
     }
 
     modifier onlyGovernance() {
@@ -131,6 +144,16 @@ contract Decentraveller {
         _;
     }
 
+    modifier onlyNonModerator() {
+        if (
+            profilesByOwner[msg.sender].role ==
+            DecentravellerDataTypes.DecentravellerUserRole.MODERATOR
+        ) {
+            revert OnlyNonModerator__Execution();
+        }
+        _;
+    }
+
     function registerProfile(
         string calldata _nickname,
         string calldata _country,
@@ -152,7 +175,7 @@ contract Decentraveller {
 
         DecentravellerDataTypes.DecentravellerUserRole role;
 
-        if (currentModeratorsAmount < moderatorsAmount) {
+        if (currentModeratorsAmount < minModeratorsAmount) {
             role = DecentravellerDataTypes.DecentravellerUserRole.MODERATOR;
             currentModeratorsAmount++;
         } else {
@@ -173,13 +196,24 @@ contract Decentraveller {
         return msg.sender;
     }
 
+    function promoteToModerator() external onlyNonModerator {
+        token.burn(msg.sender, moderatorCost);
+        profilesByOwner[msg.sender].role = DecentravellerDataTypes.DecentravellerUserRole.MODERATOR;
+        currentModeratorsAmount++;
+        emit ProfileRoleChange(msg.sender, DecentravellerDataTypes.DecentravellerUserRole.MODERATOR);
+    }
+
+    function moderatorPromotionCost() external view returns (uint256){
+        return moderatorCost;
+    }
+
     function addPlace(
         string memory _name,
         string memory _latitude,
         string memory _longitude,
         string memory _physicalAddress,
         DecentravellerDataTypes.DecentravellerPlaceCategory category
-    ) public onlyRegisteredAddress returns (uint256 placeId) {
+    ) external onlyRegisteredAddress returns (uint256 placeId) {
         string memory locationIdentifier = string.concat(_latitude, _longitude);
         uint256 placeIdForLocation = placeIdByPlaceLocation[locationIdentifier];
 
@@ -230,8 +264,7 @@ contract Decentraveller {
         uint256 _placeId,
         uint256 _reviewId
     ) external view returns (address) {
-        address placeAddress = getPlaceAddress(_placeId);
-        return DecentravellerPlace(placeAddress).getReviewAddress(_reviewId);
+        return _getReviewAddress(_placeId, _reviewId);
     }
 
     function _getReviewAddress(
@@ -259,16 +292,32 @@ contract Decentraveller {
             _brokenRuleId,
             msg.sender
         );
+    }
 
-        censoredReviewsByBrokenRuleId[_brokenRuleId].push(
-            ReviewIdData({placeId: _placeId, reviewId: _reviewId})
+    function challengeReviewCensorship(
+        uint256 _placeId,
+        uint256 _reviewId
+    ) external onlyRegisteredAddress {
+        address reviewAddress = _getReviewAddress(_placeId, _reviewId);
+        DecentravellerReview review = DecentravellerReview(reviewAddress);
+        DecentravellerDataTypes.CensorshipChallenge memory challenge = review
+            .challengeCensorship(msg.sender, address(governance.token()));
+
+        emit DecentravellerReviewCensorshipChallenged(
+            _placeId,
+            _reviewId,
+            challenge.challengeDeadline,
+            challenge.juries
         );
     }
 
-    function _uncensorReview(uint256 _placeId, uint256 _reviewId) internal {
+    function executeReviewUncensorship(
+        uint256 _placeId,
+        uint256 _reviewId
+    ) external onlyRegisteredAddress {
         address reviewAddress = _getReviewAddress(_placeId, _reviewId);
-        DecentravellerReview(reviewAddress).uncensor();
-
+        DecentravellerReview review = DecentravellerReview(reviewAddress);
+        review.executeUncensorship();
         emit DecentravellerReviewUncensored(_placeId, _reviewId);
     }
 
@@ -342,18 +391,6 @@ contract Decentraveller {
         );
         rule.status = DecentravellerDataTypes.DecentravellerRuleStatus.DELETED;
         emit DecentravellerRuleDeleted(ruleId);
-
-        ReviewIdData[]
-            memory censoredReviewsOfDeletedRule = censoredReviewsByBrokenRuleId[
-                ruleId
-            ];
-
-        uint256 censoredReviewsAmount = censoredReviewsOfDeletedRule.length;
-
-        for (uint i = 0; i < censoredReviewsAmount; i++) {
-            ReviewIdData memory reviewIdData = censoredReviewsOfDeletedRule[i];
-            _uncensorReview(reviewIdData.placeId, reviewIdData.reviewId);
-        }
     }
 
     function createRuleDeletionProposal(

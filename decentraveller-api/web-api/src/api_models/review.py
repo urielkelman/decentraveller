@@ -1,4 +1,4 @@
-from typing import NewType
+from typing import NewType, List, Optional
 from datetime import datetime
 
 from fastapi_utils.api_model import APIModel
@@ -42,6 +42,9 @@ class ReviewInDB(ReviewBody):
     image_count: int
     created_at: datetime
     status: ReviewStatus
+    broken_rule_id: Optional[RuleId]
+    challenge_deadline: Optional[datetime]
+    juries: Optional[List[str]]
 
 
 class ReviewWithProfile(ReviewInDB):
@@ -56,6 +59,10 @@ class ReviewWithProfile(ReviewInDB):
         return v
 
 
+class UncensorReviewInput(APIModel):
+    review_id: ReviewID
+    place_id: PlaceID
+
 class CensorReviewInput(APIModel):
     review_id: ReviewID
     place_id: PlaceID
@@ -65,3 +72,14 @@ class CensorReviewInput(APIModel):
     @validator('moderator')
     def wallet_id_validator(cls, v):
         return wallet_id_validator(v)
+
+
+class ReviewChallengeCensorshipInput(APIModel):
+    review_id: ReviewID
+    place_id: PlaceID
+    deadline_timestamp: int
+    juries: List[WalletID]
+
+    @validator('juries')
+    def juries_validator(cls, v):
+        return [w.lower() for w in v]

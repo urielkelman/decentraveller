@@ -1,4 +1,4 @@
-import { KeyboardAvoidingView, View } from 'react-native';
+import { KeyboardAvoidingView } from 'react-native';
 import React from 'react';
 import DecentravellerHeadingText from '../../../commons/components/DecentravellerHeadingText';
 import { bottomTabScreenStyles } from '../../../styles/bottomTabScreensStyles';
@@ -10,7 +10,7 @@ import DecentravellerTextInput from '../../../commons/components/DecentravellerT
 import DecentravellerButton from '../../../commons/components/DecentravellerButton';
 import { useNavigation } from '@react-navigation/native';
 import DecentravellerInformativeModal from '../../../commons/components/DecentravellerInformativeModal';
-import { AddReviewImagesScreenProp, CreatePlaceLocationScreenProp } from './types';
+import { CreatePlaceLocationScreenProp } from './types';
 
 const CreatePlaceNameScreen = () => {
     const { placeTypePicker, placeName, setPlaceName } = useCreatePlaceContext();

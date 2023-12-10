@@ -38,6 +38,30 @@ const decentravellerMainContract: DecentravellerContract = {
             functionName: 'getTokens',
             fullContractABI: mainContractStringfiedABI,
         },
+        moderatorPromotionCost: {
+            functionName: 'moderatorPromotionCost',
+            fullContractABI: mainContractStringfiedABI,
+        },
+        promoteToModerator: {
+            functionName: 'promoteToModerator',
+            fullContractABI: mainContractStringfiedABI,
+        },
+        censorReview: {
+            functionName: 'censorReview',
+            fullContractABI: mainContractStringfiedABI,
+        },
+        getReviewAddress: {
+            functionName: 'getReviewAddress',
+            fullContractABI: mainContractStringfiedABI,
+        },
+        challengeReviewCensorship: {
+            functionName: 'challengeReviewCensorship',
+            fullContractABI: mainContractStringfiedABI,
+        },
+        executeReviewUncensorship: {
+            functionName: 'executeReviewUncensorship',
+            fullContractABI: mainContractStringfiedABI,
+        },
     },
 };
 

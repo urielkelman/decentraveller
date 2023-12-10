@@ -12,7 +12,7 @@ const BLOCKCHAIN_TIMEOUT_IN_MILLIS = 100000;
 const BLOCKCHAIN_TRANSACTION_TASK_NAME = 'Blockchain transaction';
 
 class BlockchainAdapter {
-    private async populateAndSendWithAddress(
+    public async populateAndSendWithAddress(
         web3Provider: ethers.providers.Web3Provider,
         contract: DecentravellerContract,
         functionName: string,
@@ -134,6 +134,28 @@ class BlockchainAdapter {
         }
     }
 
+    async getModeratorCost(web3Provider: ethers.providers.Web3Provider): Promise<number> {
+        try {
+            const blockchain: Blockchain = BlockchainByChainId[DEFAULT_CHAIN_ID];
+            const contractFunction: ContractFunction = decentravellerMainContract.functions['moderatorPromotionCost'];
+
+            const contractAddress: string = decentravellerMainContract.addressesByBlockchain[blockchain];
+            const decentraveller = new ethers.Contract(contractAddress, contractFunction.fullContractABI, web3Provider);
+            return Number(await decentraveller.moderatorPromotionCost());
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    async promoteToModerator(web3Provider: ethers.providers.Web3Provider, onError: () => void) {
+        try {
+            return await this.populateAndSend(web3Provider, decentravellerMainContract, 'promoteToModerator');
+        } catch (e) {
+            console.log(e);
+            onError();
+        }
+    }
+
     async addPlaceReviewTransaction(
         web3Provider: ethers.providers.Web3Provider,
         placeId: number,
@@ -233,6 +255,25 @@ class BlockchainAdapter {
                 web3Provider,
             );
             return await decentravellerContract.getTokens(address);
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    async getReviewAddress(
+        web3Provider: ethers.providers.Web3Provider,
+        placeId: number,
+        reviewId: number,
+    ): Promise<string> {
+        try {
+            const blockchain: Blockchain = BlockchainByChainId[DEFAULT_CHAIN_ID];
+            const decentravellerAddress: string = decentravellerMainContract.addressesByBlockchain[blockchain];
+            const decentravellerContract = new ethers.Contract(
+                decentravellerAddress,
+                decentravellerMainContract.fullContractABI,
+                web3Provider,
+            );
+            return await decentravellerContract.getReviewAddress(placeId, reviewId);
         } catch (e) {
             console.log(e);
         }
@@ -372,6 +413,49 @@ class BlockchainAdapter {
                 ForVotes: Number(result[1]),
                 AgainstVotes: Number(result[0]),
             };
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    async censorReview(web3Provider: ethers.providers.Web3Provider, placeId: number, reviewId: number, ruleId: number) {
+        try {
+            return await this.populateAndSend(
+                web3Provider,
+                decentravellerMainContract,
+                'censorReview',
+                placeId,
+                reviewId,
+                ruleId,
+            );
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    async challengeReviewCensorship(web3Provider: ethers.providers.Web3Provider, placeId: number, reviewId: number) {
+        try {
+            return await this.populateAndSend(
+                web3Provider,
+                decentravellerMainContract,
+                'challengeReviewCensorship',
+                placeId,
+                reviewId,
+            );
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    async executeReviewUncensorship(web3Provider: ethers.providers.Web3Provider, placeId: number, reviewId: number) {
+        try {
+            return await this.populateAndSend(
+                web3Provider,
+                decentravellerMainContract,
+                'executeReviewUncensorship',
+                placeId,
+                reviewId,
+            );
         } catch (e) {
             console.log(e);
         }

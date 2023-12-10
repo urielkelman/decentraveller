@@ -7,3 +7,8 @@ services:
     command: ./node_modules/.bin/hardhat --config hardhat.config.ts --network localhost run scripts/load_data.ts
     environment:
       - LOCALHOST_HOST_ADDRESS=blockchain
+  load-sample-data-min:
+    build: decentraveller-blockchain/
+    command: ./node_modules/.bin/hardhat --config hardhat.config.ts --network localhost run scripts/load_data_min.ts
+    environment:
+      - LOCALHOST_HOST_ADDRESS=blockchain

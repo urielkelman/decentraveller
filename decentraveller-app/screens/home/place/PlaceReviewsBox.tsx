@@ -1,17 +1,20 @@
-import React, { useCallback, useEffect } from 'react';
-import { View, Text, TouchableOpacity, FlatList, ActivityIndicator } from 'react-native';
+import React, { useCallback } from 'react';
+import { ActivityIndicator, FlatList, Text, TouchableOpacity, View } from 'react-native';
 import { placeReviewsBoxStyles } from '../../../styles/placeDetailStyles';
 import { ReviewResponse, ReviewsResponse } from '../../../api/response/reviews';
 import { renderReviewItem } from '../../../commons/components/DecentravellerReviewsList';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { AddReviewImagesScreenProp } from './types';
 import { apiAdapter } from '../../../api/apiAdapter';
-import ReviewItem, { ReviewItemProps } from '../../reviews/ReviewItem';
+import { ReviewItemProps } from '../../reviews/ReviewItem';
+import { useAppContext } from '../../../context/AppContext';
 
 const adapter = apiAdapter;
 
 const PlaceReviewsBox = ({ placeId, summarized }) => {
     const navigation = useNavigation<AddReviewImagesScreenProp>();
+    const { web3Provider, connectionContext } = useAppContext();
+    const { connectedAddress } = connectionContext;
     const [loadingReviews, setLoadingReviews] = React.useState<boolean>(false);
     const [reviews, setReviews] = React.useState<ReviewItemProps[]>(null);
     const [reviewCount, setReviewsCount] = React.useState<number>(0);
@@ -21,24 +24,7 @@ const PlaceReviewsBox = ({ placeId, summarized }) => {
             (async () => {
                 setLoadingReviews(true);
                 const reviewsResponse: ReviewsResponse = await adapter.getPlaceReviews(placeId, 0, 5);
-                const avatarUrls = reviewsResponse.reviews.map((r: ReviewResponse) => {
-                    return adapter.getProfileAvatarUrl(r.owner.owner);
-                });
-                const reviewsToShow: ReviewItemProps[] = reviewsResponse.reviews.map(function (r, i) {
-                    return {
-                        id: r.id,
-                        placeId: r.placeId,
-                        score: r.score,
-                        text: r.text,
-                        imageCount: r.imageCount,
-                        state: r.state,
-                        ownerNickname: r.owner.nickname,
-                        ownerWallet: r.owner.owner,
-                        avatarUrl: avatarUrls[i],
-                        createdAt: r.createdAt,
-                        summarized: summarized,
-                    };
-                });
+                const reviewsToShow = await mapReviews(reviewsResponse.reviews);
                 setReviews(reviewsToShow);
                 setReviewsCount(reviewsResponse.total);
                 setLoadingReviews(false);
@@ -101,6 +87,28 @@ const PlaceReviewsBox = ({ placeId, summarized }) => {
         );
     };
 
+    const mapReviews = async (reviews: ReviewResponse[]): Promise<ReviewItemProps[]> => {
+        const avatarUrls = reviews.map((r: ReviewResponse) => {
+            return adapter.getProfileAvatarUrl(r.owner.owner);
+        });
+
+        return reviews.map((r, i) => {
+            return {
+                id: r.id,
+                placeId: r.placeId,
+                score: r.score,
+                text: r.text,
+                imageCount: r.imageCount,
+                status: r.status,
+                ownerNickname: r.owner.nickname,
+                ownerWallet: r.owner.owner,
+                avatarUrl: avatarUrls[i],
+                createdAt: r.createdAt,
+                summarized: summarized,
+            };
+        });
+    };
+
     const loadMoreReviews = async () => {
         if (!summarized && hasReviews() && reviewCount > reviews.length) {
             setLoadingReviews(true);
@@ -109,24 +117,7 @@ const PlaceReviewsBox = ({ placeId, summarized }) => {
                 (reviews.length / 5) | 0,
                 5,
             );
-            const avatarUrls = reviewsResponse.reviews.map((r: ReviewResponse) => {
-                return adapter.getProfileAvatarUrl(r.owner.owner);
-            });
-            const reviewsToShow: ReviewItemProps[] = reviewsResponse.reviews.map(function (r, i) {
-                return {
-                    id: r.id,
-                    placeId: r.placeId,
-                    score: r.score,
-                    text: r.text,
-                    imageCount: r.imageCount,
-                    state: r.state,
-                    ownerNickname: r.owner.nickname,
-                    ownerWallet: r.owner.owner,
-                    avatarUrl: avatarUrls[i],
-                    createdAt: r.createdAt,
-                    summarized: summarized,
-                };
-            });
+            const reviewsToShow = await mapReviews(reviewsResponse.reviews);
             reviews.push.apply(reviews, reviewsToShow);
             setLoadingReviews(false);
         }

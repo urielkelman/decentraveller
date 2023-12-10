@@ -3,6 +3,7 @@ import { ActivityIndicator, FlatList, Text, View } from 'react-native';
 import React, { useEffect } from 'react';
 import { placeReviewsBoxStyles } from '../../styles/placeDetailStyles';
 import LoadingComponent from './DecentravellerLoading';
+import { BackendReviewStatus, BlockchainProposalStatus, BlockchainReviewStatus } from '../../blockchain/types';
 
 export type ReviewShowProps = {
     id: number;
@@ -10,7 +11,7 @@ export type ReviewShowProps = {
     score: number;
     text: string;
     imageCount: number;
-    state: string;
+    status: BackendReviewStatus;
     ownerNickname: string;
     ownerWallet: string;
     avatarUrl: string;
@@ -24,7 +25,7 @@ const renderReviewItem = ({ item, summarized }: { item: ReviewShowProps; summari
         score={item.score}
         text={item.text}
         imageCount={item.imageCount}
-        state={item.state}
+        status={item.status}
         ownerNickname={item.ownerNickname}
         ownerWallet={item.ownerWallet}
         avatarUrl={item.avatarUrl}
@@ -97,28 +98,29 @@ const DecentravellerReviewsItems: React.FC<ReviewItemsProps> = ({ reviewList, lo
     );
 
     const hasReviews = () => {
-        return reviews != null && reviews.length > 0;
+        return reviews && reviews.length > 0;
     };
 
     const footerComponent = () => {
-        if (footer != null) {
-        }
         return (
             <View>
-                {!hasReviews() ? <Text style={{ padding: 5, fontSize: 18 }}>No reviews found.</Text> : null}
-                {hasReviews() && reviewCount > reviews.length ? <LoadingComponent /> : null}
+                {!hasReviews() ? (
+                    <Text style={{ padding: 5, fontSize: 18 }}>No reviews found.</Text>
+                ) : reviewCount > reviews.length ? (
+                    <LoadingComponent />
+                ) : null}
             </View>
         );
     };
 
     const headerComponent = () => {
-        return (
+        return hasReviews() ? (
             <View style={placeReviewsBoxStyles.reviewsHeader}>
                 <View style={placeReviewsBoxStyles.titleContainer}>
                     <Text style={placeReviewsBoxStyles.titleText}>Reviews ({reviewCount})</Text>
                 </View>
             </View>
-        );
+        ) : null;
     };
 
     const reviewsBoxComponent = () => {
@@ -140,7 +142,7 @@ const DecentravellerReviewsItems: React.FC<ReviewItemsProps> = ({ reviewList, lo
                 keyExtractor={(item, index) => String(index)}
                 ListHeaderComponent={headerComponent}
                 stickyHeaderIndices={[0]}
-                ListFooterComponent={footerComponent}
+                ListFooterComponent={footer != null ? footer : footerComponent}
                 renderItem={internalRenderReviewItem}
                 scrollEnabled={true}
             ></FlatList>

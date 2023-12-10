@@ -1,12 +1,13 @@
-import { Image, Text, View, StyleSheet, TouchableOpacity } from 'react-native';
+import { Image, Text, TouchableOpacity, View } from 'react-native';
 import React from 'react';
 // @ts-ignore
 import { useNavigation } from '@react-navigation/native';
 import { placeReviewsBoxStyles } from '../../styles/placeDetailStyles';
 import StarComponent from '../../commons/components/StarComponent';
 import { ReviewShowProps } from '../../commons/components/DecentravellerReviewsList';
-import { UserProfileScreenProps } from '../users/profile/types';
+import { UserProfileScreenProps, UserRole } from '../users/profile/types';
 import ReviewImageContainer from './ReviewImageContainer';
+import { BackendReviewStatus } from '../../blockchain/types';
 
 export type ReviewItemProps = ReviewShowProps & {
     summarized: boolean;
@@ -18,7 +19,7 @@ const ReviewItem: React.FC<ReviewItemProps> = ({
     score,
     text,
     imageCount,
-    state,
+    status,
     ownerNickname,
     ownerWallet,
     avatarUrl,
@@ -32,6 +33,24 @@ const ReviewItem: React.FC<ReviewItemProps> = ({
         return createdAt.split('T')[0];
     };
 
+    const statusComponent = () => {
+        switch (status) {
+            case BackendReviewStatus.CENSORED:
+                return (
+                    <View style={placeReviewsBoxStyles.reviewStatusRibbon}>
+                        <Text style={placeReviewsBoxStyles.reviewStatusRibbonText}>🚫 Censored</Text>
+                    </View>
+                );
+            case BackendReviewStatus.CENSORSHIP_CHALLENGED:
+                return (
+                    <View style={placeReviewsBoxStyles.reviewStatusRibbon}>
+                        <Text style={placeReviewsBoxStyles.reviewStatusRibbonText}>⚔️ Disputed</Text>
+                    </View>
+                );
+            default:
+                return null;
+        }
+    };
     return (
         <TouchableOpacity
             style={placeReviewsBoxStyles.reviewItem}
@@ -65,6 +84,7 @@ const ReviewItem: React.FC<ReviewItemProps> = ({
                 </Text>
             </View>
             <ReviewImageContainer placeId={placeId} reviewId={id} imageCount={imageCount} />
+            {statusComponent()}
         </TouchableOpacity>
     );
 };

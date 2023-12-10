@@ -162,6 +162,12 @@ class ApiAdapter {
 
         return { rules: rules };
     }
+
+    async sendPushNotificationToken(address: string, pushNotificationToken: string) {}
+
+    getPlaceThumbailUrl(id: number) {
+        return undefined;
+    }
 }
 
 const mockApiAdapter = new ApiAdapter();

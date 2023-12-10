@@ -1,5 +1,5 @@
 import React from 'react';
-import { createStackNavigator, StackScreenProps } from '@react-navigation/stack';
+import { createStackNavigator } from '@react-navigation/stack';
 import CreatePlaceNameScreen from './place/CreatePlaceNameScreen';
 import CreatePlaceLocationScreen from './place/CreatePlaceLocationScreen';
 import CreatePlaceProvider from './place/CreatePlaceContext';
@@ -13,7 +13,6 @@ import UserReviewsScreen from '../users/profile/UserReviewsScreen';
 import AddReviewComment from '../reviews/AddReviewComment';
 import SuccessAddReviewScreen from '../reviews/SuccessAddReviewScreen';
 import AddReviewImages from '../reviews/AddReviewImages';
-import * as Linking from 'expo-linking';
 import ReviewDetailScreen from '../reviews/ReviewDetailScreen';
 import DecentravellerRulesList from './community/DecentravellerRulesList';
 import { Rule } from './community/types';
@@ -23,6 +22,11 @@ import VotingResultsScreen from './community/VotingResultsScreen';
 import { RuleResponse } from '../../api/response/rules';
 import RulesScreen from './community/RulesScreen';
 import { BlockchainProposalStatus } from '../../blockchain/types';
+import SelectBrokenRuleScreen from '../reviews/SelectBrokenRuleScreen';
+import ModerationsScreen from './community/ModerationsScreen';
+import MyCensoredReviews from './community/MyCensoredReviews';
+import CensoredReviews from './community/CensoredReviews';
+import DisputesToVote from './community/DisputesToVote';
 
 export type HomeStackScreens = {
     LeftSideBar: undefined;
@@ -39,10 +43,20 @@ export type HomeStackScreens = {
     UserProfileScreen: { walletId: string };
     ReviewDetailScreen: { reviewId: number; placeId: number };
     RulesScreen: undefined;
-    DecentravellerRulesList: { ruleList: RuleResponse[]; minified: boolean; horizontal: boolean };
+    ModerationsScreen: undefined;
+    MyCensoredReviews: undefined;
+    DisputesToVote: undefined;
+    CensoredReviews: undefined;
+    DecentravellerRulesList: {
+        ruleList: RuleResponse[];
+        minified: boolean;
+        horizontal: boolean;
+        selectionCallback: (id: number, statement: string) => void;
+    };
     RuleDetailScreen: { ruleId: number; blockchainStatus: BlockchainProposalStatus; rule?: Rule };
     ProposeRuleScreen: undefined;
     VotingResultsScreen: { rule: Rule };
+    SelectBrokenRuleScreen: { reviewId: number; placeId: number };
 };
 
 const HomeStackNavigator = createStackNavigator<HomeStackScreens>();
@@ -149,7 +163,31 @@ const HomeNavigator = () => {
                     name="RulesScreen"
                     component={RulesScreen}
                     options={{
-                        title: 'Rules screen',
+                        title: 'Rules',
+                        headerShown: true,
+                    }}
+                />
+                <HomeStackNavigator.Screen
+                    name="ModerationsScreen"
+                    component={ModerationsScreen}
+                    options={{
+                        title: 'Moderations',
+                        headerShown: true,
+                    }}
+                />
+                <HomeStackNavigator.Screen
+                    name="MyCensoredReviews"
+                    component={MyCensoredReviews}
+                    options={{
+                        title: 'My censored reviews',
+                        headerShown: true,
+                    }}
+                />
+                <HomeStackNavigator.Screen
+                    name="CensoredReviews"
+                    component={CensoredReviews}
+                    options={{
+                        title: 'Censored reviews',
                         headerShown: true,
                     }}
                 />
@@ -182,6 +220,22 @@ const HomeNavigator = () => {
                     component={VotingResultsScreen}
                     options={{
                         title: 'Voting results',
+                        headerShown: true,
+                    }}
+                />
+                <HomeStackNavigator.Screen
+                    name="SelectBrokenRuleScreen"
+                    component={SelectBrokenRuleScreen}
+                    options={{
+                        title: 'Select broken rule',
+                        headerShown: true,
+                    }}
+                />
+                <HomeStackNavigator.Screen
+                    name="DisputesToVote"
+                    component={DisputesToVote}
+                    options={{
+                        title: 'Disputes to vote',
                         headerShown: true,
                     }}
                 />

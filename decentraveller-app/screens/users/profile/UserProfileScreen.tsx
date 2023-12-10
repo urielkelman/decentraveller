@@ -4,7 +4,7 @@ import { userProfileMainStyles } from '../../../styles/userProfileStyles';
 import { apiAdapter } from '../../../api/apiAdapter';
 import LoadingComponent from '../../../commons/components/DecentravellerLoading';
 import { useNavigation } from '@react-navigation/native';
-import { UserProfileScreenProps } from './types';
+import { UserProfileScreenProps, UserRole } from './types';
 import { ImageGallery } from '@georstat/react-native-image-gallery';
 import { blockchainAdapter } from '../../../blockchain/blockhainAdapter';
 import { useAppContext } from '../../../context/AppContext';
@@ -20,6 +20,7 @@ export type UserShowProps = {
     createdAt: string;
     interest: string;
     tokens: number;
+    role: string;
 };
 
 const adapter = apiAdapter;
@@ -33,6 +34,8 @@ const UserProfileScreen: React.FC<UserProfileScreenProps> = ({ route }) => {
     const navigation = useNavigation<UserProfileScreenProps>();
     const [isOpen, setIsOpen] = useState(false);
     const { web3Provider } = useAppContext();
+
+    console.log('wallet=', walletId);
 
     const openGallery = () => setIsOpen(true);
 
@@ -53,6 +56,7 @@ const UserProfileScreen: React.FC<UserProfileScreenProps> = ({ route }) => {
                 createdAt: userData.createdAt,
                 interest: userData.interest,
                 tokens: Number(await contractAdapter.getTokens(web3Provider, walletId)),
+                role: userData.role,
             };
             setUser(user);
             setLoading(false);
@@ -76,6 +80,9 @@ const UserProfileScreen: React.FC<UserProfileScreenProps> = ({ route }) => {
                 </View>
                 <View style={userProfileMainStyles.titleContainer}>
                     <Text style={userProfileMainStyles.nicknameTitle}>{user.name}</Text>
+                    {user.role == UserRole.MODERATOR ? (
+                        <Text style={userProfileMainStyles.moderatorBadge}>🛡️ Moderator</Text>
+                    ) : null}
                     <Text style={userProfileMainStyles.walletSubtitle}>{user.walletAddress}</Text>
                 </View>
                 <View style={userProfileMainStyles.joinedAtContainer}>

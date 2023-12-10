@@ -1,6 +1,5 @@
-import { Modal, TouchableOpacity, View } from 'react-native';
+import { Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useAppContext } from '../../../context/AppContext';
-import { Text, StyleSheet } from 'react-native';
 import React, { useState } from 'react';
 import { explorePlacesScreenWording } from './wording';
 import { apiAdapter } from '../../../api/apiAdapter';

@@ -1,5 +1,5 @@
 import { Dimensions, StyleSheet } from 'react-native';
-import { DECENTRAVELLER_DEFAULT_CONTRAST_COLOR } from '../commons/global';
+import { DECENTRAVELLER_DEFAULT_BACKGROUND_COLOR, DECENTRAVELLER_DEFAULT_CONTRAST_COLOR } from '../commons/global';
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
@@ -8,7 +8,7 @@ const reviewDetailStyles = StyleSheet.create({
     container: {
         flex: 1,
         flexDirection: 'column',
-        backgroundColor: '#F0F0F0',
+        backgroundColor: DECENTRAVELLER_DEFAULT_BACKGROUND_COLOR,
     },
     title: {
         fontFamily: 'Montserrat_400Regular',
@@ -29,26 +29,53 @@ const reviewDetailStyles = StyleSheet.create({
     },
     reviewContainer: {
         paddingHorizontal: 5,
+        paddingTop: 10,
     },
-    optionsContainer: {
+    optionButtonContainer: {
         paddingHorizontal: 10,
-        alignItems: 'flex-end',
-    },
-    optionDenounce: {
-        flexDirection: 'row',
         alignItems: 'center',
+    },
+    buttonVoteContainer: {
+        flexDirection: 'row',
         justifyContent: 'center',
     },
-    denounceText: {
-        fontSize: 18,
-        fontFamily: 'Montserrat_400Regular',
-        fontWeight: 'bold',
-        color: DECENTRAVELLER_DEFAULT_CONTRAST_COLOR,
+    cardContainer: {
+        backgroundColor: 'white',
+        borderRadius: 10,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 2,
+        elevation: 4,
+        padding: 8,
+        margin: 10,
     },
-    denounceIcon: {
-        fontSize: 24,
+    explanationText: {
+        fontSize: 14,
         fontFamily: 'Montserrat_400Regular',
-        color: DECENTRAVELLER_DEFAULT_CONTRAST_COLOR,
+    },
+    cardContent: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    headerText: {
+        fontSize: 18,
+        fontFamily: 'Montserrat_700Bold',
+    },
+    textContainer: {
+        marginLeft: 4,
+    },
+    buttonImage: {
+        width: 60,
+        height: 60,
+        marginTop: 10,
+    },
+    icon: {
+        width: 24,
+        height: 24,
+        marginRight: 8,
+        marginLeft: 4,
+        resizeMode: 'contain',
     },
 });
 

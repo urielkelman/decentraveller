@@ -1,6 +1,5 @@
 import { NavigationProp, RouteProp } from '@react-navigation/native';
 import { HomeStackScreens } from '../../home/HomeNavigator';
-import { PlaceDetailParams } from '../../home/place/types';
 
 export type UserShowProps = {
     profileImage: string;
@@ -25,3 +24,8 @@ export type UserProfileScreenProps = NavigationProp<HomeStackScreens, 'UserProfi
         params: WalletIdProps;
     };
 };
+
+export enum UserRole {
+    NORMAL = 'NORMAL',
+    MODERATOR = 'MODERATOR',
+}

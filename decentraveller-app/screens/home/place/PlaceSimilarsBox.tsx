@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { View, Text, TouchableOpacity, FlatList, ActivityIndicator } from 'react-native';
+import { Text, View } from 'react-native';
 import { placeSimilarsBoxStyles } from '../../../styles/placeDetailStyles';
 import { useNavigation } from '@react-navigation/native';
 import { AddReviewImagesScreenProp } from './types';

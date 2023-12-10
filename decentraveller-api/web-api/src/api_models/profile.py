@@ -29,6 +29,18 @@ def wallet_id_validator(owner: WalletID) -> str:
     return owner.lower()
 
 
+class RoleChangeBody(APIModel):
+    """
+    Role body
+    """
+    owner: WalletID
+    role: ProfileRole
+
+    @validator('owner')
+    def wallet_id_validator(cls, v):
+        return wallet_id_validator(v)
+
+
 class ProfileBody(APIModel):
     """
     Profile body API Model

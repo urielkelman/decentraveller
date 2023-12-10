@@ -60,6 +60,9 @@ const communityScreenStyles = StyleSheet.create({
     halfScreenCard: {
         flex: 0.45,
     },
+    thirdScreenCard: {
+        flex: 0.3,
+    },
 });
 
 const ruleDetailStyles = StyleSheet.create({

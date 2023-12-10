@@ -3,11 +3,10 @@ import { FlatList, Text, TouchableOpacity, View } from 'react-native';
 import LoadingComponent from '../../../commons/components/DecentravellerLoading';
 import { useNavigation } from '@react-navigation/native';
 import { Rule, RuleListProps, RuleScreenProps } from './types';
-import { Montserrat_700Bold } from '@expo-google-fonts/montserrat';
 import { DECENTRAVELLER_DEFAULT_BACKGROUND_COLOR } from '../../../commons/global';
 
 const DecentravellerRulesList: React.FC<RuleListProps> = ({ route }) => {
-    const { ruleList, minified, horizontal, loadRules } = route.params;
+    const { ruleList, minified, horizontal, loadRules, selectionCallback } = route.params;
     const navigation = useNavigation<RuleScreenProps>();
     const [loading, setLoading] = useState<boolean>(false);
     const [rules, setRules] = useState<Rule[]>([]);
@@ -53,12 +52,15 @@ const DecentravellerRulesList: React.FC<RuleListProps> = ({ route }) => {
 
     const rulesListComponent = () => {
         const internalRenderRuleItem = ({ item }: { item: Rule }) => {
-            const navigateToScreen = () => {
+            const navigateToDetail = () => {
                 navigation.navigate('RuleDetailScreen', {
                     ruleId: item.ruleId,
                     blockchainStatus: item.ruleSubStatus,
                     rule: item,
                 });
+            };
+            const navigateToScreen = () => {
+                selectionCallback != null ? selectionCallback(item.ruleId, item.ruleStatement) : navigateToDetail();
             };
 
             return (
