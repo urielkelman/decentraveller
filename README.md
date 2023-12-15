@@ -1,15 +1,9 @@
-# Basic Sample Hardhat Project
+# Decentraveller
 
-This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, a sample script that deploys that contract, and an example of a task implementation, which simply lists the available accounts.
+![Aplicacióln móvil en react native](App.png)
 
-Try running some of the following tasks:
+Este repo corresponde al trabajo práctico final de la carrera de Ingeniería en Informática de la Universidad de Buenos Aires realizado por Uriel Kelman, Gianmarco Cafferata y Matias Scacosky.
 
-```shell
-npx hardhat accounts
-npx hardhat compile
-npx hardhat clean
-npx hardhat test
-npx hardhat node
-node scripts/sample-script.js
-npx hardhat help
-```
+El trabajo consiste en una dapp de reseñas de lugares con componentes off-chain y servicios de machine learning.
+
+Información técnica detallada puede encontrarse en el [informe](Informe_TPP.pdf).
